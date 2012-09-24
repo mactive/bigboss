@@ -22,4 +22,9 @@
 {
     self.xmpp_user_storageObj.displayName = name;
 }
+
+-(NSString *)jid
+{
+    return self.xmpp_user_storageObj.jidStr;
+}
 @end

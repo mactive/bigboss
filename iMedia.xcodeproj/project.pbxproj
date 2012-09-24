@@ -23,6 +23,14 @@
 		562DE73B160AFCDB00F782D2 /* UIBubbleTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 562DE735160AFCDB00F782D2 /* UIBubbleTableViewCell.m */; };
 		562DE73C160AFCDB00F782D2 /* UIBubbleTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 562DE736160AFCDB00F782D2 /* UIBubbleTableViewCell.xib */; };
 		562DE73E160B02E900F782D2 /* HandleNewMessage.h in Sources */ = {isa = PBXBuildFile; fileRef = 562DE73D160B027000F782D2 /* HandleNewMessage.h */; };
+		562DE7651610446000F782D2 /* MessageInputBarBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 562DE75D1610446000F782D2 /* MessageInputBarBackground.png */; };
+		562DE7661610446000F782D2 /* MessageInputBarBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 562DE75E1610446000F782D2 /* MessageInputBarBackground@2x.png */; };
+		562DE7671610446000F782D2 /* MessageInputFieldBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 562DE75F1610446000F782D2 /* MessageInputFieldBackground.png */; };
+		562DE7681610446000F782D2 /* MessageInputFieldBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 562DE7601610446000F782D2 /* MessageInputFieldBackground@2x.png */; };
+		562DE7691610446000F782D2 /* SendButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 562DE7611610446000F782D2 /* SendButton.png */; };
+		562DE76A1610446000F782D2 /* SendButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 562DE7621610446000F782D2 /* SendButton@2x.png */; };
+		562DE76B1610446000F782D2 /* SendButtonHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 562DE7631610446000F782D2 /* SendButtonHighlighted.png */; };
+		562DE76C1610446000F782D2 /* SendButtonHighlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 562DE7641610446000F782D2 /* SendButtonHighlighted@2x.png */; };
 		5646FAFB160D4BA700175B78 /* ACPlaceholderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5646FAFA160D4BA700175B78 /* ACPlaceholderTextView.m */; };
 		5646FAFD160D4BC400175B78 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5646FAFC160D4BC400175B78 /* QuartzCore.framework */; };
 		5646FAFF160F1EBF00175B78 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5646FAFE160F1EBF00175B78 /* libicucore.dylib */; };
@@ -219,6 +227,14 @@
 		562DE736160AFCDB00F782D2 /* UIBubbleTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = UIBubbleTableViewCell.xib; path = iMedia/NSBubbleData/UIBubbleTableViewCell.xib; sourceTree = SOURCE_ROOT; };
 		562DE737160AFCDB00F782D2 /* UIBubbleTableViewDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIBubbleTableViewDataSource.h; path = iMedia/NSBubbleData/UIBubbleTableViewDataSource.h; sourceTree = SOURCE_ROOT; };
 		562DE73D160B027000F782D2 /* HandleNewMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HandleNewMessage.h; path = Protocols/HandleNewMessage.h; sourceTree = "<group>"; };
+		562DE75D1610446000F782D2 /* MessageInputBarBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MessageInputBarBackground.png; path = Resources/MessageInputBarBackground.png; sourceTree = "<group>"; };
+		562DE75E1610446000F782D2 /* MessageInputBarBackground@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "MessageInputBarBackground@2x.png"; path = "Resources/MessageInputBarBackground@2x.png"; sourceTree = "<group>"; };
+		562DE75F1610446000F782D2 /* MessageInputFieldBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MessageInputFieldBackground.png; path = Resources/MessageInputFieldBackground.png; sourceTree = "<group>"; };
+		562DE7601610446000F782D2 /* MessageInputFieldBackground@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "MessageInputFieldBackground@2x.png"; path = "Resources/MessageInputFieldBackground@2x.png"; sourceTree = "<group>"; };
+		562DE7611610446000F782D2 /* SendButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = SendButton.png; path = Resources/SendButton.png; sourceTree = "<group>"; };
+		562DE7621610446000F782D2 /* SendButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "SendButton@2x.png"; path = "Resources/SendButton@2x.png"; sourceTree = "<group>"; };
+		562DE7631610446000F782D2 /* SendButtonHighlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = SendButtonHighlighted.png; path = Resources/SendButtonHighlighted.png; sourceTree = "<group>"; };
+		562DE7641610446000F782D2 /* SendButtonHighlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "SendButtonHighlighted@2x.png"; path = "Resources/SendButtonHighlighted@2x.png"; sourceTree = "<group>"; };
 		5646FAF9160D4BA700175B78 /* ACPlaceholderTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACPlaceholderTextView.h; sourceTree = "<group>"; };
 		5646FAFA160D4BA700175B78 /* ACPlaceholderTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACPlaceholderTextView.m; sourceTree = "<group>"; };
 		5646FAFC160D4BC400175B78 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -532,6 +548,14 @@
 		562DE706160AC3A300F782D2 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				562DE75D1610446000F782D2 /* MessageInputBarBackground.png */,
+				562DE75E1610446000F782D2 /* MessageInputBarBackground@2x.png */,
+				562DE75F1610446000F782D2 /* MessageInputFieldBackground.png */,
+				562DE7601610446000F782D2 /* MessageInputFieldBackground@2x.png */,
+				562DE7611610446000F782D2 /* SendButton.png */,
+				562DE7621610446000F782D2 /* SendButton@2x.png */,
+				562DE7631610446000F782D2 /* SendButtonHighlighted.png */,
+				562DE7641610446000F782D2 /* SendButtonHighlighted@2x.png */,
 				562DE707160AC3C600F782D2 /* bubbleMine.png */,
 				562DE708160AC3C600F782D2 /* bubbleMine@2x.png */,
 				562DE709160AC3C600F782D2 /* bubbleSomeone.png */,
@@ -1407,6 +1431,14 @@
 				562DE715160AC3C600F782D2 /* typingSomeone.png in Resources */,
 				562DE716160AC3C600F782D2 /* typingSomeone@2x.png in Resources */,
 				562DE73C160AFCDB00F782D2 /* UIBubbleTableViewCell.xib in Resources */,
+				562DE7651610446000F782D2 /* MessageInputBarBackground.png in Resources */,
+				562DE7661610446000F782D2 /* MessageInputBarBackground@2x.png in Resources */,
+				562DE7671610446000F782D2 /* MessageInputFieldBackground.png in Resources */,
+				562DE7681610446000F782D2 /* MessageInputFieldBackground@2x.png in Resources */,
+				562DE7691610446000F782D2 /* SendButton.png in Resources */,
+				562DE76A1610446000F782D2 /* SendButton@2x.png in Resources */,
+				562DE76B1610446000F782D2 /* SendButtonHighlighted.png in Resources */,
+				562DE76C1610446000F782D2 /* SendButtonHighlighted@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -15,5 +15,6 @@
 
 @property (strong, nonatomic) XMPPUserCoreDataStorageObject *xmpp_user_storageObj;
 @property (strong, nonatomic) NSString  *displayName;
+@property (strong, nonatomic) NSString  *jid;
 
 @end

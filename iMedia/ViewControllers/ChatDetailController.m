@@ -322,6 +322,22 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 
 - (void)sendMessage
 {
+    // Autocomplete text before sending. @hack
+    [self.textView resignFirstResponder];
+    [self.textView becomeFirstResponder];
+    
+    // Send message.
+    // TODO: Prevent this message from getting saved to Core Data if I hit back.
+    XMPPMessage *msg = [XMPPMessage messageWithType:@"chat" to:[XMPPJID jidWithString:self.user.jid]];
+    NSXMLElement *body = [NSXMLElement elementWithName:@"body" stringValue:self.textView.text];
+    [msg  addChild:body];
+    [[self appDelegate].xmppStream sendElement:msg];
+    
+    [bubbleData addObject:[NSBubbleData dataWithText:self.textView.text andDate:[NSDate date] andType:BubbleTypeMine]];
+    [bubbleTable reloadData];
+
+    self.textView.text = nil;
+    [self textViewDidChange:_textView];
     [self.textView resignFirstResponder];
 }
 

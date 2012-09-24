@@ -318,10 +318,12 @@ NSString *const kXMPPmyPassword = @"kXMPPmyPassword";
 	// If you don't want to use the Settings view to set the JID,
 	// uncomment the section below to hard code a JID and password.
 	//
-	//myJID = @"customer2@192.168.1.104";
-	//myPassword = @"111";
-    myJID = @"lix@jabber.at";
-	myPassword = @"1234Abcd";
+	
+    
+    myJID = @"customer2@192.168.1.104";
+	myPassword = @"111";
+ //   myJID = @"lix@jabber.at";
+//	myPassword = @"1234Abcd";
     
 	if (myJID == nil || myPassword == nil) {
 		return NO;
