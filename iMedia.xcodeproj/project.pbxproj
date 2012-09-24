@@ -1,0 +1,1831 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		562DE705160ABFA100F782D2 /* ChatDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 562DE704160ABFA100F782D2 /* ChatDetailController.m */; };
+		562DE70F160AC3C600F782D2 /* bubbleMine.png in Resources */ = {isa = PBXBuildFile; fileRef = 562DE707160AC3C600F782D2 /* bubbleMine.png */; };
+		562DE710160AC3C600F782D2 /* bubbleMine@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 562DE708160AC3C600F782D2 /* bubbleMine@2x.png */; };
+		562DE711160AC3C600F782D2 /* bubbleSomeone.png in Resources */ = {isa = PBXBuildFile; fileRef = 562DE709160AC3C600F782D2 /* bubbleSomeone.png */; };
+		562DE712160AC3C600F782D2 /* bubbleSomeone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 562DE70A160AC3C600F782D2 /* bubbleSomeone@2x.png */; };
+		562DE713160AC3C600F782D2 /* typingMine.png in Resources */ = {isa = PBXBuildFile; fileRef = 562DE70B160AC3C600F782D2 /* typingMine.png */; };
+		562DE714160AC3C600F782D2 /* typingMine@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 562DE70C160AC3C600F782D2 /* typingMine@2x.png */; };
+		562DE715160AC3C600F782D2 /* typingSomeone.png in Resources */ = {isa = PBXBuildFile; fileRef = 562DE70D160AC3C600F782D2 /* typingSomeone.png */; };
+		562DE716160AC3C600F782D2 /* typingSomeone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 562DE70E160AC3C600F782D2 /* typingSomeone@2x.png */; };
+		562DE719160AD32500F782D2 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 562DE718160AD32500F782D2 /* Message.m */; };
+		562DE738160AFCDB00F782D2 /* NSBubbleData.m in Sources */ = {isa = PBXBuildFile; fileRef = 562DE72F160AFCDB00F782D2 /* NSBubbleData.m */; };
+		562DE739160AFCDB00F782D2 /* NSBubbleDataInternal.m in Sources */ = {isa = PBXBuildFile; fileRef = 562DE731160AFCDB00F782D2 /* NSBubbleDataInternal.m */; };
+		562DE73A160AFCDB00F782D2 /* UIBubbleTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 562DE733160AFCDB00F782D2 /* UIBubbleTableView.m */; };
+		562DE73B160AFCDB00F782D2 /* UIBubbleTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 562DE735160AFCDB00F782D2 /* UIBubbleTableViewCell.m */; };
+		562DE73C160AFCDB00F782D2 /* UIBubbleTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 562DE736160AFCDB00F782D2 /* UIBubbleTableViewCell.xib */; };
+		562DE73E160B02E900F782D2 /* HandleNewMessage.h in Sources */ = {isa = PBXBuildFile; fileRef = 562DE73D160B027000F782D2 /* HandleNewMessage.h */; };
+		5646FAFB160D4BA700175B78 /* ACPlaceholderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5646FAFA160D4BA700175B78 /* ACPlaceholderTextView.m */; };
+		5646FAFD160D4BC400175B78 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5646FAFC160D4BC400175B78 /* QuartzCore.framework */; };
+		5646FAFF160F1EBF00175B78 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5646FAFE160F1EBF00175B78 /* libicucore.dylib */; };
+		5646FB23160F246500175B78 /* libCocoaPlant.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5646FB1C160F243200175B78 /* libCocoaPlant.a */; };
+		566E80A21609A24C00A333EA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 566E80A11609A24C00A333EA /* UIKit.framework */; };
+		566E80A41609A24C00A333EA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 566E80A31609A24C00A333EA /* Foundation.framework */; };
+		566E80A61609A24C00A333EA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 566E80A51609A24C00A333EA /* CoreGraphics.framework */; };
+		566E80A81609A24C00A333EA /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 566E80A71609A24C00A333EA /* CoreData.framework */; };
+		566E80AE1609A24C00A333EA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 566E80AC1609A24C00A333EA /* InfoPlist.strings */; };
+		566E80B01609A24C00A333EA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E80AF1609A24C00A333EA /* main.m */; };
+		566E80B41609A24C00A333EA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E80B31609A24C00A333EA /* AppDelegate.m */; };
+		566E80B71609A24C00A333EA /* iMedia.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 566E80B51609A24C00A333EA /* iMedia.xcdatamodeld */; };
+		566E80BF1609A24C00A333EA /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 566E80BE1609A24C00A333EA /* SenTestingKit.framework */; };
+		566E80C01609A24C00A333EA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 566E80A11609A24C00A333EA /* UIKit.framework */; };
+		566E80C11609A24C00A333EA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 566E80A31609A24C00A333EA /* Foundation.framework */; };
+		566E80C21609A24C00A333EA /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 566E80A71609A24C00A333EA /* CoreData.framework */; };
+		566E80CA1609A24C00A333EA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 566E80C81609A24C00A333EA /* InfoPlist.strings */; };
+		566E80CD1609A24C00A333EA /* iMediaTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E80CC1609A24C00A333EA /* iMediaTests.m */; };
+		566E81E91609A2AA00A333EA /* XMPPAnonymousAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E80DA1609A2AA00A333EA /* XMPPAnonymousAuthentication.m */; };
+		566E81EA1609A2AA00A333EA /* XMPPDeprecatedDigestAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E80DD1609A2AA00A333EA /* XMPPDeprecatedDigestAuthentication.m */; };
+		566E81EB1609A2AA00A333EA /* XMPPDeprecatedPlainAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E80E01609A2AA00A333EA /* XMPPDeprecatedPlainAuthentication.m */; };
+		566E81EC1609A2AA00A333EA /* XMPPDigestMD5Authentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E80E31609A2AA00A333EA /* XMPPDigestMD5Authentication.m */; };
+		566E81ED1609A2AA00A333EA /* XMPPPlainAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E80E61609A2AA00A333EA /* XMPPPlainAuthentication.m */; };
+		566E81EE1609A2AA00A333EA /* XMPPXFacebookPlatformAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E80E91609A2AA00A333EA /* XMPPXFacebookPlatformAuthentication.m */; };
+		566E81EF1609A2AA00A333EA /* NSData+XMPP.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E80ED1609A2AA00A333EA /* NSData+XMPP.m */; };
+		566E81F01609A2AA00A333EA /* NSNumber+XMPP.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E80EF1609A2AA00A333EA /* NSNumber+XMPP.m */; };
+		566E81F11609A2AA00A333EA /* NSXMLElement+XMPP.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E80F11609A2AA00A333EA /* NSXMLElement+XMPP.m */; };
+		566E81F21609A2AA00A333EA /* XMPPElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E80F51609A2AA00A333EA /* XMPPElement.m */; };
+		566E81F31609A2AA00A333EA /* XMPPIQ.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E80F81609A2AA00A333EA /* XMPPIQ.m */; };
+		566E81F41609A2AA00A333EA /* XMPPJID.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E80FA1609A2AA00A333EA /* XMPPJID.m */; };
+		566E81F51609A2AA00A333EA /* XMPPMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E80FD1609A2AA00A333EA /* XMPPMessage.m */; };
+		566E81F61609A2AA00A333EA /* XMPPModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E80FF1609A2AA00A333EA /* XMPPModule.m */; };
+		566E81F71609A2AA00A333EA /* XMPPParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81011609A2AA00A333EA /* XMPPParser.m */; };
+		566E81F81609A2AA00A333EA /* XMPPPresence.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81031609A2AA00A333EA /* XMPPPresence.m */; };
+		566E81F91609A2AA00A333EA /* XMPPStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81051609A2AA00A333EA /* XMPPStream.m */; };
+		566E81FA1609A2AA00A333EA /* XMPPBandwidthMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81091609A2AA00A333EA /* XMPPBandwidthMonitor.m */; };
+		566E81FB1609A2AA00A333EA /* XMPPCoreDataStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E810C1609A2AA00A333EA /* XMPPCoreDataStorage.m */; };
+		566E81FC1609A2AA00A333EA /* XMPPProcessOne.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81101609A2AA00A333EA /* XMPPProcessOne.m */; };
+		566E81FD1609A2AA00A333EA /* XMPPReconnect.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81131609A2AA00A333EA /* XMPPReconnect.m */; };
+		566E81FE1609A2AA00A333EA /* XMPPGroupCoreDataStorageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81171609A2AA00A333EA /* XMPPGroupCoreDataStorageObject.m */; };
+		566E81FF1609A2AA00A333EA /* XMPPResourceCoreDataStorageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81191609A2AA00A333EA /* XMPPResourceCoreDataStorageObject.m */; };
+		566E82001609A2AA00A333EA /* XMPPRoster.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 566E811A1609A2AA00A333EA /* XMPPRoster.xcdatamodel */; };
+		566E82011609A2AA00A333EA /* XMPPRosterCoreDataStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E811C1609A2AA00A333EA /* XMPPRosterCoreDataStorage.m */; };
+		566E82021609A2AA00A333EA /* XMPPUserCoreDataStorageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E811E1609A2AA00A333EA /* XMPPUserCoreDataStorageObject.m */; };
+		566E82031609A2AA00A333EA /* XMPPResourceMemoryStorageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81211609A2AA00A333EA /* XMPPResourceMemoryStorageObject.m */; };
+		566E82041609A2AA00A333EA /* XMPPRosterMemoryStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81231609A2AA00A333EA /* XMPPRosterMemoryStorage.m */; };
+		566E82051609A2AA00A333EA /* XMPPUserMemoryStorageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81261609A2AA00A333EA /* XMPPUserMemoryStorageObject.m */; };
+		566E82061609A2AA00A333EA /* XMPPRoster.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81291609A2AA00A333EA /* XMPPRoster.m */; };
+		566E82071609A2AA00A333EA /* XMPPIQ+JabberRPC.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E812E1609A2AA00A333EA /* XMPPIQ+JabberRPC.m */; };
+		566E82081609A2AA00A333EA /* XMPPIQ+JabberRPCResonse.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81301609A2AA00A333EA /* XMPPIQ+JabberRPCResonse.m */; };
+		566E82091609A2AA00A333EA /* XMPPJabberRPCModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81321609A2AA00A333EA /* XMPPJabberRPCModule.m */; };
+		566E820A1609A2AA00A333EA /* XMPPPrivacy.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81351609A2AA00A333EA /* XMPPPrivacy.m */; };
+		566E820B1609A2AA00A333EA /* XMPPRoom.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 566E81381609A2AA00A333EA /* XMPPRoom.xcdatamodeld */; };
+		566E820C1609A2AA00A333EA /* XMPPRoomCoreDataStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E813B1609A2AA00A333EA /* XMPPRoomCoreDataStorage.m */; };
+		566E820D1609A2AA00A333EA /* XMPPRoomMessageCoreDataStorageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E813D1609A2AA00A333EA /* XMPPRoomMessageCoreDataStorageObject.m */; };
+		566E820E1609A2AA00A333EA /* XMPPRoomOccupantCoreDataStorageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E813F1609A2AA00A333EA /* XMPPRoomOccupantCoreDataStorageObject.m */; };
+		566E820F1609A2AA00A333EA /* XMPPRoomHybrid.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 566E81411609A2AA00A333EA /* XMPPRoomHybrid.xcdatamodeld */; };
+		566E82101609A2AA00A333EA /* XMPPRoomHybridStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81441609A2AA00A333EA /* XMPPRoomHybridStorage.m */; };
+		566E82111609A2AA00A333EA /* XMPPRoomMessageHybridCoreDataStorageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81471609A2AA00A333EA /* XMPPRoomMessageHybridCoreDataStorageObject.m */; };
+		566E82121609A2AA00A333EA /* XMPPRoomOccupantHybridMemoryStorageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81491609A2AA00A333EA /* XMPPRoomOccupantHybridMemoryStorageObject.m */; };
+		566E82131609A2AA00A333EA /* XMPPRoomMemoryStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E814C1609A2AA00A333EA /* XMPPRoomMemoryStorage.m */; };
+		566E82141609A2AA00A333EA /* XMPPRoomMessageMemoryStorageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E814E1609A2AA00A333EA /* XMPPRoomMessageMemoryStorageObject.m */; };
+		566E82151609A2AA00A333EA /* XMPPRoomOccupantMemoryStorageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81501609A2AA00A333EA /* XMPPRoomOccupantMemoryStorageObject.m */; };
+		566E82161609A2AA00A333EA /* XMPPMessage+XEP0045.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81521609A2AA00A333EA /* XMPPMessage+XEP0045.m */; };
+		566E82171609A2AA00A333EA /* XMPPMUC.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81541609A2AA00A333EA /* XMPPMUC.m */; };
+		566E82181609A2AA00A333EA /* XMPPRoom.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81561609A2AA00A333EA /* XMPPRoom.m */; };
+		566E82191609A2AA00A333EA /* XMPPvCard.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 566E815C1609A2AA00A333EA /* XMPPvCard.xcdatamodeld */; };
+		566E821A1609A2AA00A333EA /* XMPPvCardAvatarCoreDataStorageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E815F1609A2AA00A333EA /* XMPPvCardAvatarCoreDataStorageObject.m */; };
+		566E821B1609A2AA00A333EA /* XMPPvCardCoreDataStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81611609A2AA00A333EA /* XMPPvCardCoreDataStorage.m */; };
+		566E821C1609A2AA00A333EA /* XMPPvCardCoreDataStorageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81631609A2AA00A333EA /* XMPPvCardCoreDataStorageObject.m */; };
+		566E821D1609A2AA00A333EA /* XMPPvCardTempCoreDataStorageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81651609A2AA00A333EA /* XMPPvCardTempCoreDataStorageObject.m */; };
+		566E821E1609A2AA00A333EA /* XMPPvCardTemp.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81671609A2AA00A333EA /* XMPPvCardTemp.m */; };
+		566E821F1609A2AA00A333EA /* XMPPvCardTempAdr.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81691609A2AA00A333EA /* XMPPvCardTempAdr.m */; };
+		566E82201609A2AA00A333EA /* XMPPvCardTempAdrTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E816B1609A2AA00A333EA /* XMPPvCardTempAdrTypes.m */; };
+		566E82211609A2AA00A333EA /* XMPPvCardTempBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E816D1609A2AA00A333EA /* XMPPvCardTempBase.m */; };
+		566E82221609A2AA00A333EA /* XMPPvCardTempEmail.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E816F1609A2AA00A333EA /* XMPPvCardTempEmail.m */; };
+		566E82231609A2AA00A333EA /* XMPPvCardTempLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81711609A2AA00A333EA /* XMPPvCardTempLabel.m */; };
+		566E82241609A2AA00A333EA /* XMPPvCardTempModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81731609A2AA00A333EA /* XMPPvCardTempModule.m */; };
+		566E82251609A2AA00A333EA /* XMPPvCardTempTel.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81751609A2AA00A333EA /* XMPPvCardTempTel.m */; };
+		566E82261609A2AA00A333EA /* XMPPPubSub.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81781609A2AA00A333EA /* XMPPPubSub.m */; };
+		566E82271609A2AA00A333EA /* TURNSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E817B1609A2AA00A333EA /* TURNSocket.m */; };
+		566E82281609A2AA00A333EA /* NSDate+XMPPDateTimeProfiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E817E1609A2AA00A333EA /* NSDate+XMPPDateTimeProfiles.m */; };
+		566E82291609A2AA00A333EA /* XMPPDateTimeProfiles.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81801609A2AA00A333EA /* XMPPDateTimeProfiles.m */; };
+		566E822A1609A2AA00A333EA /* XMPPMessage+XEP_0085.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81831609A2AA00A333EA /* XMPPMessage+XEP_0085.m */; };
+		566E822B1609A2AA00A333EA /* XMPPTransports.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81861609A2AA00A333EA /* XMPPTransports.m */; };
+		566E822C1609A2AA00A333EA /* XMPPCapabilities.xcdatamodel in Sources */ = {isa = PBXBuildFile; fileRef = 566E81891609A2AA00A333EA /* XMPPCapabilities.xcdatamodel */; };
+		566E822D1609A2AA00A333EA /* XMPPCapabilitiesCoreDataStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E818B1609A2AA00A333EA /* XMPPCapabilitiesCoreDataStorage.m */; };
+		566E822E1609A2AA00A333EA /* XMPPCapsCoreDataStorageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E818D1609A2AA00A333EA /* XMPPCapsCoreDataStorageObject.m */; };
+		566E822F1609A2AA00A333EA /* XMPPCapsResourceCoreDataStorageObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E818F1609A2AA00A333EA /* XMPPCapsResourceCoreDataStorageObject.m */; };
+		566E82301609A2AA00A333EA /* XMPPCapabilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81911609A2AA00A333EA /* XMPPCapabilities.m */; };
+		566E82311609A2AA00A333EA /* XMPPMessageArchiving.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 566E81941609A2AA00A333EA /* XMPPMessageArchiving.xcdatamodeld */; };
+		566E82321609A2AA00A333EA /* XMPPMessageArchiving_Contact_CoreDataObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81971609A2AA00A333EA /* XMPPMessageArchiving_Contact_CoreDataObject.m */; };
+		566E82331609A2AA00A333EA /* XMPPMessageArchiving_Message_CoreDataObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81991609A2AA00A333EA /* XMPPMessageArchiving_Message_CoreDataObject.m */; };
+		566E82341609A2AA00A333EA /* XMPPMessageArchivingCoreDataStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E819B1609A2AA00A333EA /* XMPPMessageArchivingCoreDataStorage.m */; };
+		566E82351609A2AA00A333EA /* XMPPMessageArchiving.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E819D1609A2AA00A333EA /* XMPPMessageArchiving.m */; };
+		566E82361609A2AA00A333EA /* XMPPvCardAvatarModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81A01609A2AA00A333EA /* XMPPvCardAvatarModule.m */; };
+		566E82371609A2AA00A333EA /* XMPPMessage+XEP_0184.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81A31609A2AA00A333EA /* XMPPMessage+XEP_0184.m */; };
+		566E82381609A2AA00A333EA /* XMPPAutoPing.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81A61609A2AA00A333EA /* XMPPAutoPing.m */; };
+		566E82391609A2AA00A333EA /* XMPPPing.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81A81609A2AA00A333EA /* XMPPPing.m */; };
+		566E823A1609A2AA00A333EA /* XMPPAutoTime.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81AB1609A2AA00A333EA /* XMPPAutoTime.m */; };
+		566E823B1609A2AA00A333EA /* XMPPTime.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81AD1609A2AA00A333EA /* XMPPTime.m */; };
+		566E823C1609A2AA00A333EA /* XMPPElement+Delay.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81B01609A2AA00A333EA /* XMPPElement+Delay.m */; };
+		566E823F1609A2AA00A333EA /* DDList.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81B81609A2AA00A333EA /* DDList.m */; };
+		566E82401609A2AA00A333EA /* GCDMulticastDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81BA1609A2AA00A333EA /* GCDMulticastDelegate.m */; };
+		566E82411609A2AA00A333EA /* LibIDN.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81BC1609A2AA00A333EA /* LibIDN.m */; };
+		566E82421609A2AA00A333EA /* RFImageToDataTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81BE1609A2AA00A333EA /* RFImageToDataTransformer.m */; };
+		566E82431609A2AA00A333EA /* XMPPIDTracker.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81C01609A2AA00A333EA /* XMPPIDTracker.m */; };
+		566E82441609A2AA00A333EA /* XMPPSRVResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81C21609A2AA00A333EA /* XMPPSRVResolver.m */; };
+		566E82451609A2AA00A333EA /* GCDAsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81C61609A2AA00A333EA /* GCDAsyncSocket.m */; };
+		566E82461609A2AA00A333EA /* DDAbstractDatabaseLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81C91609A2AA00A333EA /* DDAbstractDatabaseLogger.m */; };
+		566E82471609A2AA00A333EA /* DDASLLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81CB1609A2AA00A333EA /* DDASLLogger.m */; };
+		566E82481609A2AA00A333EA /* DDFileLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81CD1609A2AA00A333EA /* DDFileLogger.m */; };
+		566E82491609A2AA00A333EA /* DDLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81CF1609A2AA00A333EA /* DDLog.m */; };
+		566E824A1609A2AA00A333EA /* DDTTYLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81D11609A2AA00A333EA /* DDTTYLogger.m */; };
+		566E824B1609A2AA00A333EA /* ContextFilterLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81D41609A2AA00A333EA /* ContextFilterLogFormatter.m */; };
+		566E824C1609A2AA00A333EA /* DispatchQueueLogFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81D61609A2AA00A333EA /* DispatchQueueLogFormatter.m */; };
+		566E824D1609A2AA00A333EA /* README.txt in Resources */ = {isa = PBXBuildFile; fileRef = 566E81D71609A2AA00A333EA /* README.txt */; };
+		566E824E1609A2AA00A333EA /* NSString+DDXML.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81DB1609A2AA00A333EA /* NSString+DDXML.m */; };
+		566E824F1609A2AA00A333EA /* DDXMLDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81DE1609A2AA00A333EA /* DDXMLDocument.m */; };
+		566E82501609A2AA00A333EA /* DDXMLElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81E01609A2AA00A333EA /* DDXMLElement.m */; };
+		566E82511609A2AA00A333EA /* DDXMLNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E81E21609A2AA00A333EA /* DDXMLNode.m */; };
+		566E82521609A2AA00A333EA /* libidn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 566E81E71609A2AA00A333EA /* libidn.a */; };
+		566E82551609A41B00A333EA /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 566E82541609A41B00A333EA /* Security.framework */; };
+		566E82571609A42100A333EA /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 566E82561609A42100A333EA /* CoreLocation.framework */; };
+		566E82591609A42F00A333EA /* libresolv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 566E82581609A42F00A333EA /* libresolv.dylib */; };
+		566E825B1609A44900A333EA /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 566E825A1609A44900A333EA /* CFNetwork.framework */; };
+		566E825D1609A48900A333EA /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 566E825C1609A48900A333EA /* SystemConfiguration.framework */; };
+		566E82621609A77D00A333EA /* ContactListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E82611609A77D00A333EA /* ContactListViewController.m */; };
+		566E82651609A79B00A333EA /* ChatListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E82641609A79B00A333EA /* ChatListViewController.m */; };
+		566E82681609AF2700A333EA /* ContactDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E82671609AF2700A333EA /* ContactDetailController.m */; };
+		566E826B1609AF8A00A333EA /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E826A1609AF8A00A333EA /* User.m */; };
+		566E826D1609B79900A333EA /* LayoutConst.h in Sources */ = {isa = PBXBuildFile; fileRef = 566E826C1609B58100A333EA /* LayoutConst.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		5646FB1B160F243200175B78 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5646FB11160F243200175B78 /* CocoaPlant.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C90B0CB313F55026009C18B1;
+			remoteInfo = CocoaPlant;
+		};
+		5646FB1D160F243200175B78 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5646FB11160F243200175B78 /* CocoaPlant.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C951D3E013F87926001D12CD;
+			remoteInfo = CocoaPlantApp;
+		};
+		5646FB1F160F243200175B78 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5646FB11160F243200175B78 /* CocoaPlant.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C90B0CC313F55026009C18B1;
+			remoteInfo = CocoaPlantSpecs;
+		};
+		5646FB21160F245600175B78 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5646FB11160F243200175B78 /* CocoaPlant.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = C90B0CB213F55026009C18B1;
+			remoteInfo = CocoaPlant;
+		};
+		566E80C31609A24C00A333EA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 566E80941609A24C00A333EA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 566E809C1609A24C00A333EA;
+			remoteInfo = iMedia;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		562DE703160ABFA100F782D2 /* ChatDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChatDetailController.h; path = ViewControllers/ChatDetailController.h; sourceTree = "<group>"; };
+		562DE704160ABFA100F782D2 /* ChatDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChatDetailController.m; path = ViewControllers/ChatDetailController.m; sourceTree = "<group>"; };
+		562DE707160AC3C600F782D2 /* bubbleMine.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bubbleMine.png; path = Resources/bubbleMine.png; sourceTree = "<group>"; };
+		562DE708160AC3C600F782D2 /* bubbleMine@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bubbleMine@2x.png"; path = "Resources/bubbleMine@2x.png"; sourceTree = "<group>"; };
+		562DE709160AC3C600F782D2 /* bubbleSomeone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bubbleSomeone.png; path = Resources/bubbleSomeone.png; sourceTree = "<group>"; };
+		562DE70A160AC3C600F782D2 /* bubbleSomeone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "bubbleSomeone@2x.png"; path = "Resources/bubbleSomeone@2x.png"; sourceTree = "<group>"; };
+		562DE70B160AC3C600F782D2 /* typingMine.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = typingMine.png; path = Resources/typingMine.png; sourceTree = "<group>"; };
+		562DE70C160AC3C600F782D2 /* typingMine@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "typingMine@2x.png"; path = "Resources/typingMine@2x.png"; sourceTree = "<group>"; };
+		562DE70D160AC3C600F782D2 /* typingSomeone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = typingSomeone.png; path = Resources/typingSomeone.png; sourceTree = "<group>"; };
+		562DE70E160AC3C600F782D2 /* typingSomeone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "typingSomeone@2x.png"; path = "Resources/typingSomeone@2x.png"; sourceTree = "<group>"; };
+		562DE717160AD32500F782D2 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Message.h; path = Models/Message.h; sourceTree = "<group>"; };
+		562DE718160AD32500F782D2 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Message.m; path = Models/Message.m; sourceTree = "<group>"; };
+		562DE72E160AFCDB00F782D2 /* NSBubbleData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSBubbleData.h; path = iMedia/NSBubbleData/NSBubbleData.h; sourceTree = SOURCE_ROOT; };
+		562DE72F160AFCDB00F782D2 /* NSBubbleData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSBubbleData.m; path = iMedia/NSBubbleData/NSBubbleData.m; sourceTree = SOURCE_ROOT; };
+		562DE730160AFCDB00F782D2 /* NSBubbleDataInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSBubbleDataInternal.h; path = iMedia/NSBubbleData/NSBubbleDataInternal.h; sourceTree = SOURCE_ROOT; };
+		562DE731160AFCDB00F782D2 /* NSBubbleDataInternal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSBubbleDataInternal.m; path = iMedia/NSBubbleData/NSBubbleDataInternal.m; sourceTree = SOURCE_ROOT; };
+		562DE732160AFCDB00F782D2 /* UIBubbleTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIBubbleTableView.h; path = iMedia/NSBubbleData/UIBubbleTableView.h; sourceTree = SOURCE_ROOT; };
+		562DE733160AFCDB00F782D2 /* UIBubbleTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIBubbleTableView.m; path = iMedia/NSBubbleData/UIBubbleTableView.m; sourceTree = SOURCE_ROOT; };
+		562DE734160AFCDB00F782D2 /* UIBubbleTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIBubbleTableViewCell.h; path = iMedia/NSBubbleData/UIBubbleTableViewCell.h; sourceTree = SOURCE_ROOT; };
+		562DE735160AFCDB00F782D2 /* UIBubbleTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIBubbleTableViewCell.m; path = iMedia/NSBubbleData/UIBubbleTableViewCell.m; sourceTree = SOURCE_ROOT; };
+		562DE736160AFCDB00F782D2 /* UIBubbleTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = UIBubbleTableViewCell.xib; path = iMedia/NSBubbleData/UIBubbleTableViewCell.xib; sourceTree = SOURCE_ROOT; };
+		562DE737160AFCDB00F782D2 /* UIBubbleTableViewDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIBubbleTableViewDataSource.h; path = iMedia/NSBubbleData/UIBubbleTableViewDataSource.h; sourceTree = SOURCE_ROOT; };
+		562DE73D160B027000F782D2 /* HandleNewMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HandleNewMessage.h; path = Protocols/HandleNewMessage.h; sourceTree = "<group>"; };
+		5646FAF9160D4BA700175B78 /* ACPlaceholderTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACPlaceholderTextView.h; sourceTree = "<group>"; };
+		5646FAFA160D4BA700175B78 /* ACPlaceholderTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACPlaceholderTextView.m; sourceTree = "<group>"; };
+		5646FAFC160D4BC400175B78 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		5646FAFE160F1EBF00175B78 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
+		5646FB11160F243200175B78 /* CocoaPlant.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CocoaPlant.xcodeproj; path = CocoaPlant/CocoaPlant.xcodeproj; sourceTree = "<group>"; };
+		566E809D1609A24C00A333EA /* iMedia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iMedia.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		566E80A11609A24C00A333EA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		566E80A31609A24C00A333EA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		566E80A51609A24C00A333EA /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		566E80A71609A24C00A333EA /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		566E80AB1609A24C00A333EA /* iMedia-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "iMedia-Info.plist"; sourceTree = "<group>"; };
+		566E80AD1609A24C00A333EA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		566E80AF1609A24C00A333EA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		566E80B11609A24C00A333EA /* iMedia-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "iMedia-Prefix.pch"; sourceTree = "<group>"; };
+		566E80B21609A24C00A333EA /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		566E80B31609A24C00A333EA /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		566E80B61609A24C00A333EA /* iMedia.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = iMedia.xcdatamodel; sourceTree = "<group>"; };
+		566E80BD1609A24C00A333EA /* iMediaTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iMediaTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		566E80BE1609A24C00A333EA /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		566E80C71609A24C00A333EA /* iMediaTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "iMediaTests-Info.plist"; sourceTree = "<group>"; };
+		566E80C91609A24C00A333EA /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		566E80CB1609A24C00A333EA /* iMediaTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iMediaTests.h; sourceTree = "<group>"; };
+		566E80CC1609A24C00A333EA /* iMediaTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iMediaTests.m; sourceTree = "<group>"; };
+		566E80D91609A2AA00A333EA /* XMPPAnonymousAuthentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPAnonymousAuthentication.h; sourceTree = "<group>"; };
+		566E80DA1609A2AA00A333EA /* XMPPAnonymousAuthentication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPAnonymousAuthentication.m; sourceTree = "<group>"; };
+		566E80DC1609A2AA00A333EA /* XMPPDeprecatedDigestAuthentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPDeprecatedDigestAuthentication.h; sourceTree = "<group>"; };
+		566E80DD1609A2AA00A333EA /* XMPPDeprecatedDigestAuthentication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPDeprecatedDigestAuthentication.m; sourceTree = "<group>"; };
+		566E80DF1609A2AA00A333EA /* XMPPDeprecatedPlainAuthentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPDeprecatedPlainAuthentication.h; sourceTree = "<group>"; };
+		566E80E01609A2AA00A333EA /* XMPPDeprecatedPlainAuthentication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPDeprecatedPlainAuthentication.m; sourceTree = "<group>"; };
+		566E80E21609A2AA00A333EA /* XMPPDigestMD5Authentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPDigestMD5Authentication.h; sourceTree = "<group>"; };
+		566E80E31609A2AA00A333EA /* XMPPDigestMD5Authentication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPDigestMD5Authentication.m; sourceTree = "<group>"; };
+		566E80E51609A2AA00A333EA /* XMPPPlainAuthentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPPlainAuthentication.h; sourceTree = "<group>"; };
+		566E80E61609A2AA00A333EA /* XMPPPlainAuthentication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPPlainAuthentication.m; sourceTree = "<group>"; };
+		566E80E81609A2AA00A333EA /* XMPPXFacebookPlatformAuthentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPXFacebookPlatformAuthentication.h; sourceTree = "<group>"; };
+		566E80E91609A2AA00A333EA /* XMPPXFacebookPlatformAuthentication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPXFacebookPlatformAuthentication.m; sourceTree = "<group>"; };
+		566E80EA1609A2AA00A333EA /* XMPPSASLAuthentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPSASLAuthentication.h; sourceTree = "<group>"; };
+		566E80EC1609A2AA00A333EA /* NSData+XMPP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+XMPP.h"; sourceTree = "<group>"; };
+		566E80ED1609A2AA00A333EA /* NSData+XMPP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+XMPP.m"; sourceTree = "<group>"; };
+		566E80EE1609A2AA00A333EA /* NSNumber+XMPP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNumber+XMPP.h"; sourceTree = "<group>"; };
+		566E80EF1609A2AA00A333EA /* NSNumber+XMPP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSNumber+XMPP.m"; sourceTree = "<group>"; };
+		566E80F01609A2AA00A333EA /* NSXMLElement+XMPP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSXMLElement+XMPP.h"; sourceTree = "<group>"; };
+		566E80F11609A2AA00A333EA /* NSXMLElement+XMPP.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSXMLElement+XMPP.m"; sourceTree = "<group>"; };
+		566E80F31609A2AA00A333EA /* XMPP.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPP.h; sourceTree = "<group>"; };
+		566E80F41609A2AA00A333EA /* XMPPElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPElement.h; sourceTree = "<group>"; };
+		566E80F51609A2AA00A333EA /* XMPPElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPElement.m; sourceTree = "<group>"; };
+		566E80F61609A2AA00A333EA /* XMPPInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPInternal.h; sourceTree = "<group>"; };
+		566E80F71609A2AA00A333EA /* XMPPIQ.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPIQ.h; sourceTree = "<group>"; };
+		566E80F81609A2AA00A333EA /* XMPPIQ.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPIQ.m; sourceTree = "<group>"; };
+		566E80F91609A2AA00A333EA /* XMPPJID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPJID.h; sourceTree = "<group>"; };
+		566E80FA1609A2AA00A333EA /* XMPPJID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPJID.m; sourceTree = "<group>"; };
+		566E80FB1609A2AA00A333EA /* XMPPLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPLogging.h; sourceTree = "<group>"; };
+		566E80FC1609A2AA00A333EA /* XMPPMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPMessage.h; sourceTree = "<group>"; };
+		566E80FD1609A2AA00A333EA /* XMPPMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPMessage.m; sourceTree = "<group>"; };
+		566E80FE1609A2AA00A333EA /* XMPPModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPModule.h; sourceTree = "<group>"; };
+		566E80FF1609A2AA00A333EA /* XMPPModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPModule.m; sourceTree = "<group>"; };
+		566E81001609A2AA00A333EA /* XMPPParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPParser.h; sourceTree = "<group>"; };
+		566E81011609A2AA00A333EA /* XMPPParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPParser.m; sourceTree = "<group>"; };
+		566E81021609A2AA00A333EA /* XMPPPresence.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPPresence.h; sourceTree = "<group>"; };
+		566E81031609A2AA00A333EA /* XMPPPresence.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPPresence.m; sourceTree = "<group>"; };
+		566E81041609A2AA00A333EA /* XMPPStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPStream.h; sourceTree = "<group>"; };
+		566E81051609A2AA00A333EA /* XMPPStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPStream.m; sourceTree = "<group>"; };
+		566E81081609A2AA00A333EA /* XMPPBandwidthMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPBandwidthMonitor.h; sourceTree = "<group>"; };
+		566E81091609A2AA00A333EA /* XMPPBandwidthMonitor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPBandwidthMonitor.m; sourceTree = "<group>"; };
+		566E810B1609A2AA00A333EA /* XMPPCoreDataStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPCoreDataStorage.h; sourceTree = "<group>"; };
+		566E810C1609A2AA00A333EA /* XMPPCoreDataStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPCoreDataStorage.m; sourceTree = "<group>"; };
+		566E810D1609A2AA00A333EA /* XMPPCoreDataStorageProtected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPCoreDataStorageProtected.h; sourceTree = "<group>"; };
+		566E810F1609A2AA00A333EA /* XMPPProcessOne.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPProcessOne.h; sourceTree = "<group>"; };
+		566E81101609A2AA00A333EA /* XMPPProcessOne.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPProcessOne.m; sourceTree = "<group>"; };
+		566E81121609A2AA00A333EA /* XMPPReconnect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPReconnect.h; sourceTree = "<group>"; };
+		566E81131609A2AA00A333EA /* XMPPReconnect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPReconnect.m; sourceTree = "<group>"; };
+		566E81161609A2AA00A333EA /* XMPPGroupCoreDataStorageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPGroupCoreDataStorageObject.h; sourceTree = "<group>"; };
+		566E81171609A2AA00A333EA /* XMPPGroupCoreDataStorageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPGroupCoreDataStorageObject.m; sourceTree = "<group>"; };
+		566E81181609A2AA00A333EA /* XMPPResourceCoreDataStorageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPResourceCoreDataStorageObject.h; sourceTree = "<group>"; };
+		566E81191609A2AA00A333EA /* XMPPResourceCoreDataStorageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPResourceCoreDataStorageObject.m; sourceTree = "<group>"; };
+		566E811A1609A2AA00A333EA /* XMPPRoster.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = XMPPRoster.xcdatamodel; sourceTree = "<group>"; };
+		566E811B1609A2AA00A333EA /* XMPPRosterCoreDataStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPRosterCoreDataStorage.h; sourceTree = "<group>"; };
+		566E811C1609A2AA00A333EA /* XMPPRosterCoreDataStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPRosterCoreDataStorage.m; sourceTree = "<group>"; };
+		566E811D1609A2AA00A333EA /* XMPPUserCoreDataStorageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPUserCoreDataStorageObject.h; sourceTree = "<group>"; };
+		566E811E1609A2AA00A333EA /* XMPPUserCoreDataStorageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPUserCoreDataStorageObject.m; sourceTree = "<group>"; };
+		566E81201609A2AA00A333EA /* XMPPResourceMemoryStorageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPResourceMemoryStorageObject.h; sourceTree = "<group>"; };
+		566E81211609A2AA00A333EA /* XMPPResourceMemoryStorageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPResourceMemoryStorageObject.m; sourceTree = "<group>"; };
+		566E81221609A2AA00A333EA /* XMPPRosterMemoryStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPRosterMemoryStorage.h; sourceTree = "<group>"; };
+		566E81231609A2AA00A333EA /* XMPPRosterMemoryStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPRosterMemoryStorage.m; sourceTree = "<group>"; };
+		566E81241609A2AA00A333EA /* XMPPRosterMemoryStoragePrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPRosterMemoryStoragePrivate.h; sourceTree = "<group>"; };
+		566E81251609A2AA00A333EA /* XMPPUserMemoryStorageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPUserMemoryStorageObject.h; sourceTree = "<group>"; };
+		566E81261609A2AA00A333EA /* XMPPUserMemoryStorageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPUserMemoryStorageObject.m; sourceTree = "<group>"; };
+		566E81271609A2AA00A333EA /* XMPPResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPResource.h; sourceTree = "<group>"; };
+		566E81281609A2AA00A333EA /* XMPPRoster.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPRoster.h; sourceTree = "<group>"; };
+		566E81291609A2AA00A333EA /* XMPPRoster.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPRoster.m; sourceTree = "<group>"; };
+		566E812A1609A2AA00A333EA /* XMPPRosterPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPRosterPrivate.h; sourceTree = "<group>"; };
+		566E812B1609A2AA00A333EA /* XMPPUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPUser.h; sourceTree = "<group>"; };
+		566E812D1609A2AA00A333EA /* XMPPIQ+JabberRPC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "XMPPIQ+JabberRPC.h"; sourceTree = "<group>"; };
+		566E812E1609A2AA00A333EA /* XMPPIQ+JabberRPC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "XMPPIQ+JabberRPC.m"; sourceTree = "<group>"; };
+		566E812F1609A2AA00A333EA /* XMPPIQ+JabberRPCResonse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "XMPPIQ+JabberRPCResonse.h"; sourceTree = "<group>"; };
+		566E81301609A2AA00A333EA /* XMPPIQ+JabberRPCResonse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "XMPPIQ+JabberRPCResonse.m"; sourceTree = "<group>"; };
+		566E81311609A2AA00A333EA /* XMPPJabberRPCModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPJabberRPCModule.h; sourceTree = "<group>"; };
+		566E81321609A2AA00A333EA /* XMPPJabberRPCModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPJabberRPCModule.m; sourceTree = "<group>"; };
+		566E81341609A2AA00A333EA /* XMPPPrivacy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPPrivacy.h; sourceTree = "<group>"; };
+		566E81351609A2AA00A333EA /* XMPPPrivacy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPPrivacy.m; sourceTree = "<group>"; };
+		566E81391609A2AA00A333EA /* XMPPRoom.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = XMPPRoom.xcdatamodel; sourceTree = "<group>"; };
+		566E813A1609A2AA00A333EA /* XMPPRoomCoreDataStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPRoomCoreDataStorage.h; sourceTree = "<group>"; };
+		566E813B1609A2AA00A333EA /* XMPPRoomCoreDataStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPRoomCoreDataStorage.m; sourceTree = "<group>"; };
+		566E813C1609A2AA00A333EA /* XMPPRoomMessageCoreDataStorageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPRoomMessageCoreDataStorageObject.h; sourceTree = "<group>"; };
+		566E813D1609A2AA00A333EA /* XMPPRoomMessageCoreDataStorageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPRoomMessageCoreDataStorageObject.m; sourceTree = "<group>"; };
+		566E813E1609A2AA00A333EA /* XMPPRoomOccupantCoreDataStorageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPRoomOccupantCoreDataStorageObject.h; sourceTree = "<group>"; };
+		566E813F1609A2AA00A333EA /* XMPPRoomOccupantCoreDataStorageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPRoomOccupantCoreDataStorageObject.m; sourceTree = "<group>"; };
+		566E81421609A2AA00A333EA /* XMPPRoomHybrid.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = XMPPRoomHybrid.xcdatamodel; sourceTree = "<group>"; };
+		566E81431609A2AA00A333EA /* XMPPRoomHybridStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPRoomHybridStorage.h; sourceTree = "<group>"; };
+		566E81441609A2AA00A333EA /* XMPPRoomHybridStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPRoomHybridStorage.m; sourceTree = "<group>"; };
+		566E81451609A2AA00A333EA /* XMPPRoomHybridStorageProtected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPRoomHybridStorageProtected.h; sourceTree = "<group>"; };
+		566E81461609A2AA00A333EA /* XMPPRoomMessageHybridCoreDataStorageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPRoomMessageHybridCoreDataStorageObject.h; sourceTree = "<group>"; };
+		566E81471609A2AA00A333EA /* XMPPRoomMessageHybridCoreDataStorageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPRoomMessageHybridCoreDataStorageObject.m; sourceTree = "<group>"; };
+		566E81481609A2AA00A333EA /* XMPPRoomOccupantHybridMemoryStorageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPRoomOccupantHybridMemoryStorageObject.h; sourceTree = "<group>"; };
+		566E81491609A2AA00A333EA /* XMPPRoomOccupantHybridMemoryStorageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPRoomOccupantHybridMemoryStorageObject.m; sourceTree = "<group>"; };
+		566E814B1609A2AA00A333EA /* XMPPRoomMemoryStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPRoomMemoryStorage.h; sourceTree = "<group>"; };
+		566E814C1609A2AA00A333EA /* XMPPRoomMemoryStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPRoomMemoryStorage.m; sourceTree = "<group>"; };
+		566E814D1609A2AA00A333EA /* XMPPRoomMessageMemoryStorageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPRoomMessageMemoryStorageObject.h; sourceTree = "<group>"; };
+		566E814E1609A2AA00A333EA /* XMPPRoomMessageMemoryStorageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPRoomMessageMemoryStorageObject.m; sourceTree = "<group>"; };
+		566E814F1609A2AA00A333EA /* XMPPRoomOccupantMemoryStorageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPRoomOccupantMemoryStorageObject.h; sourceTree = "<group>"; };
+		566E81501609A2AA00A333EA /* XMPPRoomOccupantMemoryStorageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPRoomOccupantMemoryStorageObject.m; sourceTree = "<group>"; };
+		566E81511609A2AA00A333EA /* XMPPMessage+XEP0045.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "XMPPMessage+XEP0045.h"; sourceTree = "<group>"; };
+		566E81521609A2AA00A333EA /* XMPPMessage+XEP0045.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "XMPPMessage+XEP0045.m"; sourceTree = "<group>"; };
+		566E81531609A2AA00A333EA /* XMPPMUC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPMUC.h; sourceTree = "<group>"; };
+		566E81541609A2AA00A333EA /* XMPPMUC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPMUC.m; sourceTree = "<group>"; };
+		566E81551609A2AA00A333EA /* XMPPRoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPRoom.h; sourceTree = "<group>"; };
+		566E81561609A2AA00A333EA /* XMPPRoom.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPRoom.m; sourceTree = "<group>"; };
+		566E81571609A2AA00A333EA /* XMPPRoomMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPRoomMessage.h; sourceTree = "<group>"; };
+		566E81581609A2AA00A333EA /* XMPPRoomOccupant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPRoomOccupant.h; sourceTree = "<group>"; };
+		566E81591609A2AA00A333EA /* XMPPRoomPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPRoomPrivate.h; sourceTree = "<group>"; };
+		566E815D1609A2AA00A333EA /* XMPPvCard.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = XMPPvCard.xcdatamodel; sourceTree = "<group>"; };
+		566E815E1609A2AA00A333EA /* XMPPvCardAvatarCoreDataStorageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPvCardAvatarCoreDataStorageObject.h; sourceTree = "<group>"; };
+		566E815F1609A2AA00A333EA /* XMPPvCardAvatarCoreDataStorageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPvCardAvatarCoreDataStorageObject.m; sourceTree = "<group>"; };
+		566E81601609A2AA00A333EA /* XMPPvCardCoreDataStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPvCardCoreDataStorage.h; sourceTree = "<group>"; };
+		566E81611609A2AA00A333EA /* XMPPvCardCoreDataStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPvCardCoreDataStorage.m; sourceTree = "<group>"; };
+		566E81621609A2AA00A333EA /* XMPPvCardCoreDataStorageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPvCardCoreDataStorageObject.h; sourceTree = "<group>"; };
+		566E81631609A2AA00A333EA /* XMPPvCardCoreDataStorageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPvCardCoreDataStorageObject.m; sourceTree = "<group>"; };
+		566E81641609A2AA00A333EA /* XMPPvCardTempCoreDataStorageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPvCardTempCoreDataStorageObject.h; sourceTree = "<group>"; };
+		566E81651609A2AA00A333EA /* XMPPvCardTempCoreDataStorageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPvCardTempCoreDataStorageObject.m; sourceTree = "<group>"; };
+		566E81661609A2AA00A333EA /* XMPPvCardTemp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPvCardTemp.h; sourceTree = "<group>"; };
+		566E81671609A2AA00A333EA /* XMPPvCardTemp.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPvCardTemp.m; sourceTree = "<group>"; };
+		566E81681609A2AA00A333EA /* XMPPvCardTempAdr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPvCardTempAdr.h; sourceTree = "<group>"; };
+		566E81691609A2AA00A333EA /* XMPPvCardTempAdr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPvCardTempAdr.m; sourceTree = "<group>"; };
+		566E816A1609A2AA00A333EA /* XMPPvCardTempAdrTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPvCardTempAdrTypes.h; sourceTree = "<group>"; };
+		566E816B1609A2AA00A333EA /* XMPPvCardTempAdrTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPvCardTempAdrTypes.m; sourceTree = "<group>"; };
+		566E816C1609A2AA00A333EA /* XMPPvCardTempBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPvCardTempBase.h; sourceTree = "<group>"; };
+		566E816D1609A2AA00A333EA /* XMPPvCardTempBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPvCardTempBase.m; sourceTree = "<group>"; };
+		566E816E1609A2AA00A333EA /* XMPPvCardTempEmail.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPvCardTempEmail.h; sourceTree = "<group>"; };
+		566E816F1609A2AA00A333EA /* XMPPvCardTempEmail.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPvCardTempEmail.m; sourceTree = "<group>"; };
+		566E81701609A2AA00A333EA /* XMPPvCardTempLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPvCardTempLabel.h; sourceTree = "<group>"; };
+		566E81711609A2AA00A333EA /* XMPPvCardTempLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPvCardTempLabel.m; sourceTree = "<group>"; };
+		566E81721609A2AA00A333EA /* XMPPvCardTempModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPvCardTempModule.h; sourceTree = "<group>"; };
+		566E81731609A2AA00A333EA /* XMPPvCardTempModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPvCardTempModule.m; sourceTree = "<group>"; };
+		566E81741609A2AA00A333EA /* XMPPvCardTempTel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPvCardTempTel.h; sourceTree = "<group>"; };
+		566E81751609A2AA00A333EA /* XMPPvCardTempTel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPvCardTempTel.m; sourceTree = "<group>"; };
+		566E81771609A2AA00A333EA /* XMPPPubSub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPPubSub.h; sourceTree = "<group>"; };
+		566E81781609A2AA00A333EA /* XMPPPubSub.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPPubSub.m; sourceTree = "<group>"; };
+		566E817A1609A2AA00A333EA /* TURNSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TURNSocket.h; sourceTree = "<group>"; };
+		566E817B1609A2AA00A333EA /* TURNSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TURNSocket.m; sourceTree = "<group>"; };
+		566E817D1609A2AA00A333EA /* NSDate+XMPPDateTimeProfiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+XMPPDateTimeProfiles.h"; sourceTree = "<group>"; };
+		566E817E1609A2AA00A333EA /* NSDate+XMPPDateTimeProfiles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+XMPPDateTimeProfiles.m"; sourceTree = "<group>"; };
+		566E817F1609A2AA00A333EA /* XMPPDateTimeProfiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPDateTimeProfiles.h; sourceTree = "<group>"; };
+		566E81801609A2AA00A333EA /* XMPPDateTimeProfiles.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPDateTimeProfiles.m; sourceTree = "<group>"; };
+		566E81821609A2AA00A333EA /* XMPPMessage+XEP_0085.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "XMPPMessage+XEP_0085.h"; sourceTree = "<group>"; };
+		566E81831609A2AA00A333EA /* XMPPMessage+XEP_0085.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "XMPPMessage+XEP_0085.m"; sourceTree = "<group>"; };
+		566E81851609A2AA00A333EA /* XMPPTransports.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPTransports.h; sourceTree = "<group>"; };
+		566E81861609A2AA00A333EA /* XMPPTransports.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPTransports.m; sourceTree = "<group>"; };
+		566E81891609A2AA00A333EA /* XMPPCapabilities.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = XMPPCapabilities.xcdatamodel; sourceTree = "<group>"; };
+		566E818A1609A2AA00A333EA /* XMPPCapabilitiesCoreDataStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPCapabilitiesCoreDataStorage.h; sourceTree = "<group>"; };
+		566E818B1609A2AA00A333EA /* XMPPCapabilitiesCoreDataStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPCapabilitiesCoreDataStorage.m; sourceTree = "<group>"; };
+		566E818C1609A2AA00A333EA /* XMPPCapsCoreDataStorageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPCapsCoreDataStorageObject.h; sourceTree = "<group>"; };
+		566E818D1609A2AA00A333EA /* XMPPCapsCoreDataStorageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPCapsCoreDataStorageObject.m; sourceTree = "<group>"; };
+		566E818E1609A2AA00A333EA /* XMPPCapsResourceCoreDataStorageObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPCapsResourceCoreDataStorageObject.h; sourceTree = "<group>"; };
+		566E818F1609A2AA00A333EA /* XMPPCapsResourceCoreDataStorageObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPCapsResourceCoreDataStorageObject.m; sourceTree = "<group>"; };
+		566E81901609A2AA00A333EA /* XMPPCapabilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPCapabilities.h; sourceTree = "<group>"; };
+		566E81911609A2AA00A333EA /* XMPPCapabilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPCapabilities.m; sourceTree = "<group>"; };
+		566E81951609A2AA00A333EA /* XMPPMessageArchiving.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = XMPPMessageArchiving.xcdatamodel; sourceTree = "<group>"; };
+		566E81961609A2AA00A333EA /* XMPPMessageArchiving_Contact_CoreDataObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPMessageArchiving_Contact_CoreDataObject.h; sourceTree = "<group>"; };
+		566E81971609A2AA00A333EA /* XMPPMessageArchiving_Contact_CoreDataObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPMessageArchiving_Contact_CoreDataObject.m; sourceTree = "<group>"; };
+		566E81981609A2AA00A333EA /* XMPPMessageArchiving_Message_CoreDataObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPMessageArchiving_Message_CoreDataObject.h; sourceTree = "<group>"; };
+		566E81991609A2AA00A333EA /* XMPPMessageArchiving_Message_CoreDataObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPMessageArchiving_Message_CoreDataObject.m; sourceTree = "<group>"; };
+		566E819A1609A2AA00A333EA /* XMPPMessageArchivingCoreDataStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPMessageArchivingCoreDataStorage.h; sourceTree = "<group>"; };
+		566E819B1609A2AA00A333EA /* XMPPMessageArchivingCoreDataStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPMessageArchivingCoreDataStorage.m; sourceTree = "<group>"; };
+		566E819C1609A2AA00A333EA /* XMPPMessageArchiving.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPMessageArchiving.h; sourceTree = "<group>"; };
+		566E819D1609A2AA00A333EA /* XMPPMessageArchiving.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPMessageArchiving.m; sourceTree = "<group>"; };
+		566E819F1609A2AA00A333EA /* XMPPvCardAvatarModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPvCardAvatarModule.h; sourceTree = "<group>"; };
+		566E81A01609A2AA00A333EA /* XMPPvCardAvatarModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPvCardAvatarModule.m; sourceTree = "<group>"; };
+		566E81A21609A2AA00A333EA /* XMPPMessage+XEP_0184.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "XMPPMessage+XEP_0184.h"; sourceTree = "<group>"; };
+		566E81A31609A2AA00A333EA /* XMPPMessage+XEP_0184.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "XMPPMessage+XEP_0184.m"; sourceTree = "<group>"; };
+		566E81A51609A2AA00A333EA /* XMPPAutoPing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPAutoPing.h; sourceTree = "<group>"; };
+		566E81A61609A2AA00A333EA /* XMPPAutoPing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPAutoPing.m; sourceTree = "<group>"; };
+		566E81A71609A2AA00A333EA /* XMPPPing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPPing.h; sourceTree = "<group>"; };
+		566E81A81609A2AA00A333EA /* XMPPPing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPPing.m; sourceTree = "<group>"; };
+		566E81AA1609A2AA00A333EA /* XMPPAutoTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPAutoTime.h; sourceTree = "<group>"; };
+		566E81AB1609A2AA00A333EA /* XMPPAutoTime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPAutoTime.m; sourceTree = "<group>"; };
+		566E81AC1609A2AA00A333EA /* XMPPTime.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPTime.h; sourceTree = "<group>"; };
+		566E81AD1609A2AA00A333EA /* XMPPTime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPTime.m; sourceTree = "<group>"; };
+		566E81AF1609A2AA00A333EA /* XMPPElement+Delay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "XMPPElement+Delay.h"; sourceTree = "<group>"; };
+		566E81B01609A2AA00A333EA /* XMPPElement+Delay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "XMPPElement+Delay.m"; sourceTree = "<group>"; };
+		566E81B71609A2AA00A333EA /* DDList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDList.h; sourceTree = "<group>"; };
+		566E81B81609A2AA00A333EA /* DDList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDList.m; sourceTree = "<group>"; };
+		566E81B91609A2AA00A333EA /* GCDMulticastDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDMulticastDelegate.h; sourceTree = "<group>"; };
+		566E81BA1609A2AA00A333EA /* GCDMulticastDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDMulticastDelegate.m; sourceTree = "<group>"; };
+		566E81BB1609A2AA00A333EA /* LibIDN.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LibIDN.h; sourceTree = "<group>"; };
+		566E81BC1609A2AA00A333EA /* LibIDN.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LibIDN.m; sourceTree = "<group>"; };
+		566E81BD1609A2AA00A333EA /* RFImageToDataTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RFImageToDataTransformer.h; sourceTree = "<group>"; };
+		566E81BE1609A2AA00A333EA /* RFImageToDataTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RFImageToDataTransformer.m; sourceTree = "<group>"; };
+		566E81BF1609A2AA00A333EA /* XMPPIDTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPIDTracker.h; sourceTree = "<group>"; };
+		566E81C01609A2AA00A333EA /* XMPPIDTracker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPIDTracker.m; sourceTree = "<group>"; };
+		566E81C11609A2AA00A333EA /* XMPPSRVResolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMPPSRVResolver.h; sourceTree = "<group>"; };
+		566E81C21609A2AA00A333EA /* XMPPSRVResolver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMPPSRVResolver.m; sourceTree = "<group>"; };
+		566E81C51609A2AA00A333EA /* GCDAsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDAsyncSocket.h; sourceTree = "<group>"; };
+		566E81C61609A2AA00A333EA /* GCDAsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDAsyncSocket.m; sourceTree = "<group>"; };
+		566E81C81609A2AA00A333EA /* DDAbstractDatabaseLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDAbstractDatabaseLogger.h; sourceTree = "<group>"; };
+		566E81C91609A2AA00A333EA /* DDAbstractDatabaseLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDAbstractDatabaseLogger.m; sourceTree = "<group>"; };
+		566E81CA1609A2AA00A333EA /* DDASLLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDASLLogger.h; sourceTree = "<group>"; };
+		566E81CB1609A2AA00A333EA /* DDASLLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDASLLogger.m; sourceTree = "<group>"; };
+		566E81CC1609A2AA00A333EA /* DDFileLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDFileLogger.h; sourceTree = "<group>"; };
+		566E81CD1609A2AA00A333EA /* DDFileLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDFileLogger.m; sourceTree = "<group>"; };
+		566E81CE1609A2AA00A333EA /* DDLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDLog.h; sourceTree = "<group>"; };
+		566E81CF1609A2AA00A333EA /* DDLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDLog.m; sourceTree = "<group>"; };
+		566E81D01609A2AA00A333EA /* DDTTYLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDTTYLogger.h; sourceTree = "<group>"; };
+		566E81D11609A2AA00A333EA /* DDTTYLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDTTYLogger.m; sourceTree = "<group>"; };
+		566E81D31609A2AA00A333EA /* ContextFilterLogFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContextFilterLogFormatter.h; sourceTree = "<group>"; };
+		566E81D41609A2AA00A333EA /* ContextFilterLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContextFilterLogFormatter.m; sourceTree = "<group>"; };
+		566E81D51609A2AA00A333EA /* DispatchQueueLogFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DispatchQueueLogFormatter.h; sourceTree = "<group>"; };
+		566E81D61609A2AA00A333EA /* DispatchQueueLogFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DispatchQueueLogFormatter.m; sourceTree = "<group>"; };
+		566E81D71609A2AA00A333EA /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		566E81DA1609A2AA00A333EA /* NSString+DDXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+DDXML.h"; sourceTree = "<group>"; };
+		566E81DB1609A2AA00A333EA /* NSString+DDXML.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+DDXML.m"; sourceTree = "<group>"; };
+		566E81DC1609A2AA00A333EA /* DDXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXML.h; sourceTree = "<group>"; };
+		566E81DD1609A2AA00A333EA /* DDXMLDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLDocument.h; sourceTree = "<group>"; };
+		566E81DE1609A2AA00A333EA /* DDXMLDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLDocument.m; sourceTree = "<group>"; };
+		566E81DF1609A2AA00A333EA /* DDXMLElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLElement.h; sourceTree = "<group>"; };
+		566E81E01609A2AA00A333EA /* DDXMLElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLElement.m; sourceTree = "<group>"; };
+		566E81E11609A2AA00A333EA /* DDXMLNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLNode.h; sourceTree = "<group>"; };
+		566E81E21609A2AA00A333EA /* DDXMLNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDXMLNode.m; sourceTree = "<group>"; };
+		566E81E41609A2AA00A333EA /* DDXMLPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDXMLPrivate.h; sourceTree = "<group>"; };
+		566E81E61609A2AA00A333EA /* idn-int.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "idn-int.h"; sourceTree = "<group>"; };
+		566E81E71609A2AA00A333EA /* libidn.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libidn.a; sourceTree = "<group>"; };
+		566E81E81609A2AA00A333EA /* stringprep.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stringprep.h; sourceTree = "<group>"; };
+		566E82531609A2E500A333EA /* XMPPFramework.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPFramework.h; path = XMPPFramework/XMPPFramework.h; sourceTree = "<group>"; };
+		566E82541609A41B00A333EA /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		566E82561609A42100A333EA /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		566E82581609A42F00A333EA /* libresolv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libresolv.dylib; path = usr/lib/libresolv.dylib; sourceTree = SDKROOT; };
+		566E825A1609A44900A333EA /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		566E825C1609A48900A333EA /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		566E82601609A77D00A333EA /* ContactListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContactListViewController.h; path = ViewControllers/ContactListViewController.h; sourceTree = "<group>"; };
+		566E82611609A77D00A333EA /* ContactListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContactListViewController.m; path = ViewControllers/ContactListViewController.m; sourceTree = "<group>"; };
+		566E82631609A79B00A333EA /* ChatListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChatListViewController.h; path = ViewControllers/ChatListViewController.h; sourceTree = "<group>"; };
+		566E82641609A79B00A333EA /* ChatListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChatListViewController.m; path = ViewControllers/ChatListViewController.m; sourceTree = "<group>"; };
+		566E82661609AF2700A333EA /* ContactDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContactDetailController.h; path = ViewControllers/ContactDetailController.h; sourceTree = "<group>"; };
+		566E82671609AF2700A333EA /* ContactDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContactDetailController.m; path = ViewControllers/ContactDetailController.m; sourceTree = "<group>"; };
+		566E82691609AF8A00A333EA /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = User.h; path = Models/User.h; sourceTree = "<group>"; };
+		566E826A1609AF8A00A333EA /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = User.m; path = Models/User.m; sourceTree = "<group>"; };
+		566E826C1609B58100A333EA /* LayoutConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LayoutConst.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		566E809A1609A24C00A333EA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5646FB23160F246500175B78 /* libCocoaPlant.a in Frameworks */,
+				5646FAFF160F1EBF00175B78 /* libicucore.dylib in Frameworks */,
+				5646FAFD160D4BC400175B78 /* QuartzCore.framework in Frameworks */,
+				566E825D1609A48900A333EA /* SystemConfiguration.framework in Frameworks */,
+				566E825B1609A44900A333EA /* CFNetwork.framework in Frameworks */,
+				566E82591609A42F00A333EA /* libresolv.dylib in Frameworks */,
+				566E82571609A42100A333EA /* CoreLocation.framework in Frameworks */,
+				566E82551609A41B00A333EA /* Security.framework in Frameworks */,
+				566E80A21609A24C00A333EA /* UIKit.framework in Frameworks */,
+				566E80A41609A24C00A333EA /* Foundation.framework in Frameworks */,
+				566E80A61609A24C00A333EA /* CoreGraphics.framework in Frameworks */,
+				566E80A81609A24C00A333EA /* CoreData.framework in Frameworks */,
+				566E82521609A2AA00A333EA /* libidn.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		566E80B91609A24C00A333EA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				566E80BF1609A24C00A333EA /* SenTestingKit.framework in Frameworks */,
+				566E80C01609A24C00A333EA /* UIKit.framework in Frameworks */,
+				566E80C11609A24C00A333EA /* Foundation.framework in Frameworks */,
+				566E80C21609A24C00A333EA /* CoreData.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		562DE6F3160ABF2100F782D2 /* NSBubbleData */ = {
+			isa = PBXGroup;
+			children = (
+				562DE72E160AFCDB00F782D2 /* NSBubbleData.h */,
+				562DE72F160AFCDB00F782D2 /* NSBubbleData.m */,
+				562DE730160AFCDB00F782D2 /* NSBubbleDataInternal.h */,
+				562DE731160AFCDB00F782D2 /* NSBubbleDataInternal.m */,
+				562DE732160AFCDB00F782D2 /* UIBubbleTableView.h */,
+				562DE733160AFCDB00F782D2 /* UIBubbleTableView.m */,
+				562DE734160AFCDB00F782D2 /* UIBubbleTableViewCell.h */,
+				562DE735160AFCDB00F782D2 /* UIBubbleTableViewCell.m */,
+				562DE736160AFCDB00F782D2 /* UIBubbleTableViewCell.xib */,
+				562DE737160AFCDB00F782D2 /* UIBubbleTableViewDataSource.h */,
+			);
+			name = NSBubbleData;
+			path = src;
+			sourceTree = "<group>";
+		};
+		562DE706160AC3A300F782D2 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				562DE707160AC3C600F782D2 /* bubbleMine.png */,
+				562DE708160AC3C600F782D2 /* bubbleMine@2x.png */,
+				562DE709160AC3C600F782D2 /* bubbleSomeone.png */,
+				562DE70A160AC3C600F782D2 /* bubbleSomeone@2x.png */,
+				562DE70B160AC3C600F782D2 /* typingMine.png */,
+				562DE70C160AC3C600F782D2 /* typingMine@2x.png */,
+				562DE70D160AC3C600F782D2 /* typingSomeone.png */,
+				562DE70E160AC3C600F782D2 /* typingSomeone@2x.png */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		5646FAF7160D4B7B00175B78 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				5646FAF9160D4BA700175B78 /* ACPlaceholderTextView.h */,
+				5646FAFA160D4BA700175B78 /* ACPlaceholderTextView.m */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		5646FB00160F235400175B78 /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				5646FB11160F243200175B78 /* CocoaPlant.xcodeproj */,
+			);
+			path = Libraries;
+			sourceTree = "<group>";
+		};
+		5646FB12160F243200175B78 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5646FB1C160F243200175B78 /* libCocoaPlant.a */,
+				5646FB1E160F243200175B78 /* CocoaPlantApp.app */,
+				5646FB20160F243200175B78 /* CocoaPlantSpecs.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		566E80921609A24C00A333EA = {
+			isa = PBXGroup;
+			children = (
+				566E80A91609A24C00A333EA /* iMedia */,
+				566E80C51609A24C00A333EA /* iMediaTests */,
+				5646FB00160F235400175B78 /* Libraries */,
+				566E80A01609A24C00A333EA /* Frameworks */,
+				566E809E1609A24C00A333EA /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		566E809E1609A24C00A333EA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				566E809D1609A24C00A333EA /* iMedia.app */,
+				566E80BD1609A24C00A333EA /* iMediaTests.octest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		566E80A01609A24C00A333EA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5646FAFE160F1EBF00175B78 /* libicucore.dylib */,
+				5646FAFC160D4BC400175B78 /* QuartzCore.framework */,
+				566E825C1609A48900A333EA /* SystemConfiguration.framework */,
+				566E825A1609A44900A333EA /* CFNetwork.framework */,
+				566E82581609A42F00A333EA /* libresolv.dylib */,
+				566E82561609A42100A333EA /* CoreLocation.framework */,
+				566E82541609A41B00A333EA /* Security.framework */,
+				566E80A11609A24C00A333EA /* UIKit.framework */,
+				566E80A31609A24C00A333EA /* Foundation.framework */,
+				566E80A51609A24C00A333EA /* CoreGraphics.framework */,
+				566E80A71609A24C00A333EA /* CoreData.framework */,
+				566E80BE1609A24C00A333EA /* SenTestingKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		566E80A91609A24C00A333EA /* iMedia */ = {
+			isa = PBXGroup;
+			children = (
+				562DE6F3160ABF2100F782D2 /* NSBubbleData */,
+				566E80D61609A2AA00A333EA /* XMPPFramework */,
+				566E82531609A2E500A333EA /* XMPPFramework.h */,
+				566E80B21609A24C00A333EA /* AppDelegate.h */,
+				566E80B31609A24C00A333EA /* AppDelegate.m */,
+				562DE73D160B027000F782D2 /* HandleNewMessage.h */,
+				566E826C1609B58100A333EA /* LayoutConst.h */,
+				5646FAF7160D4B7B00175B78 /* Views */,
+				566E825F1609A61B00A333EA /* ViewControllers */,
+				566E825E1609A5FE00A333EA /* Models */,
+				562DE706160AC3A300F782D2 /* Resources */,
+				566E80AA1609A24C00A333EA /* Supporting Files */,
+			);
+			path = iMedia;
+			sourceTree = "<group>";
+		};
+		566E80AA1609A24C00A333EA /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				566E80AB1609A24C00A333EA /* iMedia-Info.plist */,
+				566E80AC1609A24C00A333EA /* InfoPlist.strings */,
+				566E80AF1609A24C00A333EA /* main.m */,
+				566E80B11609A24C00A333EA /* iMedia-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		566E80C51609A24C00A333EA /* iMediaTests */ = {
+			isa = PBXGroup;
+			children = (
+				566E80CB1609A24C00A333EA /* iMediaTests.h */,
+				566E80CC1609A24C00A333EA /* iMediaTests.m */,
+				566E80C61609A24C00A333EA /* Supporting Files */,
+			);
+			path = iMediaTests;
+			sourceTree = "<group>";
+		};
+		566E80C61609A24C00A333EA /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				566E80C71609A24C00A333EA /* iMediaTests-Info.plist */,
+				566E80C81609A24C00A333EA /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		566E80D61609A2AA00A333EA /* XMPPFramework */ = {
+			isa = PBXGroup;
+			children = (
+				566E80D71609A2AA00A333EA /* Authentication */,
+				566E80EB1609A2AA00A333EA /* Categories */,
+				566E80F21609A2AA00A333EA /* Core */,
+				566E81061609A2AA00A333EA /* Extensions */,
+				566E81B61609A2AA00A333EA /* Utilities */,
+				566E81C31609A2AA00A333EA /* Vendor */,
+			);
+			path = XMPPFramework;
+			sourceTree = "<group>";
+		};
+		566E80D71609A2AA00A333EA /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				566E80D81609A2AA00A333EA /* Anonymous */,
+				566E80DB1609A2AA00A333EA /* Deprecated-Digest */,
+				566E80DE1609A2AA00A333EA /* Deprecated-Plain */,
+				566E80E11609A2AA00A333EA /* Digest-MD5 */,
+				566E80E41609A2AA00A333EA /* Plain */,
+				566E80E71609A2AA00A333EA /* X-Facebook-Platform */,
+				566E80EA1609A2AA00A333EA /* XMPPSASLAuthentication.h */,
+			);
+			path = Authentication;
+			sourceTree = "<group>";
+		};
+		566E80D81609A2AA00A333EA /* Anonymous */ = {
+			isa = PBXGroup;
+			children = (
+				566E80D91609A2AA00A333EA /* XMPPAnonymousAuthentication.h */,
+				566E80DA1609A2AA00A333EA /* XMPPAnonymousAuthentication.m */,
+			);
+			path = Anonymous;
+			sourceTree = "<group>";
+		};
+		566E80DB1609A2AA00A333EA /* Deprecated-Digest */ = {
+			isa = PBXGroup;
+			children = (
+				566E80DC1609A2AA00A333EA /* XMPPDeprecatedDigestAuthentication.h */,
+				566E80DD1609A2AA00A333EA /* XMPPDeprecatedDigestAuthentication.m */,
+			);
+			path = "Deprecated-Digest";
+			sourceTree = "<group>";
+		};
+		566E80DE1609A2AA00A333EA /* Deprecated-Plain */ = {
+			isa = PBXGroup;
+			children = (
+				566E80DF1609A2AA00A333EA /* XMPPDeprecatedPlainAuthentication.h */,
+				566E80E01609A2AA00A333EA /* XMPPDeprecatedPlainAuthentication.m */,
+			);
+			path = "Deprecated-Plain";
+			sourceTree = "<group>";
+		};
+		566E80E11609A2AA00A333EA /* Digest-MD5 */ = {
+			isa = PBXGroup;
+			children = (
+				566E80E21609A2AA00A333EA /* XMPPDigestMD5Authentication.h */,
+				566E80E31609A2AA00A333EA /* XMPPDigestMD5Authentication.m */,
+			);
+			path = "Digest-MD5";
+			sourceTree = "<group>";
+		};
+		566E80E41609A2AA00A333EA /* Plain */ = {
+			isa = PBXGroup;
+			children = (
+				566E80E51609A2AA00A333EA /* XMPPPlainAuthentication.h */,
+				566E80E61609A2AA00A333EA /* XMPPPlainAuthentication.m */,
+			);
+			path = Plain;
+			sourceTree = "<group>";
+		};
+		566E80E71609A2AA00A333EA /* X-Facebook-Platform */ = {
+			isa = PBXGroup;
+			children = (
+				566E80E81609A2AA00A333EA /* XMPPXFacebookPlatformAuthentication.h */,
+				566E80E91609A2AA00A333EA /* XMPPXFacebookPlatformAuthentication.m */,
+			);
+			path = "X-Facebook-Platform";
+			sourceTree = "<group>";
+		};
+		566E80EB1609A2AA00A333EA /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				566E80EC1609A2AA00A333EA /* NSData+XMPP.h */,
+				566E80ED1609A2AA00A333EA /* NSData+XMPP.m */,
+				566E80EE1609A2AA00A333EA /* NSNumber+XMPP.h */,
+				566E80EF1609A2AA00A333EA /* NSNumber+XMPP.m */,
+				566E80F01609A2AA00A333EA /* NSXMLElement+XMPP.h */,
+				566E80F11609A2AA00A333EA /* NSXMLElement+XMPP.m */,
+			);
+			path = Categories;
+			sourceTree = "<group>";
+		};
+		566E80F21609A2AA00A333EA /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				566E80F31609A2AA00A333EA /* XMPP.h */,
+				566E80F41609A2AA00A333EA /* XMPPElement.h */,
+				566E80F51609A2AA00A333EA /* XMPPElement.m */,
+				566E80F61609A2AA00A333EA /* XMPPInternal.h */,
+				566E80F71609A2AA00A333EA /* XMPPIQ.h */,
+				566E80F81609A2AA00A333EA /* XMPPIQ.m */,
+				566E80F91609A2AA00A333EA /* XMPPJID.h */,
+				566E80FA1609A2AA00A333EA /* XMPPJID.m */,
+				566E80FB1609A2AA00A333EA /* XMPPLogging.h */,
+				566E80FC1609A2AA00A333EA /* XMPPMessage.h */,
+				566E80FD1609A2AA00A333EA /* XMPPMessage.m */,
+				566E80FE1609A2AA00A333EA /* XMPPModule.h */,
+				566E80FF1609A2AA00A333EA /* XMPPModule.m */,
+				566E81001609A2AA00A333EA /* XMPPParser.h */,
+				566E81011609A2AA00A333EA /* XMPPParser.m */,
+				566E81021609A2AA00A333EA /* XMPPPresence.h */,
+				566E81031609A2AA00A333EA /* XMPPPresence.m */,
+				566E81041609A2AA00A333EA /* XMPPStream.h */,
+				566E81051609A2AA00A333EA /* XMPPStream.m */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		566E81061609A2AA00A333EA /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				566E81071609A2AA00A333EA /* BandwidthMonitor */,
+				566E810A1609A2AA00A333EA /* CoreDataStorage */,
+				566E810E1609A2AA00A333EA /* ProcessOne */,
+				566E81111609A2AA00A333EA /* Reconnect */,
+				566E81141609A2AA00A333EA /* Roster */,
+				566E812C1609A2AA00A333EA /* XEP-0009 */,
+				566E81331609A2AA00A333EA /* XEP-0016 */,
+				566E81361609A2AA00A333EA /* XEP-0045 */,
+				566E815A1609A2AA00A333EA /* XEP-0054 */,
+				566E81761609A2AA00A333EA /* XEP-0060 */,
+				566E81791609A2AA00A333EA /* XEP-0065 */,
+				566E817C1609A2AA00A333EA /* XEP-0082 */,
+				566E81811609A2AA00A333EA /* XEP-0085 */,
+				566E81841609A2AA00A333EA /* XEP-0100 */,
+				566E81871609A2AA00A333EA /* XEP-0115 */,
+				566E81921609A2AA00A333EA /* XEP-0136 */,
+				566E819E1609A2AA00A333EA /* XEP-0153 */,
+				566E81A11609A2AA00A333EA /* XEP-0184 */,
+				566E81A41609A2AA00A333EA /* XEP-0199 */,
+				566E81A91609A2AA00A333EA /* XEP-0202 */,
+				566E81AE1609A2AA00A333EA /* XEP-0203 */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		566E81071609A2AA00A333EA /* BandwidthMonitor */ = {
+			isa = PBXGroup;
+			children = (
+				566E81081609A2AA00A333EA /* XMPPBandwidthMonitor.h */,
+				566E81091609A2AA00A333EA /* XMPPBandwidthMonitor.m */,
+			);
+			path = BandwidthMonitor;
+			sourceTree = "<group>";
+		};
+		566E810A1609A2AA00A333EA /* CoreDataStorage */ = {
+			isa = PBXGroup;
+			children = (
+				566E810B1609A2AA00A333EA /* XMPPCoreDataStorage.h */,
+				566E810C1609A2AA00A333EA /* XMPPCoreDataStorage.m */,
+				566E810D1609A2AA00A333EA /* XMPPCoreDataStorageProtected.h */,
+			);
+			path = CoreDataStorage;
+			sourceTree = "<group>";
+		};
+		566E810E1609A2AA00A333EA /* ProcessOne */ = {
+			isa = PBXGroup;
+			children = (
+				566E810F1609A2AA00A333EA /* XMPPProcessOne.h */,
+				566E81101609A2AA00A333EA /* XMPPProcessOne.m */,
+			);
+			path = ProcessOne;
+			sourceTree = "<group>";
+		};
+		566E81111609A2AA00A333EA /* Reconnect */ = {
+			isa = PBXGroup;
+			children = (
+				566E81121609A2AA00A333EA /* XMPPReconnect.h */,
+				566E81131609A2AA00A333EA /* XMPPReconnect.m */,
+			);
+			path = Reconnect;
+			sourceTree = "<group>";
+		};
+		566E81141609A2AA00A333EA /* Roster */ = {
+			isa = PBXGroup;
+			children = (
+				566E81151609A2AA00A333EA /* CoreDataStorage */,
+				566E811F1609A2AA00A333EA /* MemoryStorage */,
+				566E81271609A2AA00A333EA /* XMPPResource.h */,
+				566E81281609A2AA00A333EA /* XMPPRoster.h */,
+				566E81291609A2AA00A333EA /* XMPPRoster.m */,
+				566E812A1609A2AA00A333EA /* XMPPRosterPrivate.h */,
+				566E812B1609A2AA00A333EA /* XMPPUser.h */,
+			);
+			path = Roster;
+			sourceTree = "<group>";
+		};
+		566E81151609A2AA00A333EA /* CoreDataStorage */ = {
+			isa = PBXGroup;
+			children = (
+				566E81161609A2AA00A333EA /* XMPPGroupCoreDataStorageObject.h */,
+				566E81171609A2AA00A333EA /* XMPPGroupCoreDataStorageObject.m */,
+				566E81181609A2AA00A333EA /* XMPPResourceCoreDataStorageObject.h */,
+				566E81191609A2AA00A333EA /* XMPPResourceCoreDataStorageObject.m */,
+				566E811A1609A2AA00A333EA /* XMPPRoster.xcdatamodel */,
+				566E811B1609A2AA00A333EA /* XMPPRosterCoreDataStorage.h */,
+				566E811C1609A2AA00A333EA /* XMPPRosterCoreDataStorage.m */,
+				566E811D1609A2AA00A333EA /* XMPPUserCoreDataStorageObject.h */,
+				566E811E1609A2AA00A333EA /* XMPPUserCoreDataStorageObject.m */,
+			);
+			path = CoreDataStorage;
+			sourceTree = "<group>";
+		};
+		566E811F1609A2AA00A333EA /* MemoryStorage */ = {
+			isa = PBXGroup;
+			children = (
+				566E81201609A2AA00A333EA /* XMPPResourceMemoryStorageObject.h */,
+				566E81211609A2AA00A333EA /* XMPPResourceMemoryStorageObject.m */,
+				566E81221609A2AA00A333EA /* XMPPRosterMemoryStorage.h */,
+				566E81231609A2AA00A333EA /* XMPPRosterMemoryStorage.m */,
+				566E81241609A2AA00A333EA /* XMPPRosterMemoryStoragePrivate.h */,
+				566E81251609A2AA00A333EA /* XMPPUserMemoryStorageObject.h */,
+				566E81261609A2AA00A333EA /* XMPPUserMemoryStorageObject.m */,
+			);
+			path = MemoryStorage;
+			sourceTree = "<group>";
+		};
+		566E812C1609A2AA00A333EA /* XEP-0009 */ = {
+			isa = PBXGroup;
+			children = (
+				566E812D1609A2AA00A333EA /* XMPPIQ+JabberRPC.h */,
+				566E812E1609A2AA00A333EA /* XMPPIQ+JabberRPC.m */,
+				566E812F1609A2AA00A333EA /* XMPPIQ+JabberRPCResonse.h */,
+				566E81301609A2AA00A333EA /* XMPPIQ+JabberRPCResonse.m */,
+				566E81311609A2AA00A333EA /* XMPPJabberRPCModule.h */,
+				566E81321609A2AA00A333EA /* XMPPJabberRPCModule.m */,
+			);
+			path = "XEP-0009";
+			sourceTree = "<group>";
+		};
+		566E81331609A2AA00A333EA /* XEP-0016 */ = {
+			isa = PBXGroup;
+			children = (
+				566E81341609A2AA00A333EA /* XMPPPrivacy.h */,
+				566E81351609A2AA00A333EA /* XMPPPrivacy.m */,
+			);
+			path = "XEP-0016";
+			sourceTree = "<group>";
+		};
+		566E81361609A2AA00A333EA /* XEP-0045 */ = {
+			isa = PBXGroup;
+			children = (
+				566E81371609A2AA00A333EA /* CoreDataStorage */,
+				566E81401609A2AA00A333EA /* HybridStorage */,
+				566E814A1609A2AA00A333EA /* MemoryStorage */,
+				566E81511609A2AA00A333EA /* XMPPMessage+XEP0045.h */,
+				566E81521609A2AA00A333EA /* XMPPMessage+XEP0045.m */,
+				566E81531609A2AA00A333EA /* XMPPMUC.h */,
+				566E81541609A2AA00A333EA /* XMPPMUC.m */,
+				566E81551609A2AA00A333EA /* XMPPRoom.h */,
+				566E81561609A2AA00A333EA /* XMPPRoom.m */,
+				566E81571609A2AA00A333EA /* XMPPRoomMessage.h */,
+				566E81581609A2AA00A333EA /* XMPPRoomOccupant.h */,
+				566E81591609A2AA00A333EA /* XMPPRoomPrivate.h */,
+			);
+			path = "XEP-0045";
+			sourceTree = "<group>";
+		};
+		566E81371609A2AA00A333EA /* CoreDataStorage */ = {
+			isa = PBXGroup;
+			children = (
+				566E81381609A2AA00A333EA /* XMPPRoom.xcdatamodeld */,
+				566E813A1609A2AA00A333EA /* XMPPRoomCoreDataStorage.h */,
+				566E813B1609A2AA00A333EA /* XMPPRoomCoreDataStorage.m */,
+				566E813C1609A2AA00A333EA /* XMPPRoomMessageCoreDataStorageObject.h */,
+				566E813D1609A2AA00A333EA /* XMPPRoomMessageCoreDataStorageObject.m */,
+				566E813E1609A2AA00A333EA /* XMPPRoomOccupantCoreDataStorageObject.h */,
+				566E813F1609A2AA00A333EA /* XMPPRoomOccupantCoreDataStorageObject.m */,
+			);
+			path = CoreDataStorage;
+			sourceTree = "<group>";
+		};
+		566E81401609A2AA00A333EA /* HybridStorage */ = {
+			isa = PBXGroup;
+			children = (
+				566E81411609A2AA00A333EA /* XMPPRoomHybrid.xcdatamodeld */,
+				566E81431609A2AA00A333EA /* XMPPRoomHybridStorage.h */,
+				566E81441609A2AA00A333EA /* XMPPRoomHybridStorage.m */,
+				566E81451609A2AA00A333EA /* XMPPRoomHybridStorageProtected.h */,
+				566E81461609A2AA00A333EA /* XMPPRoomMessageHybridCoreDataStorageObject.h */,
+				566E81471609A2AA00A333EA /* XMPPRoomMessageHybridCoreDataStorageObject.m */,
+				566E81481609A2AA00A333EA /* XMPPRoomOccupantHybridMemoryStorageObject.h */,
+				566E81491609A2AA00A333EA /* XMPPRoomOccupantHybridMemoryStorageObject.m */,
+			);
+			path = HybridStorage;
+			sourceTree = "<group>";
+		};
+		566E814A1609A2AA00A333EA /* MemoryStorage */ = {
+			isa = PBXGroup;
+			children = (
+				566E814B1609A2AA00A333EA /* XMPPRoomMemoryStorage.h */,
+				566E814C1609A2AA00A333EA /* XMPPRoomMemoryStorage.m */,
+				566E814D1609A2AA00A333EA /* XMPPRoomMessageMemoryStorageObject.h */,
+				566E814E1609A2AA00A333EA /* XMPPRoomMessageMemoryStorageObject.m */,
+				566E814F1609A2AA00A333EA /* XMPPRoomOccupantMemoryStorageObject.h */,
+				566E81501609A2AA00A333EA /* XMPPRoomOccupantMemoryStorageObject.m */,
+			);
+			path = MemoryStorage;
+			sourceTree = "<group>";
+		};
+		566E815A1609A2AA00A333EA /* XEP-0054 */ = {
+			isa = PBXGroup;
+			children = (
+				566E815B1609A2AA00A333EA /* CoreDataStorage */,
+				566E81661609A2AA00A333EA /* XMPPvCardTemp.h */,
+				566E81671609A2AA00A333EA /* XMPPvCardTemp.m */,
+				566E81681609A2AA00A333EA /* XMPPvCardTempAdr.h */,
+				566E81691609A2AA00A333EA /* XMPPvCardTempAdr.m */,
+				566E816A1609A2AA00A333EA /* XMPPvCardTempAdrTypes.h */,
+				566E816B1609A2AA00A333EA /* XMPPvCardTempAdrTypes.m */,
+				566E816C1609A2AA00A333EA /* XMPPvCardTempBase.h */,
+				566E816D1609A2AA00A333EA /* XMPPvCardTempBase.m */,
+				566E816E1609A2AA00A333EA /* XMPPvCardTempEmail.h */,
+				566E816F1609A2AA00A333EA /* XMPPvCardTempEmail.m */,
+				566E81701609A2AA00A333EA /* XMPPvCardTempLabel.h */,
+				566E81711609A2AA00A333EA /* XMPPvCardTempLabel.m */,
+				566E81721609A2AA00A333EA /* XMPPvCardTempModule.h */,
+				566E81731609A2AA00A333EA /* XMPPvCardTempModule.m */,
+				566E81741609A2AA00A333EA /* XMPPvCardTempTel.h */,
+				566E81751609A2AA00A333EA /* XMPPvCardTempTel.m */,
+			);
+			path = "XEP-0054";
+			sourceTree = "<group>";
+		};
+		566E815B1609A2AA00A333EA /* CoreDataStorage */ = {
+			isa = PBXGroup;
+			children = (
+				566E815C1609A2AA00A333EA /* XMPPvCard.xcdatamodeld */,
+				566E815E1609A2AA00A333EA /* XMPPvCardAvatarCoreDataStorageObject.h */,
+				566E815F1609A2AA00A333EA /* XMPPvCardAvatarCoreDataStorageObject.m */,
+				566E81601609A2AA00A333EA /* XMPPvCardCoreDataStorage.h */,
+				566E81611609A2AA00A333EA /* XMPPvCardCoreDataStorage.m */,
+				566E81621609A2AA00A333EA /* XMPPvCardCoreDataStorageObject.h */,
+				566E81631609A2AA00A333EA /* XMPPvCardCoreDataStorageObject.m */,
+				566E81641609A2AA00A333EA /* XMPPvCardTempCoreDataStorageObject.h */,
+				566E81651609A2AA00A333EA /* XMPPvCardTempCoreDataStorageObject.m */,
+			);
+			path = CoreDataStorage;
+			sourceTree = "<group>";
+		};
+		566E81761609A2AA00A333EA /* XEP-0060 */ = {
+			isa = PBXGroup;
+			children = (
+				566E81771609A2AA00A333EA /* XMPPPubSub.h */,
+				566E81781609A2AA00A333EA /* XMPPPubSub.m */,
+			);
+			path = "XEP-0060";
+			sourceTree = "<group>";
+		};
+		566E81791609A2AA00A333EA /* XEP-0065 */ = {
+			isa = PBXGroup;
+			children = (
+				566E817A1609A2AA00A333EA /* TURNSocket.h */,
+				566E817B1609A2AA00A333EA /* TURNSocket.m */,
+			);
+			path = "XEP-0065";
+			sourceTree = "<group>";
+		};
+		566E817C1609A2AA00A333EA /* XEP-0082 */ = {
+			isa = PBXGroup;
+			children = (
+				566E817D1609A2AA00A333EA /* NSDate+XMPPDateTimeProfiles.h */,
+				566E817E1609A2AA00A333EA /* NSDate+XMPPDateTimeProfiles.m */,
+				566E817F1609A2AA00A333EA /* XMPPDateTimeProfiles.h */,
+				566E81801609A2AA00A333EA /* XMPPDateTimeProfiles.m */,
+			);
+			path = "XEP-0082";
+			sourceTree = "<group>";
+		};
+		566E81811609A2AA00A333EA /* XEP-0085 */ = {
+			isa = PBXGroup;
+			children = (
+				566E81821609A2AA00A333EA /* XMPPMessage+XEP_0085.h */,
+				566E81831609A2AA00A333EA /* XMPPMessage+XEP_0085.m */,
+			);
+			path = "XEP-0085";
+			sourceTree = "<group>";
+		};
+		566E81841609A2AA00A333EA /* XEP-0100 */ = {
+			isa = PBXGroup;
+			children = (
+				566E81851609A2AA00A333EA /* XMPPTransports.h */,
+				566E81861609A2AA00A333EA /* XMPPTransports.m */,
+			);
+			path = "XEP-0100";
+			sourceTree = "<group>";
+		};
+		566E81871609A2AA00A333EA /* XEP-0115 */ = {
+			isa = PBXGroup;
+			children = (
+				566E81881609A2AA00A333EA /* CoreDataStorage */,
+				566E81901609A2AA00A333EA /* XMPPCapabilities.h */,
+				566E81911609A2AA00A333EA /* XMPPCapabilities.m */,
+			);
+			path = "XEP-0115";
+			sourceTree = "<group>";
+		};
+		566E81881609A2AA00A333EA /* CoreDataStorage */ = {
+			isa = PBXGroup;
+			children = (
+				566E81891609A2AA00A333EA /* XMPPCapabilities.xcdatamodel */,
+				566E818A1609A2AA00A333EA /* XMPPCapabilitiesCoreDataStorage.h */,
+				566E818B1609A2AA00A333EA /* XMPPCapabilitiesCoreDataStorage.m */,
+				566E818C1609A2AA00A333EA /* XMPPCapsCoreDataStorageObject.h */,
+				566E818D1609A2AA00A333EA /* XMPPCapsCoreDataStorageObject.m */,
+				566E818E1609A2AA00A333EA /* XMPPCapsResourceCoreDataStorageObject.h */,
+				566E818F1609A2AA00A333EA /* XMPPCapsResourceCoreDataStorageObject.m */,
+			);
+			path = CoreDataStorage;
+			sourceTree = "<group>";
+		};
+		566E81921609A2AA00A333EA /* XEP-0136 */ = {
+			isa = PBXGroup;
+			children = (
+				566E81931609A2AA00A333EA /* CoreDataStorage */,
+				566E819C1609A2AA00A333EA /* XMPPMessageArchiving.h */,
+				566E819D1609A2AA00A333EA /* XMPPMessageArchiving.m */,
+			);
+			path = "XEP-0136";
+			sourceTree = "<group>";
+		};
+		566E81931609A2AA00A333EA /* CoreDataStorage */ = {
+			isa = PBXGroup;
+			children = (
+				566E81941609A2AA00A333EA /* XMPPMessageArchiving.xcdatamodeld */,
+				566E81961609A2AA00A333EA /* XMPPMessageArchiving_Contact_CoreDataObject.h */,
+				566E81971609A2AA00A333EA /* XMPPMessageArchiving_Contact_CoreDataObject.m */,
+				566E81981609A2AA00A333EA /* XMPPMessageArchiving_Message_CoreDataObject.h */,
+				566E81991609A2AA00A333EA /* XMPPMessageArchiving_Message_CoreDataObject.m */,
+				566E819A1609A2AA00A333EA /* XMPPMessageArchivingCoreDataStorage.h */,
+				566E819B1609A2AA00A333EA /* XMPPMessageArchivingCoreDataStorage.m */,
+			);
+			path = CoreDataStorage;
+			sourceTree = "<group>";
+		};
+		566E819E1609A2AA00A333EA /* XEP-0153 */ = {
+			isa = PBXGroup;
+			children = (
+				566E819F1609A2AA00A333EA /* XMPPvCardAvatarModule.h */,
+				566E81A01609A2AA00A333EA /* XMPPvCardAvatarModule.m */,
+			);
+			path = "XEP-0153";
+			sourceTree = "<group>";
+		};
+		566E81A11609A2AA00A333EA /* XEP-0184 */ = {
+			isa = PBXGroup;
+			children = (
+				566E81A21609A2AA00A333EA /* XMPPMessage+XEP_0184.h */,
+				566E81A31609A2AA00A333EA /* XMPPMessage+XEP_0184.m */,
+			);
+			path = "XEP-0184";
+			sourceTree = "<group>";
+		};
+		566E81A41609A2AA00A333EA /* XEP-0199 */ = {
+			isa = PBXGroup;
+			children = (
+				566E81A51609A2AA00A333EA /* XMPPAutoPing.h */,
+				566E81A61609A2AA00A333EA /* XMPPAutoPing.m */,
+				566E81A71609A2AA00A333EA /* XMPPPing.h */,
+				566E81A81609A2AA00A333EA /* XMPPPing.m */,
+			);
+			path = "XEP-0199";
+			sourceTree = "<group>";
+		};
+		566E81A91609A2AA00A333EA /* XEP-0202 */ = {
+			isa = PBXGroup;
+			children = (
+				566E81AA1609A2AA00A333EA /* XMPPAutoTime.h */,
+				566E81AB1609A2AA00A333EA /* XMPPAutoTime.m */,
+				566E81AC1609A2AA00A333EA /* XMPPTime.h */,
+				566E81AD1609A2AA00A333EA /* XMPPTime.m */,
+			);
+			path = "XEP-0202";
+			sourceTree = "<group>";
+		};
+		566E81AE1609A2AA00A333EA /* XEP-0203 */ = {
+			isa = PBXGroup;
+			children = (
+				566E81AF1609A2AA00A333EA /* XMPPElement+Delay.h */,
+				566E81B01609A2AA00A333EA /* XMPPElement+Delay.m */,
+			);
+			path = "XEP-0203";
+			sourceTree = "<group>";
+		};
+		566E81B61609A2AA00A333EA /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				566E81B71609A2AA00A333EA /* DDList.h */,
+				566E81B81609A2AA00A333EA /* DDList.m */,
+				566E81B91609A2AA00A333EA /* GCDMulticastDelegate.h */,
+				566E81BA1609A2AA00A333EA /* GCDMulticastDelegate.m */,
+				566E81BB1609A2AA00A333EA /* LibIDN.h */,
+				566E81BC1609A2AA00A333EA /* LibIDN.m */,
+				566E81BD1609A2AA00A333EA /* RFImageToDataTransformer.h */,
+				566E81BE1609A2AA00A333EA /* RFImageToDataTransformer.m */,
+				566E81BF1609A2AA00A333EA /* XMPPIDTracker.h */,
+				566E81C01609A2AA00A333EA /* XMPPIDTracker.m */,
+				566E81C11609A2AA00A333EA /* XMPPSRVResolver.h */,
+				566E81C21609A2AA00A333EA /* XMPPSRVResolver.m */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		566E81C31609A2AA00A333EA /* Vendor */ = {
+			isa = PBXGroup;
+			children = (
+				566E81C41609A2AA00A333EA /* CocoaAsyncSocket */,
+				566E81C71609A2AA00A333EA /* CocoaLumberjack */,
+				566E81D81609A2AA00A333EA /* KissXML */,
+				566E81E51609A2AA00A333EA /* libidn */,
+			);
+			path = Vendor;
+			sourceTree = "<group>";
+		};
+		566E81C41609A2AA00A333EA /* CocoaAsyncSocket */ = {
+			isa = PBXGroup;
+			children = (
+				566E81C51609A2AA00A333EA /* GCDAsyncSocket.h */,
+				566E81C61609A2AA00A333EA /* GCDAsyncSocket.m */,
+			);
+			path = CocoaAsyncSocket;
+			sourceTree = "<group>";
+		};
+		566E81C71609A2AA00A333EA /* CocoaLumberjack */ = {
+			isa = PBXGroup;
+			children = (
+				566E81C81609A2AA00A333EA /* DDAbstractDatabaseLogger.h */,
+				566E81C91609A2AA00A333EA /* DDAbstractDatabaseLogger.m */,
+				566E81CA1609A2AA00A333EA /* DDASLLogger.h */,
+				566E81CB1609A2AA00A333EA /* DDASLLogger.m */,
+				566E81CC1609A2AA00A333EA /* DDFileLogger.h */,
+				566E81CD1609A2AA00A333EA /* DDFileLogger.m */,
+				566E81CE1609A2AA00A333EA /* DDLog.h */,
+				566E81CF1609A2AA00A333EA /* DDLog.m */,
+				566E81D01609A2AA00A333EA /* DDTTYLogger.h */,
+				566E81D11609A2AA00A333EA /* DDTTYLogger.m */,
+				566E81D21609A2AA00A333EA /* Extensions */,
+			);
+			path = CocoaLumberjack;
+			sourceTree = "<group>";
+		};
+		566E81D21609A2AA00A333EA /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				566E81D31609A2AA00A333EA /* ContextFilterLogFormatter.h */,
+				566E81D41609A2AA00A333EA /* ContextFilterLogFormatter.m */,
+				566E81D51609A2AA00A333EA /* DispatchQueueLogFormatter.h */,
+				566E81D61609A2AA00A333EA /* DispatchQueueLogFormatter.m */,
+				566E81D71609A2AA00A333EA /* README.txt */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		566E81D81609A2AA00A333EA /* KissXML */ = {
+			isa = PBXGroup;
+			children = (
+				566E81D91609A2AA00A333EA /* Categories */,
+				566E81DC1609A2AA00A333EA /* DDXML.h */,
+				566E81DD1609A2AA00A333EA /* DDXMLDocument.h */,
+				566E81DE1609A2AA00A333EA /* DDXMLDocument.m */,
+				566E81DF1609A2AA00A333EA /* DDXMLElement.h */,
+				566E81E01609A2AA00A333EA /* DDXMLElement.m */,
+				566E81E11609A2AA00A333EA /* DDXMLNode.h */,
+				566E81E21609A2AA00A333EA /* DDXMLNode.m */,
+				566E81E31609A2AA00A333EA /* Private */,
+			);
+			path = KissXML;
+			sourceTree = "<group>";
+		};
+		566E81D91609A2AA00A333EA /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				566E81DA1609A2AA00A333EA /* NSString+DDXML.h */,
+				566E81DB1609A2AA00A333EA /* NSString+DDXML.m */,
+			);
+			path = Categories;
+			sourceTree = "<group>";
+		};
+		566E81E31609A2AA00A333EA /* Private */ = {
+			isa = PBXGroup;
+			children = (
+				566E81E41609A2AA00A333EA /* DDXMLPrivate.h */,
+			);
+			path = Private;
+			sourceTree = "<group>";
+		};
+		566E81E51609A2AA00A333EA /* libidn */ = {
+			isa = PBXGroup;
+			children = (
+				566E81E61609A2AA00A333EA /* idn-int.h */,
+				566E81E71609A2AA00A333EA /* libidn.a */,
+				566E81E81609A2AA00A333EA /* stringprep.h */,
+			);
+			path = libidn;
+			sourceTree = "<group>";
+		};
+		566E825E1609A5FE00A333EA /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				566E80B51609A24C00A333EA /* iMedia.xcdatamodeld */,
+				562DE717160AD32500F782D2 /* Message.h */,
+				562DE718160AD32500F782D2 /* Message.m */,
+				566E82691609AF8A00A333EA /* User.h */,
+				566E826A1609AF8A00A333EA /* User.m */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		566E825F1609A61B00A333EA /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				566E82601609A77D00A333EA /* ContactListViewController.h */,
+				566E82611609A77D00A333EA /* ContactListViewController.m */,
+				566E82661609AF2700A333EA /* ContactDetailController.h */,
+				566E82671609AF2700A333EA /* ContactDetailController.m */,
+				566E82631609A79B00A333EA /* ChatListViewController.h */,
+				566E82641609A79B00A333EA /* ChatListViewController.m */,
+				562DE703160ABFA100F782D2 /* ChatDetailController.h */,
+				562DE704160ABFA100F782D2 /* ChatDetailController.m */,
+			);
+			name = ViewControllers;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		566E809C1609A24C00A333EA /* iMedia */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 566E80D01609A24C00A333EA /* Build configuration list for PBXNativeTarget "iMedia" */;
+			buildPhases = (
+				566E80991609A24C00A333EA /* Sources */,
+				566E809A1609A24C00A333EA /* Frameworks */,
+				566E809B1609A24C00A333EA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5646FB22160F245600175B78 /* PBXTargetDependency */,
+			);
+			name = iMedia;
+			productName = iMedia;
+			productReference = 566E809D1609A24C00A333EA /* iMedia.app */;
+			productType = "com.apple.product-type.application";
+		};
+		566E80BC1609A24C00A333EA /* iMediaTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 566E80D31609A24C00A333EA /* Build configuration list for PBXNativeTarget "iMediaTests" */;
+			buildPhases = (
+				566E80B81609A24C00A333EA /* Sources */,
+				566E80B91609A24C00A333EA /* Frameworks */,
+				566E80BA1609A24C00A333EA /* Resources */,
+				566E80BB1609A24C00A333EA /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				566E80C41609A24C00A333EA /* PBXTargetDependency */,
+			);
+			name = iMediaTests;
+			productName = iMediaTests;
+			productReference = 566E80BD1609A24C00A333EA /* iMediaTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		566E80941609A24C00A333EA /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0440;
+				ORGANIZATIONNAME = "Li Xiaosi";
+			};
+			buildConfigurationList = 566E80971609A24C00A333EA /* Build configuration list for PBXProject "iMedia" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 566E80921609A24C00A333EA;
+			productRefGroup = 566E809E1609A24C00A333EA /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 5646FB12160F243200175B78 /* Products */;
+					ProjectRef = 5646FB11160F243200175B78 /* CocoaPlant.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				566E809C1609A24C00A333EA /* iMedia */,
+				566E80BC1609A24C00A333EA /* iMediaTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		5646FB1C160F243200175B78 /* libCocoaPlant.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libCocoaPlant.a;
+			remoteRef = 5646FB1B160F243200175B78 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		5646FB1E160F243200175B78 /* CocoaPlantApp.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = CocoaPlantApp.app;
+			remoteRef = 5646FB1D160F243200175B78 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		5646FB20160F243200175B78 /* CocoaPlantSpecs.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = CocoaPlantSpecs.octest;
+			remoteRef = 5646FB1F160F243200175B78 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		566E809B1609A24C00A333EA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				566E80AE1609A24C00A333EA /* InfoPlist.strings in Resources */,
+				566E824D1609A2AA00A333EA /* README.txt in Resources */,
+				562DE70F160AC3C600F782D2 /* bubbleMine.png in Resources */,
+				562DE710160AC3C600F782D2 /* bubbleMine@2x.png in Resources */,
+				562DE711160AC3C600F782D2 /* bubbleSomeone.png in Resources */,
+				562DE712160AC3C600F782D2 /* bubbleSomeone@2x.png in Resources */,
+				562DE713160AC3C600F782D2 /* typingMine.png in Resources */,
+				562DE714160AC3C600F782D2 /* typingMine@2x.png in Resources */,
+				562DE715160AC3C600F782D2 /* typingSomeone.png in Resources */,
+				562DE716160AC3C600F782D2 /* typingSomeone@2x.png in Resources */,
+				562DE73C160AFCDB00F782D2 /* UIBubbleTableViewCell.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		566E80BA1609A24C00A333EA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				566E80CA1609A24C00A333EA /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		566E80BB1609A24C00A333EA /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		566E80991609A24C00A333EA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				562DE73E160B02E900F782D2 /* HandleNewMessage.h in Sources */,
+				566E826D1609B79900A333EA /* LayoutConst.h in Sources */,
+				566E80B01609A24C00A333EA /* main.m in Sources */,
+				566E80B41609A24C00A333EA /* AppDelegate.m in Sources */,
+				566E80B71609A24C00A333EA /* iMedia.xcdatamodeld in Sources */,
+				566E81E91609A2AA00A333EA /* XMPPAnonymousAuthentication.m in Sources */,
+				566E81EA1609A2AA00A333EA /* XMPPDeprecatedDigestAuthentication.m in Sources */,
+				566E81EB1609A2AA00A333EA /* XMPPDeprecatedPlainAuthentication.m in Sources */,
+				566E81EC1609A2AA00A333EA /* XMPPDigestMD5Authentication.m in Sources */,
+				566E81ED1609A2AA00A333EA /* XMPPPlainAuthentication.m in Sources */,
+				566E81EE1609A2AA00A333EA /* XMPPXFacebookPlatformAuthentication.m in Sources */,
+				566E81EF1609A2AA00A333EA /* NSData+XMPP.m in Sources */,
+				566E81F01609A2AA00A333EA /* NSNumber+XMPP.m in Sources */,
+				566E81F11609A2AA00A333EA /* NSXMLElement+XMPP.m in Sources */,
+				566E81F21609A2AA00A333EA /* XMPPElement.m in Sources */,
+				566E81F31609A2AA00A333EA /* XMPPIQ.m in Sources */,
+				566E81F41609A2AA00A333EA /* XMPPJID.m in Sources */,
+				566E81F51609A2AA00A333EA /* XMPPMessage.m in Sources */,
+				566E81F61609A2AA00A333EA /* XMPPModule.m in Sources */,
+				566E81F71609A2AA00A333EA /* XMPPParser.m in Sources */,
+				566E81F81609A2AA00A333EA /* XMPPPresence.m in Sources */,
+				566E81F91609A2AA00A333EA /* XMPPStream.m in Sources */,
+				566E81FA1609A2AA00A333EA /* XMPPBandwidthMonitor.m in Sources */,
+				566E81FB1609A2AA00A333EA /* XMPPCoreDataStorage.m in Sources */,
+				566E81FC1609A2AA00A333EA /* XMPPProcessOne.m in Sources */,
+				566E81FD1609A2AA00A333EA /* XMPPReconnect.m in Sources */,
+				566E81FE1609A2AA00A333EA /* XMPPGroupCoreDataStorageObject.m in Sources */,
+				566E81FF1609A2AA00A333EA /* XMPPResourceCoreDataStorageObject.m in Sources */,
+				566E82001609A2AA00A333EA /* XMPPRoster.xcdatamodel in Sources */,
+				566E82011609A2AA00A333EA /* XMPPRosterCoreDataStorage.m in Sources */,
+				566E82021609A2AA00A333EA /* XMPPUserCoreDataStorageObject.m in Sources */,
+				566E82031609A2AA00A333EA /* XMPPResourceMemoryStorageObject.m in Sources */,
+				566E82041609A2AA00A333EA /* XMPPRosterMemoryStorage.m in Sources */,
+				566E82051609A2AA00A333EA /* XMPPUserMemoryStorageObject.m in Sources */,
+				566E82061609A2AA00A333EA /* XMPPRoster.m in Sources */,
+				566E82071609A2AA00A333EA /* XMPPIQ+JabberRPC.m in Sources */,
+				566E82081609A2AA00A333EA /* XMPPIQ+JabberRPCResonse.m in Sources */,
+				566E82091609A2AA00A333EA /* XMPPJabberRPCModule.m in Sources */,
+				566E820A1609A2AA00A333EA /* XMPPPrivacy.m in Sources */,
+				566E820B1609A2AA00A333EA /* XMPPRoom.xcdatamodeld in Sources */,
+				566E820C1609A2AA00A333EA /* XMPPRoomCoreDataStorage.m in Sources */,
+				566E820D1609A2AA00A333EA /* XMPPRoomMessageCoreDataStorageObject.m in Sources */,
+				566E820E1609A2AA00A333EA /* XMPPRoomOccupantCoreDataStorageObject.m in Sources */,
+				566E820F1609A2AA00A333EA /* XMPPRoomHybrid.xcdatamodeld in Sources */,
+				566E82101609A2AA00A333EA /* XMPPRoomHybridStorage.m in Sources */,
+				566E82111609A2AA00A333EA /* XMPPRoomMessageHybridCoreDataStorageObject.m in Sources */,
+				566E82121609A2AA00A333EA /* XMPPRoomOccupantHybridMemoryStorageObject.m in Sources */,
+				566E82131609A2AA00A333EA /* XMPPRoomMemoryStorage.m in Sources */,
+				566E82141609A2AA00A333EA /* XMPPRoomMessageMemoryStorageObject.m in Sources */,
+				566E82151609A2AA00A333EA /* XMPPRoomOccupantMemoryStorageObject.m in Sources */,
+				566E82161609A2AA00A333EA /* XMPPMessage+XEP0045.m in Sources */,
+				566E82171609A2AA00A333EA /* XMPPMUC.m in Sources */,
+				566E82181609A2AA00A333EA /* XMPPRoom.m in Sources */,
+				566E82191609A2AA00A333EA /* XMPPvCard.xcdatamodeld in Sources */,
+				566E821A1609A2AA00A333EA /* XMPPvCardAvatarCoreDataStorageObject.m in Sources */,
+				566E821B1609A2AA00A333EA /* XMPPvCardCoreDataStorage.m in Sources */,
+				566E821C1609A2AA00A333EA /* XMPPvCardCoreDataStorageObject.m in Sources */,
+				566E821D1609A2AA00A333EA /* XMPPvCardTempCoreDataStorageObject.m in Sources */,
+				566E821E1609A2AA00A333EA /* XMPPvCardTemp.m in Sources */,
+				566E821F1609A2AA00A333EA /* XMPPvCardTempAdr.m in Sources */,
+				566E82201609A2AA00A333EA /* XMPPvCardTempAdrTypes.m in Sources */,
+				566E82211609A2AA00A333EA /* XMPPvCardTempBase.m in Sources */,
+				566E82221609A2AA00A333EA /* XMPPvCardTempEmail.m in Sources */,
+				566E82231609A2AA00A333EA /* XMPPvCardTempLabel.m in Sources */,
+				566E82241609A2AA00A333EA /* XMPPvCardTempModule.m in Sources */,
+				566E82251609A2AA00A333EA /* XMPPvCardTempTel.m in Sources */,
+				566E82261609A2AA00A333EA /* XMPPPubSub.m in Sources */,
+				566E82271609A2AA00A333EA /* TURNSocket.m in Sources */,
+				566E82281609A2AA00A333EA /* NSDate+XMPPDateTimeProfiles.m in Sources */,
+				566E82291609A2AA00A333EA /* XMPPDateTimeProfiles.m in Sources */,
+				566E822A1609A2AA00A333EA /* XMPPMessage+XEP_0085.m in Sources */,
+				566E822B1609A2AA00A333EA /* XMPPTransports.m in Sources */,
+				566E822C1609A2AA00A333EA /* XMPPCapabilities.xcdatamodel in Sources */,
+				566E822D1609A2AA00A333EA /* XMPPCapabilitiesCoreDataStorage.m in Sources */,
+				566E822E1609A2AA00A333EA /* XMPPCapsCoreDataStorageObject.m in Sources */,
+				566E822F1609A2AA00A333EA /* XMPPCapsResourceCoreDataStorageObject.m in Sources */,
+				566E82301609A2AA00A333EA /* XMPPCapabilities.m in Sources */,
+				566E82311609A2AA00A333EA /* XMPPMessageArchiving.xcdatamodeld in Sources */,
+				566E82321609A2AA00A333EA /* XMPPMessageArchiving_Contact_CoreDataObject.m in Sources */,
+				566E82331609A2AA00A333EA /* XMPPMessageArchiving_Message_CoreDataObject.m in Sources */,
+				566E82341609A2AA00A333EA /* XMPPMessageArchivingCoreDataStorage.m in Sources */,
+				566E82351609A2AA00A333EA /* XMPPMessageArchiving.m in Sources */,
+				566E82361609A2AA00A333EA /* XMPPvCardAvatarModule.m in Sources */,
+				566E82371609A2AA00A333EA /* XMPPMessage+XEP_0184.m in Sources */,
+				566E82381609A2AA00A333EA /* XMPPAutoPing.m in Sources */,
+				566E82391609A2AA00A333EA /* XMPPPing.m in Sources */,
+				566E823A1609A2AA00A333EA /* XMPPAutoTime.m in Sources */,
+				566E823B1609A2AA00A333EA /* XMPPTime.m in Sources */,
+				566E823C1609A2AA00A333EA /* XMPPElement+Delay.m in Sources */,
+				566E823F1609A2AA00A333EA /* DDList.m in Sources */,
+				566E82401609A2AA00A333EA /* GCDMulticastDelegate.m in Sources */,
+				566E82411609A2AA00A333EA /* LibIDN.m in Sources */,
+				566E82421609A2AA00A333EA /* RFImageToDataTransformer.m in Sources */,
+				566E82431609A2AA00A333EA /* XMPPIDTracker.m in Sources */,
+				566E82441609A2AA00A333EA /* XMPPSRVResolver.m in Sources */,
+				566E82451609A2AA00A333EA /* GCDAsyncSocket.m in Sources */,
+				566E82461609A2AA00A333EA /* DDAbstractDatabaseLogger.m in Sources */,
+				566E82471609A2AA00A333EA /* DDASLLogger.m in Sources */,
+				566E82481609A2AA00A333EA /* DDFileLogger.m in Sources */,
+				566E82491609A2AA00A333EA /* DDLog.m in Sources */,
+				566E824A1609A2AA00A333EA /* DDTTYLogger.m in Sources */,
+				566E824B1609A2AA00A333EA /* ContextFilterLogFormatter.m in Sources */,
+				566E824C1609A2AA00A333EA /* DispatchQueueLogFormatter.m in Sources */,
+				566E824E1609A2AA00A333EA /* NSString+DDXML.m in Sources */,
+				566E824F1609A2AA00A333EA /* DDXMLDocument.m in Sources */,
+				566E82501609A2AA00A333EA /* DDXMLElement.m in Sources */,
+				566E82511609A2AA00A333EA /* DDXMLNode.m in Sources */,
+				566E82621609A77D00A333EA /* ContactListViewController.m in Sources */,
+				566E82651609A79B00A333EA /* ChatListViewController.m in Sources */,
+				566E82681609AF2700A333EA /* ContactDetailController.m in Sources */,
+				566E826B1609AF8A00A333EA /* User.m in Sources */,
+				562DE705160ABFA100F782D2 /* ChatDetailController.m in Sources */,
+				562DE719160AD32500F782D2 /* Message.m in Sources */,
+				562DE738160AFCDB00F782D2 /* NSBubbleData.m in Sources */,
+				562DE739160AFCDB00F782D2 /* NSBubbleDataInternal.m in Sources */,
+				562DE73A160AFCDB00F782D2 /* UIBubbleTableView.m in Sources */,
+				562DE73B160AFCDB00F782D2 /* UIBubbleTableViewCell.m in Sources */,
+				5646FAFB160D4BA700175B78 /* ACPlaceholderTextView.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		566E80B81609A24C00A333EA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				566E80CD1609A24C00A333EA /* iMediaTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		5646FB22160F245600175B78 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = CocoaPlant;
+			targetProxy = 5646FB21160F245600175B78 /* PBXContainerItemProxy */;
+		};
+		566E80C41609A24C00A333EA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 566E809C1609A24C00A333EA /* iMedia */;
+			targetProxy = 566E80C31609A24C00A333EA /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		566E80AC1609A24C00A333EA /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				566E80AD1609A24C00A333EA /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		566E80C81609A24C00A333EA /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				566E80C91609A24C00A333EA /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		566E80CE1609A24C00A333EA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = Libraries/CocoaPlant;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-force_load",
+					"${BUILT_PRODUCTS_DIR}/libCocoaPlant.a",
+				);
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		566E80CF1609A24C00A333EA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = Libraries/CocoaPlant;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-force_load",
+					"${BUILT_PRODUCTS_DIR}/libCocoaPlant.a",
+				);
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		566E80D11609A24C00A333EA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "iMedia/iMedia-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					/usr/include/libxml2,
+					Libraries/CocoaPlant,
+				);
+				INFOPLIST_FILE = "iMedia/iMedia-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/iMedia/XMPPFramework/Vendor/libidn\"",
+				);
+				OTHER_LDFLAGS = "-lxml2";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		566E80D21609A24C00A333EA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "iMedia/iMedia-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					/usr/include/libxml2,
+					Libraries/CocoaPlant,
+				);
+				INFOPLIST_FILE = "iMedia/iMedia-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/iMedia/XMPPFramework/Vendor/libidn\"",
+				);
+				OTHER_LDFLAGS = "-lxml2";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		566E80D41609A24C00A333EA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/iMedia.app/iMedia";
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "iMedia/iMedia-Prefix.pch";
+				INFOPLIST_FILE = "iMediaTests/iMediaTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		566E80D51609A24C00A333EA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/iMedia.app/iMedia";
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "iMedia/iMedia-Prefix.pch";
+				INFOPLIST_FILE = "iMediaTests/iMediaTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		566E80971609A24C00A333EA /* Build configuration list for PBXProject "iMedia" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				566E80CE1609A24C00A333EA /* Debug */,
+				566E80CF1609A24C00A333EA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		566E80D01609A24C00A333EA /* Build configuration list for PBXNativeTarget "iMedia" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				566E80D11609A24C00A333EA /* Debug */,
+				566E80D21609A24C00A333EA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		566E80D31609A24C00A333EA /* Build configuration list for PBXNativeTarget "iMediaTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				566E80D41609A24C00A333EA /* Debug */,
+				566E80D51609A24C00A333EA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		566E80B51609A24C00A333EA /* iMedia.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				566E80B61609A24C00A333EA /* iMedia.xcdatamodel */,
+			);
+			currentVersion = 566E80B61609A24C00A333EA /* iMedia.xcdatamodel */;
+			path = iMedia.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+		566E81381609A2AA00A333EA /* XMPPRoom.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				566E81391609A2AA00A333EA /* XMPPRoom.xcdatamodel */,
+			);
+			currentVersion = 566E81391609A2AA00A333EA /* XMPPRoom.xcdatamodel */;
+			path = XMPPRoom.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+		566E81411609A2AA00A333EA /* XMPPRoomHybrid.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				566E81421609A2AA00A333EA /* XMPPRoomHybrid.xcdatamodel */,
+			);
+			currentVersion = 566E81421609A2AA00A333EA /* XMPPRoomHybrid.xcdatamodel */;
+			path = XMPPRoomHybrid.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+		566E815C1609A2AA00A333EA /* XMPPvCard.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				566E815D1609A2AA00A333EA /* XMPPvCard.xcdatamodel */,
+			);
+			currentVersion = 566E815D1609A2AA00A333EA /* XMPPvCard.xcdatamodel */;
+			path = XMPPvCard.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+		566E81941609A2AA00A333EA /* XMPPMessageArchiving.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				566E81951609A2AA00A333EA /* XMPPMessageArchiving.xcdatamodel */,
+			);
+			currentVersion = 566E81951609A2AA00A333EA /* XMPPMessageArchiving.xcdatamodel */;
+			path = XMPPMessageArchiving.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 566E80941609A24C00A333EA /* Project object */;
+}

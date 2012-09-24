@@ -1,0 +1,3 @@
+[submodule "Libraries/CocoaPlant"]
+	path = Libraries/CocoaPlant
+	url = https://github.com/acani/CocoaPlant.git
