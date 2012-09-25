@@ -16,13 +16,11 @@
 		562DE714160AC3C600F782D2 /* typingMine@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 562DE70C160AC3C600F782D2 /* typingMine@2x.png */; };
 		562DE715160AC3C600F782D2 /* typingSomeone.png in Resources */ = {isa = PBXBuildFile; fileRef = 562DE70D160AC3C600F782D2 /* typingSomeone.png */; };
 		562DE716160AC3C600F782D2 /* typingSomeone@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 562DE70E160AC3C600F782D2 /* typingSomeone@2x.png */; };
-		562DE719160AD32500F782D2 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 562DE718160AD32500F782D2 /* Message.m */; };
 		562DE738160AFCDB00F782D2 /* NSBubbleData.m in Sources */ = {isa = PBXBuildFile; fileRef = 562DE72F160AFCDB00F782D2 /* NSBubbleData.m */; };
 		562DE739160AFCDB00F782D2 /* NSBubbleDataInternal.m in Sources */ = {isa = PBXBuildFile; fileRef = 562DE731160AFCDB00F782D2 /* NSBubbleDataInternal.m */; };
 		562DE73A160AFCDB00F782D2 /* UIBubbleTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 562DE733160AFCDB00F782D2 /* UIBubbleTableView.m */; };
 		562DE73B160AFCDB00F782D2 /* UIBubbleTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 562DE735160AFCDB00F782D2 /* UIBubbleTableViewCell.m */; };
 		562DE73C160AFCDB00F782D2 /* UIBubbleTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 562DE736160AFCDB00F782D2 /* UIBubbleTableViewCell.xib */; };
-		562DE73E160B02E900F782D2 /* HandleNewMessage.h in Sources */ = {isa = PBXBuildFile; fileRef = 562DE73D160B027000F782D2 /* HandleNewMessage.h */; };
 		562DE7651610446000F782D2 /* MessageInputBarBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 562DE75D1610446000F782D2 /* MessageInputBarBackground.png */; };
 		562DE7661610446000F782D2 /* MessageInputBarBackground@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 562DE75E1610446000F782D2 /* MessageInputBarBackground@2x.png */; };
 		562DE7671610446000F782D2 /* MessageInputFieldBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 562DE75F1610446000F782D2 /* MessageInputFieldBackground.png */; };
@@ -31,6 +29,10 @@
 		562DE76A1610446000F782D2 /* SendButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 562DE7621610446000F782D2 /* SendButton@2x.png */; };
 		562DE76B1610446000F782D2 /* SendButtonHighlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 562DE7631610446000F782D2 /* SendButtonHighlighted.png */; };
 		562DE76C1610446000F782D2 /* SendButtonHighlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 562DE7641610446000F782D2 /* SendButtonHighlighted@2x.png */; };
+		562DE76F161186B100F782D2 /* Conversation.m in Sources */ = {isa = PBXBuildFile; fileRef = 562DE76E161186B100F782D2 /* Conversation.m */; };
+		562DE775161186D700F782D2 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 562DE774161186D700F782D2 /* User.m */; };
+		562DE77716118E9800F782D2 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 562DE77616118E9700F782D2 /* AudioToolbox.framework */; };
+		562DE77A1611991400F782D2 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 562DE7791611991400F782D2 /* Message.m */; };
 		5646FAFB160D4BA700175B78 /* ACPlaceholderTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5646FAFA160D4BA700175B78 /* ACPlaceholderTextView.m */; };
 		5646FAFD160D4BC400175B78 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5646FAFC160D4BC400175B78 /* QuartzCore.framework */; };
 		5646FAFF160F1EBF00175B78 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5646FAFE160F1EBF00175B78 /* libicucore.dylib */; };
@@ -159,9 +161,8 @@
 		566E825B1609A44900A333EA /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 566E825A1609A44900A333EA /* CFNetwork.framework */; };
 		566E825D1609A48900A333EA /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 566E825C1609A48900A333EA /* SystemConfiguration.framework */; };
 		566E82621609A77D00A333EA /* ContactListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E82611609A77D00A333EA /* ContactListViewController.m */; };
-		566E82651609A79B00A333EA /* ChatListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E82641609A79B00A333EA /* ChatListViewController.m */; };
+		566E82651609A79B00A333EA /* ConversationsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E82641609A79B00A333EA /* ConversationsController.m */; };
 		566E82681609AF2700A333EA /* ContactDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E82671609AF2700A333EA /* ContactDetailController.m */; };
-		566E826B1609AF8A00A333EA /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E826A1609AF8A00A333EA /* User.m */; };
 		566E826D1609B79900A333EA /* LayoutConst.h in Sources */ = {isa = PBXBuildFile; fileRef = 566E826C1609B58100A333EA /* LayoutConst.h */; };
 /* End PBXBuildFile section */
 
@@ -214,8 +215,6 @@
 		562DE70C160AC3C600F782D2 /* typingMine@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "typingMine@2x.png"; path = "Resources/typingMine@2x.png"; sourceTree = "<group>"; };
 		562DE70D160AC3C600F782D2 /* typingSomeone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = typingSomeone.png; path = Resources/typingSomeone.png; sourceTree = "<group>"; };
 		562DE70E160AC3C600F782D2 /* typingSomeone@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "typingSomeone@2x.png"; path = "Resources/typingSomeone@2x.png"; sourceTree = "<group>"; };
-		562DE717160AD32500F782D2 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Message.h; path = Models/Message.h; sourceTree = "<group>"; };
-		562DE718160AD32500F782D2 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Message.m; path = Models/Message.m; sourceTree = "<group>"; };
 		562DE72E160AFCDB00F782D2 /* NSBubbleData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSBubbleData.h; path = iMedia/NSBubbleData/NSBubbleData.h; sourceTree = SOURCE_ROOT; };
 		562DE72F160AFCDB00F782D2 /* NSBubbleData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSBubbleData.m; path = iMedia/NSBubbleData/NSBubbleData.m; sourceTree = SOURCE_ROOT; };
 		562DE730160AFCDB00F782D2 /* NSBubbleDataInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSBubbleDataInternal.h; path = iMedia/NSBubbleData/NSBubbleDataInternal.h; sourceTree = SOURCE_ROOT; };
@@ -226,7 +225,6 @@
 		562DE735160AFCDB00F782D2 /* UIBubbleTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIBubbleTableViewCell.m; path = iMedia/NSBubbleData/UIBubbleTableViewCell.m; sourceTree = SOURCE_ROOT; };
 		562DE736160AFCDB00F782D2 /* UIBubbleTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = UIBubbleTableViewCell.xib; path = iMedia/NSBubbleData/UIBubbleTableViewCell.xib; sourceTree = SOURCE_ROOT; };
 		562DE737160AFCDB00F782D2 /* UIBubbleTableViewDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIBubbleTableViewDataSource.h; path = iMedia/NSBubbleData/UIBubbleTableViewDataSource.h; sourceTree = SOURCE_ROOT; };
-		562DE73D160B027000F782D2 /* HandleNewMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HandleNewMessage.h; path = Protocols/HandleNewMessage.h; sourceTree = "<group>"; };
 		562DE75D1610446000F782D2 /* MessageInputBarBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MessageInputBarBackground.png; path = Resources/MessageInputBarBackground.png; sourceTree = "<group>"; };
 		562DE75E1610446000F782D2 /* MessageInputBarBackground@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "MessageInputBarBackground@2x.png"; path = "Resources/MessageInputBarBackground@2x.png"; sourceTree = "<group>"; };
 		562DE75F1610446000F782D2 /* MessageInputFieldBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MessageInputFieldBackground.png; path = Resources/MessageInputFieldBackground.png; sourceTree = "<group>"; };
@@ -235,6 +233,13 @@
 		562DE7621610446000F782D2 /* SendButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "SendButton@2x.png"; path = "Resources/SendButton@2x.png"; sourceTree = "<group>"; };
 		562DE7631610446000F782D2 /* SendButtonHighlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = SendButtonHighlighted.png; path = Resources/SendButtonHighlighted.png; sourceTree = "<group>"; };
 		562DE7641610446000F782D2 /* SendButtonHighlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "SendButtonHighlighted@2x.png"; path = "Resources/SendButtonHighlighted@2x.png"; sourceTree = "<group>"; };
+		562DE76D161186B100F782D2 /* Conversation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Conversation.h; path = Models/Conversation.h; sourceTree = "<group>"; };
+		562DE76E161186B100F782D2 /* Conversation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Conversation.m; path = Models/Conversation.m; sourceTree = "<group>"; };
+		562DE773161186D700F782D2 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = User.h; path = Models/User.h; sourceTree = "<group>"; };
+		562DE774161186D700F782D2 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = User.m; path = Models/User.m; sourceTree = "<group>"; };
+		562DE77616118E9700F782D2 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		562DE7781611991400F782D2 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Message.h; path = Models/Message.h; sourceTree = "<group>"; };
+		562DE7791611991400F782D2 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Message.m; path = Models/Message.m; sourceTree = "<group>"; };
 		5646FAF9160D4BA700175B78 /* ACPlaceholderTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ACPlaceholderTextView.h; sourceTree = "<group>"; };
 		5646FAFA160D4BA700175B78 /* ACPlaceholderTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ACPlaceholderTextView.m; sourceTree = "<group>"; };
 		5646FAFC160D4BC400175B78 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -483,12 +488,10 @@
 		566E825C1609A48900A333EA /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		566E82601609A77D00A333EA /* ContactListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContactListViewController.h; path = ViewControllers/ContactListViewController.h; sourceTree = "<group>"; };
 		566E82611609A77D00A333EA /* ContactListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContactListViewController.m; path = ViewControllers/ContactListViewController.m; sourceTree = "<group>"; };
-		566E82631609A79B00A333EA /* ChatListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChatListViewController.h; path = ViewControllers/ChatListViewController.h; sourceTree = "<group>"; };
-		566E82641609A79B00A333EA /* ChatListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChatListViewController.m; path = ViewControllers/ChatListViewController.m; sourceTree = "<group>"; };
+		566E82631609A79B00A333EA /* ConversationsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConversationsController.h; path = ViewControllers/ConversationsController.h; sourceTree = "<group>"; };
+		566E82641609A79B00A333EA /* ConversationsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ConversationsController.m; path = ViewControllers/ConversationsController.m; sourceTree = "<group>"; };
 		566E82661609AF2700A333EA /* ContactDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContactDetailController.h; path = ViewControllers/ContactDetailController.h; sourceTree = "<group>"; };
 		566E82671609AF2700A333EA /* ContactDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContactDetailController.m; path = ViewControllers/ContactDetailController.m; sourceTree = "<group>"; };
-		566E82691609AF8A00A333EA /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = User.h; path = Models/User.h; sourceTree = "<group>"; };
-		566E826A1609AF8A00A333EA /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = User.m; path = Models/User.m; sourceTree = "<group>"; };
 		566E826C1609B58100A333EA /* LayoutConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LayoutConst.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -497,6 +500,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				562DE77716118E9800F782D2 /* AudioToolbox.framework in Frameworks */,
 				5646FB23160F246500175B78 /* libCocoaPlant.a in Frameworks */,
 				5646FAFF160F1EBF00175B78 /* libicucore.dylib in Frameworks */,
 				5646FAFD160D4BC400175B78 /* QuartzCore.framework in Frameworks */,
@@ -618,6 +622,7 @@
 		566E80A01609A24C00A333EA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				562DE77616118E9700F782D2 /* AudioToolbox.framework */,
 				5646FAFE160F1EBF00175B78 /* libicucore.dylib */,
 				5646FAFC160D4BC400175B78 /* QuartzCore.framework */,
 				566E825C1609A48900A333EA /* SystemConfiguration.framework */,
@@ -642,7 +647,6 @@
 				566E82531609A2E500A333EA /* XMPPFramework.h */,
 				566E80B21609A24C00A333EA /* AppDelegate.h */,
 				566E80B31609A24C00A333EA /* AppDelegate.m */,
-				562DE73D160B027000F782D2 /* HandleNewMessage.h */,
 				566E826C1609B58100A333EA /* LayoutConst.h */,
 				5646FAF7160D4B7B00175B78 /* Views */,
 				566E825F1609A61B00A333EA /* ViewControllers */,
@@ -1295,10 +1299,12 @@
 			isa = PBXGroup;
 			children = (
 				566E80B51609A24C00A333EA /* iMedia.xcdatamodeld */,
-				562DE717160AD32500F782D2 /* Message.h */,
-				562DE718160AD32500F782D2 /* Message.m */,
-				566E82691609AF8A00A333EA /* User.h */,
-				566E826A1609AF8A00A333EA /* User.m */,
+				562DE7781611991400F782D2 /* Message.h */,
+				562DE7791611991400F782D2 /* Message.m */,
+				562DE76D161186B100F782D2 /* Conversation.h */,
+				562DE76E161186B100F782D2 /* Conversation.m */,
+				562DE773161186D700F782D2 /* User.h */,
+				562DE774161186D700F782D2 /* User.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -1310,8 +1316,8 @@
 				566E82611609A77D00A333EA /* ContactListViewController.m */,
 				566E82661609AF2700A333EA /* ContactDetailController.h */,
 				566E82671609AF2700A333EA /* ContactDetailController.m */,
-				566E82631609A79B00A333EA /* ChatListViewController.h */,
-				566E82641609A79B00A333EA /* ChatListViewController.m */,
+				566E82631609A79B00A333EA /* ConversationsController.h */,
+				566E82641609A79B00A333EA /* ConversationsController.m */,
 				562DE703160ABFA100F782D2 /* ChatDetailController.h */,
 				562DE704160ABFA100F782D2 /* ChatDetailController.m */,
 			);
@@ -1473,7 +1479,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				562DE73E160B02E900F782D2 /* HandleNewMessage.h in Sources */,
 				566E826D1609B79900A333EA /* LayoutConst.h in Sources */,
 				566E80B01609A24C00A333EA /* main.m in Sources */,
 				566E80B41609A24C00A333EA /* AppDelegate.m in Sources */,
@@ -1581,16 +1586,17 @@
 				566E82501609A2AA00A333EA /* DDXMLElement.m in Sources */,
 				566E82511609A2AA00A333EA /* DDXMLNode.m in Sources */,
 				566E82621609A77D00A333EA /* ContactListViewController.m in Sources */,
-				566E82651609A79B00A333EA /* ChatListViewController.m in Sources */,
+				566E82651609A79B00A333EA /* ConversationsController.m in Sources */,
 				566E82681609AF2700A333EA /* ContactDetailController.m in Sources */,
-				566E826B1609AF8A00A333EA /* User.m in Sources */,
 				562DE705160ABFA100F782D2 /* ChatDetailController.m in Sources */,
-				562DE719160AD32500F782D2 /* Message.m in Sources */,
 				562DE738160AFCDB00F782D2 /* NSBubbleData.m in Sources */,
 				562DE739160AFCDB00F782D2 /* NSBubbleDataInternal.m in Sources */,
 				562DE73A160AFCDB00F782D2 /* UIBubbleTableView.m in Sources */,
 				562DE73B160AFCDB00F782D2 /* UIBubbleTableViewCell.m in Sources */,
 				5646FAFB160D4BA700175B78 /* ACPlaceholderTextView.m in Sources */,
+				562DE76F161186B100F782D2 /* Conversation.m in Sources */,
+				562DE775161186D700F782D2 /* User.m in Sources */,
+				562DE77A1611991400F782D2 /* Message.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

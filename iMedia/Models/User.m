@@ -2,29 +2,20 @@
 //  User.m
 //  iMedia
 //
-//  Created by Li Xiaosi on 9/19/12.
+//  Created by Xiaosi Li on 9/25/12.
 //  Copyright (c) 2012 Li Xiaosi. All rights reserved.
 //
 
 #import "User.h"
-#import "XMPPUserCoreDataStorageObject.h"
+#import "Conversation.h"
+
 
 @implementation User
 
-@synthesize xmpp_user_storageObj;
+@dynamic name;
+@dynamic signature;
+@dynamic ePostalID;
+@dynamic gender;
+@dynamic conversations;
 
--(NSString *)displayName
-{
-    return self.xmpp_user_storageObj.displayName;
-}
-
--(void)setDisplayName:(NSString *)name
-{
-    self.xmpp_user_storageObj.displayName = name;
-}
-
--(NSString *)jid
-{
-    return self.xmpp_user_storageObj.jidStr;
-}
 @end

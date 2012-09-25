@@ -9,10 +9,11 @@
 #import <UIKit/UIKit.h>
 
 #import "XMPPFramework.h"
-#import "HandleNewMessage.h"
 
 @class ContactListViewController;
-@class ChatListViewController;
+@class ConversationsController;
+@class Message;
+@class User;
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, XMPPRosterDelegate, XMPPPubSubDelegate>
 {
@@ -24,35 +25,37 @@
     
 	BOOL isXmppConnected;
     
+    User    *me;
+    
 }
 
 @property (nonatomic, strong, readonly) XMPPStream *xmppStream;
 @property (nonatomic, strong, readonly) XMPPReconnect *xmppReconnect;
 @property (nonatomic, strong) XMPPRoster *xmppRoster;
-@property (nonatomic, strong) XMPPRosterCoreDataStorage *xmppRosterStorage;
-@property (nonatomic, strong, readonly) XMPPvCardTempModule *xmppvCardTempModule;
+@property (nonatomic, strong) XMPPRosterMemoryStorage *xmppRosterStorage;
+/*@property (nonatomic, strong, readonly) XMPPvCardTempModule *xmppvCardTempModule;
 @property (nonatomic, strong, readonly) XMPPvCardCoreDataStorage *xmppvCardStorage;
 @property (nonatomic, strong, readonly) XMPPvCardAvatarModule *xmppvCardAvatarModule;
 @property (nonatomic, strong, readonly) XMPPCapabilities *xmppCapabilities;
 @property (nonatomic, strong, readonly) XMPPCapabilitiesCoreDataStorage *xmppCapabilitiesStorage;
+ */
 @property (nonatomic, strong, readonly) XMPPPubSub *xmppPubsub;
-@property (nonatomic, strong) XMPPMessageArchivingCoreDataStorage *xmppMessageArchivingStorage;
-@property (nonatomic, strong) XMPPMessageArchiving *xmppMessageArchiving;
+//@property (nonatomic, strong) XMPPMessageArchivingCoreDataStorage *xmppMessageArchivingStorage;
+//@property (nonatomic, strong) XMPPMessageArchiving *xmppMessageArchiving;
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) UITabBarController *tabController;
-@property (strong, nonatomic) ChatListViewController *chatListController;
+@property (strong, nonatomic) ConversationsController *conversationController;
 @property (strong, nonatomic) ContactListViewController *contactListController;
 
-@property (strong, nonatomic) id <HandleNewMessageDelegate> messageDelegate;
-
-- (NSManagedObjectContext *)managedObjectContext_roster;
-- (NSManagedObjectContext *)managedObjectContext_capabilities;
-- (NSManagedObjectContext *)managedObjectContext_archive;
+//- (NSManagedObjectContext *)managedObjectContext_roster;
+//- (NSManagedObjectContext *)managedObjectContext_capabilities;
+//- (NSManagedObjectContext *)managedObjectContext_archive;
 
 - (BOOL)connect;
 - (void)disconnect;
 
+- (void)sendMessage:(Message *)message;
 
 @end
 

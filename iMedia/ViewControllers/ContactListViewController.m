@@ -10,7 +10,7 @@
 #import "AppDelegate.h"
 #import "ContactDetailController.h"
 #import "User.h"
-#import "ChatListViewController.h"
+#import "ConversationsController.h"
 
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
@@ -49,7 +49,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 {
     if (user) {
         [self.tabBarController setSelectedIndex:0];
-        [[self appDelegate].chatListController chatWithUser:user];
     }
     
     [self dismissModalViewControllerAnimated:YES];
@@ -90,6 +89,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 {
 	if (fetchedResultsController == nil)
 	{
+        /*
 		NSManagedObjectContext *moc = [[self appDelegate] managedObjectContext_roster];
 		
 		NSEntityDescription *entity = [NSEntityDescription entityForName:@"XMPPUserCoreDataStorageObject"
@@ -117,7 +117,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		{
 			DDLogError(@"Error performing fetch: %@", error);
 		}
-        
+        */
 	}
 	
 	return fetchedResultsController;
@@ -180,10 +180,11 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
+    
     // Configure the cell...
-    XMPPUserCoreDataStorageObject *user = [[self fetchedResultsController] objectAtIndexPath:indexPath];
+    //XMPPUserCoreDataStorageObject *user = [[self fetchedResultsController] objectAtIndexPath:indexPath];
 	
-	cell.textLabel.text = user.displayName;
+	//cell.textLabel.text = user.displayName;
     
     
     return cell;
@@ -236,7 +237,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     ContactDetailController *detailViewController = [[ContactDetailController alloc] initWithNibName:nil bundle:nil];
     
     detailViewController.user = [[User alloc] init];
-    detailViewController.user.xmpp_user_storageObj = [[self fetchedResultsController] objectAtIndexPath:indexPath];
+    //detailViewController.user.xmpp_user_storageObj = [[self fetchedResultsController] objectAtIndexPath:indexPath];
     
     detailViewController.delegate = self;
 

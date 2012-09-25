@@ -2,18 +2,20 @@
 //  Message.h
 //  iMedia
 //
-//  Created by Xiaosi Li on 9/20/12.
+//  Created by Xiaosi Li on 9/25/12.
 //  Copyright (c) 2012 Li Xiaosi. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreData/CoreData.h>
 
-@class XMPPMessage;
+@class Conversation, User;
 
-@interface Message : NSObject
+@interface Message : NSManagedObject
 
-@property (nonatomic, strong) XMPPMessage* message;
-@property (nonatomic, strong) NSString* from;
-@property (nonatomic, strong) NSString* body;
+@property (nonatomic, retain) NSDate * sentDate;
+@property (nonatomic, retain) NSString * text;
+@property (nonatomic, retain) Conversation *conversation;
+@property (nonatomic, retain) User *from;
 
 @end

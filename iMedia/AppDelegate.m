@@ -7,11 +7,16 @@
 //
 
 #import "AppDelegate.h"
+#import <AudioToolbox/AudioToolbox.h>
 #import "DDLog.h"
 #import "DDTTYLogger.h"
 #import "Message.h"
+#import "User.h"
+#import "Conversation.h"
+#import "LayoutConst.h"
+#import <CocoaPlant/NSManagedObject+CocoaPlant.h>
 
-#import "ChatListViewController.h"
+#import "ConversationsController.h"
 #import "ContactListViewController.h"
 
 // Log levels: off, error, warn, info, verbose
@@ -24,8 +29,18 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 NSString *const kXMPPmyJID = @"customer1";
 NSString *const kXMPPmyPassword = @"kXMPPmyPassword";
 
-@interface AppDelegate()
+#define NAVIGATION_CONTROLLER() ((UINavigationController *)_window.rootViewController)
 
+
+
+@interface AppDelegate()
+{
+    NSManagedObjectContext *_managedObjectContext;
+    Conversation  *_conversation; // this is a mock
+    NSMutableDictionary     *_messagesSending;
+    SystemSoundID           _messageReceivedSystemSoundID;
+    SystemSoundID           _messageSentSystemSoundID;
+}
 - (void)setupStream;
 - (void)teardownStream;
 
@@ -41,20 +56,20 @@ NSString *const kXMPPmyPassword = @"kXMPPmyPassword";
 @synthesize xmppReconnect;
 @synthesize xmppRoster;
 @synthesize xmppRosterStorage;
+@synthesize xmppPubsub;
+/*
 @synthesize xmppvCardStorage;
 @synthesize xmppvCardTempModule;
 @synthesize xmppvCardAvatarModule;
 @synthesize xmppCapabilities;
 @synthesize xmppCapabilitiesStorage;
-@synthesize xmppPubsub;
 @synthesize xmppMessageArchiving;
 @synthesize xmppMessageArchivingStorage;
-
-@synthesize messageDelegate;
+*/
 
 @synthesize window = _window;
 @synthesize tabController = _tabController;
-@synthesize chatListController;
+@synthesize conversationController;
 @synthesize contactListController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -62,54 +77,62 @@ NSString *const kXMPPmyPassword = @"kXMPPmyPassword";
     
 	[DDLog addLogger:[DDTTYLogger sharedInstance]];
     
-    // Setup the XMPP stream
-    
-	[self setupStream];
-    
-    if (![self connect])
-	{
-        DDLogVerbose(@"%@: %@ cannot connect to server", THIS_FILE, THIS_METHOD);
-	}
+    // Set up Core Data stack.
+    NSPersistentStoreCoordinator *persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[[NSManagedObjectModel alloc] initWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"iMedia" withExtension:@"momd"]]];
+    NSError *error;
+    NSAssert([persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:[[[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject] URLByAppendingPathComponent:@"iMedia.sqlite"] options:nil error:&error], @"Add-Persistent-Store Error: %@", error);
+    _managedObjectContext = [[NSManagedObjectContext alloc] init];
+    [_managedObjectContext setPersistentStoreCoordinator:persistentStoreCoordinator];
 
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    // Override point for customization after application launch.
-    self.window.backgroundColor = [UIColor whiteColor];
+    // Fetch or insert the conversation.
+    // This is really for mock test
+    NSArray *fetchedConversations = MOCFetchAll(_managedObjectContext, @"Conversation");
+    if ([fetchedConversations count]) {
+        _conversation = [fetchedConversations objectAtIndex:0];
+    } else {
+        _conversation = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:_managedObjectContext];
+        _conversation.lastMessageSentDate = [NSDate date];
+        User *user = [NSEntityDescription insertNewObjectForEntityForName:@"User" inManagedObjectContext:_managedObjectContext];
+        user.name = @"iMedia";
+        [_conversation addUsersObject:user];
+    }
+    _messagesSending = [NSMutableDictionary dictionary];
     
+    //
+    // Creating all the initial controllers
+    //
     self.tabController = [[UITabBarController alloc] init];
-    
     self.contactListController = [[ContactListViewController alloc] init];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:self.contactListController];
     
-    
-    self.chatListController = [[ChatListViewController alloc] init];
-    UINavigationController *navController2 = [[UINavigationController alloc] initWithRootViewController:self.chatListController];
+    self.conversationController = [[ConversationsController alloc] init];
+    UINavigationController *navController2 = [[UINavigationController alloc] initWithRootViewController:self.conversationController];
+    self.conversationController.managedObjectContext = _managedObjectContext;
+    self.conversationController.title = NSLocalizedString(@"Messages", nil);
     
     NSArray* controllers = [NSArray arrayWithObjects:navController2, navController, nil];
     self.tabController.viewControllers = controllers;
                                              
-    
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.window.backgroundColor = [UIColor whiteColor];
     [self.window addSubview:self.tabController.view];
     [self.window makeKeyAndVisible];
+    
+    // Setup the XMPP stream
+	[self setupStream];    
+    if (![self connect])
+	{
+        DDLogVerbose(@"%@: %@ cannot connect to server", THIS_FILE, THIS_METHOD);
+	}
+    
+    // when first use, 
+
     return YES;
 }
 
 - (void)dealloc
 {
 	[self teardownStream];
-}
-
-- (NSManagedObjectContext *)managedObjectContext_roster
-{
-	return [xmppRosterStorage mainThreadManagedObjectContext];
-}
-- (NSManagedObjectContext *)managedObjectContext_capabilities
-{
-	return [xmppCapabilitiesStorage mainThreadManagedObjectContext];
-}
-
-- (NSManagedObjectContext *)managedObjectContext_archive
-{
-	return [xmppMessageArchivingStorage mainThreadManagedObjectContext];
 }
 
 - (void)setupStream
@@ -157,68 +180,24 @@ NSString *const kXMPPmyPassword = @"kXMPPmyPassword";
 	// You can do it however you like! It's your application.
 	// But you do need to provide the roster with some storage facility.
     
-	xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] initWithDatabaseFilename:@"iMedia.sqlite"];
-    //	xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] initWithInMemoryStore];
+	//xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] initWithDatabaseFilename:@"iMedia.sqlite"];
+    xmppRosterStorage = [[XMPPRosterMemoryStorage alloc] init];
     
 	xmppRoster = [[XMPPRoster alloc] initWithRosterStorage:xmppRosterStorage];
     
-	xmppRoster.autoFetchRoster = YES;
+	xmppRoster.autoFetchRoster = NO;
 	xmppRoster.autoAcceptKnownPresenceSubscriptionRequests = YES;
-    
-	// Setup vCard support
-	//
-	// The vCard Avatar module works in conjuction with the standard vCard Temp module to download user avatars.
-	// The XMPPRoster will automatically integrate with XMPPvCardAvatarModule to cache roster photos in the roster.
-    
-	xmppvCardStorage = [XMPPvCardCoreDataStorage sharedInstance];
-	xmppvCardTempModule = [[XMPPvCardTempModule alloc] initWithvCardStorage:xmppvCardStorage];
-    
-	xmppvCardAvatarModule = [[XMPPvCardAvatarModule alloc] initWithvCardTempModule:xmppvCardTempModule];
-    
-	// Setup capabilities
-	//
-	// The XMPPCapabilities module handles all the complex hashing of the caps protocol (XEP-0115).
-	// Basically, when other clients broadcast their presence on the network
-	// they include information about what capabilities their client supports (audio, video, file transfer, etc).
-	// But as you can imagine, this list starts to get pretty big.
-	// This is where the hashing stuff comes into play.
-	// Most people running the same version of the same client are going to have the same list of capabilities.
-	// So the protocol defines a standardized way to hash the list of capabilities.
-	// Clients then broadcast the tiny hash instead of the big list.
-	// The XMPPCapabilities protocol automatically handles figuring out what these hashes mean,
-	// and also persistently storing the hashes so lookups aren't needed in the future.
-	//
-	// Similarly to the roster, the storage of the module is abstracted.
-	// You are strongly encouraged to persist caps information across sessions.
-	//
-	// The XMPPCapabilitiesCoreDataStorage is an ideal solution.
-	// It can also be shared amongst multiple streams to further reduce hash lookups.
-    
-	xmppCapabilitiesStorage = [XMPPCapabilitiesCoreDataStorage sharedInstance];
-    xmppCapabilities = [[XMPPCapabilities alloc] initWithCapabilitiesStorage:xmppCapabilitiesStorage];
-    
-    xmppCapabilities.autoFetchHashedCapabilities = YES;
-    xmppCapabilities.autoFetchNonHashedCapabilities = NO;
-    
+        
     // Setup XMPP PubSub
     xmppPubsub = [[XMPPPubSub alloc] initWithServiceJID:[XMPPJID jidWithString:@"pubsub.192.168.1.104"]];
     [xmppPubsub subscribeToNode:@"summer" withOptions:nil];
-    
-    // Setup Message Archive
-    xmppMessageArchivingStorage = [XMPPMessageArchivingCoreDataStorage sharedInstance];
-    xmppMessageArchiving = [[XMPPMessageArchiving alloc] initWithMessageArchivingStorage:xmppMessageArchivingStorage];
-    xmppMessageArchiving.clientSideMessageArchivingOnly = YES;
     
     
 	// Activate xmpp modules
     
 	[xmppReconnect         activate:xmppStream];
 	[xmppRoster            activate:xmppStream];
-	[xmppvCardTempModule   activate:xmppStream];
-	[xmppvCardAvatarModule activate:xmppStream];
-	[xmppCapabilities      activate:xmppStream];
     [xmppPubsub            activate:xmppStream];
-    [xmppMessageArchiving  activate:xmppStream];
     
 	// Add ourself as a delegate to anything we may be interested in
     
@@ -254,11 +233,7 @@ NSString *const kXMPPmyPassword = @"kXMPPmyPassword";
     
 	[xmppReconnect         deactivate];
 	[xmppRoster            deactivate];
-	[xmppvCardTempModule   deactivate];
-	[xmppvCardAvatarModule deactivate];
-	[xmppCapabilities      deactivate];
     [xmppPubsub            deactivate];
-    [xmppMessageArchiving  deactivate];
     
 	[xmppStream disconnect];
     
@@ -266,14 +241,7 @@ NSString *const kXMPPmyPassword = @"kXMPPmyPassword";
 	xmppReconnect = nil;
     xmppRoster = nil;
 	xmppRosterStorage = nil;
-	xmppvCardStorage = nil;
-    xmppvCardTempModule = nil;
-	xmppvCardAvatarModule = nil;
-	xmppCapabilities = nil;
-	xmppCapabilitiesStorage = nil;
     xmppPubsub = nil;
-    xmppMessageArchiving = nil;
-    xmppMessageArchivingStorage = nil;
 }
 
 // It's easy to create XML elments to send and to read received XML elements.
@@ -367,12 +335,15 @@ NSString *const kXMPPmyPassword = @"kXMPPmyPassword";
 {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    [self disconnect];
     [self saveContext];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+    _messagesSending = [NSMutableDictionary dictionary];
+    [self connect];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
@@ -388,28 +359,99 @@ NSString *const kXMPPmyPassword = @"kXMPPmyPassword";
 
 - (void)saveContext
 {
-
     NSError *error = nil;
-    NSManagedObjectContext *managedObjectContext = self.managedObjectContext_roster;
-    if (managedObjectContext != nil) {
-        if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error]) {
+    if (_managedObjectContext != nil) {
+        if ([_managedObjectContext hasChanges] && ![_managedObjectContext save:&error]) {
              // Replace this implementation with code to handle the error appropriately.
              // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
             NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            abort();
         } 
     }
-    NSManagedObjectContext *managedObjectContext_cap = self.managedObjectContext_capabilities;
-    if (managedObjectContext_cap != nil) {
-        if ([managedObjectContext_cap hasChanges] && ![managedObjectContext_cap save:&error]) {
-            // Replace this implementation with code to handle the error appropriately.
-            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            abort();
-        }
-    }
-  
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark Work between Message & XMPPMessage
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (User *)findUserWithEPostalID:(NSString *)ePostalID
+{
+    NSManagedObjectContext *moc = _managedObjectContext;
+    NSEntityDescription *entityDescription = [NSEntityDescription
+                                              entityForName:@"User" inManagedObjectContext:moc];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDescription];
+    
+    // Set example predicate and sort orderings...
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:
+                              @"(ePostalID = %@)", ePostalID];
+    [request setPredicate:predicate];
+    
+    NSError *error = nil;
+    NSArray *array = [moc executeFetchRequest:request error:&error];
+
+    if (array == nil)
+    {
+        DDLogError(@"User doesn't exist: %@", error);
+        return nil;
+    } else {
+        if ([array count] > 1) {
+            DDLogError(@"More than one user object with same postal id: %@", ePostalID);
+        }
+        return [array objectAtIndex:0];
+    }
+}
+- (void)addMessageWithXMPPMessage:(XMPPMessage *)msg {
+    Message *message = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:_managedObjectContext];
+
+    User *from = [self findUserWithEPostalID:msg.fromStr];
+    if (from == nil)
+    {
+        DDLogError(@"User doesn't exist");
+    }
+    
+    message.from = from;
+    message.sentDate = [NSDate date];
+    message.text = [[msg elementForName:@"body"] stringValue];
+    
+    // Find a conversation that this message belongs. That is judged by the conversation's user list.
+    NSSet *results = [from.conversations objectsPassingTest:^(id obj, BOOL *stop){
+        Conversation *conv = (Conversation *)obj;
+        if ([conv.users count] == 1) {
+            return YES;
+        }
+        return NO;
+    }];
+    
+    
+    Conversation *conv;
+    if ([results count] == 0)
+    {
+        conv = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:_managedObjectContext];
+    } else {
+        conv = [results anyObject];
+    }
+    conv.lastMessageSentDate = message.sentDate;
+    conv.lastMessageText = message.text;
+    [conv addMessagesObject:message];
+    [conv addUsersObject:from];
+    
+    // Now setup for display
+    //? i may not need update with the context management
+    
+}
+
+- (void)sendMessage:(Message *)message {
+    // Send message.
+    // TODO: Prevent this message from getting saved to Core Data if I hit back.
+    XMPPMessage *msg = [XMPPMessage messageWithType:@"chat" to:[XMPPJID jidWithString:message.from.ePostalID]];
+    NSXMLElement *body = [NSXMLElement elementWithName:@"body" stringValue:message.text];
+    [msg  addChild:body];
+    [self.xmppStream sendElement:msg];
+    
+    NSNumber *messageSendingIndex = @([_messagesSending count]);
+    [_messagesSending setObject:message forKey:messageSendingIndex];
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark XMPPStream Delegate
@@ -516,18 +558,14 @@ NSString *const kXMPPmyPassword = @"kXMPPmyPassword";
 
     if ([message isChatMessageWithBody])
 	{
-		XMPPUserCoreDataStorageObject *user = [xmppRosterStorage userForJID:[message from]
-		                                                         xmppStream:xmppStream
-		                                               managedObjectContext:[self managedObjectContext_roster]];
+		XMPPUserMemoryStorageObject *user = [xmppRosterStorage userForJID:[message from]];
         
 		NSString *body = [[message elementForName:@"body"] stringValue];
 		NSString *displayName = [user displayName];
         
 		if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive)
 		{
-            Message *msg = [[Message alloc] init];
-            msg.message = message;
-            [self.messageDelegate receiveNewMessage:msg];
+            [self addMessageWithXMPPMessage:message];
 		}
 		else
 		{
@@ -539,39 +577,6 @@ NSString *const kXMPPmyPassword = @"kXMPPmyPassword";
 			[[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
 		}
 	}
-    
-    /*
-	// A simple example of inbound message handling.
-    
-	if ([message isChatMessageWithBody])
-	{
-		XMPPUserCoreDataStorageObject *user = [xmppRosterStorage userForJID:[message from]
-		                                                         xmppStream:xmppStream
-		                                               managedObjectContext:[self managedObjectContext_roster]];
-        
-		NSString *body = [[message elementForName:@"body"] stringValue];
-		NSString *displayName = [user displayName];
-        
-		if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive)
-		{
-			UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:displayName
-                                                                message:body
-                                                               delegate:nil
-                                                      cancelButtonTitle:@"Ok"
-                                                      otherButtonTitles:nil];
-			[alertView show];
-		}
-		else
-		{
-			// We are not active, so use a local notification instead
-			UILocalNotification *localNotification = [[UILocalNotification alloc] init];
-			localNotification.alertAction = @"Ok";
-			localNotification.alertBody = [NSString stringWithFormat:@"From: %@\n\n%@",displayName,body];
-            
-			[[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
-		}
-	}
-     */
 }
 
 - (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence
@@ -602,9 +607,7 @@ NSString *const kXMPPmyPassword = @"kXMPPmyPassword";
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
     
-	XMPPUserCoreDataStorageObject *user = [xmppRosterStorage userForJID:[presence from]
-	                                                         xmppStream:xmppStream
-	                                               managedObjectContext:[self managedObjectContext_roster]];
+	XMPPUserMemoryStorageObject *user = [xmppRosterStorage userForJID:[presence from]];
     
 	NSString *displayName = [user displayName];
 	NSString *jidStrBare = [presence fromStr];
@@ -656,7 +659,7 @@ NSString *const kXMPPmyPassword = @"kXMPPmyPassword";
 
     if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive)
     {
-        [self.messageDelegate receiveNewEvent:entry];
+
     }
     
     /*

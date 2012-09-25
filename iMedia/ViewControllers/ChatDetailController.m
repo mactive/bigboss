@@ -11,10 +11,10 @@
 #import "NSBubbleData.h"
 #import "User.h"
 #import "Message.h"
+#import "Conversation.h"
 #import "LayoutConst.h"
 #import "AppDelegate.h"
 #import "UIBubbleTableViewDataSource.h"
-#import "HandleNewMessage.h"
 #import "ACPlaceholderTextView.h"
 #import <CocoaPlant/CocoaPlant.h>
 
@@ -50,7 +50,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 [[NSNotificationCenter defaultCenter] removeObserver:self];
 
 
-@interface ChatDetailController () <UITextViewDelegate, UIBubbleTableViewDataSource, HandleNewMessageDelegate>
+@interface ChatDetailController () <UITextViewDelegate, UIBubbleTableViewDataSource>
 {
     NSMutableArray *_heightForRow;
     UIImage *_messageBubbleGray;
@@ -66,7 +66,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 @synthesize sendButton = _sendButton;
 @synthesize bubbleData;
 @synthesize bubbleTable;
-@synthesize user;
+@synthesize conversation;
 
 - (id)init
 {
@@ -96,6 +96,15 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     bubbleTable.backgroundColor = [UIColor colorWithRed:0.859 green:0.886 blue:0.929 alpha:1];
     bubbleTable.separatorStyle = UITableViewCellSeparatorStyleNone;
    
+    NSSet *messages = conversation.messages;
+    bubbleData = [[NSMutableArray alloc] initWithCapacity:[messages count]];
+    NSEnumerator *enumerator = [conversation.messages objectEnumerator];
+    Message* aMessage;
+    while (aMessage = enumerator nextObject) {
+        
+        bubbleData addObject:[NSBubbleData dataWithText:aMessage.text andDate:aMessage.sentDate andType:<#(NSBubbleType)#>]
+    }
+    
     bubbleData =[[NSMutableArray alloc] initWithObjects:
                  [NSBubbleData dataWithText:@"hi friends" andDate:[NSDate dateWithTimeIntervalSinceNow:-300] andType:BubbleTypeMine],
                  [NSBubbleData dataWithText:@"hi back" andDate:[NSDate dateWithTimeIntervalSinceNow:-280] andType:BubbleTypeSomeoneElse],
@@ -164,11 +173,9 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-    self.title = user.displayName;
+
     [bubbleTable reloadData];
     
-    [self appDelegate].messageDelegate = self;
     [self scrollToBottomAnimated:NO];
     
 }
@@ -190,8 +197,6 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    
-    [self appDelegate].messageDelegate = [self appDelegate].chatListController;
 }
 
 
@@ -274,7 +279,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 ////////////////////////////////////////////////////////////////////////////////////////////
 - (void)receiveNewMessage:(Message *)message
 {
-    [bubbleData addObject:[NSBubbleData dataWithText:message.body andDate:[NSDate date] andType:BubbleTypeSomeoneElse]];
+ //   [bubbleData addObject:[NSBubbleData dataWithText:message.body andDate:[NSDate date] andType:BubbleTypeSomeoneElse]];
     
     [bubbleTable reloadData];
 }
@@ -326,13 +331,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     [self.textView resignFirstResponder];
     [self.textView becomeFirstResponder];
     
-    // Send message.
-    // TODO: Prevent this message from getting saved to Core Data if I hit back.
-    XMPPMessage *msg = [XMPPMessage messageWithType:@"chat" to:[XMPPJID jidWithString:self.user.jid]];
-    NSXMLElement *body = [NSXMLElement elementWithName:@"body" stringValue:self.textView.text];
-    [msg  addChild:body];
-    [[self appDelegate].xmppStream sendElement:msg];
-    
+     
     [bubbleData addObject:[NSBubbleData dataWithText:self.textView.text andDate:[NSDate date] andType:BubbleTypeMine]];
     [bubbleTable reloadData];
 

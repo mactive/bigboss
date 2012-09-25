@@ -75,7 +75,6 @@
 {
     [super viewWillAppear:animated];
     
-    self.nameLabel.text = self.user.displayName;
 }
 
 -(void)sendMsgButtonPushed:(id)sender

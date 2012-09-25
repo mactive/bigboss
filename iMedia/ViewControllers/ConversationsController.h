@@ -1,5 +1,5 @@
 //
-//  ChatListViewController.h
+//  ConversationsController.h
 //  iMedia
 //
 //  Created by Li Xiaosi on 9/19/12.
@@ -7,20 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <CoreData/CoreData.h>
-#import "HandleNewMessage.h"
 
-@class User;
-@class Message;
-
-@interface ChatListViewController : UITableViewController <NSFetchedResultsControllerDelegate, HandleNewMessageDelegate>
+@interface ConversationsController : UITableViewController <NSFetchedResultsControllerDelegate>
 {
     NSFetchedResultsController *_fetchedResultsController;
 }
 
 @property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
-
-- (void) chatWithUser:(User *)user;
+@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
 - (UITableViewCell *)tableViewCellWithReuseIdentifier:(NSString *)identifier;
 - (void)configureCell:(UITableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath;

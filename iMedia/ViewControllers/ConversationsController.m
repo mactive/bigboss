@@ -6,11 +6,12 @@
 //  Copyright (c) 2012 Li Xiaosi. All rights reserved.
 //
 
-#import "ChatListViewController.h"
+#import "ConversationsController.h"
 #import "ChatDetailController.h"
 #import "AppDelegate.h"
 #import "Message.h"
 #import "User.h"
+#import "Conversation.h"
 
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
@@ -22,13 +23,13 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 #define ROW_HEIGHT 60
 
-@interface ChatListViewController ()
+@interface ConversationsController ()
 {
     ChatDetailController *detailController;
 }
 @end
 
-@implementation ChatListViewController
+@implementation ConversationsController
 
 @synthesize fetchedResultsController = _fetchedResultsController;
 
@@ -86,24 +87,21 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 {
 	if (_fetchedResultsController == nil)
 	{
-		NSManagedObjectContext *moc = [[self appDelegate] managedObjectContext_archive];
+		NSManagedObjectContext *moc = self.managedObjectContext;
 		
-		NSEntityDescription *entity = [NSEntityDescription entityForName:@"XMPPMessageArchiving_Contact_CoreDataObject"
+		NSEntityDescription *entity = [NSEntityDescription entityForName:@"Conversation"
 		                                          inManagedObjectContext:moc];
-		
-		NSSortDescriptor *sd1 = [[NSSortDescriptor alloc] initWithKey:@"mostRecentMessageTimestamp" ascending:YES];
-		NSSortDescriptor *sd2 = [[NSSortDescriptor alloc] initWithKey:@"bareJidStr" ascending:YES];
-		
-		NSArray *sortDescriptors = [NSArray arrayWithObjects:sd1, sd2, nil];
+		NSSortDescriptor *sd1 = [[NSSortDescriptor alloc] initWithKey:@"lastMessageSentDate" ascending:YES];
+		NSArray *sortDescriptors = [NSArray arrayWithObjects:sd1, nil];
 		
 		NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
 		[fetchRequest setEntity:entity];
 		[fetchRequest setSortDescriptors:sortDescriptors];
-		[fetchRequest setFetchBatchSize:10];
+		[fetchRequest setFetchBatchSize:30];
 		
 		_fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
 		                                                               managedObjectContext:moc
-		                                                                 sectionNameKeyPath:@"mostRecentMessageTimestamp"
+		                                                                 sectionNameKeyPath:nil
 		                                                                          cacheName:nil];
 		[_fetchedResultsController setDelegate:self];
 		
@@ -133,20 +131,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return [[[self fetchedResultsController] sections] count];
-}
-
-- (NSString *)tableView:(UITableView *)sender titleForHeaderInSection:(NSInteger)sectionIndex
-{
-	NSArray *sections = [[self fetchedResultsController] sections];
-	
-	if (sectionIndex < [sections count])
-	{
-		id <NSFetchedResultsSectionInfo> sectionInfo = [sections objectAtIndex:sectionIndex];
-    
-        return [sectionInfo.name stringByAbbreviatingWithTildeInPath];
-	}
-	
-	return @"";
 }
 
 
@@ -221,20 +205,15 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    XMPPMessageArchiving_Contact_CoreDataObject *contact = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-
-    //ChatDetailController* detailController = [[ChatDetailController alloc] init];
-    detailController.user = [[User alloc] init];
-    detailController.user.xmpp_user_storageObj = [[self appDelegate].xmppRosterStorage userForJID:contact.bareJid xmppStream:[self appDelegate].xmppStream managedObjectContext:[self appDelegate].managedObjectContext_roster];
-    
-    
+    detailController.conversation = [[self fetchedResultsController] objectAtIndexPath:indexPath];
     [self.navigationController pushViewController:detailController animated:YES];
+  
 }
 
 - (void)chatWithUser:(User *)user
 {
- //   ChatDetailController *detailController = [[ChatDetailController alloc] init];
-    detailController.user = user;
+    ChatDetailController *detailController = [[ChatDetailController alloc] init];
+    //detailController.user = user;
     
     [self.navigationController popToRootViewControllerAnimated:NO];
     [self.navigationController pushViewController:detailController animated:YES];
@@ -263,7 +242,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 - (UITableViewCell *)tableViewCellWithReuseIdentifier:(NSString *)identifier {
 	
 	/*
-	 Create an instance of UITableViewCell and add tagged subviews for the name, local time, and quarter image of the time zone.
+	 Create an instance of UITableViewCell and add tagged subviews for the name, message, and quarter image of the time zone.
 	 */
     
 	UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
@@ -313,19 +292,23 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		dateFormatter = [[NSDateFormatter alloc] init];
 		[dateFormatter setDateFormat:@"h:mm a"];
 	}
-	
-    XMPPMessageArchiving_Contact_CoreDataObject *contact = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-	
-	
-	UILabel *label;
+    
+    Conversation *conv = [[self fetchedResultsController] objectAtIndexPath:indexPath];
+
+   	UILabel *label;
 	
 	// Set the locale name.
 	label = (UILabel *)[cell viewWithTag:NAME_TAG];
-	label.text = contact.bareJidStr;
+    label.text = @"";
+    NSEnumerator *enumerator = [conv.users objectEnumerator];
+    User* anUser;
+    while (anUser = [enumerator nextObject]) {
+        label.text = [label.text stringByAppendingFormat:@"%@ ", anUser.name];
+    }
 	
-	// Set the content
+	// Set the date
 	label = (UILabel *)[cell viewWithTag:TIME_TAG];
-	label.text = contact.mostRecentMessageBody;
+	label.text = [dateFormatter stringFromDate:conv.lastMessageSentDate];
 	
 	// Set the image.
 	UIImageView *imageView = (UIImageView *)[cell viewWithTag:IMAGE_TAG];

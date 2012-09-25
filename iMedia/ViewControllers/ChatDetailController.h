@@ -10,7 +10,7 @@
 
 
 @class UIBubbleTableView;
-@class User;
+@class Conversation;
 @class ACPlaceholderTextView;
 
 @interface ChatDetailController : UIViewController
@@ -20,6 +20,6 @@
 
 @property (nonatomic, strong) UIBubbleTableView *bubbleTable;
 @property (nonatomic, strong) NSMutableArray *bubbleData;
-@property (nonatomic, strong) User* user;
+@property (nonatomic, strong) Conversation *conversation;
 
 @end

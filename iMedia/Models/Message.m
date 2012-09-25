@@ -2,30 +2,20 @@
 //  Message.m
 //  iMedia
 //
-//  Created by Xiaosi Li on 9/20/12.
+//  Created by Xiaosi Li on 9/25/12.
 //  Copyright (c) 2012 Li Xiaosi. All rights reserved.
 //
 
 #import "Message.h"
-#import "XMPPFramework.h"
+#import "Conversation.h"
+#import "User.h"
+
 
 @implementation Message
 
-@synthesize message;
-
-- (NSString *)from
-{
-    return message.fromStr;
-}
-
-- (NSString *)body
-{
-    if ([message isMessageWithBody]) {
-        NSString *body = [[message elementForName:@"body"] stringValue];
-        return body;
-    }
-    
-    return nil;
-}
+@dynamic sentDate;
+@dynamic text;
+@dynamic conversation;
+@dynamic from;
 
 @end
