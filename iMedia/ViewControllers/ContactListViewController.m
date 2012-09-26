@@ -27,6 +27,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 @implementation ContactListViewController
 
+@synthesize managedObjectContext;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -47,11 +48,13 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 - (void)contactDetailController:(ContactDetailController *)contactDetailController didChatUser:(User *)user
 {
+    [self dismissModalViewControllerAnimated:YES];
+    
     if (user) {
         [self.tabBarController setSelectedIndex:0];
-    }
-    
-    [self dismissModalViewControllerAnimated:YES];
+        [[self appDelegate].conversationController chatWithUser:user];
+    }    
+
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark View Life Cycles
@@ -89,25 +92,24 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 {
 	if (fetchedResultsController == nil)
 	{
-        /*
-		NSManagedObjectContext *moc = [[self appDelegate] managedObjectContext_roster];
+        
+		NSManagedObjectContext *moc = self.managedObjectContext;
 		
-		NSEntityDescription *entity = [NSEntityDescription entityForName:@"XMPPUserCoreDataStorageObject"
+		NSEntityDescription *entity = [NSEntityDescription entityForName:@"User"
 		                                          inManagedObjectContext:moc];
 		
-		NSSortDescriptor *sd1 = [[NSSortDescriptor alloc] initWithKey:@"sectionNum" ascending:YES];
-		NSSortDescriptor *sd2 = [[NSSortDescriptor alloc] initWithKey:@"displayName" ascending:YES];
+		NSSortDescriptor *sd1 = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
 		
-		NSArray *sortDescriptors = [NSArray arrayWithObjects:sd1, sd2, nil];
+		NSArray *sortDescriptors = [NSArray arrayWithObjects:sd1, nil];
 		
 		NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
 		[fetchRequest setEntity:entity];
 		[fetchRequest setSortDescriptors:sortDescriptors];
-		[fetchRequest setFetchBatchSize:10];
+		[fetchRequest setFetchBatchSize:30];
 		
 		fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
 		                                                               managedObjectContext:moc
-		                                                                 sectionNameKeyPath:@"sectionNum"
+		                                                                 sectionNameKeyPath:nil
 		                                                                          cacheName:nil];
 		[fetchedResultsController setDelegate:self];
 		
@@ -117,7 +119,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		{
 			DDLogError(@"Error performing fetch: %@", error);
 		}
-        */
 	}
 	
 	return fetchedResultsController;
@@ -135,26 +136,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return [[[self fetchedResultsController] sections] count];
-}
-
-- (NSString *)tableView:(UITableView *)sender titleForHeaderInSection:(NSInteger)sectionIndex
-{
-	NSArray *sections = [[self fetchedResultsController] sections];
-	
-	if (sectionIndex < [sections count])
-	{
-		id <NSFetchedResultsSectionInfo> sectionInfo = [sections objectAtIndex:sectionIndex];
-        
-		int section = [sectionInfo.name intValue];
-		switch (section)
-		{
-			case 0  : return @"Available";
-			case 1  : return @"Away";
-			default : return @"Offline";
-		}
-	}
-	
-	return @"";
 }
 
 
@@ -177,14 +158,15 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
     }
     
     
     // Configure the cell...
-    //XMPPUserCoreDataStorageObject *user = [[self fetchedResultsController] objectAtIndexPath:indexPath];
+    User *user = [[self fetchedResultsController] objectAtIndexPath:indexPath];
 	
-	//cell.textLabel.text = user.displayName;
+	cell.textLabel.text = user.ePostalID;
+    cell.detailTextLabel.text = user.name;
     
     
     return cell;
@@ -236,8 +218,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
   
     ContactDetailController *detailViewController = [[ContactDetailController alloc] initWithNibName:nil bundle:nil];
     
-    detailViewController.user = [[User alloc] init];
-    //detailViewController.user.xmpp_user_storageObj = [[self fetchedResultsController] objectAtIndexPath:indexPath];
+    detailViewController.user = [[self fetchedResultsController] objectAtIndexPath:indexPath];
     
     detailViewController.delegate = self;
 

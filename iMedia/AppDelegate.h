@@ -13,7 +13,7 @@
 @class ContactListViewController;
 @class ConversationsController;
 @class Message;
-@class User;
+@class Me;
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, XMPPRosterDelegate, XMPPPubSubDelegate>
 {
@@ -24,9 +24,6 @@
 	BOOL allowSSLHostNameMismatch;
     
 	BOOL isXmppConnected;
-    
-    User    *me;
-    
 }
 
 @property (nonatomic, strong, readonly) XMPPStream *xmppStream;
@@ -48,12 +45,16 @@
 @property (strong, nonatomic) ConversationsController *conversationController;
 @property (strong, nonatomic) ContactListViewController *contactListController;
 
+@property (strong, nonatomic) Me *me;
+
 //- (NSManagedObjectContext *)managedObjectContext_roster;
 //- (NSManagedObjectContext *)managedObjectContext_capabilities;
 //- (NSManagedObjectContext *)managedObjectContext_archive;
 
 - (BOOL)connect;
 - (void)disconnect;
+
+- (void)startMainSession;
 
 - (void)sendMessage:(Message *)message;
 

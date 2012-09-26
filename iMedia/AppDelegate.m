@@ -12,12 +12,14 @@
 #import "DDTTYLogger.h"
 #import "Message.h"
 #import "User.h"
+#import "Me.h"
 #import "Conversation.h"
 #import "LayoutConst.h"
 #import <CocoaPlant/NSManagedObject+CocoaPlant.h>
 
 #import "ConversationsController.h"
 #import "ContactListViewController.h"
+#import "FirstLoginController.h"
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -25,9 +27,6 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 #else
 static const int ddLogLevel = LOG_LEVEL_INFO;
 #endif
-
-NSString *const kXMPPmyJID = @"customer1";
-NSString *const kXMPPmyPassword = @"kXMPPmyPassword";
 
 #define NAVIGATION_CONTROLLER() ((UINavigationController *)_window.rootViewController)
 
@@ -43,6 +42,7 @@ NSString *const kXMPPmyPassword = @"kXMPPmyPassword";
 }
 - (void)setupStream;
 - (void)teardownStream;
+- (void)setupRoster;
 
 - (void)goOnline;
 - (void)goOffline;
@@ -72,10 +72,15 @@ NSString *const kXMPPmyPassword = @"kXMPPmyPassword";
 @synthesize conversationController;
 @synthesize contactListController;
 
+@synthesize me = _me;
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     
 	[DDLog addLogger:[DDTTYLogger sharedInstance]];
+    // Setup the XMPP stream
+	[self setupStream];
+
     
     // Set up Core Data stack.
     NSPersistentStoreCoordinator *persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[[NSManagedObjectModel alloc] initWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"iMedia" withExtension:@"momd"]]];
@@ -83,7 +88,30 @@ NSString *const kXMPPmyPassword = @"kXMPPmyPassword";
     NSAssert([persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:[[[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject] URLByAppendingPathComponent:@"iMedia.sqlite"] options:nil error:&error], @"Add-Persistent-Store Error: %@", error);
     _managedObjectContext = [[NSManagedObjectContext alloc] init];
     [_managedObjectContext setPersistentStoreCoordinator:persistentStoreCoordinator];
+    
+    // check whether first user
+    NSArray *fetchedUsers = MOCFetchAll(_managedObjectContext, @"Me");
+    if ([fetchedUsers count] == 0) {
+        self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+        self.window.backgroundColor = [UIColor whiteColor];
 
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"NewUserWelcome" bundle:nil];
+        FirstLoginController *loginViewController = [storyboard instantiateInitialViewController];
+
+        [self.window addSubview:loginViewController.view];
+        [self.window setRootViewController:loginViewController];
+        [self.window makeKeyAndVisible];
+        
+    } else if ([fetchedUsers count] == 1) {
+        self.me = [fetchedUsers objectAtIndex:0];
+        
+        [self startMainSession];
+    } else {
+        DDLogVerbose(@"%@: %@ multiple ME instance", THIS_FILE, THIS_METHOD);
+    }
+    
+
+/*
     // Fetch or insert the conversation.
     // This is really for mock test
     NSArray *fetchedConversations = MOCFetchAll(_managedObjectContext, @"Conversation");
@@ -97,13 +125,25 @@ NSString *const kXMPPmyPassword = @"kXMPPmyPassword";
         [_conversation addUsersObject:user];
     }
     _messagesSending = [NSMutableDictionary dictionary];
-    
+  */ 
+
+    return YES;
+}
+
+- (void)startMainSession
+{
+    if (![self connect])
+	{
+        DDLogVerbose(@"%@: %@ cannot connect to server", THIS_FILE, THIS_METHOD);
+	}
     //
     // Creating all the initial controllers
     //
     self.tabController = [[UITabBarController alloc] init];
     self.contactListController = [[ContactListViewController alloc] init];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:self.contactListController];
+    self.contactListController.managedObjectContext = _managedObjectContext;
+    self.conversationController.title = NSLocalizedString(@"Contacts", nil);
     
     self.conversationController = [[ConversationsController alloc] init];
     UINavigationController *navController2 = [[UINavigationController alloc] initWithRootViewController:self.conversationController];
@@ -112,22 +152,16 @@ NSString *const kXMPPmyPassword = @"kXMPPmyPassword";
     
     NSArray* controllers = [NSArray arrayWithObjects:navController2, navController, nil];
     self.tabController.viewControllers = controllers;
-                                             
+    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window addSubview:self.tabController.view];
+    [self.window setRootViewController:self.tabController];
     [self.window makeKeyAndVisible];
-    
-    // Setup the XMPP stream
-	[self setupStream];    
-    if (![self connect])
-	{
-        DDLogVerbose(@"%@: %@ cannot connect to server", THIS_FILE, THIS_METHOD);
-	}
-    
-    // when first use, 
 
-    return YES;
+    if(self.me == nil) {
+        [self setupRoster];
+    }
 }
 
 - (void)dealloc
@@ -244,6 +278,30 @@ NSString *const kXMPPmyPassword = @"kXMPPmyPassword";
     xmppPubsub = nil;
 }
 
+- (void)setupRoster
+{
+    [xmppRoster fetchRoster];
+    
+    XMPPUserMemoryStorageObject* meXMPP = [xmppRosterStorage myUser];
+    NSArray* roster = [xmppRosterStorage unsortedUsers];
+
+    self.me = [NSEntityDescription insertNewObjectForEntityForName:@"Me" inManagedObjectContext:_managedObjectContext];
+    self.me.ePostalID = [meXMPP.jid bare];
+    self.me.name = meXMPP.nickname;
+    
+    NSInteger count = [roster count];
+    for (int i = 0; i < count; i++) {
+        XMPPUserMemoryStorageObject* obj = [roster objectAtIndex:i];
+        User *user = [NSEntityDescription insertNewObjectForEntityForName:@"User" inManagedObjectContext:_managedObjectContext];
+        user.name = obj.nickname;
+        user.ePostalID = [obj.jid bare];
+    }
+    
+    MOCSave(_managedObjectContext);
+    
+}
+
+
 // It's easy to create XML elments to send and to read received XML elements.
 // You have the entire NSXMLElement and NSXMLNode API's.
 //
@@ -286,10 +344,13 @@ NSString *const kXMPPmyPassword = @"kXMPPmyPassword";
 	// If you don't want to use the Settings view to set the JID,
 	// uncomment the section below to hard code a JID and password.
 	//
-	
+	if (self.me != nil) {
+        myJID = self.me.username;
+        myPassword = self.me.password;
+    }
     
-    myJID = @"customer2@192.168.1.104";
-	myPassword = @"111";
+  //  myJID = @"customer2@192.168.1.104";
+//	myPassword = @"111";
  //   myJID = @"lix@jabber.at";
 //	myPassword = @"1234Abcd";
     
@@ -389,7 +450,7 @@ NSString *const kXMPPmyPassword = @"kXMPPmyPassword";
     NSError *error = nil;
     NSArray *array = [moc executeFetchRequest:request error:&error];
 
-    if (array == nil)
+    if ([array count] == 0)
     {
         DDLogError(@"User doesn't exist: %@", error);
         return nil;
@@ -450,6 +511,7 @@ NSString *const kXMPPmyPassword = @"kXMPPmyPassword";
     
     NSNumber *messageSendingIndex = @([_messagesSending count]);
     [_messagesSending setObject:message forKey:messageSendingIndex];
+    
 }
 
 

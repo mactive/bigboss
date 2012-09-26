@@ -25,7 +25,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 @interface ConversationsController ()
 {
-    ChatDetailController *detailController;
+    ChatDetailController *_detailController;
 }
 @end
 
@@ -40,7 +40,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     if (self) {
         self.title = @"Chat";
         self.tableView.rowHeight = ROW_HEIGHT;
-        detailController = [[ChatDetailController alloc] init];
+        _detailController = [[ChatDetailController alloc] init];
     }
     return self;
 }
@@ -205,18 +205,33 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    detailController.conversation = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-    [self.navigationController pushViewController:detailController animated:YES];
+    _detailController.conversation = [[self fetchedResultsController] objectAtIndexPath:indexPath];
+    _detailController.managedObjectContext = self.managedObjectContext;
+    [self.navigationController pushViewController:_detailController animated:YES];
   
 }
 
 - (void)chatWithUser:(User *)user
 {
-    ChatDetailController *detailController = [[ChatDetailController alloc] init];
-    //detailController.user = user;
+    NSSet *convs = user.conversations;
+    NSEnumerator *enumerator = [convs objectEnumerator];
+    Conversation *obj ;
+    BOOL conversationFound = NO;
+    while (obj = [enumerator nextObject]) {
+        if ([obj.users count] == 1) {
+            _detailController.conversation = obj;
+            conversationFound = YES;
+            break;
+        }
+    }
     
+    if (conversationFound == NO) {
+        _detailController.conversation = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:self.managedObjectContext];
+    }
+    
+    _detailController.managedObjectContext = self.managedObjectContext;
     [self.navigationController popToRootViewControllerAnimated:NO];
-    [self.navigationController pushViewController:detailController animated:YES];
+    [self.navigationController pushViewController:_detailController animated:YES];
 }
 
 #pragma mark -
@@ -303,7 +318,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     NSEnumerator *enumerator = [conv.users objectEnumerator];
     User* anUser;
     while (anUser = [enumerator nextObject]) {
-        label.text = [label.text stringByAppendingFormat:@"%@ ", anUser.name];
+        label.text = [label.text stringByAppendingFormat:@"%@ ", anUser.ePostalID];
     }
 	
 	// Set the date

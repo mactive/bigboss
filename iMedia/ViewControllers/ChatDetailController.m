@@ -10,6 +10,7 @@
 #import "UIBubbleTableView.h"
 #import "NSBubbleData.h"
 #import "User.h"
+#import "Me.h"
 #import "Message.h"
 #import "Conversation.h"
 #import "LayoutConst.h"
@@ -58,6 +59,8 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     CGFloat _previousTextViewContentHeight;
     NSDate *_previousShownSentDate;
 }
+
+- (void)addMessage:(Message *)msg toBubbleData:(NSMutableArray *)data;
 @end
 
 @implementation ChatDetailController
@@ -67,6 +70,7 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 @synthesize bubbleData;
 @synthesize bubbleTable;
 @synthesize conversation;
+@synthesize managedObjectContext;
 
 - (id)init
 {
@@ -100,15 +104,9 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     bubbleData = [[NSMutableArray alloc] initWithCapacity:[messages count]];
     NSEnumerator *enumerator = [conversation.messages objectEnumerator];
     Message* aMessage;
-    while (aMessage = enumerator nextObject) {
-        
-        bubbleData addObject:[NSBubbleData dataWithText:aMessage.text andDate:aMessage.sentDate andType:<#(NSBubbleType)#>]
+    while (aMessage = [enumerator nextObject]) {
+        [self addMessage:aMessage toBubbleData:bubbleData];
     }
-    
-    bubbleData =[[NSMutableArray alloc] initWithObjects:
-                 [NSBubbleData dataWithText:@"hi friends" andDate:[NSDate dateWithTimeIntervalSinceNow:-300] andType:BubbleTypeMine],
-                 [NSBubbleData dataWithText:@"hi back" andDate:[NSDate dateWithTimeIntervalSinceNow:-280] andType:BubbleTypeSomeoneElse],
-                 nil];
     
     bubbleTable.bubbleDataSource = self;
     bubbleTable.snapInterval = 100;
@@ -254,7 +252,10 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 }
 
 - (void)scrollToBottomAnimated:(BOOL)animated {
-    NSInteger numberOfRows = [self.bubbleTable numberOfRowsInSection:0];
+    NSInteger numberOfRows = 0;
+    if ([self.bubbleTable numberOfSections] > 0) {
+        numberOfRows = [self.bubbleTable tableView:self.bubbleTable numberOfRowsInSection:0];
+    }
     if (numberOfRows) {
         [self.bubbleTable scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:numberOfRows-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:animated];
     }
@@ -331,13 +332,29 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     [self.textView resignFirstResponder];
     [self.textView becomeFirstResponder];
     
+    Message *message = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:managedObjectContext];
+    
+    message.from = [self appDelegate].me;
+    message.sentDate = [NSDate date];
+    message.text = self.textView.text;
+    message.conversation = self.conversation;
+    [self.conversation addMessagesObject:message];
      
-    [bubbleData addObject:[NSBubbleData dataWithText:self.textView.text andDate:[NSDate date] andType:BubbleTypeMine]];
+    [self addMessage:message toBubbleData:bubbleData];
     [bubbleTable reloadData];
 
     self.textView.text = nil;
     [self textViewDidChange:_textView];
     [self.textView resignFirstResponder];
+}
+
+- (void)addMessage:(Message *)msg toBubbleData:(NSMutableArray *)data
+{
+    NSBubbleType type = BubbleTypeMine;
+    if (msg.from.ePostalID != [self appDelegate].me.ePostalID) {
+        type = BubbleTypeSomeoneElse;
+    }
+    [bubbleData addObject:[NSBubbleData dataWithText:msg.text andDate:msg.sentDate andType:type]];
 }
 
 @end

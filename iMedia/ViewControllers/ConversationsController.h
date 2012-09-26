@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+@class User;
+
 @interface ConversationsController : UITableViewController <NSFetchedResultsControllerDelegate>
 {
     NSFetchedResultsController *_fetchedResultsController;
@@ -18,4 +20,6 @@
 
 - (UITableViewCell *)tableViewCellWithReuseIdentifier:(NSString *)identifier;
 - (void)configureCell:(UITableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath;
+
+- (void)chatWithUser:(User *)user;
 @end

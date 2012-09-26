@@ -32,7 +32,7 @@
 #define NAV_MAX_BUTTON 80
 #define TEMPLATE_CELL_HEIGHT 50
 
-/*
+
 #pragma mark - Core Data
 
 #define MOCSave(managedObjectContext) { \
@@ -45,6 +45,15 @@ NSManagedObjectContextCount(self, _cmd, managedObjectContext, fetchRequest)
 #define MOCCountAll(managedObjectContext, entityName) \
 MOCCount(_managedObjectContext, [NSFetchRequest fetchRequestWithEntityName:entityName])
 
+NS_INLINE NSUInteger NSManagedObjectContextCount(id self, SEL _cmd, NSManagedObjectContext *managedObjectContext, NSFetchRequest *fetchRequest) {
+    NSError __autoreleasing *error = nil;
+    NSUInteger objectsCount = [managedObjectContext countForFetchRequest:fetchRequest error:&error];
+    NSAssert(objectsCount != NSNotFound, @"-[NSManagedObjectContext countForFetchRequest:error:] error:\n\n%@", error);
+    return objectsCount;
+}
+
+
+/*
 #define MOCFetch(managedObjectContext, fetchRequest) \
 NSManagedObjectContextFetch(self, _cmd, managedObjectContext, fetchRequest)
 
@@ -61,13 +70,6 @@ MOCDelete(managedObjectContext, [NSFetchRequest fetchRequestWithEntityName:entit
 NSError __autoreleasing *error = nil; \
 NSAssert([fetchedResultsController performFetch:&error], @"-[NSFetchedResultsController performFetch:] error:\n\n%@", error); }
 
-
-NS_INLINE NSUInteger NSManagedObjectContextCount(id self, SEL _cmd, NSManagedObjectContext *managedObjectContext, NSFetchRequest *fetchRequest) {
-    NSError __autoreleasing *error = nil;
-    NSUInteger objectsCount = [managedObjectContext countForFetchRequest:fetchRequest error:&error];
-    NSAssert(objectsCount != NSNotFound, @"-[NSManagedObjectContext countForFetchRequest:error:] error:\n\n%@", error);
-    return objectsCount;
-}
 
 NS_INLINE NSArray *NSManagedObjectContextFetch(id self, SEL _cmd, NSManagedObjectContext *managedObjectContext, NSFetchRequest *fetchRequest) {
     NSError __autoreleasing *error = nil;

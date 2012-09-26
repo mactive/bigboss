@@ -164,6 +164,10 @@
 		566E82651609A79B00A333EA /* ConversationsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E82641609A79B00A333EA /* ConversationsController.m */; };
 		566E82681609AF2700A333EA /* ContactDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E82671609AF2700A333EA /* ContactDetailController.m */; };
 		566E826D1609B79900A333EA /* LayoutConst.h in Sources */ = {isa = PBXBuildFile; fileRef = 566E826C1609B58100A333EA /* LayoutConst.h */; };
+		56EE29571613075700910CE5 /* FirstLoginController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56EE29551613075600910CE5 /* FirstLoginController.m */; };
+		56EE295B16130B1B00910CE5 /* Me.m in Sources */ = {isa = PBXBuildFile; fileRef = 56EE295A16130B1B00910CE5 /* Me.m */; };
+		56EE295D161318A000910CE5 /* NewUserWelcome.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 56EE295C161318A000910CE5 /* NewUserWelcome.storyboard */; };
+		56EE296016131E5700910CE5 /* StartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56EE295F16131E5600910CE5 /* StartViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -493,6 +497,13 @@
 		566E82661609AF2700A333EA /* ContactDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContactDetailController.h; path = ViewControllers/ContactDetailController.h; sourceTree = "<group>"; };
 		566E82671609AF2700A333EA /* ContactDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContactDetailController.m; path = ViewControllers/ContactDetailController.m; sourceTree = "<group>"; };
 		566E826C1609B58100A333EA /* LayoutConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LayoutConst.h; sourceTree = "<group>"; };
+		56EE29541613075600910CE5 /* FirstLoginController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FirstLoginController.h; path = ViewControllers/FirstLoginController.h; sourceTree = "<group>"; };
+		56EE29551613075600910CE5 /* FirstLoginController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FirstLoginController.m; path = ViewControllers/FirstLoginController.m; sourceTree = "<group>"; };
+		56EE295916130B1B00910CE5 /* Me.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Me.h; path = Models/Me.h; sourceTree = "<group>"; };
+		56EE295A16130B1B00910CE5 /* Me.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Me.m; path = Models/Me.m; sourceTree = "<group>"; };
+		56EE295C161318A000910CE5 /* NewUserWelcome.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = NewUserWelcome.storyboard; sourceTree = "<group>"; };
+		56EE295E16131E5600910CE5 /* StartViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StartViewController.h; path = ViewControllers/StartViewController.h; sourceTree = "<group>"; };
+		56EE295F16131E5600910CE5 /* StartViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StartViewController.m; path = ViewControllers/StartViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1298,6 +1309,8 @@
 		566E825E1609A5FE00A333EA /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				56EE295916130B1B00910CE5 /* Me.h */,
+				56EE295A16130B1B00910CE5 /* Me.m */,
 				566E80B51609A24C00A333EA /* iMedia.xcdatamodeld */,
 				562DE7781611991400F782D2 /* Message.h */,
 				562DE7791611991400F782D2 /* Message.m */,
@@ -1320,6 +1333,11 @@
 				566E82641609A79B00A333EA /* ConversationsController.m */,
 				562DE703160ABFA100F782D2 /* ChatDetailController.h */,
 				562DE704160ABFA100F782D2 /* ChatDetailController.m */,
+				56EE29541613075600910CE5 /* FirstLoginController.h */,
+				56EE29551613075600910CE5 /* FirstLoginController.m */,
+				56EE295E16131E5600910CE5 /* StartViewController.h */,
+				56EE295F16131E5600910CE5 /* StartViewController.m */,
+				56EE295C161318A000910CE5 /* NewUserWelcome.storyboard */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -1445,6 +1463,7 @@
 				562DE76A1610446000F782D2 /* SendButton@2x.png in Resources */,
 				562DE76B1610446000F782D2 /* SendButtonHighlighted.png in Resources */,
 				562DE76C1610446000F782D2 /* SendButtonHighlighted@2x.png in Resources */,
+				56EE295D161318A000910CE5 /* NewUserWelcome.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1597,6 +1616,9 @@
 				562DE76F161186B100F782D2 /* Conversation.m in Sources */,
 				562DE775161186D700F782D2 /* User.m in Sources */,
 				562DE77A1611991400F782D2 /* Message.m in Sources */,
+				56EE29571613075700910CE5 /* FirstLoginController.m in Sources */,
+				56EE295B16130B1B00910CE5 /* Me.m in Sources */,
+				56EE296016131E5700910CE5 /* StartViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1666,7 +1688,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = Libraries/CocoaPlant;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-force_load",
@@ -1693,7 +1715,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = Libraries/CocoaPlant;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				OTHER_LDFLAGS = (
 					"-ObjC",

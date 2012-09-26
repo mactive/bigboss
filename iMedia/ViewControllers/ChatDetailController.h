@@ -22,4 +22,6 @@
 @property (nonatomic, strong) NSMutableArray *bubbleData;
 @property (nonatomic, strong) Conversation *conversation;
 
+@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
+
 @end
