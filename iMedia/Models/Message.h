@@ -2,7 +2,7 @@
 //  Message.h
 //  iMedia
 //
-//  Created by Xiaosi Li on 9/25/12.
+//  Created by Xiaosi Li on 9/27/12.
 //  Copyright (c) 2012 Li Xiaosi. All rights reserved.
 //
 
@@ -15,6 +15,7 @@
 
 @property (nonatomic, retain) NSDate * sentDate;
 @property (nonatomic, retain) NSString * text;
+@property (nonatomic, retain) NSNumber * type;
 @property (nonatomic, retain) Conversation *conversation;
 @property (nonatomic, retain) User *from;
 

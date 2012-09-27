@@ -13,7 +13,7 @@
 #import "Me.h"
 #import "Message.h"
 #import "Conversation.h"
-#import "LayoutConst.h"
+#import "AppDefs.h"
 #import "AppDelegate.h"
 #import "UIBubbleTableViewDataSource.h"
 #import "ACPlaceholderTextView.h"
@@ -42,14 +42,6 @@
 #define MESSAGE_TEXT_SIZE_WITH_FONT(message, font) \
 [message.text sizeWithFont:font constrainedToSize:CGSizeMake(MESSAGE_TEXT_WIDTH_MAX, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap]
 
-#define UIKeyboardNotificationsObserve() \
-NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter]; \
-[notificationCenter addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];\
-[notificationCenter addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
-
-#define UIKeyboardNotificationsUnobserve() \
-[[NSNotificationCenter defaultCenter] removeObserver:self];
-
 
 @interface ChatDetailController () <UITextViewDelegate, UIBubbleTableViewDataSource>
 {
@@ -61,6 +53,9 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 }
 
 - (void)addMessage:(Message *)msg toBubbleData:(NSMutableArray *)data;
+
+// receive new message notification
+- (void)newMessageReceived:(NSNotification *)notification;
 @end
 
 @implementation ChatDetailController
@@ -76,13 +71,15 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 {
     self = [super init];
     if (self) {
-        // Custom initialization
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(newMessageReceived:)
+                                                     name:NEW_MESSAGE_NOTIFICATION object:nil];
     }
     return self;
 }
 
 - (void)dealloc {;
-    UIKeyboardNotificationsUnobserve()
+    NotificationsUnobserve()
 }
 
 - (AppDelegate *)appDelegate
@@ -168,27 +165,41 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 }
 */
 
+- (void)refreshBubbleData
+{
+    NSSet *messages = conversation.messages;
+    bubbleData = [[NSMutableArray alloc] initWithCapacity:[messages count]];
+    NSEnumerator *enumerator = [conversation.messages objectEnumerator];
+    Message* aMessage;
+    while (aMessage = [enumerator nextObject]) {
+        [self addMessage:aMessage toBubbleData:bubbleData];
+    }
+    
+    [bubbleTable reloadData];
+    [self scrollToBottomAnimated:NO];
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-
-    [bubbleTable reloadData];
     
-    [self scrollToBottomAnimated:NO];
-    
+    [self refreshBubbleData];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     UIKeyboardNotificationsObserve();
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(newMessageReceived:)
+                                                 name:NEW_MESSAGE_NOTIFICATION object:nil];
     [self.bubbleTable flashScrollIndicators];
     
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    UIKeyboardNotificationsUnobserve();
+    NotificationsUnobserve();
     [super viewWillDisappear:animated];
 }
 
@@ -253,11 +264,12 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 
 - (void)scrollToBottomAnimated:(BOOL)animated {
     NSInteger numberOfRows = 0;
-    if ([self.bubbleTable numberOfSections] > 0) {
-        numberOfRows = [self.bubbleTable tableView:self.bubbleTable numberOfRowsInSection:0];
+    NSInteger numberOfSections = [self.bubbleTable numberOfSections];
+    if (numberOfSections > 0) {
+        numberOfRows = [self.bubbleTable tableView:self.bubbleTable numberOfRowsInSection:numberOfSections-1];
     }
     if (numberOfRows) {
-        [self.bubbleTable scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:numberOfRows-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:animated];
+        [self.bubbleTable scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:numberOfRows-1 inSection:numberOfSections-1] atScrollPosition:UITableViewScrollPositionBottom animated:animated];
     }
 }
 
@@ -275,21 +287,6 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     return [bubbleData objectAtIndex:row];
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark - HandleNewMessageDelegate implementation
-////////////////////////////////////////////////////////////////////////////////////////////
-- (void)receiveNewMessage:(Message *)message
-{
- //   [bubbleData addObject:[NSBubbleData dataWithText:message.body andDate:[NSDate date] andType:BubbleTypeSomeoneElse]];
-    
-    [bubbleTable reloadData];
-}
-
-- (void)receiveNewEvent:(NSString *)content
-{
-    [bubbleData addObject:[NSBubbleData dataWithText:content andDate:[NSDate date] andType:NSBubbleDataTypeWebview]];
-    [bubbleTable reloadData];
-}
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark UITextViewDelegate
@@ -339,6 +336,8 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     message.text = self.textView.text;
     message.conversation = self.conversation;
     [self.conversation addMessagesObject:message];
+    self.conversation.lastMessageSentDate = message.sentDate;
+    self.conversation.lastMessageText = message.text;
      
     [self addMessage:message toBubbleData:bubbleData];
     [bubbleTable reloadData];
@@ -346,6 +345,8 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     self.textView.text = nil;
     [self textViewDidChange:_textView];
     [self.textView resignFirstResponder];
+    
+    [[self appDelegate] sendChatMessage:message];
 }
 
 - (void)addMessage:(Message *)msg toBubbleData:(NSMutableArray *)data
@@ -357,4 +358,8 @@ NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
     [bubbleData addObject:[NSBubbleData dataWithText:msg.text andDate:msg.sentDate andType:type]];
 }
 
+- (void)newMessageReceived:(NSNotification *)notification
+{
+    [self refreshBubbleData];
+}
 @end

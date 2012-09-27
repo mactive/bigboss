@@ -32,6 +32,15 @@
 #define NAV_MAX_BUTTON 80
 #define TEMPLATE_CELL_HEIGHT 50
 
+#define NEW_MESSAGE_NOTIFICATION @"NewMessage"
+
+#define UIKeyboardNotificationsObserve() \
+NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter]; \
+[notificationCenter addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];\
+[notificationCenter addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+
+#define NotificationsUnobserve() \
+[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 #pragma mark - Core Data
 
@@ -51,6 +60,13 @@ NS_INLINE NSUInteger NSManagedObjectContextCount(id self, SEL _cmd, NSManagedObj
     NSAssert(objectsCount != NSNotFound, @"-[NSManagedObjectContext countForFetchRequest:error:] error:\n\n%@", error);
     return objectsCount;
 }
+
+typedef enum _MessageType
+{
+    MessageTypeChat = 0,
+    MessageTypePublish = 1,
+    MessageTypeNone = 2
+} MessageType;
 
 
 /*

@@ -55,10 +55,14 @@ NSString *const kXMPPmyPassword = @"kXMPPmyPassword";
     [self setField:jidField forKey:kXMPPmyJID];
     [self setField:passwordField forKey:kXMPPmyPassword];
     
+    //bypass the client library bug that : if manual fetch roster before authentication end, no msg
+    //will be sent. This set autofetch property before connection.
+    [self appDelegate].xmppRoster.autoFetchRoster = YES;
+    
     if (![[self appDelegate] connect]) {
         self.passwordField.text = nil;
     } else {
-        [[self appDelegate].xmppRoster fetchRoster];
+        [self appDelegate].xmppRoster.autoFetchRoster = YES;
         [self performSegueWithIdentifier:@"WelcomeMsg" sender:self];
     }
 }

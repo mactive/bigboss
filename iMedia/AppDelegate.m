@@ -14,7 +14,7 @@
 #import "User.h"
 #import "Me.h"
 #import "Conversation.h"
-#import "LayoutConst.h"
+#import "AppDefs.h"
 #import <CocoaPlant/NSManagedObject+CocoaPlant.h>
 
 #import "ConversationsController.h"
@@ -43,6 +43,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 - (void)setupStream;
 - (void)teardownStream;
 - (void)setupRoster;
+-(void)startIntroSession;
 
 - (void)goOnline;
 - (void)goOffline;
@@ -92,42 +93,28 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     // check whether first user
     NSArray *fetchedUsers = MOCFetchAll(_managedObjectContext, @"Me");
     if ([fetchedUsers count] == 0) {
-        self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-        self.window.backgroundColor = [UIColor whiteColor];
-
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"NewUserWelcome" bundle:nil];
-        FirstLoginController *loginViewController = [storyboard instantiateInitialViewController];
-
-        [self.window addSubview:loginViewController.view];
-        [self.window setRootViewController:loginViewController];
-        [self.window makeKeyAndVisible];
-        
+        [self startIntroSession];
     } else if ([fetchedUsers count] == 1) {
         self.me = [fetchedUsers objectAtIndex:0];
-        
         [self startMainSession];
     } else {
         DDLogVerbose(@"%@: %@ multiple ME instance", THIS_FILE, THIS_METHOD);
     }
-    
-
-/*
-    // Fetch or insert the conversation.
-    // This is really for mock test
-    NSArray *fetchedConversations = MOCFetchAll(_managedObjectContext, @"Conversation");
-    if ([fetchedConversations count]) {
-        _conversation = [fetchedConversations objectAtIndex:0];
-    } else {
-        _conversation = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:_managedObjectContext];
-        _conversation.lastMessageSentDate = [NSDate date];
-        User *user = [NSEntityDescription insertNewObjectForEntityForName:@"User" inManagedObjectContext:_managedObjectContext];
-        user.name = @"iMedia";
-        [_conversation addUsersObject:user];
-    }
-    _messagesSending = [NSMutableDictionary dictionary];
-  */ 
 
     return YES;
+}
+
+- (void)startIntroSession
+{
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.window.backgroundColor = [UIColor whiteColor];
+    
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"NewUserWelcome" bundle:nil];
+    FirstLoginController *loginViewController = [storyboard instantiateInitialViewController];
+    
+    [self.window addSubview:loginViewController.view];
+    [self.window setRootViewController:loginViewController];
+    [self.window makeKeyAndVisible];
 }
 
 - (void)startMainSession
@@ -214,7 +201,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	// You can do it however you like! It's your application.
 	// But you do need to provide the roster with some storage facility.
     
-	//xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] initWithDatabaseFilename:@"iMedia.sqlite"];
+	//xmppRosterStorage = [[XMPPRosterCoreDataStorage alloc] initWithDatabaseFilename:@"iMediaTest.sqlite"];
     xmppRosterStorage = [[XMPPRosterMemoryStorage alloc] init];
     
 	xmppRoster = [[XMPPRoster alloc] initWithRosterStorage:xmppRosterStorage];
@@ -278,16 +265,20 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     xmppPubsub = nil;
 }
 
+// Only for first use to initialize User db with full poster. All future add/remove user will be handled via
+// individual request
 - (void)setupRoster
 {
-    [xmppRoster fetchRoster];
-    
+
     XMPPUserMemoryStorageObject* meXMPP = [xmppRosterStorage myUser];
     NSArray* roster = [xmppRosterStorage unsortedUsers];
 
     self.me = [NSEntityDescription insertNewObjectForEntityForName:@"Me" inManagedObjectContext:_managedObjectContext];
     self.me.ePostalID = [meXMPP.jid bare];
     self.me.name = meXMPP.nickname;
+    self.me.username = [[NSUserDefaults standardUserDefaults] stringForKey:kXMPPmyJID];
+	self.me.password = [[NSUserDefaults standardUserDefaults] stringForKey:kXMPPmyPassword];
+
     
     NSInteger count = [roster count];
     for (int i = 0; i < count; i++) {
@@ -464,15 +455,17 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 - (void)addMessageWithXMPPMessage:(XMPPMessage *)msg {
     Message *message = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:_managedObjectContext];
 
-    User *from = [self findUserWithEPostalID:msg.fromStr];
+    User *from = [self findUserWithEPostalID:[[msg from] bare]];
     if (from == nil)
     {
         DDLogError(@"User doesn't exist");
+        return;
     }
     
     message.from = from;
     message.sentDate = [NSDate date];
     message.text = [[msg elementForName:@"body"] stringValue];
+    message.type = [NSNumber numberWithInt:MessageTypeChat];
     
     // Find a conversation that this message belongs. That is judged by the conversation's user list.
     NSSet *results = [from.conversations objectsPassingTest:^(id obj, BOOL *stop){
@@ -488,23 +481,31 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     if ([results count] == 0)
     {
         conv = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:_managedObjectContext];
+        [conv addUsersObject:from];
     } else {
         conv = [results anyObject];
     }
     conv.lastMessageSentDate = message.sentDate;
     conv.lastMessageText = message.text;
     [conv addMessagesObject:message];
-    [conv addUsersObject:from];
+
     
-    // Now setup for display
-    //? i may not need update with the context management
+    // MyNotificationName defined globally
+    NSNotification *myNotification =
+    [NSNotification notificationWithName:NEW_MESSAGE_NOTIFICATION object:conv];
+    [[NSNotificationQueue defaultQueue]
+     enqueueNotification:myNotification
+     postingStyle:NSPostWhenIdle
+     coalesceMask:NSNotificationNoCoalescing
+     forModes:nil];
     
 }
 
-- (void)sendMessage:(Message *)message {
+- (void)sendChatMessage:(Message *)message {
     // Send message.
     // TODO: Prevent this message from getting saved to Core Data if I hit back.
-    XMPPMessage *msg = [XMPPMessage messageWithType:@"chat" to:[XMPPJID jidWithString:message.from.ePostalID]];
+    User *to = [message.conversation.users anyObject];
+    XMPPMessage *msg = [XMPPMessage messageWithType:@"chat" to:[XMPPJID jidWithString:to.ePostalID]];
     NSXMLElement *body = [NSXMLElement elementWithName:@"body" stringValue:message.text];
     [msg  addChild:body];
     [self.xmppStream sendElement:msg];
@@ -620,11 +621,11 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
     if ([message isChatMessageWithBody])
 	{
-		XMPPUserMemoryStorageObject *user = [xmppRosterStorage userForJID:[message from]];
+		XMPPUserMemoryStorageObject *user = [xmppRosterStorage userForJID:[[message from] bareJID]];
         
 		NSString *body = [[message elementForName:@"body"] stringValue];
 		NSString *displayName = [user displayName];
-        
+
 		if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive)
 		{
             [self addMessageWithXMPPMessage:message];
@@ -639,6 +640,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 			[[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
 		}
 	}
+ 
 }
 
 - (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence
@@ -668,7 +670,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 - (void)xmppRoster:(XMPPRoster *)sender didReceiveBuddyRequest:(XMPPPresence *)presence
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-    
+/*
 	XMPPUserMemoryStorageObject *user = [xmppRosterStorage userForJID:[presence from]];
     
 	NSString *displayName = [user displayName];
@@ -703,7 +705,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         
 		[[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
 	}
-    
+ */   
 }
 
 #define NS_PUBSUB_EVENT    @"http://jabber.org/protocol/pubsub#event"
@@ -717,11 +719,56 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
     
     NSXMLElement *event = [message elementForName:@"event" xmlns:NS_PUBSUB_EVENT];
-    NSString *entry = [event description];
+    NSString *entry = [event stringValue];
 
     if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive)
     {
-
+        Message *msg = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:_managedObjectContext];
+        
+        User *from = [self findUserWithEPostalID:[[message from] bare]];
+        if (from == nil)
+        {
+            DDLogError(@"User doesn't exist");
+            return;
+        }
+        
+        msg.from = from;
+        msg.sentDate = [NSDate date];
+        msg.text = entry;
+        msg.type = [NSNumber numberWithInt:MessageTypePublish];
+        
+        // Find a conversation that this message belongs. That is judged by the conversation's user list.
+        NSSet *results = [from.conversations objectsPassingTest:^(id obj, BOOL *stop){
+            Conversation *conv = (Conversation *)obj;
+            if ([conv.users count] == 1) {
+                return YES;
+            }
+            return NO;
+        }];
+        
+        
+        Conversation *conv;
+        if ([results count] == 0)
+        {
+            conv = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:_managedObjectContext];
+            [conv addUsersObject:from];
+        } else {
+            conv = [results anyObject];
+        }
+        conv.lastMessageSentDate = msg.sentDate;
+        conv.lastMessageText = [[event elementForName:@"text"] stringValue];
+        [conv addMessagesObject:msg];
+        
+        
+        // MyNotificationName defined globally
+        NSNotification *myNotification =
+        [NSNotification notificationWithName:NEW_MESSAGE_NOTIFICATION object:conv];
+        [[NSNotificationQueue defaultQueue]
+         enqueueNotification:myNotification
+         postingStyle:NSPostWhenIdle
+         coalesceMask:NSNotificationNoCoalescing
+         forModes:nil];
+        
     }
     
     /*

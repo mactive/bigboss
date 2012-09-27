@@ -7,7 +7,6 @@
 //
 
 #import "ContactDetailController.h"
-#import "LayoutConst.h"
 #import "User.h"
 
 @interface ContactDetailController ()
@@ -51,6 +50,8 @@
     [self.sendMsgButton addTarget:self action:@selector(sendMsgButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:self.sendMsgButton];
+    
+    self.title = self.user.ePostalID;
 
 }
 

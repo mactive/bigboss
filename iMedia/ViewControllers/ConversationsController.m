@@ -12,6 +12,7 @@
 #import "Message.h"
 #import "User.h"
 #import "Conversation.h"
+#import "AppDefs.h"
 
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
@@ -27,6 +28,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 {
     ChatDetailController *_detailController;
 }
+
+// Notication to receive new message
+- (void)newMessageReceived:(NSNotification *)notification;
+
 @end
 
 @implementation ConversationsController
@@ -41,8 +46,15 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         self.title = @"Chat";
         self.tableView.rowHeight = ROW_HEIGHT;
         _detailController = [[ChatDetailController alloc] init];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(newMessageReceived:)
+                                                     name:NEW_MESSAGE_NOTIFICATION object:nil];
     }
     return self;
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -117,9 +129,62 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	return _fetchedResultsController;
 }
 
+/*
+ NSFetchedResultsController delegate methods to respond to additions, removals and so on.
+ */
+
+- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
+{
+    // The fetch controller is about to start sending change notifications, so prepare the table view for updates.
+    [self.tableView beginUpdates];
+}
+
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath
+{
+    UITableView *tableView = self.tableView;
+    
+    switch(type) {
+            
+        case NSFetchedResultsChangeInsert:
+            [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+            
+        case NSFetchedResultsChangeDelete:
+            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+            
+        case NSFetchedResultsChangeUpdate:
+            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] forIndexPath:indexPath];
+            break;
+            
+        case NSFetchedResultsChangeMove:
+            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+    }
+}
+
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type
+{
+    switch(type) {
+            
+        case NSFetchedResultsChangeInsert:
+            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+            
+        case NSFetchedResultsChangeDelete:
+            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+    }
+}
+
+
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
-	[[self tableView] reloadData];
+    // The fetch controller has sent all current change notifications, so tell the table view to process all updates.
+    [self.tableView endUpdates];
 }
 
 
@@ -227,6 +292,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
     if (conversationFound == NO) {
         _detailController.conversation = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:self.managedObjectContext];
+        [_detailController.conversation addUsersObject:user];
     }
     
     _detailController.managedObjectContext = self.managedObjectContext;
@@ -240,19 +306,21 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 #define NAME_TAG 1
 #define TIME_TAG 2
 #define IMAGE_TAG 3
+#define SUMMARY_TAG 4
 
 #define LEFT_COLUMN_OFFSET 10.0
-#define LEFT_COLUMN_WIDTH 160.0
+#define LEFT_COLUMN_WIDTH 36.0
 
-#define MIDDLE_COLUMN_OFFSET 170.0
-#define MIDDLE_COLUMN_WIDTH 90.0
+#define MIDDLE_COLUMN_OFFSET 70.0
+#define MIDDLE_COLUMN_WIDTH 200.0
 
 #define RIGHT_COLUMN_OFFSET 280.0
 
-#define MAIN_FONT_SIZE 18.0
-#define LABEL_HEIGHT 26.0
+#define MAIN_FONT_SIZE 16.0
+#define SUMMARY_FONT_SIZE 14.0
+#define LABEL_HEIGHT 25.0
 
-#define IMAGE_SIDE 30.0
+#define IMAGE_SIDE 50.0
 
 - (UITableViewCell *)tableViewCellWithReuseIdentifier:(NSString *)identifier {
 	
@@ -268,31 +336,41 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	UILabel *label;
 	CGRect rect;
 	
+    // Create an image view for the quarter image.
+	rect = CGRectMake(LEFT_COLUMN_OFFSET, (ROW_HEIGHT - IMAGE_SIDE) / 2.0, IMAGE_SIDE, IMAGE_SIDE);
+    
+	UIImageView *imageView = [[UIImageView alloc] initWithFrame:rect];
+	imageView.tag = IMAGE_TAG;
+	[cell.contentView addSubview:imageView];
+
 	// Create a label for the user name.
-	rect = CGRectMake(LEFT_COLUMN_OFFSET, (ROW_HEIGHT - LABEL_HEIGHT) / 2.0, LEFT_COLUMN_WIDTH, LABEL_HEIGHT);
+	rect = CGRectMake(MIDDLE_COLUMN_OFFSET, (ROW_HEIGHT - LABEL_HEIGHT) / 2.0, MIDDLE_COLUMN_WIDTH, LABEL_HEIGHT);
 	label = [[UILabel alloc] initWithFrame:rect];
 	label.tag = NAME_TAG;
 	label.font = [UIFont boldSystemFontOfSize:MAIN_FONT_SIZE];
+    label.highlighted = YES;
 	label.adjustsFontSizeToFitWidth = YES;
 	[cell.contentView addSubview:label];
 	label.highlightedTextColor = [UIColor whiteColor];
 	
 	// Create a label for the message.
-	rect = CGRectMake(MIDDLE_COLUMN_OFFSET, (ROW_HEIGHT - LABEL_HEIGHT) / 2.0, MIDDLE_COLUMN_WIDTH, LABEL_HEIGHT);
+	rect = CGRectMake(MIDDLE_COLUMN_OFFSET, ROW_HEIGHT - (LABEL_HEIGHT / 2.0), MIDDLE_COLUMN_WIDTH, LABEL_HEIGHT);
+	label = [[UILabel alloc] initWithFrame:rect];
+	label.tag = SUMMARY_TAG;
+	label.font = [UIFont systemFontOfSize:SUMMARY_FONT_SIZE];
+	label.textAlignment = UITextAlignmentRight;
+	[cell.contentView addSubview:label];
+	label.highlightedTextColor = [UIColor whiteColor];
+    
+    // Create a label for the time.
+	rect = CGRectMake(RIGHT_COLUMN_OFFSET, (ROW_HEIGHT - LABEL_HEIGHT) / 2.0, MIDDLE_COLUMN_WIDTH, LABEL_HEIGHT);
 	label = [[UILabel alloc] initWithFrame:rect];
 	label.tag = TIME_TAG;
 	label.font = [UIFont systemFontOfSize:MAIN_FONT_SIZE];
 	label.textAlignment = UITextAlignmentRight;
 	[cell.contentView addSubview:label];
 	label.highlightedTextColor = [UIColor whiteColor];
-    
-	// Create an image view for the quarter image.
-	rect = CGRectMake(RIGHT_COLUMN_OFFSET, (ROW_HEIGHT - IMAGE_SIDE) / 2.0, IMAGE_SIDE, IMAGE_SIDE);
-    
-	UIImageView *imageView = [[UIImageView alloc] initWithFrame:rect];
-	imageView.tag = IMAGE_TAG;
-	[cell.contentView addSubview:imageView];
-	
+		
 	return cell;
 }
 
@@ -312,7 +390,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
    	UILabel *label;
 	
-	// Set the locale name.
+	// Set the conv name.
 	label = (UILabel *)[cell viewWithTag:NAME_TAG];
     label.text = @"";
     NSEnumerator *enumerator = [conv.users objectEnumerator];
@@ -320,6 +398,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     while (anUser = [enumerator nextObject]) {
         label.text = [label.text stringByAppendingFormat:@"%@ ", anUser.ePostalID];
     }
+    
+    // set the last msg text
+    label = (UILabel *)[cell viewWithTag:NAME_TAG];
+    label.text = conv.lastMessageText;
 	
 	// Set the date
 	label = (UILabel *)[cell viewWithTag:TIME_TAG];
@@ -330,5 +412,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	imageView.image = nil;
 }    
 
-
+- (void)newMessageReceived:(NSNotification *)notification
+{
+    [self.tableView reloadData];
+}
 @end

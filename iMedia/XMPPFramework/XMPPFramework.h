@@ -30,6 +30,7 @@
 
 #import "XMPPRoster.h"
 #import "XMPPRosterMemoryStorage.h"
+#import "XMPPRosterCoreDataStorage.h"
 
 
 //#import "XMPPvCardTempModule.h"

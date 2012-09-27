@@ -56,7 +56,7 @@
 
 - (void)startMainSession;
 
-- (void)sendMessage:(Message *)message;
+- (void)sendChatMessage:(Message *)message;
 
 @end
 
