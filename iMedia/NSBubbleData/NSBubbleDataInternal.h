@@ -18,8 +18,7 @@
 typedef enum _NSBubbleDataType
 {
     NSBubbleDataTypeNormalBubble = 0,
-    NSBubbleDataTypeTypingBubble = 1,
-    NSBubbleDataTypeWebview      = 2
+    NSBubbleDataTypeTypingBubble = 1
 } NSBubbleDataType;
 
 @interface NSBubbleDataInternal : NSObject

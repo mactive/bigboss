@@ -455,7 +455,14 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 - (void)addMessageWithXMPPMessage:(XMPPMessage *)msg {
     Message *message = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:_managedObjectContext];
 
-    User *from = [self findUserWithEPostalID:[[msg from] bare]];
+#warning hck
+    NSString* jid = [[msg  from] bare];
+    if ( [@"aaa100@192.168.1.104" isEqualToString:jid]) {
+        jid = @"serverbot@192.168.1.104";
+    }
+    
+    User *from = [self findUserWithEPostalID:jid];
+
     if (from == nil)
     {
         DDLogError(@"User doesn't exist");
@@ -719,13 +726,35 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
     
     NSXMLElement *event = [message elementForName:@"event" xmlns:NS_PUBSUB_EVENT];
-    NSString *entry = [event stringValue];
+    NSXMLElement *items = [event elementForName:@"items"];
+    NSXMLElement *item = [items elementForName:@"item"];
+    NSXMLElement *entry = [item elementForName:@"entry"];
+    NSXMLElement *link = [entry elementForName:@"link"];
+    NSString* linkValue = [link attributeStringValueForName:@"href"];
+    NSString* summary = [[entry elementForName:@"text"] stringValue];
+    NSString *fromJidStr = [items attributeStringValueForName:@"node"];
+    
+    // if haven't setup users, discard message
+#warning debug message
+    NSArray *fetchedUsers = MOCFetchAll(_managedObjectContext, @"Me");
+    if ([fetchedUsers count] == 0) {
+        return;
+    }
+    if (item == nil) {
+        return;
+    }
 
     if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive)
     {
         Message *msg = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:_managedObjectContext];
         
-        User *from = [self findUserWithEPostalID:[[message from] bare]];
+#warning hack
+        NSString* jid = [[message from] bare];
+        if ( [@"sss@192.168.1.104" isEqualToString:fromJidStr]) {
+            jid = @"serverbot@192.168.1.104";
+        }
+        
+        User *from = [self findUserWithEPostalID:jid];
         if (from == nil)
         {
             DDLogError(@"User doesn't exist");
@@ -734,7 +763,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         
         msg.from = from;
         msg.sentDate = [NSDate date];
-        msg.text = entry;
+        msg.text = [@"http://" stringByAppendingString:linkValue];
         msg.type = [NSNumber numberWithInt:MessageTypePublish];
         
         // Find a conversation that this message belongs. That is judged by the conversation's user list.
@@ -756,7 +785,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             conv = [results anyObject];
         }
         conv.lastMessageSentDate = msg.sentDate;
-        conv.lastMessageText = [[event elementForName:@"text"] stringValue];
+        conv.lastMessageText = summary;
         [conv addMessagesObject:msg];
         
         

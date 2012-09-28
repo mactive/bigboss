@@ -312,9 +312,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 #define LEFT_COLUMN_WIDTH 36.0
 
 #define MIDDLE_COLUMN_OFFSET 70.0
-#define MIDDLE_COLUMN_WIDTH 200.0
+#define MIDDLE_COLUMN_WIDTH 180.0
 
-#define RIGHT_COLUMN_OFFSET 280.0
+#define RIGHT_COLUMN_OFFSET 260.0
+#define RIGHT_COLUMN_WIDTH  60
 
 #define MAIN_FONT_SIZE 16.0
 #define SUMMARY_FONT_SIZE 14.0
@@ -344,26 +345,26 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	[cell.contentView addSubview:imageView];
 
 	// Create a label for the user name.
-	rect = CGRectMake(MIDDLE_COLUMN_OFFSET, (ROW_HEIGHT - LABEL_HEIGHT) / 2.0, MIDDLE_COLUMN_WIDTH, LABEL_HEIGHT);
+	rect = CGRectMake(MIDDLE_COLUMN_OFFSET, (ROW_HEIGHT - IMAGE_SIDE) / 2.0, MIDDLE_COLUMN_WIDTH, LABEL_HEIGHT);
 	label = [[UILabel alloc] initWithFrame:rect];
 	label.tag = NAME_TAG;
 	label.font = [UIFont boldSystemFontOfSize:MAIN_FONT_SIZE];
     label.highlighted = YES;
-	label.adjustsFontSizeToFitWidth = YES;
+	label.textAlignment = UITextAlignmentLeft;
 	[cell.contentView addSubview:label];
 	label.highlightedTextColor = [UIColor whiteColor];
 	
 	// Create a label for the message.
-	rect = CGRectMake(MIDDLE_COLUMN_OFFSET, ROW_HEIGHT - (LABEL_HEIGHT / 2.0), MIDDLE_COLUMN_WIDTH, LABEL_HEIGHT);
+	rect = CGRectMake(MIDDLE_COLUMN_OFFSET, ROW_HEIGHT - (IMAGE_SIDE / 2.0), MIDDLE_COLUMN_WIDTH, LABEL_HEIGHT);
 	label = [[UILabel alloc] initWithFrame:rect];
 	label.tag = SUMMARY_TAG;
 	label.font = [UIFont systemFontOfSize:SUMMARY_FONT_SIZE];
-	label.textAlignment = UITextAlignmentRight;
+	label.textAlignment = UITextAlignmentLeft;
 	[cell.contentView addSubview:label];
 	label.highlightedTextColor = [UIColor whiteColor];
     
     // Create a label for the time.
-	rect = CGRectMake(RIGHT_COLUMN_OFFSET, (ROW_HEIGHT - LABEL_HEIGHT) / 2.0, MIDDLE_COLUMN_WIDTH, LABEL_HEIGHT);
+	rect = CGRectMake(RIGHT_COLUMN_OFFSET, (ROW_HEIGHT - LABEL_HEIGHT) / 2.0, RIGHT_COLUMN_WIDTH, LABEL_HEIGHT);
 	label = [[UILabel alloc] initWithFrame:rect];
 	label.tag = TIME_TAG;
 	label.font = [UIFont systemFontOfSize:MAIN_FONT_SIZE];
@@ -400,7 +401,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     }
     
     // set the last msg text
-    label = (UILabel *)[cell viewWithTag:NAME_TAG];
+    label = (UILabel *)[cell viewWithTag:SUMMARY_TAG];
     label.text = conv.lastMessageText;
 	
 	// Set the date

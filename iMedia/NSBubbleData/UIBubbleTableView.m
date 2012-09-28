@@ -127,8 +127,12 @@
             dataInternal.type = NSBubbleDataTypeNormalBubble;
             
             // Calculating cell height
+            if (dataInternal.data.type == BubbleTypeWebview)
+            {
+                dataInternal.labelSize = CGSizeMake(280, 200);
+            } else {
             dataInternal.labelSize = [(dataInternal.data.text ? dataInternal.data.text : @"") sizeWithFont:[UIFont systemFontOfSize:[UIFont systemFontSize]] constrainedToSize:CGSizeMake(220, 9999) lineBreakMode:UILineBreakModeWordWrap];
-            
+            }
             dataInternal.height = dataInternal.labelSize.height + 5 + 11;
             
             dataInternal.header = nil;

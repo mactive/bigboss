@@ -53,6 +53,8 @@
         headerLabel.hidden = YES;
     }
     
+    webView.hidden = YES;
+    
     NSBubbleType type = self.dataInternal.data.type;
     
     float x = (type == BubbleTypeSomeoneElse) ? 20 : self.frame.size.width - 20 - self.dataInternal.labelSize.width;
@@ -61,22 +63,28 @@
     contentLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
     contentLabel.frame = CGRectMake(x, y, self.dataInternal.labelSize.width, self.dataInternal.labelSize.height);
     contentLabel.text = self.dataInternal.data.text;
+    contentLabel.textColor = [UIColor blueColor];
     
     if (type == BubbleTypeSomeoneElse)
     {
+        contentLabel.hidden = NO;
         bubbleImage.image = [[UIImage imageNamed:@"bubbleSomeone.png"] stretchableImageWithLeftCapWidth:21 topCapHeight:14];
         bubbleImage.frame = CGRectMake(x - 18, y - 4, self.dataInternal.labelSize.width + 30, self.dataInternal.labelSize.height + 15);
     }
     else if (type == BubbleTypeMine){
+         contentLabel.hidden = NO;
         bubbleImage.image = [[UIImage imageNamed:@"bubbleMine.png"] stretchableImageWithLeftCapWidth:15 topCapHeight:14];
         bubbleImage.frame = CGRectMake(x - 9, y - 4, self.dataInternal.labelSize.width + 26, self.dataInternal.labelSize.height + 15);
     } else if (type == BubbleTypeWebview){
         contentLabel.hidden = YES;
-        headerLabel.hidden = YES;
+        webView.hidden = NO;
         
-        UIWebView* webView = [[UIWebView alloc] initWithFrame:CGRectMake(x-18, y-4, 280, 200)];
-        [webView loadHTMLString:self.dataInternal.data.text baseURL:[NSURL URLWithString:@"http://google.com"]];
-        [self.contentView addSubview:webView];
+        webView.frame = CGRectMake(10, y-4, 280, 200);
+    //    [webView loadHTMLString:self.dataInternal.data.text baseURL:[NSURL URLWithString:@"http://google.com"]];
+    //    [webView loadRequest:[NSURL URLWithString:self.dataInternal.data.text]];
+        
+        [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:self.dataInternal.data.text]]];
+         webView.scalesPageToFit = YES;
     }
 }
 

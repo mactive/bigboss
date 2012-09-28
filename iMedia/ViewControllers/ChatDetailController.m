@@ -335,6 +335,8 @@
     message.sentDate = [NSDate date];
     message.text = self.textView.text;
     message.conversation = self.conversation;
+    message.type = [NSNumber numberWithInt:MessageTypeChat];
+    
     [self.conversation addMessagesObject:message];
     self.conversation.lastMessageSentDate = message.sentDate;
     self.conversation.lastMessageText = message.text;
@@ -355,7 +357,12 @@
     if (msg.from.ePostalID != [self appDelegate].me.ePostalID) {
         type = BubbleTypeSomeoneElse;
     }
-    [bubbleData addObject:[NSBubbleData dataWithText:msg.text andDate:msg.sentDate andType:type]];
+    if (msg.type == [NSNumber numberWithInt:MessageTypeChat])
+    {
+      [bubbleData addObject:[NSBubbleData dataWithText:msg.text andDate:msg.sentDate andType:type]];
+    } else if (msg.type == [NSNumber numberWithInt:MessageTypePublish]) {
+       [bubbleData addObject:[NSBubbleData dataWithText:msg.text andDate:msg.sentDate andType:BubbleTypeWebview]];
+    }
 }
 
 - (void)newMessageReceived:(NSNotification *)notification
