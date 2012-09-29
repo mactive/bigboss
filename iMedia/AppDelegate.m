@@ -20,6 +20,7 @@
 #import "ConversationsController.h"
 #import "ContactListViewController.h"
 #import "FirstLoginController.h"
+#import "ProfileController.h"
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG

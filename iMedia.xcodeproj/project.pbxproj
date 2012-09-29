@@ -168,6 +168,7 @@
 		56EE295D161318A000910CE5 /* NewUserWelcome.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 56EE295C161318A000910CE5 /* NewUserWelcome.storyboard */; };
 		56EE296016131E5700910CE5 /* StartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56EE295F16131E5600910CE5 /* StartViewController.m */; };
 		56EE296D1614651700910CE5 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 56EE296C1614651700910CE5 /* Message.m */; };
+		56EE2970161696FB00910CE5 /* ProfileController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56EE296F161696FA00910CE5 /* ProfileController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -504,6 +505,8 @@
 		56EE295F16131E5600910CE5 /* StartViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StartViewController.m; path = ViewControllers/StartViewController.m; sourceTree = "<group>"; };
 		56EE296B1614651700910CE5 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Message.h; path = Models/Message.h; sourceTree = "<group>"; };
 		56EE296C1614651700910CE5 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Message.m; path = Models/Message.m; sourceTree = "<group>"; };
+		56EE296E161696F900910CE5 /* ProfileController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProfileController.h; path = ViewControllers/ProfileController.h; sourceTree = "<group>"; };
+		56EE296F161696FA00910CE5 /* ProfileController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProfileController.m; path = ViewControllers/ProfileController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1338,6 +1341,8 @@
 				56EE295E16131E5600910CE5 /* StartViewController.h */,
 				56EE295F16131E5600910CE5 /* StartViewController.m */,
 				56EE295C161318A000910CE5 /* NewUserWelcome.storyboard */,
+				56EE296E161696F900910CE5 /* ProfileController.h */,
+				56EE296F161696FA00910CE5 /* ProfileController.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -1619,6 +1624,7 @@
 				56EE295B16130B1B00910CE5 /* Me.m in Sources */,
 				56EE296016131E5700910CE5 /* StartViewController.m in Sources */,
 				56EE296D1614651700910CE5 /* Message.m in Sources */,
+				56EE2970161696FB00910CE5 /* ProfileController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
