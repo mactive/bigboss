@@ -162,7 +162,7 @@
 		566E82651609A79B00A333EA /* ConversationsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E82641609A79B00A333EA /* ConversationsController.m */; };
 		566E82681609AF2700A333EA /* ContactDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E82671609AF2700A333EA /* ContactDetailController.m */; };
 		566E826D1609B79900A333EA /* AppDefs.h in Sources */ = {isa = PBXBuildFile; fileRef = 566E826C1609B58100A333EA /* AppDefs.h */; };
-		56DF5E2016256AA800E75105 /* NetworkCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 56DF5E1F16256AA800E75105 /* NetworkCenter.m */; };
+		56B4CCDB1625818D00E046CC /* XMPPNetworkCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CCDA1625818D00E046CC /* XMPPNetworkCenter.m */; };
 		56DF5E2316256DB800E75105 /* Conversation.m in Sources */ = {isa = PBXBuildFile; fileRef = 56DF5E2216256DB800E75105 /* Conversation.m */; };
 		56DF5E2616256DB900E75105 /* Channel.m in Sources */ = {isa = PBXBuildFile; fileRef = 56DF5E2516256DB900E75105 /* Channel.m */; };
 		56DF5E6516257F5600E75105 /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 56DF5E5016257F5600E75105 /* SBJsonParser.m */; };
@@ -508,8 +508,8 @@
 		566E82661609AF2700A333EA /* ContactDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContactDetailController.h; path = ViewControllers/ContactDetailController.h; sourceTree = "<group>"; };
 		566E82671609AF2700A333EA /* ContactDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContactDetailController.m; path = ViewControllers/ContactDetailController.m; sourceTree = "<group>"; };
 		566E826C1609B58100A333EA /* AppDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDefs.h; sourceTree = "<group>"; };
-		56DF5E1E16256AA800E75105 /* NetworkCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NetworkCenter.h; path = Network/NetworkCenter.h; sourceTree = "<group>"; };
-		56DF5E1F16256AA800E75105 /* NetworkCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NetworkCenter.m; path = Network/NetworkCenter.m; sourceTree = "<group>"; };
+		56B4CCD91625818D00E046CC /* XMPPNetworkCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPNetworkCenter.h; path = Network/XMPPNetworkCenter.h; sourceTree = "<group>"; };
+		56B4CCDA1625818D00E046CC /* XMPPNetworkCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMPPNetworkCenter.m; path = Network/XMPPNetworkCenter.m; sourceTree = "<group>"; };
 		56DF5E2116256DB800E75105 /* Conversation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Conversation.h; path = Models/Conversation.h; sourceTree = "<group>"; };
 		56DF5E2216256DB800E75105 /* Conversation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Conversation.m; path = Models/Conversation.m; sourceTree = "<group>"; };
 		56DF5E2416256DB900E75105 /* Channel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Channel.h; path = Models/Channel.h; sourceTree = "<group>"; };
@@ -701,11 +701,10 @@
 			children = (
 				562DE6F3160ABF2100F782D2 /* NSBubbleData */,
 				566E80D61609A2AA00A333EA /* XMPPFramework */,
-				566E82531609A2E500A333EA /* XMPPFramework.h */,
 				56DF5E4C16257E9D00E75105 /* SBJson */,
 				56DF5E1A162564D100E75105 /* Network */,
-				566E80B31609A24C00A333EA /* AppDelegate.m */,
 				566E80B21609A24C00A333EA /* AppDelegate.h */,
+				566E80B31609A24C00A333EA /* AppDelegate.m */,
 				566E826C1609B58100A333EA /* AppDefs.h */,
 				5646FAF7160D4B7B00175B78 /* Views */,
 				566E825F1609A61B00A333EA /* ViewControllers */,
@@ -1397,8 +1396,9 @@
 		56DF5E1A162564D100E75105 /* Network */ = {
 			isa = PBXGroup;
 			children = (
-				56DF5E1E16256AA800E75105 /* NetworkCenter.h */,
-				56DF5E1F16256AA800E75105 /* NetworkCenter.m */,
+				566E82531609A2E500A333EA /* XMPPFramework.h */,
+				56B4CCD91625818D00E046CC /* XMPPNetworkCenter.h */,
+				56B4CCDA1625818D00E046CC /* XMPPNetworkCenter.m */,
 			);
 			name = Network;
 			sourceTree = "<group>";
@@ -1712,7 +1712,6 @@
 				56EE296016131E5700910CE5 /* StartViewController.m in Sources */,
 				56EE296D1614651700910CE5 /* Message.m in Sources */,
 				56EE2970161696FB00910CE5 /* ProfileController.m in Sources */,
-				56DF5E2016256AA800E75105 /* NetworkCenter.m in Sources */,
 				56DF5E2316256DB800E75105 /* Conversation.m in Sources */,
 				56DF5E2616256DB900E75105 /* Channel.m in Sources */,
 				56DF5E6516257F5600E75105 /* SBJsonParser.m in Sources */,
@@ -1727,6 +1726,7 @@
 				56DF5E6E16257F5600E75105 /* SBJsonUTF8Stream.m in Sources */,
 				56DF5E6F16257F5600E75105 /* SBJsonWriter.m in Sources */,
 				56DF5E7216257F7A00E75105 /* NSObject+SBJson.m in Sources */,
+				56B4CCDB1625818D00E046CC /* XMPPNetworkCenter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
