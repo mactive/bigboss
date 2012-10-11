@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2549" systemVersion="12C54" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="JPY-K8-DO0">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="2843" systemVersion="12C60" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="JPY-K8-DO0">
     <dependencies>
-        <deployment defaultVersion="1296" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1498"/>
+        <deployment defaultVersion="1536" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="1929"/>
     </dependencies>
     <scenes>
         <!--First Login Controller-->
         <scene sceneID="N7k-Df-smX">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Qze-Q7-3AL" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="JPY-K8-DO0" customClass="FirstLoginController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="M1t-ui-Jnh">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
@@ -51,7 +50,7 @@
                                 </connections>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Jzn-t0-fa3">
-                                <rect key="frame" x="124" y="153" width="72" height="37"/>
+                                <rect key="frame" x="124" y="143" width="72" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="GO">
@@ -63,7 +62,6 @@
                                 </state>
                                 <connections>
                                     <action selector="loginPressed:" destination="JPY-K8-DO0" eventType="touchUpInside" id="qn0-bO-vFr"/>
-                                    <segue destination="SiL-KX-fSk" kind="modal" identifier="WelcomeMsg" id="2lY-h1-mUw"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -72,15 +70,16 @@
                     <connections>
                         <outlet property="jidField" destination="Bi9-LL-TuC" id="CPR-pD-0Sn"/>
                         <outlet property="passwordField" destination="NpT-jW-mlw" id="Hat-qz-zJp"/>
+                        <segue destination="SiL-KX-fSk" kind="modal" identifier="WelcomeMsg" id="kkS-EH-3Yb"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Qze-Q7-3AL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-371" y="-96"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="VDk-VT-Iqh">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="q84-Jm-6o3" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="SiL-KX-fSk" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="yxu-aS-S9m">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
@@ -106,13 +105,13 @@
                     </view>
                     <navigationItem key="navigationItem" id="tdW-7A-sa1"/>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="q84-Jm-6o3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="97" y="-96"/>
         </scene>
         <!--Start View Controller-->
         <scene sceneID="TrO-2Q-2Qd">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="y4I-dh-tIW" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="gfu-QG-4hv" customClass="StartViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="vtS-6r-gmR">
                         <rect key="frame" x="0.0" y="20" width="320" height="460"/>
@@ -137,27 +136,11 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="y4I-dh-tIW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="519" y="-101"/>
         </scene>
     </scenes>
-    <classes>
-        <class className="FirstLoginController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/FirstLoginController.h"/>
-            <relationships>
-                <relationship kind="action" name="hideKeyboard:"/>
-                <relationship kind="action" name="loginPressed:"/>
-                <relationship kind="outlet" name="jidField" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="passwordField" candidateClass="UITextField"/>
-            </relationships>
-        </class>
-        <class className="StartViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/StartViewController.h"/>
-            <relationships>
-                <relationship kind="action" name="donePressed:"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

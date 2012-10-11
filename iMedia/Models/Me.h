@@ -2,7 +2,7 @@
 //  Me.h
 //  iMedia
 //
-//  Created by Xiaosi Li on 9/26/12.
+//  Created by Xiaosi Li on 10/11/12.
 //  Copyright (c) 2012 Li Xiaosi. All rights reserved.
 //
 
@@ -13,7 +13,8 @@
 
 @interface Me : User
 
-@property (nonatomic, retain) NSString * username;
 @property (nonatomic, retain) NSString * password;
+@property (nonatomic, retain) NSString * username;
+@property (nonatomic, retain) NSString * ePostalPassword;
 
 @end

@@ -2,7 +2,7 @@
 //  Channel.h
 //  iMedia
 //
-//  Created by Li Xiaosi on 10/10/12.
+//  Created by Xiaosi Li on 10/11/12.
 //  Copyright (c) 2012 Li Xiaosi. All rights reserved.
 //
 
@@ -13,10 +13,10 @@
 
 @interface Channel : NSManagedObject
 
-@property (nonatomic, retain) NSString * announcePostalID;
-@property (nonatomic, retain) NSString * receiverPostalID;
 @property (nonatomic, retain) NSString * csPostalIDPattern;
 @property (nonatomic, retain) NSString * displayName;
+@property (nonatomic, retain) NSString * receiverPostalID;
+@property (nonatomic, retain) NSString * node;
 @property (nonatomic, retain) Conversation *conversation;
 
 @end

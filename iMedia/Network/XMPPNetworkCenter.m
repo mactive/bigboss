@@ -10,9 +10,16 @@
 #import "XMPPFramework.h"
 #import "DDLog.h"
 
+#import "User.h"
+#import "Message.h"
+#import "Channel.h"
+#import "Conversation.h"
+#import "ModelSearchHelper.h"
+#import "NetMessageConverter.h"
+
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
-@interface XMPPNetworkCenter () <XMPPRosterDelegate, XMPPPubSubDelegate>
+@interface XMPPNetworkCenter () <XMPPRosterDelegate, XMPPPubSubDelegate, XMPPRosterMemoryStorageDelegate>
 {
     
     NSString *password;
@@ -47,6 +54,18 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 @synthesize xmppRoster;
 @synthesize xmppRosterStorage;
 @synthesize xmppPubsub;
+@synthesize managedObjectContext = _managedObjectContext;
+
++ (XMPPNetworkCenter *)sharedClient {
+    static XMPPNetworkCenter *_sharedClient = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _sharedClient = [[XMPPNetworkCenter alloc] init];
+    });
+    
+    return _sharedClient;
+}
+
 
 - (BOOL)setupWithHostname:(NSString *)hostname andPort:(int)port
 {
@@ -100,6 +119,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     
 	xmppRoster.autoFetchRoster = NO;
 	xmppRoster.autoAcceptKnownPresenceSubscriptionRequests = YES;
+    xmppRoster.allowRosterlessOperation = YES;
     
     // Setup XMPP PubSub
     //xmppPubsub = [[XMPPPubSub alloc] initWithServiceJID:[XMPPJID jidWithString:@"pubsub.192.168.1.104"]];
@@ -140,6 +160,30 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     return YES;
 }
 
+- (void)teardownStream
+{
+	[xmppStream removeDelegate:self];
+	[xmppRoster removeDelegate:self];
+    [xmppPubsub removeDelegate:self];
+    
+	[xmppReconnect         deactivate];
+	[xmppRoster            deactivate];
+    [xmppPubsub            deactivate];
+    
+	[xmppStream disconnect];
+    
+	xmppStream = nil;
+	xmppReconnect = nil;
+    xmppRoster = nil;
+	xmppRosterStorage = nil;
+    xmppPubsub = nil;
+}
+
+-(BOOL)isConnected
+{
+    return ![xmppStream isDisconnected];
+}
+
 - (BOOL)connectWithUsername:(NSString *)username andPassword:(NSString *)passwd
 {
 	if (![xmppStream isDisconnected]) {
@@ -177,18 +221,461 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 	return YES;
 }
 
--(BOOL)sendMessage:(NSDictionary *)msgDict
+- (BOOL)disconnect
 {
-    NSString* msgBody = [msgDict valueForKey:MESSAGE_BODY_DICT_KEY];
+	[self goOffline];
+	[xmppStream disconnect];
     
-    XMPPMessage *msg = [XMPPMessage messageWithType:[msgDict valueForKey:MESSAGE_TYPE_DICT_KEY] to:[XMPPJID jidWithString:[msgDict valueForKey:MESSAGE_TO_DICT_KEY]]];
-    NSXMLElement *body = [NSXMLElement elementWithName:@"body" stringValue:msgBody];
-    [msg  addChild:body];
+    return YES;
+}
+
+
+-(BOOL)sendMessage:(Message *)message
+{
+    XMPPMessage* msg = [NetMessageConverter newXMPPMessageFromMessage:message];
     [self.xmppStream sendElement:msg];
     
   //  NSNumber *messageSendingIndex = @([_messagesSending count]);
     //[_messagesSending setObject:message forKey:messageSendingIndex];
     return YES;
+}
+
+// It's easy to create XML elments to send and to read received XML elements.
+// You have the entire NSXMLElement and NSXMLNode API's.
+//
+// In addition to this, the NSXMLElement+XMPP category provides some very handy methods for working with XMPP.
+//
+// On the iPhone, Apple chose not to include the full NSXML suite.
+// No problem - we use the KissXML library as a drop in replacement.
+//
+// For more information on working with XML elements, see the Wiki article:
+// http://code.google.com/p/xmppframework/wiki/WorkingWithElements
+
+- (void)goOnline
+{
+	XMPPPresence *presence = [XMPPPresence presence]; // type="available" is implicit
+    
+	[[self xmppStream] sendElement:presence];
+}
+
+- (void)goOffline
+{
+	XMPPPresence *presence = [XMPPPresence presenceWithType:@"unavailable"];
+    
+	[[self xmppStream] sendElement:presence];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark XMPPStream Delegate
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (void)xmppStream:(XMPPStream *)sender socketDidConnect:(GCDAsyncSocket *)socket
+{
+	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+}
+
+- (void)xmppStream:(XMPPStream *)sender willSecureWithSettings:(NSMutableDictionary *)settings
+{
+	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+    
+	if (allowSelfSignedCertificates)
+	{
+		[settings setObject:[NSNumber numberWithBool:YES] forKey:(NSString *)kCFStreamSSLAllowsAnyRoot];
+	}
+    
+	if (allowSSLHostNameMismatch)
+	{
+		[settings setObject:[NSNull null] forKey:(NSString *)kCFStreamSSLPeerName];
+	}
+	else
+	{
+		// Google does things incorrectly (does not conform to RFC).
+		// Because so many people ask questions about this (assume xmpp framework is broken),
+		// I've explicitly added code that shows how other xmpp clients "do the right thing"
+		// when connecting to a google server (gmail, or google apps for domains).
+        
+		NSString *expectedCertName = nil;
+        
+		NSString *serverDomain = xmppStream.hostName;
+		NSString *virtualDomain = [xmppStream.myJID domain];
+        
+		if ([serverDomain isEqualToString:@"talk.google.com"])
+		{
+			if ([virtualDomain isEqualToString:@"gmail.com"])
+			{
+				expectedCertName = virtualDomain;
+			}
+			else
+			{
+				expectedCertName = serverDomain;
+			}
+		}
+		else if (serverDomain == nil)
+		{
+			expectedCertName = virtualDomain;
+		}
+		else
+		{
+			expectedCertName = serverDomain;
+		}
+        
+		if (expectedCertName)
+		{
+			[settings setObject:expectedCertName forKey:(NSString *)kCFStreamSSLPeerName];
+		}
+	}
+}
+
+- (void)xmppStreamDidSecure:(XMPPStream *)sender
+{
+	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+}
+
+- (void)xmppStreamDidConnect:(XMPPStream *)sender
+{
+	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+    
+	isXmppConnected = YES;
+    
+	NSError *error = nil;
+    
+	if (![[self xmppStream] authenticateWithPassword:password error:&error])
+	{
+		DDLogError(@"Error authenticating: %@", error);
+	}
+}
+
+- (void)xmppStreamDidAuthenticate:(XMPPStream *)sender
+{
+	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+    
+	[self goOnline];
+    
+    //fetch roster
+#warning "Here needs some condition check, otherwise rosters are fetched everytime. ideally it only fetch first time
+    [xmppRoster fetchRoster];
+}
+
+- (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error
+{
+	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+}
+
+- (BOOL)xmppStream:(XMPPStream *)sender didReceiveIQ:(XMPPIQ *)iq
+{
+	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+    
+	return NO;
+}
+
+- (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)message
+{
+	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+    
+    if ([message isChatMessageWithBody])
+	{
+		XMPPUserMemoryStorageObject *user = [xmppRosterStorage userForJID:[[message from] bareJID]];
+        
+		NSString *body = [[message elementForName:@"body"] stringValue];
+		NSString *displayName = [user displayName];
+        
+		if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive)
+		{
+            Message *msg = [NetMessageConverter newMessageFromXMPPMessage:message inContext:_managedObjectContext];
+            
+            // MyNotificationName defined globally
+            NSNotification *myNotification =
+            [NSNotification notificationWithName:NEW_MESSAGE_NOTIFICATION object:msg];
+            [[NSNotificationQueue defaultQueue]
+             enqueueNotification:myNotification
+             postingStyle:NSPostWhenIdle
+             coalesceMask:NSNotificationNoCoalescing
+             forModes:nil];
+
+		}
+		else
+		{
+			// We are not active, so use a local notification instead
+			UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+			localNotification.alertAction = @"Ok";
+			localNotification.alertBody = [NSString stringWithFormat:@"From: %@\n\n%@",displayName,body];
+            
+			[[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
+		}
+	}
+    
+}
+
+- (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence
+{
+	DDLogVerbose(@"%@: %@ - %@", THIS_FILE, THIS_METHOD, [presence fromStr]);
+}
+
+- (void)xmppStream:(XMPPStream *)sender didReceiveError:(id)error
+{
+	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+}
+
+- (void)xmppStreamDidDisconnect:(XMPPStream *)sender withError:(NSError *)error
+{
+	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+    
+	if (!isXmppConnected)
+	{
+		DDLogError(@"Unable to connect to server. Check xmppStream.hostName");
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark XMPPRosterMemoryStoargeDelegate
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//
+// everytime some poster change happened, local user db should be updated
+//
+- (void)xmppRoster:(XMPPRosterMemoryStorage *)sender didAddUser:(XMPPUserMemoryStorageObject *)user
+{
+    DDLogVerbose(@"add user: %@", user);
+    
+    NSString* ePostalID = [user.jid bare];
+    
+    XMPPUserMemoryStorageObject *me = [sender myUser];
+    if ([ePostalID isEqualToString:[me.jid bare]]) {
+        return;
+    }
+    
+    NSManagedObjectContext *moc = _managedObjectContext;
+    NSEntityDescription *entityDescription = [NSEntityDescription
+                                              entityForName:@"User" inManagedObjectContext:moc];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDescription];
+    
+    // Set example predicate and sort orderings...
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:
+                              @"(ePostalID = %@)", ePostalID];
+    [request setPredicate:predicate];
+    
+    NSError *error = nil;
+    NSArray *array = [moc executeFetchRequest:request error:&error];
+    
+    // insert user if it doesn't exist
+    if ([array count] == 0) {
+        User *userNS = [NSEntityDescription insertNewObjectForEntityForName:@"User" inManagedObjectContext:_managedObjectContext];
+        userNS.name = user.nickname;
+        userNS.ePostalID = [user.jid bare];
+        
+        MOCSave(_managedObjectContext);
+    }
+
+    
+}
+
+//
+// Implement this delegate so to create local users from the poster
+// this function should only be used once
+//
+- (void)xmppRosterDidPopulate:(XMPPRosterMemoryStorage *)sender
+{
+    XMPPUserMemoryStorageObject *me = [sender myUser];
+    NSArray* roster = [sender unsortedUsers];
+    NSInteger count = [roster count];
+    for (int i = 0 ; i < count ; i++) {
+        XMPPUserMemoryStorageObject *obj = [roster objectAtIndex:i];
+        if ([obj.jid isEqualToJID:me.jid options:XMPPJIDCompareBare]) {
+            continue;
+        }
+        
+        NSString* ePostalID = [obj.jid bare];
+        
+        NSManagedObjectContext *moc = _managedObjectContext;
+        NSEntityDescription *entityDescription = [NSEntityDescription
+                                                  entityForName:@"User" inManagedObjectContext:moc];
+        NSFetchRequest *request = [[NSFetchRequest alloc] init];
+        [request setEntity:entityDescription];
+        
+        // Set example predicate and sort orderings...
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:
+                                  @"(ePostalID = %@)", ePostalID];
+        [request setPredicate:predicate];
+        
+        NSError *error = nil;
+        NSArray *array = [moc executeFetchRequest:request error:&error];
+        
+        // insert user if it doesn't exist
+        if ([array count] == 0) {
+            User *userNS = [NSEntityDescription insertNewObjectForEntityForName:@"User" inManagedObjectContext:_managedObjectContext];
+            userNS.name = obj.nickname;
+            userNS.ePostalID = [obj.jid bare];
+        }
+    }
+    
+    MOCSave(_managedObjectContext);
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark XMPPRosterDelegate
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (void)xmppRoster:(XMPPRoster *)sender didReceiveBuddyRequest:(XMPPPresence *)presence
+{
+	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+    /*
+     XMPPUserMemoryStorageObject *user = [xmppRosterStorage userForJID:[presence from]];
+     
+     NSString *displayName = [user displayName];
+     NSString *jidStrBare = [presence fromStr];
+     NSString *body = nil;
+     
+     if (![displayName isEqualToString:jidStrBare])
+     {
+     body = [NSString stringWithFormat:@"Buddy request from %@ <%@>", displayName, jidStrBare];
+     }
+     else
+     {
+     body = [NSString stringWithFormat:@"Buddy request from %@", displayName];
+     }
+     
+     
+     if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive)
+     {
+     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:displayName
+     message:body
+     delegate:nil
+     cancelButtonTitle:@"Not implemented"
+     otherButtonTitles:nil];
+     [alertView show];
+     }
+     else
+     {
+     // We are not active, so use a local notification instead
+     UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+     localNotification.alertAction = @"Not implemented";
+     localNotification.alertBody = body;
+     
+     [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
+     }
+     */
+}
+
+#define NS_PUBSUB_EVENT    @"http://jabber.org/protocol/pubsub#event"
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark XMPPPubsubDelegate
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)xmppPubSub:(XMPPPubSub *)sender didReceiveMessage:(XMPPMessage *)message
+{
+    /*
+    DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+    
+    NSXMLElement *event = [message elementForName:@"event" xmlns:NS_PUBSUB_EVENT];
+    NSXMLElement *items = [event elementForName:@"items"];
+    NSXMLElement *item = [items elementForName:@"item"];
+    NSXMLElement *entry = [item elementForName:@"entry"];
+    NSXMLElement *link = [entry elementForName:@"link"];
+    NSString* linkValue = [link attributeStringValueForName:@"href"];
+    NSString* summary = [[entry elementForName:@"text"] stringValue];
+    NSString *fromJidStr = [items attributeStringValueForName:@"node"];
+    
+    // if haven't setup users, discard message
+#warning debug message
+    NSArray *fetchedUsers = MOCFetchAll(_managedObjectContext, @"Me");
+    if ([fetchedUsers count] == 0) {
+        return;
+    }
+    if (item == nil) {
+        return;
+    }
+    
+    if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive)
+    {
+        Message *msg = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:_managedObjectContext];
+        
+#warning hack
+        NSString* jid = [[message from] bare];
+        if ( [@"sss@192.168.1.104" isEqualToString:fromJidStr]) {
+            jid = @"serverbot@192.168.1.104";
+        }
+        
+        User *from = [self findUserWithEPostalID:jid];
+        if (from == nil)
+        {
+            DDLogError(@"User doesn't exist");
+            return;
+        }
+        
+        msg.from = from;
+        msg.sentDate = [NSDate date];
+        msg.text = [@"http://" stringByAppendingString:linkValue];
+        msg.type = [NSNumber numberWithInt:MessageTypePublish];
+        
+        // Find a conversation that this message belongs. That is judged by the conversation's user list.
+        NSSet *results = [from.conversations objectsPassingTest:^(id obj, BOOL *stop){
+            Conversation *conv = (Conversation *)obj;
+            if ([conv.users count] == 1) {
+                return YES;
+            }
+            return NO;
+        }];
+        
+        
+        Conversation *conv;
+        if ([results count] == 0)
+        {
+            conv = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:_managedObjectContext];
+            [conv addUsersObject:from];
+        } else {
+            conv = [results anyObject];
+        }
+        conv.lastMessageSentDate = msg.sentDate;
+        conv.lastMessageText = summary;
+        [conv addMessagesObject:msg];
+        
+        
+        // MyNotificationName defined globally
+        NSNotification *myNotification =
+        [NSNotification notificationWithName:NEW_MESSAGE_NOTIFICATION object:conv];
+        [[NSNotificationQueue defaultQueue]
+         enqueueNotification:myNotification
+         postingStyle:NSPostWhenIdle
+         coalesceMask:NSNotificationNoCoalescing
+         forModes:nil];
+        
+    }
+    
+    /*
+     
+     // A simple example of inbound message handling.
+     
+     if ([message isChatMessageWithBody])
+     {
+     XMPPUserCoreDataStorageObject *user = [xmppRosterStorage userForJID:[message from]
+     xmppStream:xmppStream
+     managedObjectContext:[self managedObjectContext_roster]];
+     
+     NSString *body = [[message elementForName:@"body"] stringValue];
+     NSString *displayName = [user displayName];
+     
+     if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive)
+     {
+     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:displayName
+     message:body
+     delegate:nil
+     cancelButtonTitle:@"Ok"
+     otherButtonTitles:nil];
+     [alertView show];
+     }
+     else
+     {
+     // We are not active, so use a local notification instead
+     UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+     localNotification.alertAction = @"Ok";
+     localNotification.alertBody = [NSString stringWithFormat:@"From: %@\n\n%@",displayName,body];
+     
+     [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
+     }
+     }
+     */
+    
 }
 
 

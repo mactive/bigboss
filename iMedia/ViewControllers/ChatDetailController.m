@@ -348,7 +348,7 @@
     [self textViewDidChange:_textView];
     [self.textView resignFirstResponder];
     
-    [[self appDelegate] sendChatMessage:message];
+    [[XMPPNetworkCenter sharedClient] sendMessage:message];
 }
 
 - (void)addMessage:(Message *)msg toBubbleData:(NSMutableArray *)data

@@ -6,23 +6,21 @@
 //  Copyright (c) 2012 Li Xiaosi. All rights reserved.
 //
 
-@protocol XMPPNetworkCenterDelegate <NSObject>
-
--(void)didReceiveMessage:(NSString*)jsonText;
-
-@end
-
-#define MESSAGE_TYPE_DICT_KEY       type
-#define MESSAGE_TO_DICT_KEY         to
-#define MESSAGE_BODY_DICT_KEY       body
+@class Message;
 
 @interface XMPPNetworkCenter : NSObject
 
++ (XMPPNetworkCenter *)sharedClient;
+
+@property (strong, nonatomic) NSManagedObjectContext* managedObjectContext;
+
 -(BOOL)connectWithUsername:(NSString *)username andPassword:(NSString *)password;
 -(BOOL)setupWithHostname:(NSString *)hostname andPort:(int)port;
+-(void)teardownStream;
 
--(BOOL)disconnet;
+-(BOOL)disconnect;
+-(BOOL)isConnected;
 
--(BOOL)sendMessage:(NSDictionary*)msgDict;
+-(BOOL)sendMessage:(Message *)message;
 
 @end
