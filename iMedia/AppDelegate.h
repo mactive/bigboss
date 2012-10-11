@@ -24,10 +24,6 @@
 
 @property (strong, nonatomic) Me *me;
 
-//- (NSManagedObjectContext *)managedObjectContext_roster;
-//- (NSManagedObjectContext *)managedObjectContext_capabilities;
-//- (NSManagedObjectContext *)managedObjectContext_archive;
-
 - (void)startMainSession;
 - (void)createMeWithUsername:(NSString *)username password:(NSString *)passwd jid:(NSString *)jidStr andJidPasswd:(NSString *)jidPass;
 
