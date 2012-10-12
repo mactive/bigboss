@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@protocol ChatWithUserDelegate;
+@protocol chatWithIdentityDelegate;
 @class User;
 
 @interface ContactDetailController : UIViewController
@@ -21,12 +21,12 @@
 
 @property (strong, nonatomic) User *user;
 
-@property (strong, nonatomic) id <ChatWithUserDelegate> delegate;
+@property (strong, nonatomic) id <chatWithIdentityDelegate> delegate;
 
 @end
 
-@protocol ChatWithUserDelegate <NSObject>
+@protocol chatWithIdentityDelegate <NSObject>
 
-- (void)contactDetailController:(ContactDetailController *)contactDetailController didChatUser:(User *)user;
+- (void)contactDetailController:(ContactDetailController *)contactDetailController didChatIdentity:(id)obj;
 
 @end

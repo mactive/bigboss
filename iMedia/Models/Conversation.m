@@ -2,7 +2,7 @@
 //  Conversation.m
 //  iMedia
 //
-//  Created by Li Xiaosi on 10/10/12.
+//  Created by Xiaosi Li on 10/12/12.
 //  Copyright (c) 2012 Li Xiaosi. All rights reserved.
 //
 
@@ -19,8 +19,8 @@
 @dynamic lastMessageText;
 @dynamic messagesLength;
 @dynamic unreadMessagesCount;
+@dynamic channel;
 @dynamic messages;
 @dynamic users;
-@dynamic channel;
 
 @end

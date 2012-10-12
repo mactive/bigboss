@@ -1,18 +1,13 @@
 //
-//  Me.m
+//  AddFriendController.h
 //  iMedia
 //
 //  Created by Xiaosi Li on 10/12/12.
 //  Copyright (c) 2012 Li Xiaosi. All rights reserved.
 //
 
-#import "Me.h"
+#import <UIKit/UIKit.h>
 
-
-@implementation Me
-
-@dynamic password;
-@dynamic username;
-@dynamic ePostalPassword;
+@interface AddFriendController : UITableViewController
 
 @end

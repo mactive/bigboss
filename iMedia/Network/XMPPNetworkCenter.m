@@ -17,6 +17,8 @@
 #import "ModelSearchHelper.h"
 #import "NetMessageConverter.h"
 
+#import "AppDelegate.h"
+
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 @interface XMPPNetworkCenter () <XMPPRosterDelegate, XMPPPubSubDelegate, XMPPRosterMemoryStorageDelegate>
@@ -66,6 +68,10 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     return _sharedClient;
 }
 
+- (AppDelegate *)appDelegate
+{
+	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
+}
 
 - (BOOL)setupWithHostname:(NSString *)hostname andPort:(int)port
 {
@@ -385,7 +391,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
             
             // MyNotificationName defined globally
             NSNotification *myNotification =
-            [NSNotification notificationWithName:NEW_MESSAGE_NOTIFICATION object:msg];
+            [NSNotification notificationWithName:NEW_MESSAGE_NOTIFICATION object:msg.conversation];
             [[NSNotificationQueue defaultQueue]
              enqueueNotification:myNotification
              postingStyle:NSPostWhenIdle
@@ -463,6 +469,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
         User *userNS = [NSEntityDescription insertNewObjectForEntityForName:@"User" inManagedObjectContext:_managedObjectContext];
         userNS.name = user.nickname;
         userNS.ePostalID = [user.jid bare];
+        userNS.displayName = [user.jid bare];
+        userNS.type = [NSNumber numberWithInt:IdentityTypeUser];
         
         MOCSave(_managedObjectContext);
     }
@@ -506,6 +514,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
             User *userNS = [NSEntityDescription insertNewObjectForEntityForName:@"User" inManagedObjectContext:_managedObjectContext];
             userNS.name = obj.nickname;
             userNS.ePostalID = [obj.jid bare];
+            userNS.displayName = [obj.jid bare];
+            userNS.type = [NSNumber numberWithInt:IdentityTypeUser];
         }
     }
     
@@ -556,7 +566,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
      */
 }
 
-#define NS_PUBSUB_EVENT    @"http://jabber.org/protocol/pubsub#event"
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -564,117 +574,37 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)xmppPubSub:(XMPPPubSub *)sender didReceiveMessage:(XMPPMessage *)message
 {
-    /*
     DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-    
-    NSXMLElement *event = [message elementForName:@"event" xmlns:NS_PUBSUB_EVENT];
-    NSXMLElement *items = [event elementForName:@"items"];
-    NSXMLElement *item = [items elementForName:@"item"];
-    NSXMLElement *entry = [item elementForName:@"entry"];
-    NSXMLElement *link = [entry elementForName:@"link"];
-    NSString* linkValue = [link attributeStringValueForName:@"href"];
-    NSString* summary = [[entry elementForName:@"text"] stringValue];
-    NSString *fromJidStr = [items attributeStringValueForName:@"node"];
-    
+
     // if haven't setup users, discard message
-#warning debug message
-    NSArray *fetchedUsers = MOCFetchAll(_managedObjectContext, @"Me");
-    if ([fetchedUsers count] == 0) {
-        return;
-    }
-    if (item == nil) {
+    if ([self appDelegate].me == nil) {
         return;
     }
     
     if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive)
     {
-        Message *msg = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:_managedObjectContext];
+        Message *msg = [NetMessageConverter newMessageFromXMPPPubsubMessage:message inContext:_managedObjectContext];
         
-#warning hack
-        NSString* jid = [[message from] bare];
-        if ( [@"sss@192.168.1.104" isEqualToString:fromJidStr]) {
-            jid = @"serverbot@192.168.1.104";
+        if (msg) {
+            // MyNotificationName defined globally
+            NSNotification *myNotification =
+            [NSNotification notificationWithName:NEW_MESSAGE_NOTIFICATION object:msg.conversation];
+            [[NSNotificationQueue defaultQueue]
+             enqueueNotification:myNotification
+             postingStyle:NSPostWhenIdle
+             coalesceMask:NSNotificationNoCoalescing
+             forModes:nil];
         }
-        
-        User *from = [self findUserWithEPostalID:jid];
-        if (from == nil)
-        {
-            DDLogError(@"User doesn't exist");
-            return;
-        }
-        
-        msg.from = from;
-        msg.sentDate = [NSDate date];
-        msg.text = [@"http://" stringByAppendingString:linkValue];
-        msg.type = [NSNumber numberWithInt:MessageTypePublish];
-        
-        // Find a conversation that this message belongs. That is judged by the conversation's user list.
-        NSSet *results = [from.conversations objectsPassingTest:^(id obj, BOOL *stop){
-            Conversation *conv = (Conversation *)obj;
-            if ([conv.users count] == 1) {
-                return YES;
-            }
-            return NO;
-        }];
-        
-        
-        Conversation *conv;
-        if ([results count] == 0)
-        {
-            conv = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:_managedObjectContext];
-            [conv addUsersObject:from];
-        } else {
-            conv = [results anyObject];
-        }
-        conv.lastMessageSentDate = msg.sentDate;
-        conv.lastMessageText = summary;
-        [conv addMessagesObject:msg];
-        
-        
-        // MyNotificationName defined globally
-        NSNotification *myNotification =
-        [NSNotification notificationWithName:NEW_MESSAGE_NOTIFICATION object:conv];
-        [[NSNotificationQueue defaultQueue]
-         enqueueNotification:myNotification
-         postingStyle:NSPostWhenIdle
-         coalesceMask:NSNotificationNoCoalescing
-         forModes:nil];
-        
-    }
+                
+    }else{
+        // We are not active, so use a local notification instead
+        UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+        localNotification.alertAction = @"Ok";
+        localNotification.alertBody = [NSString stringWithFormat:@"From: "];
+     
+        [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
+     }
     
-    /*
-     
-     // A simple example of inbound message handling.
-     
-     if ([message isChatMessageWithBody])
-     {
-     XMPPUserCoreDataStorageObject *user = [xmppRosterStorage userForJID:[message from]
-     xmppStream:xmppStream
-     managedObjectContext:[self managedObjectContext_roster]];
-     
-     NSString *body = [[message elementForName:@"body"] stringValue];
-     NSString *displayName = [user displayName];
-     
-     if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive)
-     {
-     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:displayName
-     message:body
-     delegate:nil
-     cancelButtonTitle:@"Ok"
-     otherButtonTitles:nil];
-     [alertView show];
-     }
-     else
-     {
-     // We are not active, so use a local notification instead
-     UILocalNotification *localNotification = [[UILocalNotification alloc] init];
-     localNotification.alertAction = @"Ok";
-     localNotification.alertBody = [NSString stringWithFormat:@"From: %@\n\n%@",displayName,body];
-     
-     [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
-     }
-     }
-     */
     
 }
 

@@ -192,7 +192,7 @@
     UIKeyboardNotificationsObserve();
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(newMessageReceived:)
-                                                 name:NEW_MESSAGE_NOTIFICATION object:nil];
+                                                 name:NEW_MESSAGE_NOTIFICATION object:conversation];
     [self.bubbleTable flashScrollIndicators];
     
 }

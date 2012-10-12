@@ -11,7 +11,7 @@
 
 #import "ContactDetailController.h"
 
-@interface ContactListViewController : UITableViewController <NSFetchedResultsControllerDelegate, ChatWithUserDelegate>
+@interface ContactListViewController : UITableViewController <NSFetchedResultsControllerDelegate, chatWithIdentityDelegate>
 {
     NSFetchedResultsController *fetchedResultsController;
 }

@@ -11,6 +11,7 @@
 #import "AppDelegate.h"
 #import "Message.h"
 #import "User.h"
+#import "Channel.h"
 #import "Conversation.h"
 #import "AppDefs.h"
 
@@ -276,23 +277,32 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
   
 }
 
-- (void)chatWithUser:(User *)user
+- (void)chatWithIdentity:(id)obj
 {
-    NSSet *convs = user.conversations;
-    NSEnumerator *enumerator = [convs objectEnumerator];
-    Conversation *obj ;
-    BOOL conversationFound = NO;
-    while (obj = [enumerator nextObject]) {
-        if ([obj.users count] == 1) {
-            _detailController.conversation = obj;
-            conversationFound = YES;
-            break;
+    if ([obj isKindOfClass:[User class]]) {
+        User* user = obj;
+        NSSet *convs = user.conversations;
+        NSEnumerator *enumerator = [convs objectEnumerator];
+        Conversation *obj ;
+        BOOL conversationFound = NO;
+        while (obj = [enumerator nextObject]) {
+            if ([obj.users count] == 1) {
+                _detailController.conversation = obj;
+                conversationFound = YES;
+                break;
+            }
         }
-    }
     
-    if (conversationFound == NO) {
-        _detailController.conversation = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:self.managedObjectContext];
-        [_detailController.conversation addUsersObject:user];
+        if (conversationFound == NO) {
+            _detailController.conversation = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:self.managedObjectContext];
+            [_detailController.conversation addUsersObject:user];
+        }
+    } else if ([obj isKindOfClass:[Channel class]]) {
+        Channel *channel = obj;
+        if (channel.conversation == nil) {
+            _detailController.conversation = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:self.managedObjectContext];
+            channel.conversation = _detailController.conversation;
+        }
     }
     
     _detailController.managedObjectContext = self.managedObjectContext;

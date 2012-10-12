@@ -11,6 +11,7 @@
 #import "ContactDetailController.h"
 #import "User.h"
 #import "ConversationsController.h"
+#import "AddFriendController.h"
 
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
@@ -34,11 +35,13 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     self = [super initWithStyle:style];
     if (self) {
         self.title = @"Contacts";
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(add:)];
+
     }
     return self;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark Accessors
+#pragma mark Accessors & selectors
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 - (AppDelegate *)appDelegate
@@ -46,16 +49,23 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
-- (void)contactDetailController:(ContactDetailController *)contactDetailController didChatUser:(User *)user
+- (void)contactDetailController:(ContactDetailController *)contactDetailController didChatIdentity:(id)obj
 {
     [self dismissModalViewControllerAnimated:YES];
     
-    if (user) {
+    if (obj) {
         [self.tabBarController setSelectedIndex:0];
-        [[self appDelegate].conversationController chatWithUser:user];
+        [[self appDelegate].conversationController chatWithIdentity:obj];
     }    
 
 }
+
+- (void)add:(id)sender {
+    AddFriendController *controller = [[AddFriendController alloc] initWithStyle:UITableViewStyleGrouped];
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark View Life Cycles
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -95,10 +105,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         
 		NSManagedObjectContext *moc = self.managedObjectContext;
 		
-		NSEntityDescription *entity = [NSEntityDescription entityForName:@"User"
+		NSEntityDescription *entity = [NSEntityDescription entityForName:@"Identity"
 		                                          inManagedObjectContext:moc];
 		
-		NSSortDescriptor *sd1 = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:YES];
+		NSSortDescriptor *sd1 = [[NSSortDescriptor alloc] initWithKey:@"displayName" ascending:YES];
 		
 		NSArray *sortDescriptors = [NSArray arrayWithObjects:sd1, nil];
 		
@@ -163,10 +173,14 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
     
     // Configure the cell...
-    User *user = [[self fetchedResultsController] objectAtIndexPath:indexPath];
+    id obj  =  [[self fetchedResultsController] objectAtIndexPath:indexPath];
+    
+    if ([obj isKindOfClass:[User class]]) {
+        User *user = obj;
 	
-	cell.textLabel.text = user.ePostalID;
-    cell.detailTextLabel.text = user.name;
+        cell.textLabel.text = user.displayName;
+        cell.detailTextLabel.text = user.name;
+    }
     
     
     return cell;

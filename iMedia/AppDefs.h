@@ -68,6 +68,13 @@ typedef enum _MessageType
     MessageTypeNone = 2
 } MessageType;
 
+typedef enum _IdentityType
+{
+    IdentityTypeUser = 1,
+    IdentityTypeMe      = 2,
+    IdentityTypeChannel = 3
+} IdentityType;
+
 
 /*
 #define MOCFetch(managedObjectContext, fetchRequest) \

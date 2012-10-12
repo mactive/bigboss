@@ -13,6 +13,7 @@
 @interface NetMessageConverter : NSObject
 
 +(Message *)newMessageFromXMPPMessage:(XMPPMessage *)msg inContext:(NSManagedObjectContext *)context;
++(Message *)newMessageFromXMPPPubsubMessage:(XMPPMessage *)msg inContext:(NSManagedObjectContext *)context;
 +(XMPPMessage *)newXMPPMessageFromMessage:(Message *)msg;
 
 @end

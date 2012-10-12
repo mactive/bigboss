@@ -21,5 +21,5 @@
 - (UITableViewCell *)tableViewCellWithReuseIdentifier:(NSString *)identifier;
 - (void)configureCell:(UITableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath;
 
-- (void)chatWithUser:(User *)user;
+- (void)chatWithIdentity:(id)obj;
 @end

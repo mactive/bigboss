@@ -11,11 +11,12 @@
 #import "ModelSearchHelper.h"
 #import "Conversation.h"
 #import "User.h"
+#import "Channel.h"
 
 @implementation NetMessageConverter
 
 //
-// msg comes from three sources: 1. User; 2. A business; 3. A CS rep of a business (i.e., invisible user)
+// msg comes from two sources: 1. User; 2. A CS rep of a business (i.e., invisible user). All 1-1 no pubsub
 //
 // This function converts between XMPPMessage and our message
 
@@ -29,7 +30,7 @@
         
     if (from == nil)
     {
-        // it could be from a channel or from a CS repre
+        // it is from a CS repre
     }
         
     message.from = from;
@@ -60,6 +61,45 @@
     [conv addMessagesObject:message];
     
     return message;
+}
+
+#define NS_PUBSUB_EVENT    @"http://jabber.org/protocol/pubsub#event"
+
++(Message *)newMessageFromXMPPPubsubMessage:(XMPPMessage *)message inContext:(NSManagedObjectContext *)context
+{
+    NSXMLElement *event = [message elementForName:@"event" xmlns:NS_PUBSUB_EVENT];
+    NSXMLElement *items = [event elementForName:@"items"];
+    NSXMLElement *item = [items elementForName:@"item"];
+    NSXMLElement *entry = [item elementForName:@"entry"];
+    NSXMLElement *link = [entry elementForName:@"link"];
+    NSString* linkValue = [link attributeStringValueForName:@"href"];
+    NSString* summary = [[entry elementForName:@"text"] stringValue];
+    NSString *nodeStr = [items attributeStringValueForName:@"node"];
+    
+    if (item == nil) {
+        return nil;
+    }
+
+    Message *msg = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:context];
+    
+    Channel *channel = [ModelSearchHelper findChannelWithNode:nodeStr inContext:context];
+
+#warning Hasn't handle the rich text storage yet
+    msg.from = channel;
+    msg.sentDate = [NSDate date];
+    msg.text = [@"http://" stringByAppendingString:linkValue];
+    msg.type = [NSNumber numberWithInt:MessageTypePublish];
+    
+    if (channel.conversation == nil)
+    {
+        channel.conversation = [NSEntityDescription insertNewObjectForEntityForName:@"Channel" inManagedObjectContext:context];
+    }
+    
+    channel.conversation.lastMessageSentDate = msg.sentDate;
+    channel.conversation.lastMessageText = summary;
+    [channel.conversation addMessagesObject:msg];
+    
+    return msg;
 }
 
 +(XMPPMessage *)newXMPPMessageFromMessage:(Message *)message

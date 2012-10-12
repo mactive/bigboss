@@ -2,21 +2,21 @@
 //  User.h
 //  iMedia
 //
-//  Created by Xiaosi Li on 9/25/12.
+//  Created by Xiaosi Li on 10/12/12.
 //  Copyright (c) 2012 Li Xiaosi. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
+#import "Identity.h"
 
 @class Conversation;
 
-@interface User : NSManagedObject
+@interface User : Identity
 
+@property (nonatomic, retain) NSNumber * gender;
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * signature;
-@property (nonatomic, retain) NSString * ePostalID;
-@property (nonatomic, retain) NSNumber * gender;
 @property (nonatomic, retain) NSSet *conversations;
 @end
 

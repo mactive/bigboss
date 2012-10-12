@@ -80,7 +80,7 @@
 
 -(void)sendMsgButtonPushed:(id)sender
 {
-    [self.delegate contactDetailController:self didChatUser:self.user];
+    [self.delegate contactDetailController:self didChatIdentity:self.user];
 }
 
 @end

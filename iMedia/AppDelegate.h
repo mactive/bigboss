@@ -22,6 +22,12 @@
 @property (strong, nonatomic) ConversationsController *conversationController;
 @property (strong, nonatomic) ContactListViewController *contactListController;
 
+// Here comes one of the bigges assumptions. This me is the only instance in the Me entity. If me exists, it means
+// this is not a first run, all data initializations will be done already. We will not pull the full poster again
+// and update our addressbook
+//
+// if me is nil, it is the first run. a full poster fetch will be performed, welcome section will be displayed, and
+// initial data population will be done.
 @property (strong, nonatomic) Me *me;
 
 - (void)startMainSession;

@@ -2,7 +2,7 @@
 //  Conversation.h
 //  iMedia
 //
-//  Created by Li Xiaosi on 10/10/12.
+//  Created by Xiaosi Li on 10/12/12.
 //  Copyright (c) 2012 Li Xiaosi. All rights reserved.
 //
 
@@ -18,9 +18,9 @@
 @property (nonatomic, retain) NSString * lastMessageText;
 @property (nonatomic, retain) NSNumber * messagesLength;
 @property (nonatomic, retain) NSNumber * unreadMessagesCount;
+@property (nonatomic, retain) Channel *channel;
 @property (nonatomic, retain) NSSet *messages;
 @property (nonatomic, retain) NSSet *users;
-@property (nonatomic, retain) Channel *channel;
 @end
 
 @interface Conversation (CoreDataGeneratedAccessors)

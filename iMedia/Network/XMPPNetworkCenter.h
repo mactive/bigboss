@@ -5,6 +5,12 @@
 //  Created by Xiaosi Li on 10/10/12.
 //  Copyright (c) 2012 Li Xiaosi. All rights reserved.
 //
+//  This class is to wrap all the XMPP communications/classes inside. Outside of this file there would be no XMPP
+//  entities
+//
+//  To achieve the above pupose, this class knows about our data model. It will create and delete NSManagedObjects
+//  (i.e. update our local data storage) and send notifications so that interesting party can perform actions
+//
 
 @class Message;
 

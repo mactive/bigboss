@@ -73,7 +73,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [XMPPNetworkCenter sharedClient].managedObjectContext = _managedObjectContext;
 
     
-    // check whether first user
+    // check whether first use
     NSArray *fetchedUsers = MOCFetchAll(_managedObjectContext, @"Me");
     if ([fetchedUsers count] == 0) {
         [self startIntroSession];
@@ -133,6 +133,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         self.me = [NSEntityDescription insertNewObjectForEntityForName:@"Me" inManagedObjectContext:_managedObjectContext];
         self.me.ePostalID = jidStr;
         self.me.ePostalPassword = jidPass;
+        self.me.type = [NSNumber numberWithInt:IdentityTypeMe];
+        self.me.displayName = jidStr;
         self.me.username = username;
         self.me.password = passwd;
         
