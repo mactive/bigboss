@@ -11,9 +11,11 @@
 @class User;
 @class Channel;
 
-@interface ModelSearchHelper : NSObject
+@interface ModelHelper : NSObject
 
 + (User *)findUserWithEPostalID:(NSString *)ePostalID inContext:(NSManagedObjectContext*)context;
 + (Channel *)findChannelWithNode:(NSString *)node inContext:(NSManagedObjectContext *)context;
+
++ (BOOL)populateUser:(User *)user withJSONData:(NSString *)json;
 
 @end

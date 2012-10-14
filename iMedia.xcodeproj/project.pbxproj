@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		56202F46162AA32F00F6306F /* AddFriendByIDController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56202F45162AA32F00F6306F /* AddFriendByIDController.m */; };
+		56202F49162AE85B00F6306F /* ChannelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56202F48162AE85A00F6306F /* ChannelViewController.m */; };
 		562DE705160ABFA100F782D2 /* ChatDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 562DE704160ABFA100F782D2 /* ChatDetailController.m */; };
 		562DE70F160AC3C600F782D2 /* bubbleMine.png in Resources */ = {isa = PBXBuildFile; fileRef = 562DE707160AC3C600F782D2 /* bubbleMine.png */; };
 		562DE710160AC3C600F782D2 /* bubbleMine@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 562DE708160AC3C600F782D2 /* bubbleMine@2x.png */; };
@@ -184,8 +186,8 @@
 		56B4CD0A1626890D00E046CC /* AppNetworkAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CD081626890D00E046CC /* AppNetworkAPIClient.m */; };
 		56B4CD151626B9ED00E046CC /* NetMessageConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CD141626B9ED00E046CC /* NetMessageConverter.m */; };
 		56B4CD161626B9ED00E046CC /* NetMessageConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CD141626B9ED00E046CC /* NetMessageConverter.m */; };
-		56B4CD191626C9E100E046CC /* ModelSearchHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CD181626C9E100E046CC /* ModelSearchHelper.m */; };
-		56B4CD1A1626C9E100E046CC /* ModelSearchHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CD181626C9E100E046CC /* ModelSearchHelper.m */; };
+		56B4CD191626C9E100E046CC /* ModelHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CD181626C9E100E046CC /* ModelHelper.m */; };
+		56B4CD1A1626C9E100E046CC /* ModelHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CD181626C9E100E046CC /* ModelHelper.m */; };
 		56B4CD211627AAFB00E046CC /* Conversation.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CD201627AAFB00E046CC /* Conversation.m */; };
 		56B4CD221627AAFB00E046CC /* Conversation.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CD201627AAFB00E046CC /* Conversation.m */; };
 		56B4CD351627AB9F00E046CC /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CD341627AB9F00E046CC /* User.m */; };
@@ -254,6 +256,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		56202F44162AA32F00F6306F /* AddFriendByIDController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AddFriendByIDController.h; path = ViewControllers/AddFriendByIDController.h; sourceTree = "<group>"; };
+		56202F45162AA32F00F6306F /* AddFriendByIDController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AddFriendByIDController.m; path = ViewControllers/AddFriendByIDController.m; sourceTree = "<group>"; };
+		56202F47162AE85A00F6306F /* ChannelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChannelViewController.h; path = ViewControllers/ChannelViewController.h; sourceTree = "<group>"; };
+		56202F48162AE85A00F6306F /* ChannelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChannelViewController.m; path = ViewControllers/ChannelViewController.m; sourceTree = "<group>"; };
 		562DE703160ABFA100F782D2 /* ChatDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChatDetailController.h; path = ViewControllers/ChatDetailController.h; sourceTree = "<group>"; };
 		562DE704160ABFA100F782D2 /* ChatDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChatDetailController.m; path = ViewControllers/ChatDetailController.m; sourceTree = "<group>"; };
 		562DE707160AC3C600F782D2 /* bubbleMine.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bubbleMine.png; path = Resources/bubbleMine.png; sourceTree = "<group>"; };
@@ -561,8 +567,8 @@
 		56B4CD081626890D00E046CC /* AppNetworkAPIClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppNetworkAPIClient.m; path = Network/AppNetworkAPIClient.m; sourceTree = "<group>"; };
 		56B4CD131626B9ED00E046CC /* NetMessageConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NetMessageConverter.h; path = Network/NetMessageConverter.h; sourceTree = "<group>"; };
 		56B4CD141626B9ED00E046CC /* NetMessageConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NetMessageConverter.m; path = Network/NetMessageConverter.m; sourceTree = "<group>"; };
-		56B4CD171626C9E100E046CC /* ModelSearchHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ModelSearchHelper.h; path = Models/ModelSearchHelper.h; sourceTree = "<group>"; };
-		56B4CD181626C9E100E046CC /* ModelSearchHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ModelSearchHelper.m; path = Models/ModelSearchHelper.m; sourceTree = "<group>"; };
+		56B4CD171626C9E100E046CC /* ModelHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ModelHelper.h; path = Models/ModelHelper.h; sourceTree = "<group>"; };
+		56B4CD181626C9E100E046CC /* ModelHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ModelHelper.m; path = Models/ModelHelper.m; sourceTree = "<group>"; };
 		56B4CD1F1627AAFB00E046CC /* Conversation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Conversation.h; path = Models/Conversation.h; sourceTree = "<group>"; };
 		56B4CD201627AAFB00E046CC /* Conversation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Conversation.m; path = Models/Conversation.m; sourceTree = "<group>"; };
 		56B4CD331627AB9F00E046CC /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = User.h; path = Models/User.h; sourceTree = "<group>"; };
@@ -1428,8 +1434,8 @@
 				56B4CD341627AB9F00E046CC /* User.m */,
 				56B4CD1F1627AAFB00E046CC /* Conversation.h */,
 				56B4CD201627AAFB00E046CC /* Conversation.m */,
-				56B4CD171626C9E100E046CC /* ModelSearchHelper.h */,
-				56B4CD181626C9E100E046CC /* ModelSearchHelper.m */,
+				56B4CD171626C9E100E046CC /* ModelHelper.h */,
+				56B4CD181626C9E100E046CC /* ModelHelper.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -1447,6 +1453,8 @@
 				562DE704160ABFA100F782D2 /* ChatDetailController.m */,
 				56EE296E161696F900910CE5 /* ProfileController.h */,
 				56EE296F161696FA00910CE5 /* ProfileController.m */,
+				56202F47162AE85A00F6306F /* ChannelViewController.h */,
+				56202F48162AE85A00F6306F /* ChannelViewController.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -1505,6 +1513,8 @@
 			children = (
 				56B4CD511628101400E046CC /* AddFriendController.h */,
 				56B4CD521628101500E046CC /* AddFriendController.m */,
+				56202F44162AA32F00F6306F /* AddFriendByIDController.h */,
+				56202F45162AA32F00F6306F /* AddFriendByIDController.m */,
 			);
 			name = AddFriendPart;
 			sourceTree = "<group>";
@@ -1853,7 +1863,7 @@
 				56B4CD001626732500E046CC /* UIImageView+AFNetworking.m in Sources */,
 				56B4CD091626890D00E046CC /* AppNetworkAPIClient.m in Sources */,
 				56B4CD151626B9ED00E046CC /* NetMessageConverter.m in Sources */,
-				56B4CD191626C9E100E046CC /* ModelSearchHelper.m in Sources */,
+				56B4CD191626C9E100E046CC /* ModelHelper.m in Sources */,
 				56B4CD211627AAFB00E046CC /* Conversation.m in Sources */,
 				56B4CD351627AB9F00E046CC /* User.m in Sources */,
 				56B4CD461627E55400E046CC /* Message.m in Sources */,
@@ -1861,6 +1871,8 @@
 				56B4CD4C16280C6B00E046CC /* Channel.m in Sources */,
 				56B4CD4F16280C8100E046CC /* Me.m in Sources */,
 				56B4CD531628101500E046CC /* AddFriendController.m in Sources */,
+				56202F46162AA32F00F6306F /* AddFriendByIDController.m in Sources */,
+				56202F49162AE85B00F6306F /* ChannelViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1880,7 +1892,7 @@
 				56B4CD011626732500E046CC /* UIImageView+AFNetworking.m in Sources */,
 				56B4CD0A1626890D00E046CC /* AppNetworkAPIClient.m in Sources */,
 				56B4CD161626B9ED00E046CC /* NetMessageConverter.m in Sources */,
-				56B4CD1A1626C9E100E046CC /* ModelSearchHelper.m in Sources */,
+				56B4CD1A1626C9E100E046CC /* ModelHelper.m in Sources */,
 				56B4CD221627AAFB00E046CC /* Conversation.m in Sources */,
 				56B4CD361627AB9F00E046CC /* User.m in Sources */,
 				56B4CD5016280C8100E046CC /* Me.m in Sources */,

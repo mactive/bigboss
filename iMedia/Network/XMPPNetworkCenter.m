@@ -14,7 +14,7 @@
 #import "Message.h"
 #import "Channel.h"
 #import "Conversation.h"
-#import "ModelSearchHelper.h"
+#import "ModelHelper.h"
 #import "NetMessageConverter.h"
 
 #import "AppDelegate.h"
@@ -107,6 +107,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 	// There's a bunch more information in the XMPPReconnect header file.
     
 	xmppReconnect = [[XMPPReconnect alloc] init];
+
     
 	// Setup roster
 	//
@@ -128,8 +129,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     xmppRoster.allowRosterlessOperation = YES;
     
     // Setup XMPP PubSub
-    //xmppPubsub = [[XMPPPubSub alloc] initWithServiceJID:[XMPPJID jidWithString:@"pubsub.192.168.1.104"]];
-    //[xmppPubsub subscribeToNode:@"summer" withOptions:nil];
+#warning Pubsub needs to be moved to later stage where serviceJiD is available
+    xmppPubsub = [[XMPPPubSub alloc] initWithServiceJID:[XMPPJID jidWithString:@"pubsub.192.168.1.104"]];
     
     
 	// Activate xmpp modules
@@ -584,6 +585,10 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive)
     {
         Message *msg = [NetMessageConverter newMessageFromXMPPPubsubMessage:message inContext:_managedObjectContext];
+        
+        if (msg == nil) {
+            return;
+        }
         
         if (msg) {
             // MyNotificationName defined globally

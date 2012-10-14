@@ -25,12 +25,6 @@ NSString *const kXMPPmyJIDPassword = @"kXMPPmyJIDPassword";
 NSString *const kXMPPmyPassword = @"kXMPPmyPassword";
 NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 
-#define GET_CONFIG_PATH         @"/base/getconfig"
-#define LOGIN_PATH              @"/base/applogin"
-#define GET_DATA_PATH           @"/base/getjsondata"
-#define POST_DATA_PATH          @"/base/setjsondata"
-
-
 @implementation FirstLoginController
 
 

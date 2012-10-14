@@ -8,7 +8,7 @@
 
 #import "NetMessageConverter.h"
 #import "XMPPFramework.h"
-#import "ModelSearchHelper.h"
+#import "ModelHelper.h"
 #import "Conversation.h"
 #import "User.h"
 #import "Channel.h"
@@ -26,7 +26,7 @@
         
     NSString* jid = [[msg from] bare];
         
-    User *from = [ModelSearchHelper findUserWithEPostalID:jid inContext:context];
+    User *from = [ModelHelper findUserWithEPostalID:jid inContext:context];
         
     if (from == nil)
     {
@@ -80,9 +80,14 @@
         return nil;
     }
 
-    Message *msg = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:context];
+    Channel *channel = [ModelHelper findChannelWithNode:nodeStr inContext:context];
     
-    Channel *channel = [ModelSearchHelper findChannelWithNode:nodeStr inContext:context];
+    if (channel == nil) {
+        //Channel hasn't been setup
+        return nil;
+    }
+    
+    Message *msg = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:context];
 
 #warning Hasn't handle the rich text storage yet
     msg.from = channel;

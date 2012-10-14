@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 Li Xiaosi. All rights reserved.
 //
 
-#import "ModelSearchHelper.h"
+#import "ModelHelper.h"
 #import "User.h"
 #import "Channel.h"
 #import "DDLog.h"
@@ -18,7 +18,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 #endif
 
 
-@implementation ModelSearchHelper
+@implementation ModelHelper
 
 + (User *)findUserWithEPostalID:(NSString *)ePostalID inContext:(NSManagedObjectContext *)context
 {
@@ -74,6 +74,16 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         }
         return [array objectAtIndex:0];
     }
+}
+
++ (BOOL)populateUser:(User *)user withJSONData:(id)json
+{
+    user.ePostalID = [json valueForKey:@"jid"];
+    user.gender = [json valueForKey:@"sex"];
+    user.signature = [json valueForKey:@"signature"];
+    user.displayName = [json valueForKey:@"nickname"];
+    
+    return YES;
 }
 
 @end

@@ -1,31 +1,29 @@
 //
-//  ContactDetailController.m
+//  ChannelViewController.m
 //  iMedia
 //
-//  Created by Li Xiaosi on 9/19/12.
+//  Created by Xiaosi Li on 10/14/12.
 //  Copyright (c) 2012 Li Xiaosi. All rights reserved.
 //
 
-#import "ContactDetailController.h"
-#import "User.h"
+#import "ChannelViewController.h"
 
-@interface ContactDetailController ()
+#import "Channel.h"
+
+@interface ChannelViewController ()
 
 @end
 
-@implementation ContactDetailController
+@implementation ChannelViewController
 
-@synthesize sendMsgButton = _sendMsgButton;
-@synthesize nameLabel = _nameLabel;
-@synthesize user =_user;
-@synthesize delegate = _delegate;
+@synthesize channel;
 @synthesize jsonData;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        
+        // Custom initialization
     }
     return self;
 }
@@ -47,20 +45,20 @@
     [self.sendMsgButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [self.sendMsgButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     [self.sendMsgButton setBackgroundColor:[UIColor yellowColor]];
-
+    
     [self.view addSubview:self.sendMsgButton];
     
     // Now set content. Either user or jsonData must have value
-    if (self.user == nil) {
+    if (self.channel == nil) {
         self.title = [jsonData valueForKey:@"jid"];
-        [self.sendMsgButton setTitle:NSLocalizedString(@"Add as a friend", nil) forState:UIControlStateNormal];
-
+        [self.sendMsgButton setTitle:NSLocalizedString(@"subscribe", nil) forState:UIControlStateNormal];
+        
     } else {
-        self.title = self.user.ePostalID;
+        self.title = self.channel.ePostalID;
         [self.sendMsgButton setTitle:NSLocalizedString(@"Send Msg", nil) forState:UIControlStateNormal];
         [self.sendMsgButton addTarget:self action:@selector(sendMsgButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
     }
-
+    
 }
 
 - (void)viewDidLoad
@@ -69,26 +67,10 @@
 	// Do any additional setup after loading the view.
 }
 
-- (void)viewDidUnload
+- (void)didReceiveMemoryWarning
 {
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-
-- (void) viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-}
-
--(void)sendMsgButtonPushed:(id)sender
-{
-    [self.delegate contactDetailController:self didChatIdentity:self.user];
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
 }
 
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "AddFriendController.h"
+#import "AddFriendByIDController.h"
 
 @interface AddFriendController ()
 
@@ -120,9 +121,14 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (indexPath.section == 0) {
+        // add friend by search ID
+        AddFriendByIDController *controller = [[AddFriendByIDController alloc] initWithNibName:nil bundle:nil];
+        [self.navigationController pushViewController:controller animated:YES];
+    }
     // Navigation logic may go here. Create and push another view controller.
     /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
+       *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
      // ...
      // Pass the selected object to the new view controller.
      [self.navigationController pushViewController:detailViewController animated:YES];

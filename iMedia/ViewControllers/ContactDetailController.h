@@ -14,12 +14,14 @@
 @interface ContactDetailController : UIViewController
 {
     User  *_user;
+    id    jsonData;
 }
 
 @property (strong, nonatomic) UIButton *sendMsgButton;
 @property (strong, nonatomic) UILabel  *nameLabel;
 
 @property (strong, nonatomic) User *user;
+@property (strong, nonatomic) id   jsonData;
 
 @property (strong, nonatomic) id <chatWithIdentityDelegate> delegate;
 
