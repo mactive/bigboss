@@ -20,6 +20,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 #import "ModelHelper.h"
 #import "ContactDetailController.h"
 #import "ChannelViewController.h"
+#import "AppDelegate.h"
 
 @interface AddFriendByIDController () <UITextFieldDelegate>
 
@@ -39,6 +40,11 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     if (self) {
      }
     return self;
+}
+
+- (AppDelegate *)appDelegate
+{
+	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
 - (void)loadView
@@ -90,6 +96,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         if ([type isEqualToString:@"user"]) {
             ContactDetailController *controller = [[ContactDetailController alloc] initWithNibName:nil bundle:nil];
             controller.jsonData = responseObject;
+            controller.managedObjectContext = [self appDelegate].context;
             
             // Pass the selected object to the new view controller.
             [self.navigationController pushViewController:controller animated:YES];
@@ -97,6 +104,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         } else if ([type isEqualToString:@"channel"]) {
             ChannelViewController *controller = [[ChannelViewController alloc] initWithNibName:nil bundle:nil];
             controller.jsonData = responseObject;
+            controller.managedObjectContext = [self appDelegate].context;
             [self.navigationController pushViewController:controller animated:YES];
         }
         

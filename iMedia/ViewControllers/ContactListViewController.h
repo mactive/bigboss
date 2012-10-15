@@ -10,8 +10,9 @@
 #import <CoreData/CoreData.h>
 
 #import "ContactDetailController.h"
+#import "ChatWithIdentity.h"
 
-@interface ContactListViewController : UITableViewController <NSFetchedResultsControllerDelegate, chatWithIdentityDelegate>
+@interface ContactListViewController : UITableViewController <NSFetchedResultsControllerDelegate, ChatWithIdentityDelegate>
 {
     NSFetchedResultsController *fetchedResultsController;
 }

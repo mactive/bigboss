@@ -8,7 +8,10 @@
 
 #import "ChannelViewController.h"
 
+#import "XMPPNetworkCenter.h"
+
 #import "Channel.h"
+#import "ModelHelper.h"
 
 @interface ChannelViewController ()
 
@@ -18,6 +21,8 @@
 
 @synthesize channel;
 @synthesize jsonData;
+@synthesize delegate;
+@synthesize managedObjectContext;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -50,8 +55,9 @@
     
     // Now set content. Either user or jsonData must have value
     if (self.channel == nil) {
-        self.title = [jsonData valueForKey:@"jid"];
+        self.title = [jsonData valueForKey:@"receive_jid"];
         [self.sendMsgButton setTitle:NSLocalizedString(@"subscribe", nil) forState:UIControlStateNormal];
+        [self.sendMsgButton addTarget:self action:@selector(subscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
         
     } else {
         self.title = self.channel.ePostalID;
@@ -73,4 +79,20 @@
     // Dispose of any resources that can be recreated.
 }
 
+-(void)sendMsgButtonPushed:(id)sender
+{
+    [self.delegate viewController:self didChatIdentity:self.channel];
+}
+-(void)subscribeButtonPushed:(id)sender
+{
+    NSString *nodeStr = [jsonData valueForKey:@"node_address"];
+    Channel *newChannel = [ModelHelper findChannelWithNode:nodeStr inContext:self.managedObjectContext];
+    if (newChannel == nil) {
+        newChannel = [NSEntityDescription insertNewObjectForEntityForName:@"Channel" inManagedObjectContext:self.managedObjectContext];
+        [ModelHelper populateChannel:newChannel withServerJSONData:jsonData];
+        channel.state = [NSNumber numberWithInt:IdentityStatePendingAddSubscription];
+    }
+    
+    [[XMPPNetworkCenter sharedClient] subscribeToChannel:nodeStr withCallbackBlock:nil];
+}
 @end

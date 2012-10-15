@@ -137,12 +137,17 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         self.me.displayName = jidStr;
         self.me.username = username;
         self.me.password = passwd;
+        self.me.state = [NSNumber numberWithInt:IdentityStateActive];
         
         MOCSave(_managedObjectContext);
     }
 
 }
 
+- (NSManagedObjectContext *)context
+{
+    return _managedObjectContext;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Connect/disconnect

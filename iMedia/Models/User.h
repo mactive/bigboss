@@ -2,7 +2,7 @@
 //  User.h
 //  iMedia
 //
-//  Created by Xiaosi Li on 10/12/12.
+//  Created by Xiaosi Li on 10/15/12.
 //  Copyright (c) 2012 Li Xiaosi. All rights reserved.
 //
 
@@ -14,7 +14,7 @@
 
 @interface User : Identity
 
-@property (nonatomic, retain) NSNumber * gender;
+@property (nonatomic, retain) NSString * gender;
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * signature;
 @property (nonatomic, retain) NSSet *conversations;

@@ -2,7 +2,7 @@
 //  Channel.h
 //  iMedia
 //
-//  Created by Xiaosi Li on 10/12/12.
+//  Created by Xiaosi Li on 10/15/12.
 //  Copyright (c) 2012 Li Xiaosi. All rights reserved.
 //
 
@@ -14,8 +14,9 @@
 
 @interface Channel : Identity
 
-@property (nonatomic, retain) NSString * node;
 @property (nonatomic, retain) NSString * csContactPostalID;
+@property (nonatomic, retain) NSString * node;
+@property (nonatomic, retain) NSString * subID;
 @property (nonatomic, retain) Conversation *conversation;
 
 @end

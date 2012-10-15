@@ -16,10 +16,14 @@
 #import "Conversation.h"
 #import "ModelHelper.h"
 #import "NetMessageConverter.h"
+#import "ModelHelper.h"
 
 #import "AppDelegate.h"
 
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
+
+//static NSString * const pubsubhost = @"pubsub.192.168.1.104"
+static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 
 @interface XMPPNetworkCenter () <XMPPRosterDelegate, XMPPPubSubDelegate, XMPPRosterMemoryStorageDelegate>
 {
@@ -130,7 +134,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     
     // Setup XMPP PubSub
 #warning Pubsub needs to be moved to later stage where serviceJiD is available
-    xmppPubsub = [[XMPPPubSub alloc] initWithServiceJID:[XMPPJID jidWithString:@"pubsub.192.168.1.104"]];
+    xmppPubsub = [[XMPPPubSub alloc] initWithServiceJID:[XMPPJID jidWithString:pubsubhost]];
     
     
 	// Activate xmpp modules
@@ -239,12 +243,32 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 -(BOOL)sendMessage:(Message *)message
 {
+    DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+    
     XMPPMessage* msg = [NetMessageConverter newXMPPMessageFromMessage:message];
     [self.xmppStream sendElement:msg];
     
   //  NSNumber *messageSendingIndex = @([_messagesSending count]);
     //[_messagesSending setObject:message forKey:messageSendingIndex];
     return YES;
+}
+
+-(void)subscribeToChannel:(NSString *)nodeName withCallbackBlock:(void (^)(NSError *))block
+{
+    DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+    [xmppPubsub subscribeToNode:nodeName withOptions:nil];
+}
+
+-(void)addBuddy:(NSString *)jidStr withCallbackBlock:(void (^)(NSError *))block
+{
+    DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+    [xmppRoster addUser:[XMPPJID jidWithString:jidStr] withNickname:nil];
+}
+
+-(void)removeBuddy:(NSString *)jidStr withCallbackBlock:(void (^)(NSError *))block
+{
+    DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+    [xmppRoster removeUser:[XMPPJID jidWithString:jidStr]];
 }
 
 // It's easy to create XML elments to send and to read received XML elements.
@@ -442,6 +466,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 //
 - (void)xmppRoster:(XMPPRosterMemoryStorage *)sender didAddUser:(XMPPUserMemoryStorageObject *)user
 {
+    DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
     DDLogVerbose(@"add user: %@", user);
     
     NSString* ePostalID = [user.jid bare];
@@ -451,32 +476,43 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
         return;
     }
     
-    NSManagedObjectContext *moc = _managedObjectContext;
-    NSEntityDescription *entityDescription = [NSEntityDescription
-                                              entityForName:@"User" inManagedObjectContext:moc];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:entityDescription];
-    
-    // Set example predicate and sort orderings...
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:
-                              @"(ePostalID = %@)", ePostalID];
-    [request setPredicate:predicate];
-    
-    NSError *error = nil;
-    NSArray *array = [moc executeFetchRequest:request error:&error];
+    User* thisUser = [ModelHelper findUserWithEPostalID:ePostalID inContext:_managedObjectContext];
     
     // insert user if it doesn't exist
-    if ([array count] == 0) {
-        User *userNS = [NSEntityDescription insertNewObjectForEntityForName:@"User" inManagedObjectContext:_managedObjectContext];
-        userNS.name = user.nickname;
-        userNS.ePostalID = [user.jid bare];
-        userNS.displayName = [user.jid bare];
-        userNS.type = [NSNumber numberWithInt:IdentityTypeUser];
+    if (thisUser == nil || thisUser.state.intValue == IdentityStateInactive) {
+        thisUser = [NSEntityDescription insertNewObjectForEntityForName:@"User" inManagedObjectContext:_managedObjectContext];
+        thisUser.name = user.nickname;
+        thisUser.ePostalID = [user.jid bare];
+        thisUser.displayName = [user.jid bare];
+        thisUser.type = [NSNumber numberWithInt:IdentityTypeUser];
+        thisUser.state = [NSNumber numberWithInt:IdentityStateActive];
         
         MOCSave(_managedObjectContext);
+    } else if (thisUser.state.intValue == IdentityStatePendingAddFriend ) {
+        thisUser.state = [NSNumber numberWithInt:IdentityStateActive];
     }
+}
 
+-(void)xmppRoster:(XMPPRosterMemoryStorage *)sender didRemoveUser:(XMPPUserMemoryStorageObject *)user
+{
+    DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
     
+    NSString* ePostalID = [user.jid bare];
+    
+    XMPPUserMemoryStorageObject *me = [sender myUser];
+    if ([ePostalID isEqualToString:[me.jid bare]]) {
+        return;
+    }
+    
+    User* thisUser = [ModelHelper findUserWithEPostalID:ePostalID inContext:_managedObjectContext];
+    
+    // insert user if it doesn't exist
+    if (thisUser == nil) {
+        // weird - log an error
+        DDLogError(@"user have to exist! ERROR NEED CHECK: %@", user);
+    } else if (thisUser.state.intValue == IdentityStateActive || thisUser.state.intValue == IdentityStatePendingRemoveFriend) {
+        thisUser.state = [NSNumber numberWithInt:IdentityStateInactive];
+    }
 }
 
 //
@@ -485,6 +521,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 //
 - (void)xmppRosterDidPopulate:(XMPPRosterMemoryStorage *)sender
 {
+    DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+    
     XMPPUserMemoryStorageObject *me = [sender myUser];
     NSArray* roster = [sender unsortedUsers];
     NSInteger count = [roster count];
@@ -517,6 +555,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
             userNS.ePostalID = [obj.jid bare];
             userNS.displayName = [obj.jid bare];
             userNS.type = [NSNumber numberWithInt:IdentityTypeUser];
+            userNS.state = [NSNumber numberWithInt:IdentityStateActive];
         }
     }
     
@@ -611,6 +650,31 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
      }
     
     
+}
+
+- (void)xmppPubSub:(XMPPPubSub *)sender didSubscribe:(XMPPIQ *)iq
+{
+    DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+    
+    // <iq from="pubsub.host.com" to="user@host.com/rsrc" id="ABC123:subscribenode" type="result">
+    //   <pubsub xmlns="http://jabber.org/protocol/pubsub">
+    //     <subscription jid="tv@xmpp.local" subscription="subscribed" subid="DEF456"/>
+    //   </pubsub>
+    // </iq>
+    
+    NSString *nodeStr = [iq attributeStringValueForName:@"id"];
+    NSXMLElement *pubsub = [iq elementForName:@"pubsub"];
+    NSXMLElement *subscription = [pubsub elementForName:@"subscription"];
+    NSString* subID = [subscription attributeStringValueForName:@"subid"];
+    
+    //add the Channel to the addressbook
+    Channel *channel = [ModelHelper findChannelWithNode:nodeStr inContext:_managedObjectContext];
+    if (channel && channel.state.intValue == IdentityStatePendingAddSubscription) {
+        channel.state = [NSNumber numberWithInt:IdentityStateActive];
+        channel.subID = subID;
+    }
+    
+    // notify server about the subscription
 }
 
 

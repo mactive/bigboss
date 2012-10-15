@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@protocol chatWithIdentityDelegate;
+@protocol ChatWithIdentityDelegate;
 @class User;
 
 @interface ContactDetailController : UIViewController
@@ -16,19 +16,16 @@
     User  *_user;
     id    jsonData;
 }
+@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
 @property (strong, nonatomic) UIButton *sendMsgButton;
+@property (strong, nonatomic) UIButton *deleteUserButton;
 @property (strong, nonatomic) UILabel  *nameLabel;
 
 @property (strong, nonatomic) User *user;
 @property (strong, nonatomic) id   jsonData;
 
-@property (strong, nonatomic) id <chatWithIdentityDelegate> delegate;
+@property (strong, nonatomic) id <ChatWithIdentityDelegate> delegate;
 
 @end
 
-@protocol chatWithIdentityDelegate <NSObject>
-
-- (void)contactDetailController:(ContactDetailController *)contactDetailController didChatIdentity:(id)obj;
-
-@end

@@ -8,8 +8,12 @@
 
 #import "AFHTTPClient.h"
 
+//@class Channel;
+
 @interface AppNetworkAPIClient : AFHTTPClient
 
 + (AppNetworkAPIClient *)sharedClient;
+
+//- (void)updateChannelInfo:(Channel *)channel withBlock:(void (^)(NSError *error))block;
 
 @end
