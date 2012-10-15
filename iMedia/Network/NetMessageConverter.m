@@ -12,6 +12,8 @@
 #import "Conversation.h"
 #import "User.h"
 #import "Channel.h"
+#import "AppNetworkAPIClient.h"
+#import "XMPPNetworkCenter.h"
 
 @implementation NetMessageConverter
 
@@ -97,7 +99,7 @@
     
     if (channel.conversation == nil)
     {
-        channel.conversation = [NSEntityDescription insertNewObjectForEntityForName:@"Channel" inManagedObjectContext:context];
+        channel.conversation = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:context];
     }
     
     channel.conversation.lastMessageSentDate = msg.sentDate;
@@ -106,6 +108,12 @@
     
     return msg;
 }
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark conversion for the other way
+////////////////////////////////////////////////////////////////////////////////////////
 
 +(XMPPMessage *)newXMPPMessageFromMessage:(Message *)message
 {

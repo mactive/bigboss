@@ -17,5 +17,6 @@
 + (Channel *)findChannelWithNode:(NSString *)node inContext:(NSManagedObjectContext *)context;
 
 + (BOOL)populateUser:(User *)user withJSONData:(NSString *)json;
++ (BOOL)populateChannel:(Channel *)channel withServerJSONData:(NSString *)json;
 
 @end

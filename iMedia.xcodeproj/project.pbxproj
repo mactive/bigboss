@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		56202F46162AA32F00F6306F /* AddFriendByIDController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56202F45162AA32F00F6306F /* AddFriendByIDController.m */; };
 		56202F49162AE85B00F6306F /* ChannelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56202F48162AE85A00F6306F /* ChannelViewController.m */; };
+		56202F4C162BBDDF00F6306F /* Channel.m in Sources */ = {isa = PBXBuildFile; fileRef = 56202F4B162BBDDF00F6306F /* Channel.m */; };
+		56202F56162BEDF000F6306F /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 56202F55162BEDF000F6306F /* User.m */; };
 		562DE705160ABFA100F782D2 /* ChatDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 562DE704160ABFA100F782D2 /* ChatDetailController.m */; };
 		562DE70F160AC3C600F782D2 /* bubbleMine.png in Resources */ = {isa = PBXBuildFile; fileRef = 562DE707160AC3C600F782D2 /* bubbleMine.png */; };
 		562DE710160AC3C600F782D2 /* bubbleMine@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 562DE708160AC3C600F782D2 /* bubbleMine@2x.png */; };
@@ -190,11 +192,8 @@
 		56B4CD1A1626C9E100E046CC /* ModelHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CD181626C9E100E046CC /* ModelHelper.m */; };
 		56B4CD211627AAFB00E046CC /* Conversation.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CD201627AAFB00E046CC /* Conversation.m */; };
 		56B4CD221627AAFB00E046CC /* Conversation.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CD201627AAFB00E046CC /* Conversation.m */; };
-		56B4CD351627AB9F00E046CC /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CD341627AB9F00E046CC /* User.m */; };
-		56B4CD361627AB9F00E046CC /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CD341627AB9F00E046CC /* User.m */; };
 		56B4CD461627E55400E046CC /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CD451627E55400E046CC /* Message.m */; };
 		56B4CD4916280C5A00E046CC /* Identity.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CD4816280C5900E046CC /* Identity.m */; };
-		56B4CD4C16280C6B00E046CC /* Channel.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CD4B16280C6B00E046CC /* Channel.m */; };
 		56B4CD4F16280C8100E046CC /* Me.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CD4E16280C8100E046CC /* Me.m */; };
 		56B4CD5016280C8100E046CC /* Me.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CD4E16280C8100E046CC /* Me.m */; };
 		56B4CD531628101500E046CC /* AddFriendController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CD521628101500E046CC /* AddFriendController.m */; };
@@ -260,6 +259,11 @@
 		56202F45162AA32F00F6306F /* AddFriendByIDController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AddFriendByIDController.m; path = ViewControllers/AddFriendByIDController.m; sourceTree = "<group>"; };
 		56202F47162AE85A00F6306F /* ChannelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChannelViewController.h; path = ViewControllers/ChannelViewController.h; sourceTree = "<group>"; };
 		56202F48162AE85A00F6306F /* ChannelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChannelViewController.m; path = ViewControllers/ChannelViewController.m; sourceTree = "<group>"; };
+		56202F4A162BBDDF00F6306F /* Channel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Channel.h; path = Models/Channel.h; sourceTree = "<group>"; };
+		56202F4B162BBDDF00F6306F /* Channel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Channel.m; path = Models/Channel.m; sourceTree = "<group>"; };
+		56202F50162BCB4100F6306F /* ChatWithIdentity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ChatWithIdentity.h; path = ViewControllers/ChatWithIdentity.h; sourceTree = "<group>"; };
+		56202F54162BEDF000F6306F /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = User.h; path = Models/User.h; sourceTree = "<group>"; };
+		56202F55162BEDF000F6306F /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = User.m; path = Models/User.m; sourceTree = "<group>"; };
 		562DE703160ABFA100F782D2 /* ChatDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChatDetailController.h; path = ViewControllers/ChatDetailController.h; sourceTree = "<group>"; };
 		562DE704160ABFA100F782D2 /* ChatDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChatDetailController.m; path = ViewControllers/ChatDetailController.m; sourceTree = "<group>"; };
 		562DE707160AC3C600F782D2 /* bubbleMine.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bubbleMine.png; path = Resources/bubbleMine.png; sourceTree = "<group>"; };
@@ -571,14 +575,10 @@
 		56B4CD181626C9E100E046CC /* ModelHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ModelHelper.m; path = Models/ModelHelper.m; sourceTree = "<group>"; };
 		56B4CD1F1627AAFB00E046CC /* Conversation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Conversation.h; path = Models/Conversation.h; sourceTree = "<group>"; };
 		56B4CD201627AAFB00E046CC /* Conversation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Conversation.m; path = Models/Conversation.m; sourceTree = "<group>"; };
-		56B4CD331627AB9F00E046CC /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = User.h; path = Models/User.h; sourceTree = "<group>"; };
-		56B4CD341627AB9F00E046CC /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = User.m; path = Models/User.m; sourceTree = "<group>"; };
 		56B4CD441627E55400E046CC /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Message.h; path = Models/Message.h; sourceTree = "<group>"; };
 		56B4CD451627E55400E046CC /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Message.m; path = Models/Message.m; sourceTree = "<group>"; };
 		56B4CD4716280C5900E046CC /* Identity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Identity.h; path = Models/Identity.h; sourceTree = "<group>"; };
 		56B4CD4816280C5900E046CC /* Identity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Identity.m; path = Models/Identity.m; sourceTree = "<group>"; };
-		56B4CD4A16280C6B00E046CC /* Channel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Channel.h; path = Models/Channel.h; sourceTree = "<group>"; };
-		56B4CD4B16280C6B00E046CC /* Channel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Channel.m; path = Models/Channel.m; sourceTree = "<group>"; };
 		56B4CD4D16280C8100E046CC /* Me.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Me.h; path = Models/Me.h; sourceTree = "<group>"; };
 		56B4CD4E16280C8100E046CC /* Me.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Me.m; path = Models/Me.m; sourceTree = "<group>"; };
 		56B4CD511628101400E046CC /* AddFriendController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AddFriendController.h; path = ViewControllers/AddFriendController.h; sourceTree = "<group>"; };
@@ -1422,16 +1422,16 @@
 			isa = PBXGroup;
 			children = (
 				566E80B51609A24C00A333EA /* iMedia.xcdatamodeld */,
+				56202F54162BEDF000F6306F /* User.h */,
+				56202F55162BEDF000F6306F /* User.m */,
+				56202F4A162BBDDF00F6306F /* Channel.h */,
+				56202F4B162BBDDF00F6306F /* Channel.m */,
 				56B4CD4D16280C8100E046CC /* Me.h */,
 				56B4CD4E16280C8100E046CC /* Me.m */,
-				56B4CD4A16280C6B00E046CC /* Channel.h */,
-				56B4CD4B16280C6B00E046CC /* Channel.m */,
 				56B4CD4716280C5900E046CC /* Identity.h */,
 				56B4CD4816280C5900E046CC /* Identity.m */,
 				56B4CD441627E55400E046CC /* Message.h */,
 				56B4CD451627E55400E046CC /* Message.m */,
-				56B4CD331627AB9F00E046CC /* User.h */,
-				56B4CD341627AB9F00E046CC /* User.m */,
 				56B4CD1F1627AAFB00E046CC /* Conversation.h */,
 				56B4CD201627AAFB00E046CC /* Conversation.m */,
 				56B4CD171626C9E100E046CC /* ModelHelper.h */,
@@ -1455,6 +1455,7 @@
 				56EE296F161696FA00910CE5 /* ProfileController.m */,
 				56202F47162AE85A00F6306F /* ChannelViewController.h */,
 				56202F48162AE85A00F6306F /* ChannelViewController.m */,
+				56202F50162BCB4100F6306F /* ChatWithIdentity.h */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -1865,14 +1866,14 @@
 				56B4CD151626B9ED00E046CC /* NetMessageConverter.m in Sources */,
 				56B4CD191626C9E100E046CC /* ModelHelper.m in Sources */,
 				56B4CD211627AAFB00E046CC /* Conversation.m in Sources */,
-				56B4CD351627AB9F00E046CC /* User.m in Sources */,
 				56B4CD461627E55400E046CC /* Message.m in Sources */,
 				56B4CD4916280C5A00E046CC /* Identity.m in Sources */,
-				56B4CD4C16280C6B00E046CC /* Channel.m in Sources */,
 				56B4CD4F16280C8100E046CC /* Me.m in Sources */,
 				56B4CD531628101500E046CC /* AddFriendController.m in Sources */,
 				56202F46162AA32F00F6306F /* AddFriendByIDController.m in Sources */,
 				56202F49162AE85B00F6306F /* ChannelViewController.m in Sources */,
+				56202F4C162BBDDF00F6306F /* Channel.m in Sources */,
+				56202F56162BEDF000F6306F /* User.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1894,7 +1895,6 @@
 				56B4CD161626B9ED00E046CC /* NetMessageConverter.m in Sources */,
 				56B4CD1A1626C9E100E046CC /* ModelHelper.m in Sources */,
 				56B4CD221627AAFB00E046CC /* Conversation.m in Sources */,
-				56B4CD361627AB9F00E046CC /* User.m in Sources */,
 				56B4CD5016280C8100E046CC /* Me.m in Sources */,
 				56B4CD541628101500E046CC /* AddFriendController.m in Sources */,
 			);

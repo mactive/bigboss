@@ -12,6 +12,8 @@
 //  (i.e. update our local data storage) and send notifications so that interesting party can perform actions
 //
 
+#define NS_PUBSUB          @"http://jabber.org/protocol/pubsub"
+
 @class Message;
 
 @interface XMPPNetworkCenter : NSObject
@@ -28,5 +30,8 @@
 -(BOOL)isConnected;
 
 -(BOOL)sendMessage:(Message *)message;
+-(void)subscribeToChannel:(NSString *)nodeName withCallbackBlock:(void (^)(NSError *error))block;
+-(void)addBuddy:(NSString *)jidStr withCallbackBlock:(void (^)(NSError *error))block;
+-(void)removeBuddy:(NSString *)jidStr withCallbackBlock:(void (^)(NSError *erro))block;
 
 @end

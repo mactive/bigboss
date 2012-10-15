@@ -8,12 +8,15 @@
 
 #import <Foundation/Foundation.h>
 #import "Message.h"
-#import "XMPPMessage.h"
+#import "Channel.h"
+
+@class XMPPMessage;
+@class XMPPIQ;
 
 @interface NetMessageConverter : NSObject
 
 +(Message *)newMessageFromXMPPMessage:(XMPPMessage *)msg inContext:(NSManagedObjectContext *)context;
 +(Message *)newMessageFromXMPPPubsubMessage:(XMPPMessage *)msg inContext:(NSManagedObjectContext *)context;
-+(XMPPMessage *)newXMPPMessageFromMessage:(Message *)msg;
 
++(XMPPMessage *)newXMPPMessageFromMessage:(Message *)msg;
 @end

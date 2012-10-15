@@ -49,7 +49,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
-- (void)contactDetailController:(ContactDetailController *)contactDetailController didChatIdentity:(id)obj
+- (void)viewController:(UIViewController *)viewController didChatIdentity:(id)obj
 {
     [self dismissModalViewControllerAnimated:YES];
     
@@ -111,12 +111,15 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		NSSortDescriptor *sd1 = [[NSSortDescriptor alloc] initWithKey:@"displayName" ascending:YES];
 		
 		NSArray *sortDescriptors = [NSArray arrayWithObjects:sd1, nil];
-		
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:
+                                  @"(state = %d)", IdentityStateActive];
+        
 		NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
 		[fetchRequest setEntity:entity];
 		[fetchRequest setSortDescriptors:sortDescriptors];
 		[fetchRequest setFetchBatchSize:30];
-		
+		[fetchRequest setPredicate:predicate];
+        
 		fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
 		                                                               managedObjectContext:moc
 		                                                                 sectionNameKeyPath:nil

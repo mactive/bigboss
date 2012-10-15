@@ -86,4 +86,15 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     return YES;
 }
 
++ (BOOL)populateChannel:(Channel *)channel withServerJSONData:(NSString *)json
+{
+    channel.guid = [json valueForKey:@"global_id"];
+    channel.node = [json valueForKey:@"node_address"];
+    channel.displayName = [json valueForKey:@"name"];
+    channel.csContactPostalID = [json valueForKey:@"receive_jid"];
+    channel.type = [NSNumber numberWithInt:IdentityTypeChannel];
+    
+    return YES;
+}
+
 @end

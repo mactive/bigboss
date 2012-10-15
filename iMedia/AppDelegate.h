@@ -32,6 +32,7 @@
 
 - (void)startMainSession;
 - (void)createMeWithUsername:(NSString *)username password:(NSString *)passwd jid:(NSString *)jidStr andJidPasswd:(NSString *)jidPass;
+- (NSManagedObjectContext *)context;
 
 @end
 
