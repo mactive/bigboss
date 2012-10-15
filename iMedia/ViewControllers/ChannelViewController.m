@@ -18,6 +18,8 @@
 
 @synthesize channel;
 @synthesize jsonData;
+@synthesize nameLabel = _nameLabel;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
