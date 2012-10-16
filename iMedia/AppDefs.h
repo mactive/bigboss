@@ -35,7 +35,7 @@
 #define GET_CONFIG_PATH         @"/base/getconfig"
 #define LOGIN_PATH              @"/base/applogin"
 #define GET_DATA_PATH           @"/base/getjsondata"
-#define POST_DATA_PATH          @"/base/setjsondata"
+#define POST_DATA_PATH          @"/base/setdata"
 
 #define NEW_MESSAGE_NOTIFICATION @"NewMessage"
 

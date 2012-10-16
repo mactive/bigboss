@@ -18,6 +18,8 @@
 #import "NetMessageConverter.h"
 #import "ModelHelper.h"
 
+#import "AppNetworkAPIClient.h"
+
 #import "AppDelegate.h"
 
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
@@ -674,7 +676,19 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
         channel.subID = subID;
     }
     
-    // notify server about the subscription
+    NSString* csrftoken = [[NSUserDefaults standardUserDefaults] valueForKey:@"csrfmiddlewaretoken"];
+    
+    // notify server about the subscription 
+    NSDictionary *postDict = [NSDictionary dictionaryWithObjectsAndKeys: channel.guid, @"guid", @"4", @"op", csrftoken, @"csrfmiddlewaretoken", nil];
+        
+    [[AppNetworkAPIClient sharedClient] postPath:POST_DATA_PATH parameters:postDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            DDLogVerbose(@"login JSON received: %@", responseObject);
+            
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            //
+            DDLogVerbose(@"login failed: %@", error);
+    }];
+
 }
 
 

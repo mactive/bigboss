@@ -22,6 +22,8 @@
 #import "FirstLoginController.h"
 #import "ProfileController.h"
 
+#import "AppNetworkAPIClient.h"
+
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
@@ -182,6 +184,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     _messagesSending = [NSMutableDictionary dictionary];
+    [[AppNetworkAPIClient sharedClient]loginWithUsername:self.me.username andPassword:self.me.password withBlock:nil];
     [self connect];
 }
 
