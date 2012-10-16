@@ -21,6 +21,7 @@
 
 @synthesize channel;
 @synthesize jsonData;
+@synthesize nameLabel = _nameLabel;
 @synthesize delegate;
 @synthesize managedObjectContext;
 
