@@ -20,10 +20,6 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 static const int ddLogLevel = LOG_LEVEL_INFO;
 #endif
 
-NSString *const kXMPPmyJID = @"kXMPPmyJID";
-NSString *const kXMPPmyJIDPassword = @"kXMPPmyJIDPassword";
-NSString *const kXMPPmyPassword = @"kXMPPmyPassword";
-NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 
 @implementation FirstLoginController
 
@@ -68,49 +64,26 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     [self setField:jidField forKey:kXMPPmyJID];
     [self setField:passwordField forKey:kXMPPmyPassword];
     
-    [[AppNetworkAPIClient sharedClient] getPath:GET_CONFIG_PATH parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        DDLogVerbose(@"get config JSON received: %@", responseObject);
-        [[NSUserDefaults standardUserDefaults] setObject:[responseObject valueForKey:@"logintypes"] forKey:@"logintypes"];
-        [[NSUserDefaults standardUserDefaults] setObject:[responseObject valueForKey:@"csrfmiddlewaretoken"] forKey:@"csrfmiddlewaretoken"];
-        
-        // now is to login
-        NSDictionary *loginDict = [NSDictionary dictionaryWithObjectsAndKeys: jidField.text, @"username", passwordField.text, @"password", [responseObject valueForKey:@"csrfmiddlewaretoken"], @"csrfmiddlewaretoken", nil];
-        
-        [[AppNetworkAPIClient sharedClient] postPath:LOGIN_PATH parameters:loginDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
-            DDLogVerbose(@"login JSON received: %@", responseObject);
+    [[AppNetworkAPIClient sharedClient] loginWithUsername:jidField.text andPassword:passwordField.text withBlock:^(id responseObject, NSError *error) {
+        if (error == nil) {
             
-            NSString* status = [responseObject valueForKey:@"status"];
-            if ([status isEqualToString:@"success"]) {
-                
-                NSString* jid = [responseObject valueForKey:@"jid"];
-                NSString *jPassword = [responseObject valueForKey:@"jpass"];
-                
-                [[NSUserDefaults standardUserDefaults] setObject:jid forKey:kXMPPmyJID];
-                [[NSUserDefaults standardUserDefaults] setObject:jPassword forKey:kXMPPmyJIDPassword];
-                [[NSUserDefaults standardUserDefaults] setObject:jidField.text forKey:kXMPPmyUsername];
-                [[NSUserDefaults standardUserDefaults] setObject:passwordField.text forKey:kXMPPmyPassword];
-
-                [self performSegueWithIdentifier:@"WelcomeMsg" sender:self];
-                
-                if (![[XMPPNetworkCenter sharedClient] connectWithUsername:jid andPassword:jPassword])
-                {
-                    DDLogVerbose(@"%@: %@ cannot connect to XMPP server", THIS_FILE, THIS_METHOD);
-                }
-                
-                [[self appDelegate] createMeWithUsername:jidField.text password:passwordField.text jid:jid andJidPasswd:jPassword];
-
+            NSString* jid = [responseObject valueForKey:@"jid"];
+            NSString *jPassword = [responseObject valueForKey:@"jpass"];
+            
+            [self performSegueWithIdentifier:@"WelcomeMsg" sender:self];
+            
+            if (![[XMPPNetworkCenter sharedClient] connectWithUsername:jid andPassword:jPassword])
+            {
+                DDLogVerbose(@"%@: %@ cannot connect to XMPP server", THIS_FILE, THIS_METHOD);
             }
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            //
-            DDLogVerbose(@"login failed: %@", error);
-            self.passwordField.text = nil;
-        }];
+            
+            [[self appDelegate] createMeWithUsername:jidField.text password:passwordField.text jid:jid andJidPasswd:jPassword];
+        } else {
+            DDLogError(@"NSError received during login: %@", error);
+        }
         
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        //
-        DDLogVerbose(@"error received: %@", error);
     }];
-
+    
 }
 
 

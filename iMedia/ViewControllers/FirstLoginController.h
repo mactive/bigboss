@@ -8,10 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-extern NSString *const kXMPPmyJID;
-extern NSString *const kXMPPmyJIDPassword;
-extern NSString *const kXMPPmyPassword;
-extern NSString *const kXMPPmyUsername;
 
 
 @interface FirstLoginController : UIViewController

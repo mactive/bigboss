@@ -10,10 +10,17 @@
 
 //@class Channel;
 
+extern NSString *const kXMPPmyJID;
+extern NSString *const kXMPPmyJIDPassword;
+extern NSString *const kXMPPmyPassword;
+extern NSString *const kXMPPmyUsername;
+
+
 @interface AppNetworkAPIClient : AFHTTPClient
 
 + (AppNetworkAPIClient *)sharedClient;
 
 //- (void)updateChannelInfo:(Channel *)channel withBlock:(void (^)(NSError *error))block;
 
+- (void)loginWithUsername:(NSString *)username andPassword:(NSString *)passwd withBlock:(void (^)(id responseObject, NSError *error))block;
 @end
