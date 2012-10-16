@@ -24,6 +24,7 @@
 @synthesize nameLabel = _nameLabel;
 @synthesize delegate;
 @synthesize managedObjectContext;
+@synthesize sendMsgButton = _sendMsgButton;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {

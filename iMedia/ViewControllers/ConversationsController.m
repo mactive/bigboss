@@ -38,6 +38,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 @implementation ConversationsController
 
 @synthesize fetchedResultsController = _fetchedResultsController;
+@synthesize managedObjectContext = _managedObjectContext;
 
 
 - (id)initWithStyle:(UITableViewStyle)style
