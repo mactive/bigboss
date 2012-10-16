@@ -1447,14 +1447,14 @@
 				566E82611609A77D00A333EA /* ContactListViewController.m */,
 				566E82661609AF2700A333EA /* ContactDetailController.h */,
 				566E82671609AF2700A333EA /* ContactDetailController.m */,
+				56202F47162AE85A00F6306F /* ChannelViewController.h */,
+				56202F48162AE85A00F6306F /* ChannelViewController.m */,
 				566E82631609A79B00A333EA /* ConversationsController.h */,
 				566E82641609A79B00A333EA /* ConversationsController.m */,
 				562DE703160ABFA100F782D2 /* ChatDetailController.h */,
 				562DE704160ABFA100F782D2 /* ChatDetailController.m */,
 				56EE296E161696F900910CE5 /* ProfileController.h */,
 				56EE296F161696FA00910CE5 /* ProfileController.m */,
-				56202F47162AE85A00F6306F /* ChannelViewController.h */,
-				56202F48162AE85A00F6306F /* ChannelViewController.m */,
 				56202F50162BCB4100F6306F /* ChatWithIdentity.h */,
 			);
 			name = ViewControllers;
