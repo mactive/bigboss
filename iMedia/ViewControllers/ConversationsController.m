@@ -300,9 +300,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     } else if ([obj isKindOfClass:[Channel class]]) {
         Channel *channel = obj;
         if (channel.conversation == nil) {
-            _detailController.conversation = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:self.managedObjectContext];
-            channel.conversation = _detailController.conversation;
+            channel.conversation = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:self.managedObjectContext];
         }
+        _detailController.conversation = channel.conversation;
+
     }
     
     _detailController.managedObjectContext = self.managedObjectContext;

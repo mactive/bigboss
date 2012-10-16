@@ -483,15 +483,15 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     // insert user if it doesn't exist
     if (thisUser == nil || thisUser.state.intValue == IdentityStateInactive) {
         thisUser = [NSEntityDescription insertNewObjectForEntityForName:@"User" inManagedObjectContext:_managedObjectContext];
+    }
+    
+    if (thisUser.state.intValue != IdentityStateActive) {
         thisUser.name = user.nickname;
         thisUser.ePostalID = [user.jid bare];
         thisUser.displayName = [user.jid bare];
         thisUser.type = [NSNumber numberWithInt:IdentityTypeUser];
         thisUser.state = [NSNumber numberWithInt:IdentityStateActive];
-        
         MOCSave(_managedObjectContext);
-    } else if (thisUser.state.intValue == IdentityStatePendingAddFriend ) {
-        thisUser.state = [NSNumber numberWithInt:IdentityStateActive];
     }
 }
 
@@ -664,16 +664,18 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     //   </pubsub>
     // </iq>
     
-    NSString *nodeStr = [iq attributeStringValueForName:@"id"];
+
     NSXMLElement *pubsub = [iq elementForName:@"pubsub"];
     NSXMLElement *subscription = [pubsub elementForName:@"subscription"];
     NSString* subID = [subscription attributeStringValueForName:@"subid"];
+    NSString *nodeStr = [subscription attributeStringValueForName:@"node"];
     
     //add the Channel to the addressbook
     Channel *channel = [ModelHelper findChannelWithNode:nodeStr inContext:_managedObjectContext];
     if (channel && channel.state.intValue == IdentityStatePendingAddSubscription) {
         channel.state = [NSNumber numberWithInt:IdentityStateActive];
         channel.subID = subID;
+        MOCSave(_managedObjectContext);
     }
     
     NSString* csrftoken = [[NSUserDefaults standardUserDefaults] valueForKey:@"csrfmiddlewaretoken"];

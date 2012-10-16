@@ -91,6 +91,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     channel.guid = [json valueForKey:@"global_id"];
     channel.node = [json valueForKey:@"node_address"];
     channel.displayName = [json valueForKey:@"name"];
+    channel.ePostalID = [json valueForKey:@"receive_jid"];
     channel.csContactPostalID = [json valueForKey:@"receive_jid"];
     channel.type = [NSNumber numberWithInt:IdentityTypeChannel];
     

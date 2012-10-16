@@ -9,7 +9,9 @@
 #import "ContactListViewController.h"
 #import "AppDelegate.h"
 #import "ContactDetailController.h"
+#import "ChannelViewController.h"
 #import "User.h"
+#import "Channel.h"
 #import "ConversationsController.h"
 #import "AddFriendController.h"
 
@@ -183,6 +185,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	
         cell.textLabel.text = user.displayName;
         cell.detailTextLabel.text = user.name;
+    } else if ([obj isKindOfClass:[Channel class]]) {
+        Channel *channel = obj;
+        cell.textLabel.text = channel.node;
+        cell.detailTextLabel.text = channel.ePostalID;
     }
     
     
@@ -233,15 +239,22 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
   
-    ContactDetailController *detailViewController = [[ContactDetailController alloc] initWithNibName:nil bundle:nil];
+    id obj =  [[self fetchedResultsController] objectAtIndexPath:indexPath];
     
-    detailViewController.user = [[self fetchedResultsController] objectAtIndexPath:indexPath];
+    if ([obj isKindOfClass:[User class]]) {
+        ContactDetailController *detailViewController = [[ContactDetailController alloc] initWithNibName:nil bundle:nil];
+        detailViewController.user = obj;
+        detailViewController.delegate = self;
+        // Pass the selected object to the new view controller.
+        [self.navigationController pushViewController:detailViewController animated:YES];
+    } else if ([obj isKindOfClass:[Channel class]]) {
+        ChannelViewController *controller = [[ChannelViewController alloc] initWithNibName:nil bundle:nil];
+        controller.channel = obj;
+        controller.delegate = self;
+        [self.navigationController pushViewController:controller animated:YES];
+    }
     
-    detailViewController.delegate = self;
-
-    // Pass the selected object to the new view controller.
-    [self.navigationController pushViewController:detailViewController animated:YES];
-    
+       
 }
 
 @end
