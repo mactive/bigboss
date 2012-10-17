@@ -7,8 +7,6 @@ build/
 xcuserdata
 
 *.pbxuser
-*.perspective
-*.perspectivev3
 
 #Compiled source #
 ###################

@@ -12,6 +12,8 @@
 
 @class ContactListViewController;
 @class ConversationsController;
+@class ShakeViewController;
+@class SettingViewController;
 @class Message;
 @class Me;
 
@@ -21,6 +23,8 @@
 @property (strong, nonatomic) UITabBarController *tabController;
 @property (strong, nonatomic) ConversationsController *conversationController;
 @property (strong, nonatomic) ContactListViewController *contactListController;
+@property (strong, nonatomic) ShakeViewController *shakeController;
+@property (strong, nonatomic) SettingViewController *settingController;
 
 // Here comes one of the bigges assumptions. This me is the only instance in the Me entity. If me exists, it means
 // this is not a first run, all data initializations will be done already. We will not pull the full poster again

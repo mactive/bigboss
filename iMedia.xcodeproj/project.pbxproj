@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		266A1A6F162E5AF3008EF1D5 /* ShakeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 266A1A6E162E5AF2008EF1D5 /* ShakeViewController.m */; };
+		266A1A72162E5B10008EF1D5 /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 266A1A71162E5B0F008EF1D5 /* SettingViewController.m */; };
 		56202F46162AA32F00F6306F /* AddFriendByIDController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56202F45162AA32F00F6306F /* AddFriendByIDController.m */; };
 		56202F49162AE85B00F6306F /* ChannelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56202F48162AE85A00F6306F /* ChannelViewController.m */; };
 		56202F4C162BBDDF00F6306F /* Channel.m in Sources */ = {isa = PBXBuildFile; fileRef = 56202F4B162BBDDF00F6306F /* Channel.m */; };
@@ -255,6 +257,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		266A1A6D162E5AF2008EF1D5 /* ShakeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShakeViewController.h; path = ViewControllers/ShakeViewController.h; sourceTree = "<group>"; };
+		266A1A6E162E5AF2008EF1D5 /* ShakeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShakeViewController.m; path = ViewControllers/ShakeViewController.m; sourceTree = "<group>"; };
+		266A1A70162E5B0F008EF1D5 /* SettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SettingViewController.h; path = ViewControllers/SettingViewController.h; sourceTree = "<group>"; };
+		266A1A71162E5B0F008EF1D5 /* SettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SettingViewController.m; path = ViewControllers/SettingViewController.m; sourceTree = "<group>"; };
 		56202F44162AA32F00F6306F /* AddFriendByIDController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AddFriendByIDController.h; path = ViewControllers/AddFriendByIDController.h; sourceTree = "<group>"; };
 		56202F45162AA32F00F6306F /* AddFriendByIDController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AddFriendByIDController.m; path = ViewControllers/AddFriendByIDController.m; sourceTree = "<group>"; };
 		56202F47162AE85A00F6306F /* ChannelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChannelViewController.h; path = ViewControllers/ChannelViewController.h; sourceTree = "<group>"; };
@@ -1455,6 +1461,10 @@
 				562DE704160ABFA100F782D2 /* ChatDetailController.m */,
 				56EE296E161696F900910CE5 /* ProfileController.h */,
 				56EE296F161696FA00910CE5 /* ProfileController.m */,
+				266A1A6D162E5AF2008EF1D5 /* ShakeViewController.h */,
+				266A1A6E162E5AF2008EF1D5 /* ShakeViewController.m */,
+				266A1A70162E5B0F008EF1D5 /* SettingViewController.h */,
+				266A1A71162E5B0F008EF1D5 /* SettingViewController.m */,
 				56202F50162BCB4100F6306F /* ChatWithIdentity.h */,
 			);
 			name = ViewControllers;
@@ -1874,6 +1884,8 @@
 				56202F49162AE85B00F6306F /* ChannelViewController.m in Sources */,
 				56202F4C162BBDDF00F6306F /* Channel.m in Sources */,
 				56202F56162BEDF000F6306F /* User.m in Sources */,
+				266A1A6F162E5AF3008EF1D5 /* ShakeViewController.m in Sources */,
+				266A1A72162E5B10008EF1D5 /* SettingViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

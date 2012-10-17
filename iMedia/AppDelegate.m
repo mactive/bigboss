@@ -19,6 +19,8 @@
 
 #import "ConversationsController.h"
 #import "ContactListViewController.h"
+#import "ShakeViewController.h"
+#import "SettingViewController.h"
 #import "FirstLoginController.h"
 #import "ProfileController.h"
 
@@ -55,6 +57,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 @synthesize tabController = _tabController;
 @synthesize conversationController;
 @synthesize contactListController;
+@synthesize shakeController;
+@synthesize settingController;
 
 @synthesize me = _me;
 
@@ -109,6 +113,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     // Creating all the initial controllers
     //
     self.tabController = [[UITabBarController alloc] init];
+    
     self.contactListController = [[ContactListViewController alloc] init];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:self.contactListController];
     self.contactListController.managedObjectContext = _managedObjectContext;
@@ -119,7 +124,15 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     self.conversationController.managedObjectContext = _managedObjectContext;
     self.conversationController.title = NSLocalizedString(@"Messages", nil);
     
-    NSArray* controllers = [NSArray arrayWithObjects:navController2, navController, nil];
+    self.shakeController = [[ShakeViewController alloc] init];
+    UINavigationController *navController3 = [[UINavigationController alloc] initWithRootViewController:self.shakeController];
+    self.shakeController.title = NSLocalizedString(@"Shake", nil);
+    
+    self.settingController = [[SettingViewController alloc] init];
+    UINavigationController *navController4 = [[UINavigationController alloc] initWithRootViewController:self.settingController];
+    self.settingController.title = NSLocalizedString(@"Setting", nil);
+    
+    NSArray* controllers = [NSArray arrayWithObjects:navController2, navController, navController3, navController4, nil];
     self.tabController.viewControllers = controllers;
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
