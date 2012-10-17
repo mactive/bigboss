@@ -1983,8 +1983,8 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: qian meng (2WTBYPH5XE)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: qian meng (2WTBYPH5XE)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -2005,8 +2005,8 @@
 					"-force_load",
 					"${BUILT_PRODUCTS_DIR}/libCocoaPlant.a",
 				);
-				PROVISIONING_PROFILE = "DA22F607-8EBD-495F-A84E-B31BFD732C50";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "DA22F607-8EBD-495F-A84E-B31BFD732C50";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2020,8 +2020,8 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: qian meng (2WTBYPH5XE)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: qian meng (2WTBYPH5XE)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -2036,8 +2036,8 @@
 					"-force_load",
 					"${BUILT_PRODUCTS_DIR}/libCocoaPlant.a",
 				);
-				PROVISIONING_PROFILE = "DA22F607-8EBD-495F-A84E-B31BFD732C50";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "DA22F607-8EBD-495F-A84E-B31BFD732C50";
+				PROVISIONING_PROFILE = "";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
