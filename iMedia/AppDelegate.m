@@ -134,6 +134,15 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
     NSArray* controllers = [NSArray arrayWithObjects:navController2, navController, navController3, navController4, nil];
     self.tabController.viewControllers = controllers;
+    [self.tabController.tabBar setFrame:CGRectMake(0, 600.0, 320.0, 40.0)];
+    UIImageView *tabbarBgView  = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tabbar_bg.png"]];
+    [self.tabController.tabBar insertSubview:tabbarBgView atIndex:1];
+    
+    NSArray* items = [self.tabController.tabBar items];
+    [[items objectAtIndex:0] setImage:[UIImage imageNamed:@"tabbar_item_0.png"] forState:UIControlStateNormal];
+    [[items objectAtIndex:1] setImage:[UIImage imageNamed:@"tabbar_item_1.png"] forState:UIControlStateNormal];
+    [[items objectAtIndex:2] setImage:[UIImage imageNamed:@"tabbar_item_2.png"] forState:UIControlStateNormal];
+    [[items objectAtIndex:3] setImage:[UIImage imageNamed:@"tabbar_item_3.png"] forState:UIControlStateNormal];    
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];
