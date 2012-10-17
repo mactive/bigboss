@@ -1,5 +1,6 @@
 #User#
 *.psd
+iMedia.xcodeproj/xcuserdata/*
 
 #Compiled source #
 ###################

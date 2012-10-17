@@ -2006,6 +2006,7 @@
 				HEADER_SEARCH_PATHS = (
 					/usr/include/libxml2,
 					Libraries/CocoaPlant,
+					iMedia/XMPPFramework/Vendor/libidn,
 				);
 				INFOPLIST_FILE = "iMedia/iMedia-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
@@ -2026,6 +2027,7 @@
 				HEADER_SEARCH_PATHS = (
 					/usr/include/libxml2,
 					Libraries/CocoaPlant,
+					iMedia/XMPPFramework/Vendor/libidn,
 				);
 				INFOPLIST_FILE = "iMedia/iMedia-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
