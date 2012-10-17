@@ -5,6 +5,7 @@
 
 build/
 xcuserdata
+iMedia.xcodeproj/project.xcworkspace/xcuserdata/
 
 *.pbxuser
 
