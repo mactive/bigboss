@@ -1,6 +1,12 @@
 #User#
 *.psd
-iMedia.xcodeproj/xcuserdata/*
+*.swp
+*~.nib
+
+build/
+xcuserdata
+
+*.pbxuser
 
 #Compiled source #
 ###################

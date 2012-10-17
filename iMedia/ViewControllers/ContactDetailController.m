@@ -114,15 +114,15 @@
     NSString *userJid = [jsonData valueForKey:@"jid"];
     User *newUser = [ModelHelper findUserWithEPostalID:userJid inContext:self.managedObjectContext];
     
-    if (newUser == nil || newUser.state.intValue == IdentityStatePendingAddFriend) {
-        // create user when user doesn't exist already
+    if (newUser == nil) {
         newUser = [NSEntityDescription insertNewObjectForEntityForName:@"User" inManagedObjectContext:self.managedObjectContext];
-        [ModelHelper populateUser:newUser withJSONData:jsonData];
-        newUser.state = [NSNumber numberWithInt:IdentityStatePendingAddFriend];
     }
     
-    [[XMPPNetworkCenter sharedClient] addBuddy:userJid withCallbackBlock:nil];
-    
+    if (newUser.state.intValue != IdentityStateActive) {
+        [ModelHelper populateUser:newUser withJSONData:jsonData];
+        newUser.state = [NSNumber numberWithInt:IdentityStatePendingAddFriend];
+        [[XMPPNetworkCenter sharedClient] addBuddy:userJid withCallbackBlock:nil];
+    }
 }
 
 -(void)deleteUserButtonPushed:(id)sender
