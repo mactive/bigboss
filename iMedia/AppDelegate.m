@@ -114,15 +114,15 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     //
     self.tabController = [[UITabBarController alloc] init];
     
-    self.contactListController = [[ContactListViewController alloc] init];
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:self.contactListController];
-    self.contactListController.managedObjectContext = _managedObjectContext;
-    self.conversationController.title = NSLocalizedString(@"Contacts", nil);
-    
     self.conversationController = [[ConversationsController alloc] init];
-    UINavigationController *navController2 = [[UINavigationController alloc] initWithRootViewController:self.conversationController];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:self.conversationController];
     self.conversationController.managedObjectContext = _managedObjectContext;
     self.conversationController.title = NSLocalizedString(@"Messages", nil);
+    
+    self.contactListController = [[ContactListViewController alloc] init];
+    UINavigationController *navController2 = [[UINavigationController alloc] initWithRootViewController:self.contactListController];
+    self.contactListController.managedObjectContext = _managedObjectContext;
+    self.contactListController.title = NSLocalizedString(@"Contacts", nil);
     
     self.shakeController = [[ShakeViewController alloc] init];
     UINavigationController *navController3 = [[UINavigationController alloc] initWithRootViewController:self.shakeController];
@@ -132,18 +132,23 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     UINavigationController *navController4 = [[UINavigationController alloc] initWithRootViewController:self.settingController];
     self.settingController.title = NSLocalizedString(@"Setting", nil);
     
-    NSArray* controllers = [NSArray arrayWithObjects:navController2, navController, navController3, navController4, nil];
+    NSArray* controllers = [NSArray arrayWithObjects:navController, navController2, navController3, navController4, nil];
     self.tabController.viewControllers = controllers;
-    [self.tabController.tabBar setFrame:CGRectMake(0, 600.0, 320.0, 40.0)];
+    // tabtar style 
+    [self.tabController.tabBar setFrame:CGRectMake(0, 440.0, 320.0, 40.0)];
     UIImageView *tabbarBgView  = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tabbar_bg.png"]];
     [self.tabController.tabBar insertSubview:tabbarBgView atIndex:1];
+    [self.tabController.tabBar setTintColor:[UIColor grayColor]];
+    [self.tabController.tabBar setSelectedImageTintColor:[UIColor whiteColor]];
+    [self.tabController.tabBar setSelectionIndicatorImage:[UIImage imageNamed:@"tabbar_overlay.png"]];
     
     NSArray* items = [self.tabController.tabBar items];
-    [[items objectAtIndex:0] setImage:[UIImage imageNamed:@"tabbar_item_0.png"] forState:UIControlStateNormal];
-    [[items objectAtIndex:1] setImage:[UIImage imageNamed:@"tabbar_item_1.png"] forState:UIControlStateNormal];
-    [[items objectAtIndex:2] setImage:[UIImage imageNamed:@"tabbar_item_2.png"] forState:UIControlStateNormal];
-    [[items objectAtIndex:3] setImage:[UIImage imageNamed:@"tabbar_item_3.png"] forState:UIControlStateNormal];    
+    [[items objectAtIndex:0] initWithTitle:NSLocalizedString(@"Message", nil)   image:[UIImage imageNamed:@"tabbar_item_0.png"] tag:1000];
+    [[items objectAtIndex:1] initWithTitle:NSLocalizedString(@"Contacts", nil)  image:[UIImage imageNamed:@"tabbar_item_1.png"] tag:1001];
+    [[items objectAtIndex:2] initWithTitle:NSLocalizedString(@"Shake", nil)     image:[UIImage imageNamed:@"tabbar_item_2.png"] tag:1002];
+    [[items objectAtIndex:3] initWithTitle:NSLocalizedString(@"Setting", nil)   image:[UIImage imageNamed:@"tabbar_item_3.png"] tag:1003];
     
+
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window addSubview:self.tabController.view];
@@ -187,6 +192,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     return YES;
 }
 
+-(void)applicationDidFinishLaunching:(UIApplication *)application{
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:NO];
+}
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {

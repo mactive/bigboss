@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2605CC36162EA34200234442 /* tabbar_overlay@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2605CC35162EA34200234442 /* tabbar_overlay@2x.png */; };
+		2605CC38162EA56000234442 /* navigationBar_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2605CC37162EA56000234442 /* navigationBar_bg@2x.png */; };
 		266A1A6F162E5AF3008EF1D5 /* ShakeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 266A1A6E162E5AF2008EF1D5 /* ShakeViewController.m */; };
 		266A1A72162E5B10008EF1D5 /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 266A1A71162E5B0F008EF1D5 /* SettingViewController.m */; };
 		2697A7C7162E6FC900BA4319 /* tabbar_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2697A7C6162E6FC900BA4319 /* tabbar_bg@2x.png */; };
@@ -262,6 +264,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2605CC35162EA34200234442 /* tabbar_overlay@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tabbar_overlay@2x.png"; sourceTree = "<group>"; };
+		2605CC37162EA56000234442 /* navigationBar_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navigationBar_bg@2x.png"; sourceTree = "<group>"; };
 		266A1A6D162E5AF2008EF1D5 /* ShakeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShakeViewController.h; path = ViewControllers/ShakeViewController.h; sourceTree = "<group>"; };
 		266A1A6E162E5AF2008EF1D5 /* ShakeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShakeViewController.m; path = ViewControllers/ShakeViewController.m; sourceTree = "<group>"; };
 		266A1A70162E5B0F008EF1D5 /* SettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SettingViewController.h; path = ViewControllers/SettingViewController.h; sourceTree = "<group>"; };
@@ -691,6 +695,8 @@
 			isa = PBXGroup;
 			children = (
 				2697A7C6162E6FC900BA4319 /* tabbar_bg@2x.png */,
+				2605CC37162EA56000234442 /* navigationBar_bg@2x.png */,
+				2605CC35162EA34200234442 /* tabbar_overlay@2x.png */,
 				2697A7C8162E8FDB00BA4319 /* tabbar_item_0@2x.png */,
 				2697A7C9162E8FDB00BA4319 /* tabbar_item_1@2x.png */,
 				2697A7CA162E8FDB00BA4319 /* tabbar_item_2@2x.png */,
@@ -1718,6 +1724,8 @@
 				2697A7CD162E8FDB00BA4319 /* tabbar_item_1@2x.png in Resources */,
 				2697A7CE162E8FDB00BA4319 /* tabbar_item_2@2x.png in Resources */,
 				2697A7CF162E8FDB00BA4319 /* tabbar_item_3@2x.png in Resources */,
+				2605CC36162EA34200234442 /* tabbar_overlay@2x.png in Resources */,
+				2605CC38162EA56000234442 /* navigationBar_bg@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1975,8 +1983,8 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Pin You (GQDHPGD2JY)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Pin You (GQDHPGD2JY)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: qian meng (2WTBYPH5XE)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: qian meng (2WTBYPH5XE)";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1997,8 +2005,8 @@
 					"-force_load",
 					"${BUILT_PRODUCTS_DIR}/libCocoaPlant.a",
 				);
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "DA22F607-8EBD-495F-A84E-B31BFD732C50";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "DA22F607-8EBD-495F-A84E-B31BFD732C50";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2012,8 +2020,8 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Pin You (GQDHPGD2JY)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Pin You (GQDHPGD2JY)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: qian meng (2WTBYPH5XE)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: qian meng (2WTBYPH5XE)";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -2028,8 +2036,8 @@
 					"-force_load",
 					"${BUILT_PRODUCTS_DIR}/libCocoaPlant.a",
 				);
-				PROVISIONING_PROFILE = "";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				PROVISIONING_PROFILE = "DA22F607-8EBD-495F-A84E-B31BFD732C50";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "DA22F607-8EBD-495F-A84E-B31BFD732C50";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
