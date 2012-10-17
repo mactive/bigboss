@@ -92,7 +92,7 @@
     if (newChannel == nil) {
         newChannel = [NSEntityDescription insertNewObjectForEntityForName:@"Channel" inManagedObjectContext:self.managedObjectContext];
         [ModelHelper populateChannel:newChannel withServerJSONData:jsonData];
-        channel.state = [NSNumber numberWithInt:IdentityStatePendingAddSubscription];
+        newChannel.state = [NSNumber numberWithInt:IdentityStatePendingAddSubscription];
     }
     
     [[XMPPNetworkCenter sharedClient] subscribeToChannel:nodeStr withCallbackBlock:nil];

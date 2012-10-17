@@ -117,8 +117,15 @@
 
 +(XMPPMessage *)newXMPPMessageFromMessage:(Message *)message
 {
-    User *to = [message.conversation.users anyObject]; // here we suppose a conversation only between two parties
-    XMPPMessage *msg = [XMPPMessage messageWithType:@"chat" to:[XMPPJID jidWithString:to.ePostalID]];
+    NSString* toJid = @"";
+    if (message.conversation.channel != nil) {
+        toJid = message.conversation.channel.csContactPostalID;
+    } else {
+        User *to = [message.conversation.users anyObject]; // here we suppose a conversation only between two parties
+        toJid = to.ePostalID;
+    }
+    
+    XMPPMessage *msg = [XMPPMessage messageWithType:@"chat" to:[XMPPJID jidWithString:toJid]];
     NSXMLElement *body = [NSXMLElement elementWithName:@"body" stringValue:message.text];
     [msg  addChild:body];
     
