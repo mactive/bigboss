@@ -91,6 +91,12 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         DDLogVerbose(@"%@: %@ multiple ME instance", THIS_FILE, THIS_METHOD);
     }
 
+        
+    // global style 
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:NO];
+    [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"navigationBar_bg.png"] forBarMetrics:UIBarMetricsDefault];
+    [[UINavigationBar appearance] setTintColor:[UIColor colorWithRed:222.0 green:224.0 blue:227.0 alpha:1.0]];
+    
     return YES;
 }
 
@@ -190,10 +196,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         return NO;
     }
     return YES;
-}
-
--(void)applicationDidFinishLaunching:(UIApplication *)application{
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:NO];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

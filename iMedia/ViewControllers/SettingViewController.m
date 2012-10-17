@@ -28,8 +28,6 @@
     UIImageView *tabbarBgView  = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"navigationBar_bg.png"]];
     [self.navigationController.navigationBar insertSubview:tabbarBgView atIndex:1];
     [self.navigationController.navigationBar setBackgroundColor:[UIColor blackColor]];
-
-    
 }
 
 - (void)viewDidLoad

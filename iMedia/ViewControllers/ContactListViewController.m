@@ -14,6 +14,7 @@
 #import "Channel.h"
 #import "ConversationsController.h"
 #import "AddFriendController.h"
+#import "UINavigationBar+Background.h"
 
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
@@ -38,7 +39,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     if (self) {
         self.title = @"Contacts";
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(add:)];
-
     }
     return self;
 }
