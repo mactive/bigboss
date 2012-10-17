@@ -90,13 +90,12 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     } else {
         DDLogVerbose(@"%@: %@ multiple ME instance", THIS_FILE, THIS_METHOD);
     }
-
         
-    // global style 
+    // Global UINavigationBar style 
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:NO];
     [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"navigationBar_bg.png"] forBarMetrics:UIBarMetricsDefault];
-    [[UINavigationBar appearance] setTintColor:[UIColor colorWithRed:59.0 green:64.0 blue:72.0 alpha:1.0]];
-    
+    [[UINavigationBar appearance] setTintColor:[UIColor colorWithRed:69/255 green:72/255 blue:76/255 alpha:1.0] ];
+
     return YES;
 }
 
@@ -141,7 +140,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     NSArray* controllers = [NSArray arrayWithObjects:navController, navController2, navController3, navController4, nil];
     self.tabController.viewControllers = controllers;
     // tabtar style 
-    [self.tabController.tabBar setFrame:CGRectMake(0, 440.0, 320.0, 40.0)];
+    [self.tabController.tabBar setFrame:CGRectMake(0, 435.0, 320.0, 45.0)];
     UIImageView *tabbarBgView  = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tabbar_bg.png"]];
     [self.tabController.tabBar insertSubview:tabbarBgView atIndex:1];
     [self.tabController.tabBar setTintColor:[UIColor grayColor]];
