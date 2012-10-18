@@ -97,6 +97,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             ContactDetailController *controller = [[ContactDetailController alloc] initWithNibName:nil bundle:nil];
             controller.jsonData = responseObject;
             controller.managedObjectContext = [self appDelegate].context;
+            NSLog(@"self delegate %@",[self appDelegate]);
             
             // Pass the selected object to the new view controller.
             [self.navigationController pushViewController:controller animated:YES];

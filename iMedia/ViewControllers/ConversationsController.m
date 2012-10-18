@@ -47,6 +47,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     if (self) {
         self.title = @"Chat";
         self.tableView.rowHeight = ROW_HEIGHT;
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         _detailController = [[ChatDetailController alloc] init];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(newMessageReceived:)
@@ -341,11 +342,15 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	 Create an instance of UITableViewCell and add tagged subviews for the name, message, and quarter image of the time zone.
 	 */
     
-	UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
-    
-	/*
-	 Create labels for the text fields; set the highlight color so that when the cell is selected it changes appropriately.
-     */
+//	UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+    UITableViewCell *cell = [[UITableViewCell alloc] initWithFrame:CGRectMake(0, 0, 320, 60) reuseIdentifier:identifier];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    UIImageView *cellBgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell_bg.png"]];
+//    cell.contentView.backgroundColor = [UIColor clearColor];
+    [cell.contentView insertSubview:cellBgView atIndex:0];
+    /*
+     Create labels for the text fields; set the highlight color so that when the cell is selected it changes appropriately.
+    */
 	UILabel *label;
 	CGRect rect;
 	
@@ -364,6 +369,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     label.highlighted = YES;
 	label.textAlignment = UITextAlignmentLeft;
 	[cell.contentView addSubview:label];
+    label.backgroundColor = [UIColor clearColor];
 	label.highlightedTextColor = [UIColor whiteColor];
 	
 	// Create a label for the message.
@@ -383,7 +389,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	label.textAlignment = UITextAlignmentRight;
 	[cell.contentView addSubview:label];
 	label.highlightedTextColor = [UIColor whiteColor];
-		
+    
+//    UIImageView *cellBgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell_bg.png"]];
+//    cell.backgroundView = cellBgView;
+    
 	return cell;
 }
 

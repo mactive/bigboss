@@ -39,7 +39,6 @@
 
 #define NEW_MESSAGE_NOTIFICATION @"NewMessage"
 
-
 #define UIKeyboardNotificationsObserve() \
 NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter]; \
 [notificationCenter addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];\
@@ -90,6 +89,38 @@ typedef enum _IdentityState
     IdentityStatePendingRemoveSubscription  = 4,
     IdentityStatePendingRemoveFriend    =5
 } IdentityState;
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// add by mactive
+#define T(a)    NSLocalizedString((a), nil)
+
+#define INT(a)  [NSNumber numberWithInt:(a)]
+#define STR(a)  [NSString stringWithFormat:@"%@", (a)]
+#define STR_INT(a)  [NSString stringWithFormat:@"%d", (a)]
+
+#define NUMBER_OR_NIL(a)	\
+(((a) && [(a) isKindOfClass:[NSNumber class]]) ? (a) : nil)
+
+#define STRING_OR_NIL(a)	\
+(((a) && [(a) isKindOfClass:[NSString class]]) ? (a) : nil)
+
+#define STRING_OR_EMPTY(a)	\
+(((a) && [(a) isKindOfClass:[NSString class]]) ? (a) : @"")
+
+#define kDateFormat  @"yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z"
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Color helpers
+
+#define RGBCOLOR(r,g,b) [UIColor colorWithRed:(r)/255.0f green:(g)/255.0f blue:(b)/255.0f alpha:1]
+#define RGBACOLOR(r,g,b,a) [UIColor colorWithRed:(r)/255.0f green:(g)/255.0f blue:(b)/255.0f \
+alpha:(a)]
+
+#define HSVCOLOR(h,s,v) [UIColor colorWithHue:(h) saturation:(s) value:(v) alpha:1]
+#define HSVACOLOR(h,s,v,a) [UIColor colorWithHue:(h) saturation:(s) value:(v) alpha:(a)]
+
+#define RGBA(r,g,b,a) (r)/255.0f, (g)/255.0f, (b)/255.0f, (a)
+#define BGCOLOR [UIColor colorWithRed:222.0f green:224.0f blue:227.0f alpha:1]
 
 /*
 #define MOCFetch(managedObjectContext, fetchRequest) \

@@ -95,7 +95,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:NO];
     [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"navigationBar_bg.png"] forBarMetrics:UIBarMetricsDefault];
     [[UINavigationBar appearance] setTintColor:[UIColor colorWithRed:121/255 green:123/255 blue:126/255 alpha:1.0] ];
-
+    
+    self.window.backgroundColor = BGCOLOR;
+    
     return YES;
 }
 

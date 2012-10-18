@@ -111,16 +111,23 @@
 
 -(void)addFriendButtonPushed:(id)sender
 {
+    NSLog(@"addFriendButtonPushed %@", jsonData);
+    
     NSString *userJid = [jsonData valueForKey:@"jid"];
+
     User *newUser = [ModelHelper findUserWithEPostalID:userJid inContext:self.managedObjectContext];
     
     if (newUser == nil) {
         newUser = [NSEntityDescription insertNewObjectForEntityForName:@"User" inManagedObjectContext:self.managedObjectContext];
     }
     
+    NSLog(@"NewUSer %@",newUser);
+    
     if (newUser.state.intValue != IdentityStateActive) {
         [ModelHelper populateUser:newUser withJSONData:jsonData];
         newUser.state = [NSNumber numberWithInt:IdentityStatePendingAddFriend];
+        NSLog(@"userJid %@",userJid);
+
         [[XMPPNetworkCenter sharedClient] addBuddy:userJid withCallbackBlock:nil];
     }
 }
