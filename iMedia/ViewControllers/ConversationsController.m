@@ -278,6 +278,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 {
     _detailController.conversation = [[self fetchedResultsController] objectAtIndexPath:indexPath];
     _detailController.managedObjectContext = self.managedObjectContext;
+    [_detailController setHidesBottomBarWhenPushed:YES];
     [self.navigationController pushViewController:_detailController animated:YES];
   
 }
@@ -348,10 +349,13 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	 */
     
 	UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     UIImageView *cellBgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell_bg.png"]];
     cell.backgroundView = cellBgView;
+    
+    UIImageView *cellBgSelectedView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell_bg_highlighted.png"]];
+    cell.selectedBackgroundView =  cellBgSelectedView;
     /*
      Create labels for the text fields; set the highlight color so that when the cell is selected it changes appropriately.
     */
@@ -440,7 +444,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         NSString *username = [anUser.ePostalID substringToIndex:range.location];
         label.text = [label.text stringByAppendingFormat:@"%@ ", username];
     }
-    
     // set the last msg text
     label = (UILabel *)[cell viewWithTag:SUMMARY_TAG];
     label.text = conv.lastMessageText;

@@ -74,12 +74,12 @@
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(newMessageReceived:)
                                                      name:NEW_MESSAGE_NOTIFICATION object:nil];
-    }
+    }    
     return self;
 }
 
-- (void)dealloc {;
-    NotificationsUnobserve()
+- (void)dealloc {
+    NotificationsUnobserve();
 }
 
 - (AppDelegate *)appDelegate
@@ -87,14 +87,12 @@
 	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    bubbleTable = [[UIBubbleTableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - kChatBarHeight1)];
+    bubbleTable = [[UIBubbleTableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
     bubbleTable.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
-    bubbleTable.backgroundColor = [UIColor colorWithRed:0.859 green:0.886 blue:0.929 alpha:1];
+    bubbleTable.backgroundColor = RGBCOLOR(222, 224, 227);
     bubbleTable.separatorStyle = UITableViewCellSeparatorStyleNone;
    
     NSSet *messages = conversation.messages;
@@ -174,7 +172,6 @@
     while (aMessage = [enumerator nextObject]) {
         [self addMessage:aMessage toBubbleData:bubbleData];
     }
-    
     [bubbleTable reloadData];
     [self scrollToBottomAnimated:NO];
 }
@@ -184,6 +181,13 @@
     [super viewWillAppear:animated];
     
     [self refreshBubbleData];
+    
+    // setup self.title
+    NSEnumerator *enumerator = [conversation.users objectEnumerator];
+    User *anUser = [enumerator nextObject];
+    NSRange range = [anUser.ePostalID rangeOfString: @"@"];
+    self.title = [anUser.ePostalID substringToIndex:range.location];
+
 }
 
 - (void)viewDidAppear:(BOOL)animated

@@ -14,6 +14,9 @@
 @class ACPlaceholderTextView;
 
 @interface ChatDetailController : UIViewController
+{
+    NSString *titleString;
+}
 
 @property (nonatomic, strong) ACPlaceholderTextView *textView;
 @property (nonatomic, strong) UIButton  *sendButton;

@@ -63,8 +63,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 @synthesize me = _me;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
-    
+{    
 	[DDLog addLogger:[DDTTYLogger sharedInstance]];
     
     // Set up Core Data stack.
