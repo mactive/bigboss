@@ -14,6 +14,8 @@
 #import "Channel.h"
 #import "Conversation.h"
 #import "AppDefs.h"
+#import <QuartzCore/QuartzCore.h> 
+
 
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
@@ -342,8 +344,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	 Create an instance of UITableViewCell and add tagged subviews for the name, message, and quarter image of the time zone.
 	 */
     
-//	UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
-    UITableViewCell *cell = [[UITableViewCell alloc] initWithFrame:CGRectMake(0, 0, 320, 60) reuseIdentifier:identifier];
+	UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     UIImageView *cellBgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell_bg.png"]];
 //    cell.contentView.backgroundColor = [UIColor clearColor];
@@ -353,13 +354,29 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     */
 	UILabel *label;
 	CGRect rect;
-	
-    // Create an image view for the quarter image.
-	rect = CGRectMake(LEFT_COLUMN_OFFSET, (ROW_HEIGHT - IMAGE_SIDE) / 2.0, IMAGE_SIDE, IMAGE_SIDE);
     
-	UIImageView *imageView = [[UIImageView alloc] initWithFrame:rect];
-	imageView.tag = IMAGE_TAG;
-	[cell.contentView addSubview:imageView];
+    // Create an image view for the quarter image.
+	CGRect imageRect = CGRectMake(LEFT_COLUMN_OFFSET, (ROW_HEIGHT - IMAGE_SIDE) / 2.0, IMAGE_SIDE, IMAGE_SIDE);
+    
+//    UIImageView *avatarImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"face_2.png"]];
+//    [avatarImage setFrame:imageRect];
+//    CALayer *avatarLayer = [avatarImage layer];
+//    [avatarLayer setMasksToBounds:YES];
+//    [avatarLayer setCornerRadius:5.0];
+//    [avatarLayer setBorderWidth:1.0];
+//    [avatarLayer setBorderColor:[[UIColor whiteColor] CGColor]];
+//    avatarImage.tag = IMAGE_TAG;
+//    [cell.contentView addSubview:avatarImage];
+
+    UIImageView *avatarImage = [[UIImageView alloc] initWithFrame:imageRect];
+    avatarImage.image = [UIImage imageNamed:@"face_2.png"];
+    CALayer *avatarLayer = [avatarImage layer];
+    [avatarLayer setMasksToBounds:YES];
+    [avatarLayer setCornerRadius:5.0];
+    [avatarLayer setBorderWidth:1.0];
+    [avatarLayer setBorderColor:[[UIColor whiteColor] CGColor]];
+    [cell.contentView addSubview:avatarImage];
+
 
 	// Create a label for the user name.
 	rect = CGRectMake(MIDDLE_COLUMN_OFFSET, (ROW_HEIGHT - IMAGE_SIDE) / 2.0, MIDDLE_COLUMN_WIDTH, LABEL_HEIGHT);
@@ -369,9 +386,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     label.highlighted = YES;
 	label.textAlignment = UITextAlignmentLeft;
 	[cell.contentView addSubview:label];
+    label.textColor = RGBCOLOR(107, 107, 107);
     label.backgroundColor = [UIColor clearColor];
-	label.highlightedTextColor = [UIColor whiteColor];
-	
+
 	// Create a label for the message.
 	rect = CGRectMake(MIDDLE_COLUMN_OFFSET, ROW_HEIGHT - (IMAGE_SIDE / 2.0), MIDDLE_COLUMN_WIDTH, LABEL_HEIGHT);
 	label = [[UILabel alloc] initWithFrame:rect];
@@ -379,7 +396,14 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	label.font = [UIFont systemFontOfSize:SUMMARY_FONT_SIZE];
 	label.textAlignment = UITextAlignmentLeft;
 	[cell.contentView addSubview:label];
-	label.highlightedTextColor = [UIColor whiteColor];
+	label.textColor = RGBCOLOR(157, 157, 157);
+    label.backgroundColor = [UIColor clearColor];
+
+    rect = CGRectMake(RIGHT_COLUMN_OFFSET, (ROW_HEIGHT - LABEL_HEIGHT) / 2.0, 15, 15);
+    UIImageView *timeIconView = [[UIImageView alloc] initWithFrame:rect];
+    timeIconView.image = [UIImage imageNamed:@"time_icon.png"];
+    [cell.contentView addSubview:timeIconView];
+
     
     // Create a label for the time.
 	rect = CGRectMake(RIGHT_COLUMN_OFFSET, (ROW_HEIGHT - LABEL_HEIGHT) / 2.0, RIGHT_COLUMN_WIDTH, LABEL_HEIGHT);
@@ -389,7 +413,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	label.textAlignment = UITextAlignmentRight;
 	[cell.contentView addSubview:label];
 	label.highlightedTextColor = [UIColor whiteColor];
-    
+    label.backgroundColor = [UIColor clearColor];
+
 //    UIImageView *cellBgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell_bg.png"]];
 //    cell.backgroundView = cellBgView;
     
