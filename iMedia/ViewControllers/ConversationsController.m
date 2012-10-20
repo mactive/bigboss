@@ -14,7 +14,8 @@
 #import "Channel.h"
 #import "Conversation.h"
 #import "AppDefs.h"
-#import <QuartzCore/QuartzCore.h> 
+#import <QuartzCore/QuartzCore.h>
+#import "NSDate+timesince.h"
 
 
 #import "DDLog.h"
@@ -277,6 +278,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 {
     _detailController.conversation = [[self fetchedResultsController] objectAtIndexPath:indexPath];
     _detailController.managedObjectContext = self.managedObjectContext;
+    [_detailController setHidesBottomBarWhenPushed:YES];
     [self.navigationController pushViewController:_detailController animated:YES];
   
 }
@@ -329,14 +331,16 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 #define MIDDLE_COLUMN_OFFSET 70.0
 #define MIDDLE_COLUMN_WIDTH 180.0
 
-#define RIGHT_COLUMN_OFFSET 260.0
+#define RIGHT_COLUMN_OFFSET 230.0
 #define RIGHT_COLUMN_WIDTH  60
 
 #define MAIN_FONT_SIZE 16.0
 #define SUMMARY_FONT_SIZE 14.0
 #define LABEL_HEIGHT 25.0
+#define MESSAGE_LABEL_HEIGHT 15.0
 
 #define IMAGE_SIDE 50.0
+#define SUMMARY_WIDTH_OFFEST 16.0
 
 - (UITableViewCell *)tableViewCellWithReuseIdentifier:(NSString *)identifier {
 	
@@ -345,10 +349,13 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	 */
     
 	UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
     UIImageView *cellBgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell_bg.png"]];
-//    cell.contentView.backgroundColor = [UIColor clearColor];
-    [cell.contentView insertSubview:cellBgView atIndex:0];
+    cell.backgroundView = cellBgView;
+    
+    UIImageView *cellBgSelectedView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell_bg_highlighted.png"]];
+    cell.selectedBackgroundView =  cellBgSelectedView;
     /*
      Create labels for the text fields; set the highlight color so that when the cell is selected it changes appropriately.
     */
@@ -357,16 +364,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
     // Create an image view for the quarter image.
 	CGRect imageRect = CGRectMake(LEFT_COLUMN_OFFSET, (ROW_HEIGHT - IMAGE_SIDE) / 2.0, IMAGE_SIDE, IMAGE_SIDE);
-    
-//    UIImageView *avatarImage = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"face_2.png"]];
-//    [avatarImage setFrame:imageRect];
-//    CALayer *avatarLayer = [avatarImage layer];
-//    [avatarLayer setMasksToBounds:YES];
-//    [avatarLayer setCornerRadius:5.0];
-//    [avatarLayer setBorderWidth:1.0];
-//    [avatarLayer setBorderColor:[[UIColor whiteColor] CGColor]];
-//    avatarImage.tag = IMAGE_TAG;
-//    [cell.contentView addSubview:avatarImage];
 
     UIImageView *avatarImage = [[UIImageView alloc] initWithFrame:imageRect];
     avatarImage.image = [UIImage imageNamed:@"face_2.png"];
@@ -390,33 +387,33 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     label.backgroundColor = [UIColor clearColor];
 
 	// Create a label for the message.
-	rect = CGRectMake(MIDDLE_COLUMN_OFFSET, ROW_HEIGHT - (IMAGE_SIDE / 2.0), MIDDLE_COLUMN_WIDTH, LABEL_HEIGHT);
+	rect = CGRectMake(MIDDLE_COLUMN_OFFSET, ROW_HEIGHT - (IMAGE_SIDE / 2.0), MIDDLE_COLUMN_WIDTH, MESSAGE_LABEL_HEIGHT);
 	label = [[UILabel alloc] initWithFrame:rect];
 	label.tag = SUMMARY_TAG;
 	label.font = [UIFont systemFontOfSize:SUMMARY_FONT_SIZE];
-	label.textAlignment = UITextAlignmentLeft;
-	[cell.contentView addSubview:label];
-	label.textColor = RGBCOLOR(157, 157, 157);
-    label.backgroundColor = [UIColor clearColor];
+	label.textAlignment = UITextAlignmentCenter;
+    label.textColor = RGBCOLOR(157, 157, 157);
+    label.backgroundColor = RGBCOLOR(248, 248, 248);
 
-    rect = CGRectMake(RIGHT_COLUMN_OFFSET, (ROW_HEIGHT - LABEL_HEIGHT) / 2.0, 15, 15);
+    [label.layer setMasksToBounds:YES];
+    [label.layer setCornerRadius:3.0];
+	[cell.contentView addSubview:label];
+
+    rect = CGRectMake(RIGHT_COLUMN_OFFSET, (ROW_HEIGHT - IMAGE_SIDE) / 2.0, 15, 15);
     UIImageView *timeIconView = [[UIImageView alloc] initWithFrame:rect];
     timeIconView.image = [UIImage imageNamed:@"time_icon.png"];
     [cell.contentView addSubview:timeIconView];
 
     
     // Create a label for the time.
-	rect = CGRectMake(RIGHT_COLUMN_OFFSET, (ROW_HEIGHT - LABEL_HEIGHT) / 2.0, RIGHT_COLUMN_WIDTH, LABEL_HEIGHT);
+	rect = CGRectMake(RIGHT_COLUMN_OFFSET + 18, (ROW_HEIGHT - IMAGE_SIDE) / 2.0, RIGHT_COLUMN_WIDTH, 15.0);
 	label = [[UILabel alloc] initWithFrame:rect];
 	label.tag = TIME_TAG;
-	label.font = [UIFont systemFontOfSize:MAIN_FONT_SIZE];
-	label.textAlignment = UITextAlignmentRight;
+	label.font = [UIFont systemFontOfSize:12.0];
+	label.textAlignment = UITextAlignmentLeft;
 	[cell.contentView addSubview:label];
-	label.highlightedTextColor = [UIColor whiteColor];
+	label.textColor = RGBCOLOR(140, 140, 140);
     label.backgroundColor = [UIColor clearColor];
-
-//    UIImageView *cellBgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell_bg.png"]];
-//    cell.backgroundView = cellBgView;
     
 	return cell;
 }
@@ -443,16 +440,19 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     NSEnumerator *enumerator = [conv.users objectEnumerator];
     User* anUser;
     while (anUser = [enumerator nextObject]) {
-        label.text = [label.text stringByAppendingFormat:@"%@ ", anUser.ePostalID];
+        NSRange range = [anUser.ePostalID rangeOfString: @"@"];
+        NSString *username = [anUser.ePostalID substringToIndex:range.location];
+        label.text = [label.text stringByAppendingFormat:@"%@ ", username];
     }
-    
     // set the last msg text
     label = (UILabel *)[cell viewWithTag:SUMMARY_TAG];
     label.text = conv.lastMessageText;
+    [label sizeToFit];
+    [label setFrame:CGRectMake(label.frame.origin.x, label.frame.origin.y, label.frame.size.width + SUMMARY_WIDTH_OFFEST, label.frame.size.height)];
 	
 	// Set the date
 	label = (UILabel *)[cell viewWithTag:TIME_TAG];
-	label.text = [dateFormatter stringFromDate:conv.lastMessageSentDate];
+	label.text = [conv.lastMessageSentDate timesince];
 	
 	// Set the image.
 	UIImageView *imageView = (UIImageView *)[cell viewWithTag:IMAGE_TAG];

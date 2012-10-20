@@ -16,6 +16,7 @@
 		2605CC46162EA9F700234442 /* tabbar_overlay@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2605CC3F162EA9F700234442 /* tabbar_overlay@2x.png */; };
 		2631C4EB16310026004DE7FB /* face_2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2631C4EA16310026004DE7FB /* face_2@2x.png */; };
 		2631C4ED1631035D004DE7FB /* time_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2631C4EC1631035D004DE7FB /* time_icon@2x.png */; };
+		2631C52A16313033004DE7FB /* NSDate+timesince.m in Sources */ = {isa = PBXBuildFile; fileRef = 2631C52916313033004DE7FB /* NSDate+timesince.m */; };
 		266A1A6F162E5AF3008EF1D5 /* ShakeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 266A1A6E162E5AF2008EF1D5 /* ShakeViewController.m */; };
 		266A1A72162E5B10008EF1D5 /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 266A1A71162E5B0F008EF1D5 /* SettingViewController.m */; };
 		2673F5A0163003B3004DAACB /* cell_bg_highlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2673F59D163003B3004DAACB /* cell_bg_highlighted@2x.png */; };
@@ -281,6 +282,8 @@
 		2605CC3F162EA9F700234442 /* tabbar_overlay@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tabbar_overlay@2x.png"; path = "Resources/tabbar_overlay@2x.png"; sourceTree = "<group>"; };
 		2631C4EA16310026004DE7FB /* face_2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "face_2@2x.png"; path = "Resources/face_2@2x.png"; sourceTree = "<group>"; };
 		2631C4EC1631035D004DE7FB /* time_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "time_icon@2x.png"; path = "Resources/time_icon@2x.png"; sourceTree = "<group>"; };
+		2631C52816313033004DE7FB /* NSDate+timesince.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDate+timesince.h"; path = "contrib/NSDate+timesince.h"; sourceTree = "<group>"; };
+		2631C52916313033004DE7FB /* NSDate+timesince.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDate+timesince.m"; path = "contrib/NSDate+timesince.m"; sourceTree = "<group>"; };
 		266A1A6D162E5AF2008EF1D5 /* ShakeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShakeViewController.h; path = ViewControllers/ShakeViewController.h; sourceTree = "<group>"; };
 		266A1A6E162E5AF2008EF1D5 /* ShakeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShakeViewController.m; path = ViewControllers/ShakeViewController.m; sourceTree = "<group>"; };
 		266A1A70162E5B0F008EF1D5 /* SettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SettingViewController.h; path = ViewControllers/SettingViewController.h; sourceTree = "<group>"; };
@@ -690,6 +693,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2631C5271631301E004DE7FB /* contrib */ = {
+			isa = PBXGroup;
+			children = (
+				2631C52816313033004DE7FB /* NSDate+timesince.h */,
+				2631C52916313033004DE7FB /* NSDate+timesince.m */,
+			);
+			name = contrib;
+			sourceTree = "<group>";
+		};
 		26C76E62162EB4D900298865 /* ViewCategory */ = {
 			isa = PBXGroup;
 			children = (
@@ -824,6 +836,7 @@
 		566E80A91609A24C00A333EA /* iMedia */ = {
 			isa = PBXGroup;
 			children = (
+				2631C5271631301E004DE7FB /* contrib */,
 				56B4CD0616267A2A00E046CC /* Vendor */,
 				566E80B21609A24C00A333EA /* AppDelegate.h */,
 				566E80B31609A24C00A333EA /* AppDelegate.m */,
@@ -1956,6 +1969,7 @@
 				266A1A6F162E5AF3008EF1D5 /* ShakeViewController.m in Sources */,
 				266A1A72162E5B10008EF1D5 /* SettingViewController.m in Sources */,
 				26C76E65162EB4F400298865 /* UINavigationBar+Background.m in Sources */,
+				2631C52A16313033004DE7FB /* NSDate+timesince.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
