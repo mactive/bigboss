@@ -90,7 +90,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    bubbleTable = [[UIBubbleTableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
+    bubbleTable = [[UIBubbleTableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-40)];
     bubbleTable.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
     bubbleTable.backgroundColor = RGBCOLOR(222, 224, 227);
     bubbleTable.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -106,6 +106,7 @@
     bubbleTable.bubbleDataSource = self;
     bubbleTable.snapInterval = 100;
     bubbleTable.typingBubble = NSBubbleTypingTypeNobody;
+    bubbleTable.showAvatars = YES;
     
     
     // Create messageInputBar to contain _textView, messageInputBarBackgroundImageView, & _sendButton.
@@ -363,9 +364,11 @@
     }
     if (msg.type == [NSNumber numberWithInt:MessageTypeChat])
     {
-      [bubbleData addObject:[NSBubbleData dataWithText:msg.text andDate:msg.sentDate andType:type]];
+        [bubbleData addObject:[NSBubbleData dataWithText:msg.text date:msg.sentDate type:type]];
     } else if (msg.type == [NSNumber numberWithInt:MessageTypePublish]) {
-       [bubbleData addObject:[NSBubbleData dataWithText:msg.text andDate:msg.sentDate andType:BubbleTypeWebview]];
+        [bubbleData addObject:[NSBubbleData dataWithText:msg.text date:msg.sentDate type:BubbleTypeMine]];
+
+        //[bubbleData addObject:[NSBubbleData dataWithText:msg.text andDate:msg.sentDate andType:BubbleTypeWebview]];
     }
 }
 

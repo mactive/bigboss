@@ -2,26 +2,32 @@
 //  UIBubbleTableViewCell.m
 //
 //  Created by Alex Barinov
-//  StexGroup, LLC
-//  http://www.stexgroup.com
-//
 //  Project home page: http://alexbarinov.github.com/UIBubbleTableView/
 //
 //  This work is licensed under the Creative Commons Attribution-ShareAlike 3.0 Unported License.
 //  To view a copy of this license, visit http://creativecommons.org/licenses/by-sa/3.0/
 //
 
-
+#import <QuartzCore/QuartzCore.h>
 #import "UIBubbleTableViewCell.h"
 #import "NSBubbleData.h"
 
 @interface UIBubbleTableViewCell ()
+
+@property (nonatomic, retain) UIView *customView;
+@property (nonatomic, retain) UIImageView *bubbleImage;
+@property (nonatomic, retain) UIImageView *avatarImage;
+
 - (void) setupInternalData;
+
 @end
 
 @implementation UIBubbleTableViewCell
 
-@synthesize dataInternal = _dataInternal;
+@synthesize data = _data;
+@synthesize customView = _customView;
+@synthesize bubbleImage = _bubbleImage;
+@synthesize showAvatar = _showAvatar;
 
 - (void)setFrame:(CGRect)frame
 {
@@ -29,63 +35,78 @@
 	[self setupInternalData];
 }
 
+#if !__has_feature(objc_arc)
 - (void) dealloc
 {
- 	_dataInternal = nil;
-} 
+    self.data = nil;
+    self.customView = nil;
+    self.bubbleImage = nil;
+    [super dealloc];
+}
+#endif
 
-
-- (void)setDataInternal:(NSBubbleDataInternal *)value
+- (void)setDataInternal:(NSBubbleData *)value
 {
-	_dataInternal = value;
+	self.data = value;
 	[self setupInternalData];
 }
 
 - (void) setupInternalData
 {
-    if (self.dataInternal.header)
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
+    
+    if (!self.bubbleImage)
     {
-        headerLabel.hidden = NO;
-        headerLabel.text = self.dataInternal.header;
-    }
-    else
-    {
-        headerLabel.hidden = YES;
+        self.bubbleImage = [[UIImageView alloc] init];
+        [self addSubview:self.bubbleImage];
     }
     
-    webView.hidden = YES;
+    NSBubbleType type = self.data.type;
     
-    NSBubbleType type = self.dataInternal.data.type;
+    CGFloat width = self.data.view.frame.size.width;
+    CGFloat height = self.data.view.frame.size.height;
+
+    CGFloat x = (type == BubbleTypeSomeoneElse) ? 0 : self.frame.size.width - width - self.data.insets.left - self.data.insets.right;
+    CGFloat y = 0;
     
-    float x = (type == BubbleTypeSomeoneElse) ? 20 : self.frame.size.width - 20 - self.dataInternal.labelSize.width;
-    float y = 5 + (self.dataInternal.header ? 30 : 0);
-    
-    contentLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
-    contentLabel.frame = CGRectMake(x, y, self.dataInternal.labelSize.width, self.dataInternal.labelSize.height);
-    contentLabel.text = self.dataInternal.data.text;
-    contentLabel.textColor = [UIColor blueColor];
-    
+    // Adjusting the x coordinate for avatar
+    if (self.showAvatar)
+    {
+        [self.avatarImage removeFromSuperview];
+        self.avatarImage = [[UIImageView alloc] initWithImage:(self.data.avatar ? self.data.avatar : [UIImage imageNamed:@"missingAvatar.png"])];
+        self.avatarImage.layer.cornerRadius = 9.0;
+        self.avatarImage.layer.masksToBounds = YES;
+        self.avatarImage.layer.borderColor = [UIColor colorWithWhite:0.0 alpha:0.2].CGColor;
+        self.avatarImage.layer.borderWidth = 1.0;
+        
+        CGFloat avatarX = (type == BubbleTypeSomeoneElse) ? 2 : self.frame.size.width - 52;
+        CGFloat avatarY = 0 ;// self.frame.size.height - 50;
+        
+        self.avatarImage.frame = CGRectMake(avatarX, avatarY, 50, 50);
+        [self addSubview:self.avatarImage];
+        
+        CGFloat delta = self.frame.size.height - (self.data.insets.top + self.data.insets.bottom + self.data.view.frame.size.height);
+        if (delta > 0) y = delta;
+        
+        if (type == BubbleTypeSomeoneElse) x += 54;
+        if (type == BubbleTypeMine) x -= 54;
+    }
+
+    [self.customView removeFromSuperview];
+    self.customView = self.data.view;
+    self.customView.frame = CGRectMake(x + self.data.insets.left, y + self.data.insets.top, width, height);
+    [self.contentView addSubview:self.customView];
+
     if (type == BubbleTypeSomeoneElse)
     {
-        contentLabel.hidden = NO;
-        bubbleImage.image = [[UIImage imageNamed:@"bubbleSomeone.png"] stretchableImageWithLeftCapWidth:21 topCapHeight:14];
-        bubbleImage.frame = CGRectMake(x - 18, y - 4, self.dataInternal.labelSize.width + 30, self.dataInternal.labelSize.height + 15);
+        self.bubbleImage.image = [[UIImage imageNamed:@"bubbleSomeone.png"] stretchableImageWithLeftCapWidth:21 topCapHeight:14];
+
     }
-    else if (type == BubbleTypeMine){
-         contentLabel.hidden = NO;
-        bubbleImage.image = [[UIImage imageNamed:@"bubbleMine.png"] stretchableImageWithLeftCapWidth:15 topCapHeight:14];
-        bubbleImage.frame = CGRectMake(x - 9, y - 4, self.dataInternal.labelSize.width + 26, self.dataInternal.labelSize.height + 15);
-    } else if (type == BubbleTypeWebview){
-        contentLabel.hidden = YES;
-        webView.hidden = NO;
-        
-        webView.frame = CGRectMake(10, y-4, 280, 200);
-    //    [webView loadHTMLString:self.dataInternal.data.text baseURL:[NSURL URLWithString:@"http://google.com"]];
-    //    [webView loadRequest:[NSURL URLWithString:self.dataInternal.data.text]];
-        
-        [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:self.dataInternal.data.text]]];
-         webView.scalesPageToFit = YES;
+    else {
+        self.bubbleImage.image = [[UIImage imageNamed:@"bubbleMine.png"] stretchableImageWithLeftCapWidth:15 topCapHeight:14];
     }
+
+    self.bubbleImage.frame = CGRectMake(x, y, width + self.data.insets.left + self.data.insets.right, height + self.data.insets.top + self.data.insets.bottom);
 }
 
 @end
