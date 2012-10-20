@@ -230,4 +230,8 @@
     return cell;
 }
 
+- (BOOL)scrollViewDidScroll:(UIScrollView *)scrollView{
+    return true;
+}
+
 @end

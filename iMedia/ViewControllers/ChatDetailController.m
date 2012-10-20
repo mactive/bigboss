@@ -151,7 +151,6 @@
     [_sendButton addTarget:self action:@selector(sendMessage) forControlEvents:UIControlEventTouchUpInside];
     [messageInputBar addSubview:_sendButton];
     
-
     [self.view addSubview:bubbleTable];
     [self.view addSubview:messageInputBar];
 }
@@ -364,11 +363,12 @@
     }
     if (msg.type == [NSNumber numberWithInt:MessageTypeChat])
     {
-        [bubbleData addObject:[NSBubbleData dataWithText:msg.text date:msg.sentDate type:type]];
+        NSBubbleData *itemBubble = [NSBubbleData dataWithText:msg.text date:msg.sentDate type:type];
+        itemBubble.avatar = [UIImage imageNamed:@"avatar.png"];
+        [bubbleData addObject:itemBubble];
+        
     } else if (msg.type == [NSNumber numberWithInt:MessageTypePublish]) {
-        [bubbleData addObject:[NSBubbleData dataWithText:msg.text date:msg.sentDate type:BubbleTypeMine]];
-
-        //[bubbleData addObject:[NSBubbleData dataWithText:msg.text andDate:msg.sentDate andType:BubbleTypeWebview]];
+        [bubbleData addObject:[NSBubbleData dataWithText:msg.text date:msg.sentDate type:BUbbleTypeWebview]];
     }
 }
 
