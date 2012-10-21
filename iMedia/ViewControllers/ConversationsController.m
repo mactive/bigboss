@@ -329,7 +329,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 #define LEFT_COLUMN_WIDTH 36.0
 
 #define MIDDLE_COLUMN_OFFSET 70.0
-#define MIDDLE_COLUMN_WIDTH 180.0
+#define MIDDLE_COLUMN_WIDTH 150.0
 
 #define RIGHT_COLUMN_OFFSET 230.0
 #define RIGHT_COLUMN_WIDTH  60
@@ -399,14 +399,14 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [label.layer setCornerRadius:3.0];
 	[cell.contentView addSubview:label];
 
-    rect = CGRectMake(RIGHT_COLUMN_OFFSET, (ROW_HEIGHT - IMAGE_SIDE) / 2.0, 15, 15);
+    rect = CGRectMake(RIGHT_COLUMN_OFFSET, (ROW_HEIGHT - IMAGE_SIDE) / 2.0 + 5 , 15, 15);
     UIImageView *timeIconView = [[UIImageView alloc] initWithFrame:rect];
     timeIconView.image = [UIImage imageNamed:@"time_icon.png"];
     [cell.contentView addSubview:timeIconView];
 
     
     // Create a label for the time.
-	rect = CGRectMake(RIGHT_COLUMN_OFFSET + 18, (ROW_HEIGHT - IMAGE_SIDE) / 2.0, RIGHT_COLUMN_WIDTH, 15.0);
+	rect = CGRectMake(RIGHT_COLUMN_OFFSET + 18, (ROW_HEIGHT - IMAGE_SIDE) / 2.0 + 5, RIGHT_COLUMN_WIDTH, 15.0);
 	label = [[UILabel alloc] initWithFrame:rect];
 	label.tag = TIME_TAG;
 	label.font = [UIFont systemFontOfSize:12.0];
@@ -440,9 +440,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     NSEnumerator *enumerator = [conv.users objectEnumerator];
     User* anUser;
     while (anUser = [enumerator nextObject]) {
-        NSRange range = [anUser.ePostalID rangeOfString: @"@"];
-        NSString *username = [anUser.ePostalID substringToIndex:range.location];
-        label.text = [label.text stringByAppendingFormat:@"%@ ", username];
+        label.text = [label.text stringByAppendingFormat:@"%@ ", anUser.displayName];
     }
     // set the last msg text
     label = (UILabel *)[cell viewWithTag:SUMMARY_TAG];

@@ -185,9 +185,7 @@
     // setup self.title
     NSEnumerator *enumerator = [conversation.users objectEnumerator];
     User *anUser = [enumerator nextObject];
-    NSRange range = [anUser.ePostalID rangeOfString: @"@"];
-    self.title = [anUser.ePostalID substringToIndex:range.location];
-
+    self.title = anUser.displayName;
 }
 
 - (void)viewDidAppear:(BOOL)animated

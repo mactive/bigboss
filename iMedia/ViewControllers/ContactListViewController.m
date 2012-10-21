@@ -15,6 +15,7 @@
 #import "ConversationsController.h"
 #import "AddFriendController.h"
 #import "UINavigationBar+Background.h"
+#import <QuartzCore/QuartzCore.h>
 
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
@@ -23,6 +24,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 #else
 static const int ddLogLevel = LOG_LEVEL_INFO;
 #endif
+#define ROW_HEIGHT  60.0
 
 
 @interface ContactListViewController ()
@@ -173,7 +175,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+        cell = [self tableViewCellWithReuseIdentifier:CellIdentifier];
     }
     
     
@@ -191,8 +193,59 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         cell.detailTextLabel.text = channel.ePostalID;
     }
     
-    
     return cell;
+}
+
+////////////////////////////////////////////////////////////////////////////////////
+#pragma mark Configuring table view cells
+////////////////////////////////////////////////////////////////////////////////////
+#define LEFT_COLUMN_OFFSET 10.0
+#define LEFT_COLUMN_WIDTH 36.0
+
+#define MIDDLE_COLUMN_OFFSET 70.0
+#define MIDDLE_COLUMN_WIDTH 180.0
+
+#define RIGHT_COLUMN_OFFSET 230.0
+#define RIGHT_COLUMN_WIDTH  60
+
+#define MAIN_FONT_SIZE 16.0
+#define SUMMARY_FONT_SIZE 14.0
+#define LABEL_HEIGHT 25.0
+#define MESSAGE_LABEL_HEIGHT 15.0
+
+#define IMAGE_SIDE 50.0
+#define SUMMARY_WIDTH_OFFEST 16.0
+
+- (UITableViewCell *)tableViewCellWithReuseIdentifier:(NSString *)identifier{
+    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];    
+    
+    UIImageView *cellBgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell_bg.png"]];
+    cell.backgroundView = cellBgView;
+    
+    UIImageView *cellBgSelectedView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell_bg_highlighted.png"]];
+    cell.selectedBackgroundView =  cellBgSelectedView;
+    
+    // Create an image view for the quarter image.
+	CGRect imageRect = CGRectMake(LEFT_COLUMN_OFFSET, (ROW_HEIGHT - IMAGE_SIDE) / 2.0, IMAGE_SIDE, IMAGE_SIDE);
+    
+    UIImageView *avatarImage = [[UIImageView alloc] initWithFrame:imageRect];
+    avatarImage.image = [UIImage imageNamed:@"face_2.png"];
+    CALayer *avatarLayer = [avatarImage layer];
+    [avatarLayer setMasksToBounds:YES];
+    [avatarLayer setCornerRadius:5.0];
+    [avatarLayer setBorderWidth:1.0];
+    [avatarLayer setBorderColor:[[UIColor whiteColor] CGColor]];
+    [cell.contentView addSubview:avatarImage];
+    
+    return  cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return 60.0;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    return 15.0;
 }
 
 /*

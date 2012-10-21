@@ -28,6 +28,7 @@
 @synthesize customView = _customView;
 @synthesize bubbleImage = _bubbleImage;
 @synthesize showAvatar = _showAvatar;
+@synthesize avatarImage;
 
 - (void)setFrame:(CGRect)frame
 {

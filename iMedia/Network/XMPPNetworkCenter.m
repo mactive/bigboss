@@ -488,7 +488,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     if (thisUser.state.intValue != IdentityStateActive) {
         thisUser.name = user.nickname;
         thisUser.ePostalID = [user.jid bare];
-        thisUser.displayName = [user.jid bare];
+        thisUser.displayName = [thisUser.ePostalID substringToIndex:[thisUser.ePostalID rangeOfString: @"@"].location];
         thisUser.type = [NSNumber numberWithInt:IdentityTypeUser];
         thisUser.state = [NSNumber numberWithInt:IdentityStateActive];
         MOCSave(_managedObjectContext);
