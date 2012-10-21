@@ -12,6 +12,7 @@
 		040127971632FB3A00845F3C /* UIBubbleTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0401278F1632FB3A00845F3C /* UIBubbleTableView.m */; };
 		040127981632FB3A00845F3C /* UIBubbleTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 040127911632FB3A00845F3C /* UIBubbleTableViewCell.m */; };
 		040127991632FB3A00845F3C /* UIBubbleTypingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 040127941632FB3A00845F3C /* UIBubbleTypingTableViewCell.m */; };
+		0489A3E816339FA400D122DF /* MessageBubbleSectionHeader@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0489A3E716339FA400D122DF /* MessageBubbleSectionHeader@2x.png */; };
 		2605CC40162EA9F700234442 /* navigationBar_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2605CC39162EA9F700234442 /* navigationBar_bg@2x.png */; };
 		2605CC41162EA9F700234442 /* tabbar_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2605CC3A162EA9F700234442 /* tabbar_bg@2x.png */; };
 		2605CC42162EA9F700234442 /* tabbar_item_0@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2605CC3B162EA9F700234442 /* tabbar_item_0@2x.png */; };
@@ -284,6 +285,7 @@
 		040127921632FB3A00845F3C /* UIBubbleTableViewDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIBubbleTableViewDataSource.h; path = iMedia/NSBubbleData/UIBubbleTableViewDataSource.h; sourceTree = SOURCE_ROOT; };
 		040127931632FB3A00845F3C /* UIBubbleTypingTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIBubbleTypingTableViewCell.h; path = iMedia/NSBubbleData/UIBubbleTypingTableViewCell.h; sourceTree = SOURCE_ROOT; };
 		040127941632FB3A00845F3C /* UIBubbleTypingTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIBubbleTypingTableViewCell.m; path = iMedia/NSBubbleData/UIBubbleTypingTableViewCell.m; sourceTree = SOURCE_ROOT; };
+		0489A3E716339FA400D122DF /* MessageBubbleSectionHeader@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "MessageBubbleSectionHeader@2x.png"; path = "Resources/MessageBubbleSectionHeader@2x.png"; sourceTree = "<group>"; };
 		2605CC39162EA9F700234442 /* navigationBar_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "navigationBar_bg@2x.png"; path = "Resources/navigationBar_bg@2x.png"; sourceTree = "<group>"; };
 		2605CC3A162EA9F700234442 /* tabbar_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tabbar_bg@2x.png"; path = "Resources/tabbar_bg@2x.png"; sourceTree = "<group>"; };
 		2605CC3B162EA9F700234442 /* tabbar_item_0@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tabbar_item_0@2x.png"; path = "Resources/tabbar_item_0@2x.png"; sourceTree = "<group>"; };
@@ -735,6 +737,7 @@
 			isa = PBXGroup;
 			children = (
 				562DE75D1610446000F782D2 /* MessageInputBarBackground.png */,
+				0489A3E716339FA400D122DF /* MessageBubbleSectionHeader@2x.png */,
 				2631C4EA16310026004DE7FB /* face_2@2x.png */,
 				2673F5A3163019E0004DAACB /* avatar@2x.png */,
 				2631C4EC1631035D004DE7FB /* time_icon@2x.png */,
@@ -1781,6 +1784,7 @@
 				2673F5A4163019E0004DAACB /* avatar@2x.png in Resources */,
 				2631C4EB16310026004DE7FB /* face_2@2x.png in Resources */,
 				2631C4ED1631035D004DE7FB /* time_icon@2x.png in Resources */,
+				0489A3E816339FA400D122DF /* MessageBubbleSectionHeader@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

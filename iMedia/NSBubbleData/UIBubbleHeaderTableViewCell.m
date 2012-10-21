@@ -11,6 +11,7 @@
 @interface UIBubbleHeaderTableViewCell ()
 
 @property (nonatomic, retain) UILabel *label;
+@property (nonatomic, retain) UIImageView *bgView;
 
 @end
 
@@ -18,6 +19,7 @@
 
 @synthesize label = _label;
 @synthesize date = _date;
+@synthesize bgView = _bgView;
 
 + (CGFloat)height
 {
@@ -47,6 +49,11 @@
     self.label.shadowColor = [UIColor whiteColor];
     self.label.textColor = [UIColor darkGrayColor];
     self.label.backgroundColor = [UIColor clearColor];
+    
+    self.bgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"MessageBubbleSectionHeader.png"]];
+    [self.bgView setFrame:CGRectMake(0, 0, self.frame.size.width, [UIBubbleHeaderTableViewCell height] )];
+    
+    [self addSubview:self.bgView];
     [self addSubview:self.label];
 }
 
