@@ -190,7 +190,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 #pragma mark Configuring table view cells
 ////////////////////////////////////////////////////////////////////////////////////
 #define NAME_TAG 1
-#define SNS_TAG 2
+#define SNS_TAG 20
 #define AVATAR_TAG 3
 #define SUMMARY_TAG 4
 
@@ -198,15 +198,15 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 #define LEFT_COLUMN_WIDTH 36.0
 
 #define MIDDLE_COLUMN_OFFSET 70.0
-#define MIDDLE_COLUMN_WIDTH 100.0
+#define MIDDLE_COLUMN_WIDTH 80.0
 
 #define RIGHT_COLUMN_OFFSET 230.0
 #define RIGHT_COLUMN_WIDTH  60
 
 #define MAIN_FONT_SIZE 16.0
-#define SUMMARY_FONT_SIZE 14.0
+#define SUMMARY_FONT_SIZE 12.0
 #define LABEL_HEIGHT 20.0
-#define MESSAGE_LABEL_HEIGHT 15.0
+#define SUMMARY_PADDING 10.0
 
 #define IMAGE_SIDE 50.0
 #define SNS_SIDE 15.0
@@ -226,7 +226,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     CGRect rect;
     // Create an image view for the quarter image.
 	CGRect imageRect = CGRectMake(LEFT_COLUMN_OFFSET, (ROW_HEIGHT - IMAGE_SIDE) / 2.0, IMAGE_SIDE, IMAGE_SIDE);
-	CGRect snsRect = CGRectMake(MIDDLE_COLUMN_OFFSET+MIDDLE_COLUMN_WIDTH+SNS_SIDE, (ROW_HEIGHT - SNS_SIDE) / 2.0, SNS_SIDE, SNS_SIDE);
+	CGRect snsRect;
     
     UIImageView *avatarImage = [[UIImageView alloc] initWithFrame:imageRect];
     avatarImage.tag = AVATAR_TAG;
@@ -241,7 +241,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	rect = CGRectMake(MIDDLE_COLUMN_OFFSET, (ROW_HEIGHT - LABEL_HEIGHT) / 2.0, MIDDLE_COLUMN_WIDTH, LABEL_HEIGHT);
 	label = [[UILabel alloc] initWithFrame:rect];
 	label.tag = NAME_TAG;
-//    label.lineBreakMode = UILineBreakModeClip;
     label.numberOfLines = 2;
 	label.font = [UIFont boldSystemFontOfSize:MAIN_FONT_SIZE];
 	label.textAlignment = UITextAlignmentLeft;
@@ -249,13 +248,33 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     label.backgroundColor = [UIColor clearColor];
     [cell.contentView addSubview:label];
     
-    UIImageView *snsImage = [[UIImageView alloc] initWithFrame:imageRect];
-    snsImage.tag = SNS_TAG;
-    [cell.contentView addSubview:label];
+    // set avatar
+    NSMutableArray *snsArray = [[NSMutableArray alloc] initWithObjects:@"weibo",@"douban",@"wechat", nil];
+    UIImageView *snsImage;
+    
+    for(int i=0;i<[snsArray count];i++)  
+    {  
+        snsRect = CGRectMake(MIDDLE_COLUMN_OFFSET + MIDDLE_COLUMN_WIDTH + (SNS_SIDE + 3)* i, (ROW_HEIGHT - SNS_SIDE) / 2.0, SNS_SIDE, SNS_SIDE);
+        snsImage = [[UIImageView alloc] initWithFrame:snsRect];
+        snsImage.tag = SNS_TAG + i;
 
+        [cell.contentView addSubview:snsImage];
+    } 
     
-    [cell.contentView addSubview:avatarImage];
     
+    // Create a label for the summary
+	rect = CGRectMake(self.view.frame.size.width - SUMMARY_WIDTH - SUMMARY_WIDTH_OFFEST , (ROW_HEIGHT - LABEL_HEIGHT) / 2.0, SUMMARY_WIDTH, LABEL_HEIGHT);
+	label = [[UILabel alloc] initWithFrame:rect];
+	label.tag = SUMMARY_TAG;
+    label.numberOfLines = 2;
+	label.font = [UIFont systemFontOfSize:SUMMARY_FONT_SIZE];
+	label.textAlignment = UITextAlignmentCenter;
+    label.textColor = RGBCOLOR(158, 158, 158);
+    label.backgroundColor = RGBCOLOR(236, 238, 240);
+    
+    [label.layer setMasksToBounds:YES];
+    [label.layer setCornerRadius:3.0];
+	[cell.contentView addSubview:label];    
     
     return  cell;
 }
@@ -280,9 +299,26 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     imageView.image = [UIImage imageNamed:@"face_3.png"];
     
     //set sns icon
-    imageView = (UIImageView *)[cell viewWithTag:SNS_TAG];
-    imageView.image = [UIImage imageNamed:@"sns_icon_weibo.png"];
+    NSMutableArray *snsArray = [[NSMutableArray alloc] initWithObjects:@"weibo",@"douban",@"wechat", nil];    
+    for (int i =0; i< [snsArray count]; i++) {
+        imageView = (UIImageView *)[cell viewWithTag:SNS_TAG + i];
     
+        if ([[snsArray objectAtIndex:i] isEqual:@"weibo"]) {
+            imageView.image = [UIImage imageNamed:@"sns_icon_weibo.png"];
+        }else if([[snsArray objectAtIndex:i] isEqual:@"douban"]){
+            imageView.image = [UIImage imageNamed:@"sns_icon_douban.png"];
+        }else if([[snsArray objectAtIndex:i] isEqual:@"wechat"]){
+            imageView.image = [UIImage imageNamed:@"sns_icon_wechat.png"];
+        }else if([[snsArray objectAtIndex:i] isEqual:@"kaixin"]){
+            imageView.image = [UIImage imageNamed:@"sns_icon_kaixin.png"];
+        }else if([[snsArray objectAtIndex:i] isEqual:@"renren"]){
+            imageView.image = [UIImage imageNamed:@"sns_icon_renren.png"];
+        }else if([[snsArray objectAtIndex:i] isEqual:@"tmweibo"]){
+            imageView.image = [UIImage imageNamed:@"sns_icon_tmweibo.png"];
+        }
+        
+    }
+
     // set the name text
     label = (UILabel *)[cell viewWithTag:NAME_TAG];
     if ([obj isKindOfClass:[User class]]) {
@@ -303,7 +339,19 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     label.frame = CGRectMake(label.frame.origin.x, _labelHeight, labelSize.width, labelSize.height);
     label.text = _nameString;
         
+    // set the user signiture
+    label = (UILabel *)[cell viewWithTag:SUMMARY_TAG];
+//    NSString *signiture = @"和实生物 同则不继 万物生";
+    NSString *signiture = @"和实生物";
     
+    CGSize signitureSize = [signiture sizeWithFont:label.font constrainedToSize:summaryMaxSize lineBreakMode: UILineBreakModeTailTruncation];
+    if (signitureSize.height > LABEL_HEIGHT) {
+        _labelHeight = label.frame.origin.y - 10;
+    }else {
+        _labelHeight = label.frame.origin.y;
+    }
+    label.text = signiture;
+    label.frame = CGRectMake(label.frame.origin.x, _labelHeight, signitureSize.width + SUMMARY_PADDING, signitureSize.height+SUMMARY_PADDING);
     
     
 }

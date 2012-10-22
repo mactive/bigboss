@@ -555,7 +555,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
             User *userNS = [NSEntityDescription insertNewObjectForEntityForName:@"User" inManagedObjectContext:_managedObjectContext];
             userNS.name = obj.nickname;
             userNS.ePostalID = [obj.jid bare];
-            userNS.displayName = [obj.jid bare];
+            userNS.displayName = [userNS.ePostalID substringToIndex:[userNS.ePostalID rangeOfString: @"@"].location];
             userNS.type = [NSNumber numberWithInt:IdentityTypeUser];
             userNS.state = [NSNumber numberWithInt:IdentityStateActive];
         }
