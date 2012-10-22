@@ -362,7 +362,7 @@
     if (msg.type == [NSNumber numberWithInt:MessageTypeChat])
     {
         NSBubbleData *itemBubble = [NSBubbleData dataWithText:msg.text date:msg.sentDate type:type];
-        itemBubble.avatar = [UIImage imageNamed:@"avatar.png"];
+        itemBubble.avatar = [UIImage imageNamed:@"face_1.png"];
         [bubbleData addObject:itemBubble];
         
     } else if (msg.type == [NSNumber numberWithInt:MessageTypePublish]) {

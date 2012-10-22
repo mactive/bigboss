@@ -40,6 +40,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     self = [super initWithStyle:style];
     if (self) {
         self.title = @"Contacts";
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(add:)];
     }
     return self;
@@ -180,18 +181,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
     
     // Configure the cell...
-    id obj  =  [[self fetchedResultsController] objectAtIndexPath:indexPath];
-    
-    if ([obj isKindOfClass:[User class]]) {
-        User *user = obj;
-	
-        cell.textLabel.text = user.displayName;
-        cell.detailTextLabel.text = user.name;
-    } else if ([obj isKindOfClass:[Channel class]]) {
-        Channel *channel = obj;
-        cell.textLabel.text = channel.node;
-        cell.detailTextLabel.text = channel.ePostalID;
-    }
+    [self configureCell:cell forIndexPath:indexPath];
     
     return cell;
 }
@@ -199,22 +189,29 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 ////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Configuring table view cells
 ////////////////////////////////////////////////////////////////////////////////////
+#define NAME_TAG 1
+#define SNS_TAG 2
+#define AVATAR_TAG 3
+#define SUMMARY_TAG 4
+
 #define LEFT_COLUMN_OFFSET 10.0
 #define LEFT_COLUMN_WIDTH 36.0
 
 #define MIDDLE_COLUMN_OFFSET 70.0
-#define MIDDLE_COLUMN_WIDTH 180.0
+#define MIDDLE_COLUMN_WIDTH 100.0
 
 #define RIGHT_COLUMN_OFFSET 230.0
 #define RIGHT_COLUMN_WIDTH  60
 
 #define MAIN_FONT_SIZE 16.0
 #define SUMMARY_FONT_SIZE 14.0
-#define LABEL_HEIGHT 25.0
+#define LABEL_HEIGHT 20.0
 #define MESSAGE_LABEL_HEIGHT 15.0
 
 #define IMAGE_SIDE 50.0
-#define SUMMARY_WIDTH_OFFEST 16.0
+#define SNS_SIDE 15.0
+#define SUMMARY_WIDTH_OFFEST 20.0
+#define SUMMARY_WIDTH 80.0
 
 - (UITableViewCell *)tableViewCellWithReuseIdentifier:(NSString *)identifier{
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];    
@@ -225,11 +222,14 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     UIImageView *cellBgSelectedView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell_bg_highlighted.png"]];
     cell.selectedBackgroundView =  cellBgSelectedView;
     
+    UILabel *label;
+    CGRect rect;
     // Create an image view for the quarter image.
 	CGRect imageRect = CGRectMake(LEFT_COLUMN_OFFSET, (ROW_HEIGHT - IMAGE_SIDE) / 2.0, IMAGE_SIDE, IMAGE_SIDE);
+	CGRect snsRect = CGRectMake(MIDDLE_COLUMN_OFFSET+MIDDLE_COLUMN_WIDTH+SNS_SIDE, (ROW_HEIGHT - SNS_SIDE) / 2.0, SNS_SIDE, SNS_SIDE);
     
     UIImageView *avatarImage = [[UIImageView alloc] initWithFrame:imageRect];
-    avatarImage.image = [UIImage imageNamed:@"face_2.png"];
+    avatarImage.tag = AVATAR_TAG;
     CALayer *avatarLayer = [avatarImage layer];
     [avatarLayer setMasksToBounds:YES];
     [avatarLayer setCornerRadius:5.0];
@@ -237,7 +237,75 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [avatarLayer setBorderColor:[[UIColor whiteColor] CGColor]];
     [cell.contentView addSubview:avatarImage];
     
+    // Create a label for the user name.
+	rect = CGRectMake(MIDDLE_COLUMN_OFFSET, (ROW_HEIGHT - LABEL_HEIGHT) / 2.0, MIDDLE_COLUMN_WIDTH, LABEL_HEIGHT);
+	label = [[UILabel alloc] initWithFrame:rect];
+	label.tag = NAME_TAG;
+//    label.lineBreakMode = UILineBreakModeClip;
+    label.numberOfLines = 2;
+	label.font = [UIFont boldSystemFontOfSize:MAIN_FONT_SIZE];
+	label.textAlignment = UITextAlignmentLeft;
+    label.textColor = RGBCOLOR(107, 107, 107);
+    label.backgroundColor = [UIColor clearColor];
+    [cell.contentView addSubview:label];
+    
+    UIImageView *snsImage = [[UIImageView alloc] initWithFrame:imageRect];
+    snsImage.tag = SNS_TAG;
+    [cell.contentView addSubview:label];
+
+    
+    [cell.contentView addSubview:avatarImage];
+    
+    
     return  cell;
+}
+
+- (void)configureCell:(UITableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath {
+    
+    id obj  =  [[self fetchedResultsController] objectAtIndexPath:indexPath];
+    
+    // set max size
+    CGSize nameMaxSize = CGSizeMake(MIDDLE_COLUMN_WIDTH, LABEL_HEIGHT*2);
+    CGSize summaryMaxSize = CGSizeMake(SUMMARY_WIDTH, LABEL_HEIGHT*2);
+
+    
+    // set the avatar
+    UILabel *label;
+    UIImageView *imageView;
+    NSString *_nameString;
+    CGFloat _labelHeight;
+    
+    //set avatar
+    imageView = (UIImageView *)[cell viewWithTag:AVATAR_TAG];
+    imageView.image = [UIImage imageNamed:@"face_3.png"];
+    
+    //set sns icon
+    imageView = (UIImageView *)[cell viewWithTag:SNS_TAG];
+    imageView.image = [UIImage imageNamed:@"sns_icon_weibo.png"];
+    
+    // set the name text
+    label = (UILabel *)[cell viewWithTag:NAME_TAG];
+    if ([obj isKindOfClass:[User class]]) {
+        User *user = obj;
+        _nameString = user.displayName;
+        
+    } else if ([obj isKindOfClass:[Channel class]]) {
+        Channel *channel = obj;
+        _nameString = channel.node;
+    }
+    
+    CGSize labelSize = [_nameString sizeWithFont:label.font constrainedToSize:nameMaxSize lineBreakMode: UILineBreakModeTailTruncation];
+    if (labelSize.height > LABEL_HEIGHT) {
+        _labelHeight = label.frame.origin.y - 10;
+    }else {
+        _labelHeight = label.frame.origin.y;
+    }
+    label.frame = CGRectMake(label.frame.origin.x, _labelHeight, labelSize.width, labelSize.height);
+    label.text = _nameString;
+        
+    
+    
+    
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
