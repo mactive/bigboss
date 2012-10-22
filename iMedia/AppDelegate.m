@@ -125,9 +125,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     self.conversationController.managedObjectContext = _managedObjectContext;
     self.conversationController.title = NSLocalizedString(@"Messages", nil);
     
-    self.contactListController = [[ContactListViewController alloc] init];
+    self.contactListController = [[ContactListViewController alloc] initWithStyle:UITableViewStylePlain andManagementContext:_managedObjectContext];
     UINavigationController *navController2 = [[UINavigationController alloc] initWithRootViewController:self.contactListController];
-    self.contactListController.managedObjectContext = _managedObjectContext;
+//    self.contactListController.managedObjectContext = _managedObjectContext;
     self.contactListController.title = NSLocalizedString(@"Contacts", nil);
     
     self.shakeController = [[ShakeViewController alloc] init];

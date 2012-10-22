@@ -38,6 +38,8 @@
 		2692531216350580000D7AFB /* sns_icon_renren@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2692530C16350580000D7AFB /* sns_icon_renren@2x.png */; };
 		2692531316350580000D7AFB /* sns_icon_wechat@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2692530D16350580000D7AFB /* sns_icon_wechat@2x.png */; };
 		2692531416350580000D7AFB /* sns_icon_weibo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2692530E16350580000D7AFB /* sns_icon_weibo@2x.png */; };
+		2692531F16353F6E000D7AFB /* pinyin.c in Sources */ = {isa = PBXBuildFile; fileRef = 2692531B16353F6E000D7AFB /* pinyin.c */; };
+		2692532016353F6E000D7AFB /* POAPinyin.m in Sources */ = {isa = PBXBuildFile; fileRef = 2692531E16353F6E000D7AFB /* POAPinyin.m */; };
 		26C76E5A162EB01200298865 /* barbutton_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26C76E59162EB01200298865 /* barbutton_bg@2x.png */; };
 		26C76E65162EB4F400298865 /* UINavigationBar+Background.m in Sources */ = {isa = PBXBuildFile; fileRef = 26C76E64162EB4F400298865 /* UINavigationBar+Background.m */; };
 		56202F46162AA32F00F6306F /* AddFriendByIDController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56202F45162AA32F00F6306F /* AddFriendByIDController.m */; };
@@ -323,6 +325,10 @@
 		2692530C16350580000D7AFB /* sns_icon_renren@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "sns_icon_renren@2x.png"; path = "Resources/sns_icon_renren@2x.png"; sourceTree = "<group>"; };
 		2692530D16350580000D7AFB /* sns_icon_wechat@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "sns_icon_wechat@2x.png"; path = "Resources/sns_icon_wechat@2x.png"; sourceTree = "<group>"; };
 		2692530E16350580000D7AFB /* sns_icon_weibo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "sns_icon_weibo@2x.png"; path = "Resources/sns_icon_weibo@2x.png"; sourceTree = "<group>"; };
+		2692531B16353F6E000D7AFB /* pinyin.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = pinyin.c; path = POAPinyin/pinyin.c; sourceTree = "<group>"; };
+		2692531C16353F6E000D7AFB /* pinyin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pinyin.h; path = POAPinyin/pinyin.h; sourceTree = "<group>"; };
+		2692531D16353F6E000D7AFB /* POAPinyin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = POAPinyin.h; path = POAPinyin/POAPinyin.h; sourceTree = "<group>"; };
+		2692531E16353F6E000D7AFB /* POAPinyin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = POAPinyin.m; path = POAPinyin/POAPinyin.m; sourceTree = "<group>"; };
 		26C76E59162EB01200298865 /* barbutton_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "barbutton_bg@2x.png"; path = "Resources/barbutton_bg@2x.png"; sourceTree = "<group>"; };
 		26C76E63162EB4F400298865 /* UINavigationBar+Background.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UINavigationBar+Background.h"; path = "ViewControllers/ViewCategory/UINavigationBar+Background.h"; sourceTree = "<group>"; };
 		26C76E64162EB4F400298865 /* UINavigationBar+Background.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UINavigationBar+Background.m"; path = "ViewControllers/ViewCategory/UINavigationBar+Background.m"; sourceTree = "<group>"; };
@@ -721,6 +727,17 @@
 				2631C52916313033004DE7FB /* NSDate+timesince.m */,
 			);
 			name = contrib;
+			sourceTree = "<group>";
+		};
+		2692531A16353F5B000D7AFB /* POApinyin */ = {
+			isa = PBXGroup;
+			children = (
+				2692531B16353F6E000D7AFB /* pinyin.c */,
+				2692531C16353F6E000D7AFB /* pinyin.h */,
+				2692531D16353F6E000D7AFB /* POAPinyin.h */,
+				2692531E16353F6E000D7AFB /* POAPinyin.m */,
+			);
+			name = POApinyin;
 			sourceTree = "<group>";
 		};
 		26C76E62162EB4D900298865 /* ViewCategory */ = {
@@ -1599,6 +1616,7 @@
 		56B4CD0616267A2A00E046CC /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
+				2692531A16353F5B000D7AFB /* POApinyin */,
 				56B4CCDC1626732400E046CC /* AFNetworking */,
 				562DE6F3160ABF2100F782D2 /* NSBubbleData */,
 				566E80D61609A2AA00A333EA /* XMPPFramework */,
@@ -2012,6 +2030,8 @@
 				040127971632FB3A00845F3C /* UIBubbleTableView.m in Sources */,
 				040127981632FB3A00845F3C /* UIBubbleTableViewCell.m in Sources */,
 				040127991632FB3A00845F3C /* UIBubbleTypingTableViewCell.m in Sources */,
+				2692531F16353F6E000D7AFB /* pinyin.c in Sources */,
+				2692532016353F6E000D7AFB /* POAPinyin.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

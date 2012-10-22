@@ -17,7 +17,13 @@
     NSFetchedResultsController *fetchedResultsController;
 }
 
+
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (strong, nonatomic) NSMutableDictionary* contacts_list_fix;
+
+- (void)addUser:(User *)userObject;
+- (id)initWithStyle:(UITableViewStyle)style andManagementContext:(NSManagedObjectContext *)context;
+
 
 @end
 

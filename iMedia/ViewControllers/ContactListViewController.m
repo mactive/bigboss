@@ -16,6 +16,8 @@
 #import "AddFriendController.h"
 #import "UINavigationBar+Background.h"
 #import <QuartzCore/QuartzCore.h>
+#import "pinyin.h"
+#import "POAPinyin.h"
 
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
@@ -34,14 +36,18 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 @implementation ContactListViewController
 
 @synthesize managedObjectContext;
+@synthesize contacts_list_fix;
 
-- (id)initWithStyle:(UITableViewStyle)style
+- (id)initWithStyle:(UITableViewStyle)style andManagementContext:(NSManagedObjectContext *)context
 {
     self = [super initWithStyle:style];
     if (self) {
+        self.managedObjectContext = context;
         self.title = @"Contacts";
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(add:)];
+
+        
     }
     return self;
 }
@@ -78,12 +84,41 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+//    User* thisUser = [NSEntityDescription insertNewObjectForEntityForName:@"User" inManagedObjectContext:self.managedObjectContext];
+//    thisUser.name = @"zhange";
+//    thisUser.ePostalID = @"mactive@121.12.104.95";
+//    thisUser.displayName = @"李晓思";
+//    thisUser.type = [NSNumber numberWithInt:IdentityTypeUser];
+//    thisUser.state = [NSNumber numberWithInt:IdentityStateActive];
+//    MOCSave(self.managedObjectContext);
+    
+    
+    NSManagedObjectContext *moc = self.managedObjectContext;
+    NSEntityDescription *entityDescription = [NSEntityDescription entityForName:@"Identity"
+                                                         inManagedObjectContext:moc];
+    
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDescription];
+    
+    //    NSSortDescriptor *sd1 = [[NSSortDescriptor alloc] initWithKey:@"displayName" ascending:YES];    
+    //    NSArray *sortDescriptors = [NSArray arrayWithObjects:sd1, nil];
+    //    [request setSortDescriptors:sortDescriptors];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:
+                              @"(state = %d)", IdentityStateActive];
+    [request setPredicate:predicate];
+    
+    NSError *error = nil;
+    NSArray *array = [moc executeFetchRequest:request error:&error];
+    
+    [self SerializeContacts:array Filter:nil];
+    
+}
 
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+- (void)addUser:(User *)userObject{
+    //add to fixnsaray
+    [self.tableView reloadData];
 }
 
 - (void)viewDidUnload
@@ -138,7 +173,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 			DDLogError(@"Error performing fetch: %@", error);
 		}
 	}
-	
+
 	return fetchedResultsController;
 }
 
@@ -153,21 +188,38 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [[[self fetchedResultsController] sections] count];
+    return [self.contacts_list_fix count];
+//    return [[[self fetchedResultsController] sections] count];
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)sectionIndex
 {
- 	NSArray *sections = [[self fetchedResultsController] sections];
-	
-	if (sectionIndex < [sections count])
-	{
-		id <NSFetchedResultsSectionInfo> sectionInfo = [sections objectAtIndex:sectionIndex];
-		return sectionInfo.numberOfObjects;
-	}
-	
-	return 0;
+// 	NSArray *sections = [[self fetchedResultsController] sections];
+//	
+//	if (sectionIndex < [sections count])
+//	{
+//		id <NSFetchedResultsSectionInfo> sectionInfo = [sections objectAtIndex:sectionIndex];
+//		return sectionInfo.numberOfObjects;
+//	}
+//    return 0;
+    NSString* _section = [[[self.contacts_list_fix allKeys] sortedArrayUsingFunction:SortIndex context:NULL] objectAtIndex:sectionIndex];
+
+    NSLog(@"%@ %d",_section,[[self.contacts_list_fix objectForKey:_section] count]);
+    return [[self.contacts_list_fix objectForKey:_section] count];	
+}
+
+NSInteger SortIndex(id char1, id char2, void* context)
+{
+    NSUInteger _char1_location = [ALPHA rangeOfString:[char1 substringToIndex:1]].location;
+    NSUInteger _char2_location = [ALPHA rangeOfString:[char2 substringToIndex:1]].location;
+    if (_char1_location < _char2_location) {
+        return NSOrderedAscending;
+    } else if (_char1_location > _char2_location) {
+        return NSOrderedDescending;
+    } else {
+        return NSOrderedSame;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -185,6 +237,43 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
     return cell;
 }
+
+////////////////////////////////////////////////////////////////////////////////////
+#pragma mark POApinyin
+////////////////////////////////////////////////////////////////////////////////////
+- (void)SerializeContacts:(NSArray *)contacts Filter:(NSString *)filter
+{
+    NSMutableArray* _section_temp = [NSMutableArray array];
+	for (int i = 0; i < 27; i++) {
+        [_section_temp addObject:[NSMutableArray array]];
+    }
+    
+    for (int i = 0; i < [contacts count]; i++) {
+        User *user =  [contacts objectAtIndex:i];
+        NSString* _pinyin = [POAPinyin quickConvert:user.displayName];
+        
+        NSString* _section = nil;
+        _section = [[NSString stringWithFormat:@"%c", [_pinyin characterAtIndex:0] ] uppercaseString];
+        
+        NSUInteger _first_letter = [NAMEFIRSTLATTER rangeOfString:[_section substringToIndex:1]].location;
+        
+        if (_first_letter != NSNotFound) {
+            [[_section_temp objectAtIndex:_first_letter] addObject:user];
+        }
+    }
+    
+    self.contacts_list_fix = [[NSMutableDictionary alloc] init];
+	for (int i = 0; i < 27; i++) {
+        if ([[_section_temp objectAtIndex:i] count] > 0) {
+            NSLog(@"user %d count %d", i,[[_section_temp objectAtIndex:i] count]);
+            [self.contacts_list_fix setObject:[_section_temp objectAtIndex:i] forKey:[[NAMEFIRSTLATTER substringFromIndex:i] substringToIndex:1]];
+        }
+    }
+    
+    
+    
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Configuring table view cells
@@ -210,7 +299,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 #define IMAGE_SIDE 50.0
 #define SNS_SIDE 15.0
-#define SUMMARY_WIDTH_OFFEST 20.0
+#define SUMMARY_WIDTH_OFFEST 30.0
 #define SUMMARY_WIDTH 80.0
 
 - (UITableViewCell *)tableViewCellWithReuseIdentifier:(NSString *)identifier{
@@ -249,7 +338,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [cell.contentView addSubview:label];
     
     // set avatar
-    NSMutableArray *snsArray = [[NSMutableArray alloc] initWithObjects:@"weibo",@"douban",@"wechat", nil];
+    NSMutableArray *snsArray = [[NSMutableArray alloc] initWithObjects:@"weibo",@"douban", nil];
     UIImageView *snsImage;
     
     for(int i=0;i<[snsArray count];i++)  
@@ -281,7 +370,12 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 - (void)configureCell:(UITableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath {
     
-    id obj  =  [[self fetchedResultsController] objectAtIndexPath:indexPath];
+    NSString* _section = [[[self.contacts_list_fix allKeys] sortedArrayUsingFunction:SortIndex context:NULL] objectAtIndex:indexPath.section];
+    NSArray* _contacts = [contacts_list_fix objectForKey:_section];
+    
+//    id obj  =  [[self fetchedResultsController] objectAtIndexPath:indexPath];
+    
+    id obj = [_contacts objectAtIndex:indexPath.row];
     
     // set max size
     CGSize nameMaxSize = CGSizeMake(MIDDLE_COLUMN_WIDTH, LABEL_HEIGHT*2);
@@ -299,7 +393,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     imageView.image = [UIImage imageNamed:@"face_3.png"];
     
     //set sns icon
-    NSMutableArray *snsArray = [[NSMutableArray alloc] initWithObjects:@"weibo",@"douban",@"wechat", nil];    
+    NSMutableArray *snsArray = [[NSMutableArray alloc] initWithObjects:@"weibo",@"douban", nil];    
     for (int i =0; i< [snsArray count]; i++) {
         imageView = (UIImageView *)[cell viewWithTag:SNS_TAG + i];
     
@@ -341,7 +435,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         
     // set the user signiture
     label = (UILabel *)[cell viewWithTag:SUMMARY_TAG];
-//    NSString *signiture = @"和实生物 同则不继 万物生";
     NSString *signiture = @"和实生物";
     
     CGSize signitureSize = [signiture sizeWithFont:label.font constrainedToSize:summaryMaxSize lineBreakMode: UILineBreakModeTailTruncation];
@@ -352,16 +445,38 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     }
     label.text = signiture;
     label.frame = CGRectMake(label.frame.origin.x, _labelHeight, signitureSize.width + SUMMARY_PADDING, signitureSize.height+SUMMARY_PADDING);
-    
-    
+
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
     return 60.0;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
     return 15.0;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UIView* _section_view = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0, self.view.frame.size.width, 15)];
+    
+    UIImageView *_section_bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"contactSectionHeader.png"]];
+    [_section_bg setFrame:_section_view.bounds];
+    
+    NSString* _section = [[[contacts_list_fix allKeys] sortedArrayUsingFunction:SortIndex context:NULL] objectAtIndex:section];
+    UILabel* _section_text = [[UILabel alloc] initWithFrame:CGRectMake( 10, 0, 15, 15)];
+    _section_text.textColor = [UIColor whiteColor];
+    _section_text.font = [UIFont boldSystemFontOfSize:14.0];
+    _section_text.shadowOffset = CGSizeMake(0, 1);
+    _section_text.shadowColor = [UIColor grayColor];
+    _section_text.backgroundColor = [UIColor clearColor];
+    _section_text.text = [NSString stringWithFormat:@"%@", _section];
+    
+    [_section_view addSubview:_section_bg];
+    [_section_view addSubview:_section_text];
+    return _section_view;
 }
 
 /*
