@@ -37,6 +37,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 @synthesize managedObjectContext;
 @synthesize contacts_list_fix;
+@synthesize contacts_list;
 
 - (id)initWithStyle:(UITableViewStyle)style andManagementContext:(NSManagedObjectContext *)context
 {
@@ -46,8 +47,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         self.title = @"Contacts";
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(add:)];
-
-        
     }
     return self;
 }
@@ -84,11 +83,12 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
+//    add a user
 //    User* thisUser = [NSEntityDescription insertNewObjectForEntityForName:@"User" inManagedObjectContext:self.managedObjectContext];
-//    thisUser.name = @"zhange";
-//    thisUser.ePostalID = @"mactive@121.12.104.95";
-//    thisUser.displayName = @"李晓思";
+//    thisUser.name = @"0001";
+//    thisUser.ePostalID = @"mact003@121.12.104.95";
+//    thisUser.displayName = @"#223";
 //    thisUser.type = [NSNumber numberWithInt:IdentityTypeUser];
 //    thisUser.state = [NSNumber numberWithInt:IdentityStateActive];
 //    MOCSave(self.managedObjectContext);
@@ -111,13 +111,28 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
     NSError *error = nil;
     NSArray *array = [moc executeFetchRequest:request error:&error];
-    
-    [self SerializeContacts:array Filter:nil];
+    self.contacts_list = [[NSMutableArray alloc] initWithArray:array];
+    [self SerializeContacts:self.contacts_list Filter:nil];
     
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark Add Romove user then refresh
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 - (void)addUser:(User *)userObject{
     //add to fixnsaray
+    
+    [self.contacts_list addObject:userObject];
+    [self SerializeContacts:self.contacts_list Filter:nil];
+    [self.tableView reloadData];
+}
+
+- (void)removeUser:(User *)userObject{
+    //add to fixnsaray
+    
+    [self.contacts_list removeObject:userObject];
+    [self SerializeContacts:self.contacts_list Filter:nil];
     [self.tableView reloadData];
 }
 
@@ -133,55 +148,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-#pragma mark - Table view data source
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark NSFetchedResultsController
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-- (NSFetchedResultsController *)fetchedResultsController
-{
-	if (fetchedResultsController == nil)
-	{
-        
-		NSManagedObjectContext *moc = self.managedObjectContext;
-		
-		NSEntityDescription *entity = [NSEntityDescription entityForName:@"Identity"
-		                                          inManagedObjectContext:moc];
-		
-		NSSortDescriptor *sd1 = [[NSSortDescriptor alloc] initWithKey:@"displayName" ascending:YES];
-		
-		NSArray *sortDescriptors = [NSArray arrayWithObjects:sd1, nil];
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:
-                                  @"(state = %d)", IdentityStateActive];
-        
-		NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-		[fetchRequest setEntity:entity];
-		[fetchRequest setSortDescriptors:sortDescriptors];
-		[fetchRequest setFetchBatchSize:30];
-		[fetchRequest setPredicate:predicate];
-        
-		fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
-		                                                               managedObjectContext:moc
-		                                                                 sectionNameKeyPath:nil
-		                                                                          cacheName:nil];
-		[fetchedResultsController setDelegate:self];
-		
-		
-		NSError *error = nil;
-		if (![fetchedResultsController performFetch:&error])
-		{
-			DDLogError(@"Error performing fetch: %@", error);
-		}
-	}
-
-	return fetchedResultsController;
-}
-
-- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
-{
-	[[self tableView] reloadData];
-}
-
 ////////////////////////////////////////////////////////////////
 #pragma mark - Table view data source
 ////////////////////////////////////////////////////////////////
@@ -189,23 +155,12 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return [self.contacts_list_fix count];
-//    return [[[self fetchedResultsController] sections] count];
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)sectionIndex
 {
-// 	NSArray *sections = [[self fetchedResultsController] sections];
-//	
-//	if (sectionIndex < [sections count])
-//	{
-//		id <NSFetchedResultsSectionInfo> sectionInfo = [sections objectAtIndex:sectionIndex];
-//		return sectionInfo.numberOfObjects;
-//	}
-//    return 0;
     NSString* _section = [[[self.contacts_list_fix allKeys] sortedArrayUsingFunction:SortIndex context:NULL] objectAtIndex:sectionIndex];
-
-    NSLog(@"%@ %d",_section,[[self.contacts_list_fix objectForKey:_section] count]);
     return [[self.contacts_list_fix objectForKey:_section] count];	
 }
 
@@ -241,7 +196,7 @@ NSInteger SortIndex(id char1, id char2, void* context)
 ////////////////////////////////////////////////////////////////////////////////////
 #pragma mark POApinyin
 ////////////////////////////////////////////////////////////////////////////////////
-- (void)SerializeContacts:(NSArray *)contacts Filter:(NSString *)filter
+- (void)SerializeContacts:(NSMutableArray *)contacts Filter:(NSString *)filter
 {
     NSMutableArray* _section_temp = [NSMutableArray array];
 	for (int i = 0; i < 27; i++) {
@@ -253,9 +208,16 @@ NSInteger SortIndex(id char1, id char2, void* context)
         NSString* _pinyin = [POAPinyin quickConvert:user.displayName];
         
         NSString* _section = nil;
+        NSUInteger _first_letter;
         _section = [[NSString stringWithFormat:@"%c", [_pinyin characterAtIndex:0] ] uppercaseString];
         
-        NSUInteger _first_letter = [NAMEFIRSTLATTER rangeOfString:[_section substringToIndex:1]].location;
+        // if the section is
+        if ([_section isEqualToString:@"0"]) {
+            _first_letter = 26;
+        }else{
+            _first_letter = [NAMEFIRSTLATTER rangeOfString:[_section substringToIndex:1]].location;
+        }
+        
         
         if (_first_letter != NSNotFound) {
             [[_section_temp objectAtIndex:_first_letter] addObject:user];
@@ -372,9 +334,7 @@ NSInteger SortIndex(id char1, id char2, void* context)
     
     NSString* _section = [[[self.contacts_list_fix allKeys] sortedArrayUsingFunction:SortIndex context:NULL] objectAtIndex:indexPath.section];
     NSArray* _contacts = [contacts_list_fix objectForKey:_section];
-    
-//    id obj  =  [[self fetchedResultsController] objectAtIndexPath:indexPath];
-    
+        
     id obj = [_contacts objectAtIndex:indexPath.row];
     
     // set max size
@@ -383,7 +343,6 @@ NSInteger SortIndex(id char1, id char2, void* context)
 
     
     // set the avatar
-    UILabel *label;
     UIImageView *imageView;
     NSString *_nameString;
     CGFloat _labelHeight;
@@ -410,11 +369,10 @@ NSInteger SortIndex(id char1, id char2, void* context)
         }else if([[snsArray objectAtIndex:i] isEqual:@"tmweibo"]){
             imageView.image = [UIImage imageNamed:@"sns_icon_tmweibo.png"];
         }
-        
     }
 
     // set the name text
-    label = (UILabel *)[cell viewWithTag:NAME_TAG];
+    UILabel *nameLabel = (UILabel *)[cell viewWithTag:NAME_TAG];
     if ([obj isKindOfClass:[User class]]) {
         User *user = obj;
         _nameString = user.displayName;
@@ -424,27 +382,27 @@ NSInteger SortIndex(id char1, id char2, void* context)
         _nameString = channel.node;
     }
     
-    CGSize labelSize = [_nameString sizeWithFont:label.font constrainedToSize:nameMaxSize lineBreakMode: UILineBreakModeTailTruncation];
+    CGSize labelSize = [_nameString sizeWithFont:nameLabel.font constrainedToSize:nameMaxSize lineBreakMode: UILineBreakModeTailTruncation];
     if (labelSize.height > LABEL_HEIGHT) {
-        _labelHeight = label.frame.origin.y - 10;
+        _labelHeight = 10.0;
     }else {
-        _labelHeight = label.frame.origin.y;
+        _labelHeight = 20.0;
     }
-    label.frame = CGRectMake(label.frame.origin.x, _labelHeight, labelSize.width, labelSize.height);
-    label.text = _nameString;
+    nameLabel.frame = CGRectMake(nameLabel.frame.origin.x, _labelHeight, labelSize.width, labelSize.height);
+    nameLabel.text = _nameString;
         
     // set the user signiture
-    label = (UILabel *)[cell viewWithTag:SUMMARY_TAG];
-    NSString *signiture = @"和实生物";
+    UILabel *signitureLabel = (UILabel *)[cell viewWithTag:SUMMARY_TAG];
+    NSString *signiture = @"和实生物, 你好世界";
     
-    CGSize signitureSize = [signiture sizeWithFont:label.font constrainedToSize:summaryMaxSize lineBreakMode: UILineBreakModeTailTruncation];
+    CGSize signitureSize = [signiture sizeWithFont:signitureLabel.font constrainedToSize:summaryMaxSize lineBreakMode: UILineBreakModeTailTruncation];
     if (signitureSize.height > LABEL_HEIGHT) {
-        _labelHeight = label.frame.origin.y - 10;
+        _labelHeight = 10.0;
     }else {
-        _labelHeight = label.frame.origin.y;
+        _labelHeight = 20.0;
     }
-    label.text = signiture;
-    label.frame = CGRectMake(label.frame.origin.x, _labelHeight, signitureSize.width + SUMMARY_PADDING, signitureSize.height+SUMMARY_PADDING);
+    signitureLabel.text = signiture;
+    signitureLabel.frame = CGRectMake(signitureLabel.frame.origin.x, _labelHeight, signitureSize.width + SUMMARY_PADDING, signitureSize.height+SUMMARY_PADDING);
 
 }
 
@@ -523,7 +481,13 @@ NSInteger SortIndex(id char1, id char2, void* context)
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
   
-    id obj =  [[self fetchedResultsController] objectAtIndexPath:indexPath];
+//    id obj =  [[self fetchedResultsController] objectAtIndexPath:indexPath];
+    NSString* _section = [[[self.contacts_list_fix allKeys] sortedArrayUsingFunction:SortIndex context:NULL] objectAtIndex:indexPath.section];
+    NSArray* _contacts = [contacts_list_fix objectForKey:_section];
+    
+    //    id obj  =  [[self fetchedResultsController] objectAtIndexPath:indexPath];
+    
+    id obj = [_contacts objectAtIndex:indexPath.row];
     
     if ([obj isKindOfClass:[User class]]) {
         ContactDetailController *detailViewController = [[ContactDetailController alloc] initWithNibName:nil bundle:nil];

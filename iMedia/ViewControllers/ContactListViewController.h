@@ -12,7 +12,7 @@
 #import "ContactDetailController.h"
 #import "ChatWithIdentity.h"
 
-@interface ContactListViewController : UITableViewController <NSFetchedResultsControllerDelegate, ChatWithIdentityDelegate>
+@interface ContactListViewController : UITableViewController <ChatWithIdentityDelegate>
 {
     NSFetchedResultsController *fetchedResultsController;
 }
@@ -20,8 +20,10 @@
 
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic) NSMutableDictionary* contacts_list_fix;
+@property (strong, nonatomic) NSMutableArray* contacts_list;
 
 - (void)addUser:(User *)userObject;
+- (void)removeUser:(User *)userObject;
 - (id)initWithStyle:(UITableViewStyle)style andManagementContext:(NSManagedObjectContext *)context;
 
 
