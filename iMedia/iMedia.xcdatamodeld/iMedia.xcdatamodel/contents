@@ -36,7 +36,6 @@
         <relationship name="from" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Identity" syncable="YES"/>
     </entity>
     <entity name="User" representedClassName="User" parentEntity="Identity" syncable="YES">
-        <attribute name="avatar" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="gender" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="signature" optional="YES" attributeType="String" syncable="YES"/>
@@ -48,6 +47,6 @@
         <element name="Identity" positionX="160" positionY="192" width="128" height="120"/>
         <element name="Me" positionX="0" positionY="0" width="128" height="90"/>
         <element name="Message" positionX="0" positionY="0" width="128" height="120"/>
-        <element name="User" positionX="-234" positionY="141" width="128" height="120"/>
+        <element name="User" positionX="-234" positionY="141" width="128" height="105"/>
     </elements>
 </model>

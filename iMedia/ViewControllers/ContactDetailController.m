@@ -13,6 +13,7 @@
 #import "ModelHelper.h"
 #import "XMPPNetworkCenter.h"
 #import "DDLog.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface ContactDetailController ()
 
@@ -38,6 +39,11 @@
     return self;
 }
 
+#define ALBUM_WIDTH 75
+#define ALBUM_WIDTH 75
+#define ALBUM_OFFSET 2.5
+
+
 - (void)loadView
 {
     [super loadView];
@@ -46,9 +52,22 @@
     UIImageView *albumViewBg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"profile_image_bg.png"]];
     [self.albumView addSubview:albumViewBg];
     
-    
+    UIImageView *albumAvatar;
+
+    NSArray *albumArray = [[NSArray alloc] initWithObjects:
+                           @"profile_face_1.png",@"profile_face_2.png",@"profile_face_1.png",@"profile_face_2.png",
+                           @"profile_face_1.png",@"profile_face_2.png",@"profile_face_1.png",@"profile_face_2.png",nil ];
+    for (int i = 0; i< [albumArray count]; i++) {
+        albumAvatar = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[albumArray objectAtIndex:i] ]];
+        [albumAvatar setFrame:CGRectMake(ALBUM_OFFSET * (i%4*2 + 1) + ALBUM_WIDTH * (i%4), ALBUM_OFFSET * (floor(i/4)*2+1) + ALBUM_WIDTH * floor(i/4), ALBUM_WIDTH, ALBUM_WIDTH)];
+        [albumAvatar.layer setMasksToBounds:YES];
+        [albumAvatar.layer setCornerRadius:3.0];
+        [self.albumView addSubview:albumAvatar];
+    }
     
     NSLog(@"%@",self.user);
+    
+    
     [self.view addSubview:self.albumView];
 
  

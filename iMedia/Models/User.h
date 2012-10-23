@@ -17,7 +17,6 @@
 @property (nonatomic, retain) NSString * gender;
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * signature;
-@property (nonatomic, retain) NSString * avatar;
 @property (nonatomic, retain) NSSet *conversations;
 @end
 
