@@ -491,12 +491,14 @@ NSInteger SortIndex(id char1, id char2, void* context)
     
     if ([obj isKindOfClass:[User class]]) {
         ContactDetailController *detailViewController = [[ContactDetailController alloc] initWithNibName:nil bundle:nil];
+        [detailViewController setHidesBottomBarWhenPushed:YES];
         detailViewController.user = obj;
         detailViewController.delegate = self;
         // Pass the selected object to the new view controller.
         [self.navigationController pushViewController:detailViewController animated:YES];
     } else if ([obj isKindOfClass:[Channel class]]) {
         ChannelViewController *controller = [[ChannelViewController alloc] initWithNibName:nil bundle:nil];
+        [controller setHidesBottomBarWhenPushed:YES];
         controller.channel = obj;
         controller.delegate = self;
         [self.navigationController pushViewController:controller animated:YES];

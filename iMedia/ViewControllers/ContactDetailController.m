@@ -12,6 +12,7 @@
 #import "ChatWithIdentity.h"
 #import "ModelHelper.h"
 #import "XMPPNetworkCenter.h"
+#import "DDLog.h"
 
 @interface ContactDetailController ()
 
@@ -26,6 +27,7 @@
 @synthesize user =_user;
 @synthesize delegate = _delegate;
 @synthesize jsonData;
+@synthesize albumView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -40,12 +42,15 @@
 {
     [super loadView];
     
-    _nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(LARGE_GAP, SMALL_GAP, 200.0f, 40.0f)];
-    _nameLabel.backgroundColor = [UIColor redColor];
-    _nameLabel.textColor = [UIColor blackColor];
-    [_nameLabel setText:@"label"];
-    [_nameLabel setMinimumFontSize:20.0];
-    [self.view addSubview:self.nameLabel];
+    self.albumView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 160)];
+    UIImageView *albumViewBg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"profile_image_bg.png"]];
+    [self.albumView addSubview:albumViewBg];
+    
+    
+    
+    NSLog(@"%@",self.user);
+    [self.view addSubview:self.albumView];
+
  
     self.sendMsgButton = [[UIButton alloc] initWithFrame:CGRectMake(SMALL_GAP, 300.0f, 80.0f, 30.0f)];
     [self.sendMsgButton setTag:0];
@@ -64,7 +69,7 @@
         [self.sendMsgButton addTarget:self action:@selector(addFriendButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
 
     } else {
-        self.title = self.user.ePostalID;
+        self.title = self.user.displayName;
         [self.sendMsgButton setTitle:NSLocalizedString(@"Send Msg", nil) forState:UIControlStateNormal];
         [self.sendMsgButton addTarget:self action:@selector(sendMsgButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
         

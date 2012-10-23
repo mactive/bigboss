@@ -16,5 +16,6 @@
 @dynamic name;
 @dynamic signature;
 @dynamic conversations;
+@dynamic avatar;
 
 @end

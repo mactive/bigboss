@@ -18,6 +18,7 @@
 }
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
+@property (strong, nonatomic) UIView *albumView;
 @property (strong, nonatomic) UIButton *sendMsgButton;
 @property (strong, nonatomic) UIButton *deleteUserButton;
 @property (strong, nonatomic) UILabel  *nameLabel;
