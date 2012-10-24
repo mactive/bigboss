@@ -14,6 +14,7 @@
 #import "XMPPNetworkCenter.h"
 #import "DDLog.h"
 #import <QuartzCore/QuartzCore.h>
+#import "AlbumViewController.h"
 
 @interface ContactDetailController ()
 
@@ -29,6 +30,9 @@
 @synthesize delegate = _delegate;
 @synthesize jsonData;
 @synthesize albumView;
+@synthesize albumArray;
+@synthesize albumViewController;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -52,17 +56,21 @@
     UIImageView *albumViewBg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"profile_image_bg.png"]];
     [self.albumView addSubview:albumViewBg];
     
-    UIImageView *albumAvatar;
+    UIButton *albumButton;
 
-    NSArray *albumArray = [[NSArray alloc] initWithObjects:
+    self.albumArray = [[NSArray alloc] initWithObjects:
                            @"profile_face_1.png",@"profile_face_2.png",@"profile_face_1.png",@"profile_face_2.png",
                            @"profile_face_1.png",@"profile_face_2.png",@"profile_face_1.png",@"profile_face_2.png",nil ];
     for (int i = 0; i< [albumArray count]; i++) {
-        albumAvatar = [[UIImageView alloc] initWithImage:[UIImage imageNamed:[albumArray objectAtIndex:i] ]];
-        [albumAvatar setFrame:CGRectMake(ALBUM_OFFSET * (i%4*2 + 1) + ALBUM_WIDTH * (i%4), ALBUM_OFFSET * (floor(i/4)*2+1) + ALBUM_WIDTH * floor(i/4), ALBUM_WIDTH, ALBUM_WIDTH)];
-        [albumAvatar.layer setMasksToBounds:YES];
-        [albumAvatar.layer setCornerRadius:3.0];
-        [self.albumView addSubview:albumAvatar];
+        albumButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [albumButton setImage:[UIImage imageNamed:[albumArray objectAtIndex:i] ] forState:UIControlStateNormal];
+        [albumButton setFrame:CGRectMake(ALBUM_OFFSET * (i%4*2 + 1) + ALBUM_WIDTH * (i%4), ALBUM_OFFSET * (floor(i/4)*2+1) + ALBUM_WIDTH * floor(i/4), ALBUM_WIDTH, ALBUM_WIDTH)];
+        [albumButton.layer setMasksToBounds:YES];
+        [albumButton.layer setCornerRadius:3.0];
+        albumButton.tag = i;
+        [albumButton addTarget:self action:@selector(albumClick:) forControlEvents:UIControlEventTouchUpInside];
+        
+        [self.albumView addSubview:albumButton];
     }
     
     NSLog(@"%@",self.user);
@@ -103,6 +111,18 @@
         [self.view addSubview:self.deleteUserButton];
     }
 
+}
+//////////////
+#pragma mark -  ablum button click
+- (void)albumClick:(UIButton *)sender
+{
+    self.albumViewController = [[AlbumViewController alloc] init];
+    self.albumViewController.albumArray = self.albumArray;
+    [self.albumViewController setHidesBottomBarWhenPushed:YES];
+    // Pass the selected object to the new view controller.
+    [self.navigationController pushViewController:self.albumViewController animated:YES];
+    NSLog(@"%d",sender.tag);
+    
 }
 
 - (void)viewDidLoad

@@ -10,6 +10,8 @@
 
 @protocol ChatWithIdentityDelegate;
 @class User;
+@class AlbumViewController;
+
 
 @interface ContactDetailController : UIViewController
 {
@@ -25,6 +27,10 @@
 
 @property (strong, nonatomic) User *user;
 @property (strong, nonatomic) id   jsonData;
+
+@property (strong, nonatomic) NSArray *albumArray;
+@property (strong, nonatomic) AlbumViewController* albumViewController;
+
 
 @property (strong, nonatomic) id <ChatWithIdentityDelegate> delegate;
 
