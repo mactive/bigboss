@@ -26,12 +26,7 @@
     [super viewDidLoad];
     
     self.scrollView.backgroundColor = [UIColor blackColor];
-//    
-//    self.albumArray = [[NSArray alloc] initWithObjects:
-//                           @"profile_face_1.png",@"profile_face_2.png",@"profile_face_1.png",@"profile_face_2.png",
-//                           @"profile_face_1.png",@"profile_face_2.png",@"profile_face_1.png",@"profile_face_2.png",nil ];
-    
-    
+
     for (NSUInteger index = 0; index < [self.albumArray count]; index ++) {
         //You add your content views here
         [self.scrollView addContentSubview:[self createViewAtIndex:index]];

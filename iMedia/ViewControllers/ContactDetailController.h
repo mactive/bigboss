@@ -13,22 +13,33 @@
 @class AlbumViewController;
 
 
-@interface ContactDetailController : UIViewController
+@interface ContactDetailController : UIViewController<UITableViewDataSource, UITableViewDelegate>
 {
     User  *_user;
     id    jsonData;
 }
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
+@property (strong, nonatomic) UIScrollView *contentView;
+@property (strong, nonatomic) UITableView *infoTableView;
+
 @property (strong, nonatomic) UIView *albumView;
+@property (strong, nonatomic) UIView *statusView;
+@property (strong, nonatomic) UIView *snsView;
+@property (strong, nonatomic) UIView *infoView;
+@property (strong, nonatomic) UIView *actionView;
+
 @property (strong, nonatomic) UIButton *sendMsgButton;
 @property (strong, nonatomic) UIButton *deleteUserButton;
+@property (strong, nonatomic) UIButton *reportUserButton;
 @property (strong, nonatomic) UILabel  *nameLabel;
 
 @property (strong, nonatomic) User *user;
 @property (strong, nonatomic) id   jsonData;
 
 @property (strong, nonatomic) NSArray *albumArray;
+@property (strong, nonatomic) NSArray *infoArray;
+@property (strong, nonatomic) NSArray *infoDescArray;
 @property (strong, nonatomic) AlbumViewController* albumViewController;
 
 
