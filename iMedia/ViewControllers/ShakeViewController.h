@@ -14,6 +14,9 @@
     SystemSoundID completeSound;
 }
 
+@property(nonatomic, strong) UIImageView *shakeImageView;
+@property(nonatomic, strong) UIView *afterView;
+
 
 
 

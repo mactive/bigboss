@@ -13,6 +13,8 @@
 @end
 
 @implementation ShakeViewController
+@synthesize shakeImageView;
+@synthesize afterView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -28,15 +30,20 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = RGBCOLOR(69, 74, 82);
-    UIImageView* shakeView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"shake_view.png"]];
-    [shakeView setFrame:CGRectMake(30, 30, 260, 320)];
-    [self.view addSubview:shakeView];
+    self.shakeImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"shake_view.png"]];
+    [self.shakeImageView setFrame:CGRectMake(30, 30, 260, 320)];
     
-//    NSString *path = [[NSBundle mainBundle] pathForResource:@"glass" ofType:@"wav"];
-//	AudioServicesCreateSystemSoundID((CFURLRef)[NSURL fileURLWithPath:path], &soundID);
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addAnimations) name:@"shake" object:nil];     
+    self.afterView = [[UIView alloc] initWithFrame:CGRectMake(30, 30, 260, 320)];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 80, 260, 40)];
+    label.text = T(@"你中奖了");
+    label.textColor = [UIColor whiteColor];
+    label.backgroundColor = [UIColor clearColor];
+    label.textAlignment = UITextAlignmentCenter;
+    label.font = [UIFont systemFontOfSize:30.0];
+    [self.afterView addSubview:label];
     
+    [self.view addSubview:self.shakeImageView];        
 }
 
 #pragma mark - 摇一摇动画效果
@@ -71,6 +78,18 @@
         AudioServicesCreateSystemSoundID((__bridge CFURLRef)audioPath, &completeSound);
         AudioServicesPlaySystemSound (completeSound);
         
+        [UIView animateWithDuration:0.7f animations:^
+         {
+             [self.shakeImageView setAlpha:0];
+         }
+                         completion:^(BOOL finished)
+         {
+             [self.shakeImageView removeFromSuperview];
+             [self.view addSubview:self.afterView];
+
+         }
+        ];
+                
     }
 }
 
