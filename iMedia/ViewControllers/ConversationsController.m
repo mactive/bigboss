@@ -244,15 +244,14 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 -(UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath 
 { 
-    NSLog(@"you moved"); 
-    return UITableViewCellEditingStyleDelete; 
+    NSLog(@"you slided");
+    return UITableViewCellEditingStyleDelete;
 }
 
 -(NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath 
-{ 
-    return  T(@"Delete"); 
+{
+    return  T(@"Delete");
 }
-
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 { 

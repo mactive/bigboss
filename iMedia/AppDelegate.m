@@ -98,6 +98,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
     self.window.backgroundColor = BGCOLOR;
     
+    application.applicationSupportsShakeToEdit = YES;
     return YES;
 }
 
@@ -124,25 +125,28 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     self.conversationController = [[ConversationsController alloc] init];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:self.conversationController];
     self.conversationController.managedObjectContext = _managedObjectContext;
-    self.conversationController.title = NSLocalizedString(@"Messages", nil);
+    self.conversationController.title = T(@"Messages");
     
     self.contactListController = [[ContactListViewController alloc] initWithStyle:UITableViewStylePlain andManagementContext:_managedObjectContext];
     UINavigationController *navController2 = [[UINavigationController alloc] initWithRootViewController:self.contactListController];
 //    self.contactListController.managedObjectContext = _managedObjectContext;
-    self.contactListController.title = NSLocalizedString(@"Contacts", nil);
+    self.contactListController.title = T(@"Contacts");
     
     self.shakeController = [[ShakeViewController alloc] init];
     UINavigationController *navController3 = [[UINavigationController alloc] initWithRootViewController:self.shakeController];
-    self.shakeController.title = NSLocalizedString(@"Shake", nil);
+    self.shakeController.title = T(@"Shake!");
     
+    NSLog(@"---- %@",NSStringFromCGRect(navController3.view.frame));
+
     self.settingController = [[SettingViewController alloc] init];
     UINavigationController *navController4 = [[UINavigationController alloc] initWithRootViewController:self.settingController];
-    self.settingController.title = NSLocalizedString(@"Setting", nil);
+    self.settingController.title = T(@"Setting");
     
     NSArray* controllers = [NSArray arrayWithObjects:navController, navController2, navController3, navController4, nil];
     self.tabController.viewControllers = controllers;
-    // tabtar style 
-    [self.tabController.tabBar setFrame:CGRectMake(0, 435.0, 320.0, 45.0)];
+
+    // tabtar style
+    [self.tabController.tabBar setFrame:CGRectMake(0, 430.0, 320.0, 50.0)];
     UIImageView *tabbarBgView  = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tabbar_bg.png"]];
     [self.tabController.tabBar insertSubview:tabbarBgView atIndex:1];
     [self.tabController.tabBar setTintColor:[UIColor grayColor]];
@@ -155,11 +159,11 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [[items objectAtIndex:2] initWithTitle:NSLocalizedString(@"Shake", nil)     image:[UIImage imageNamed:@"tabbar_item_2.png"] tag:1002];
     [[items objectAtIndex:3] initWithTitle:NSLocalizedString(@"Setting", nil)   image:[UIImage imageNamed:@"tabbar_item_3.png"] tag:1003];
     
-
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window addSubview:self.tabController.view];
     [self.window setRootViewController:self.tabController];
+
     [self.window makeKeyAndVisible];
 }
 

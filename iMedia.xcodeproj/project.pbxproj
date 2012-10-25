@@ -23,6 +23,11 @@
 		2631C4EB16310026004DE7FB /* face_2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2631C4EA16310026004DE7FB /* face_2@2x.png */; };
 		2631C4ED1631035D004DE7FB /* time_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2631C4EC1631035D004DE7FB /* time_icon@2x.png */; };
 		2631C52A16313033004DE7FB /* NSDate+timesince.m in Sources */ = {isa = PBXBuildFile; fileRef = 2631C52916313033004DE7FB /* NSDate+timesince.m */; };
+		2659A09516391C840090EADB /* profile_add@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2659A09416391C840090EADB /* profile_add@2x.png */; };
+		2659A0971639211A0090EADB /* shake_view@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2659A0961639211A0090EADB /* shake_view@2x.png */; };
+		2659A0A0163940FF0090EADB /* message_3.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2659A09E163940FF0090EADB /* message_3.wav */; };
+		2659A0A1163940FF0090EADB /* message_2.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2659A09F163940FF0090EADB /* message_2.wav */; };
+		2659A0A3163941050090EADB /* message_1.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2659A0A2163941050090EADB /* message_1.wav */; };
 		266A1A6F162E5AF3008EF1D5 /* ShakeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 266A1A6E162E5AF2008EF1D5 /* ShakeViewController.m */; };
 		266A1A72162E5B10008EF1D5 /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 266A1A71162E5B0F008EF1D5 /* SettingViewController.m */; };
 		2673F5A0163003B3004DAACB /* cell_bg_highlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2673F59D163003B3004DAACB /* cell_bg_highlighted@2x.png */; };
@@ -329,6 +334,11 @@
 		2631C4EC1631035D004DE7FB /* time_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "time_icon@2x.png"; path = "Resources/time_icon@2x.png"; sourceTree = "<group>"; };
 		2631C52816313033004DE7FB /* NSDate+timesince.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDate+timesince.h"; path = "contrib/NSDate+timesince.h"; sourceTree = "<group>"; };
 		2631C52916313033004DE7FB /* NSDate+timesince.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDate+timesince.m"; path = "contrib/NSDate+timesince.m"; sourceTree = "<group>"; };
+		2659A09416391C840090EADB /* profile_add@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "profile_add@2x.png"; path = "Resources/profile_add@2x.png"; sourceTree = "<group>"; };
+		2659A0961639211A0090EADB /* shake_view@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "shake_view@2x.png"; path = "Resources/shake_view@2x.png"; sourceTree = "<group>"; };
+		2659A09E163940FF0090EADB /* message_3.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = message_3.wav; path = Resources/message_3.wav; sourceTree = "<group>"; };
+		2659A09F163940FF0090EADB /* message_2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = message_2.wav; path = Resources/message_2.wav; sourceTree = "<group>"; };
+		2659A0A2163941050090EADB /* message_1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = message_1.wav; path = Resources/message_1.wav; sourceTree = "<group>"; };
 		266A1A6D162E5AF2008EF1D5 /* ShakeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShakeViewController.h; path = ViewControllers/ShakeViewController.h; sourceTree = "<group>"; };
 		266A1A6E162E5AF2008EF1D5 /* ShakeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShakeViewController.m; path = ViewControllers/ShakeViewController.m; sourceTree = "<group>"; };
 		266A1A70162E5B0F008EF1D5 /* SettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SettingViewController.h; path = ViewControllers/SettingViewController.h; sourceTree = "<group>"; };
@@ -825,6 +835,11 @@
 			isa = PBXGroup;
 			children = (
 				562DE75D1610446000F782D2 /* MessageInputBarBackground.png */,
+				2659A0A2163941050090EADB /* message_1.wav */,
+				2659A09E163940FF0090EADB /* message_3.wav */,
+				2659A09F163940FF0090EADB /* message_2.wav */,
+				2659A0961639211A0090EADB /* shake_view@2x.png */,
+				2659A09416391C840090EADB /* profile_add@2x.png */,
 				26825BEF1637F905008DA7CC /* profile_tabbar_btn4@2x.png */,
 				26825BED1637D043008DA7CC /* uibutton_bg_color@2x.png */,
 				26825BDB1637A983008DA7CC /* location_icon@2x.png */,
@@ -1933,6 +1948,11 @@
 				26825BE81637A983008DA7CC /* sns_icon_weibo_c@2x.png in Resources */,
 				26825BEE1637D043008DA7CC /* uibutton_bg_color@2x.png in Resources */,
 				26825BF01637F905008DA7CC /* profile_tabbar_btn4@2x.png in Resources */,
+				2659A09516391C840090EADB /* profile_add@2x.png in Resources */,
+				2659A0971639211A0090EADB /* shake_view@2x.png in Resources */,
+				2659A0A0163940FF0090EADB /* message_3.wav in Resources */,
+				2659A0A1163940FF0090EADB /* message_2.wav in Resources */,
+				2659A0A3163941050090EADB /* message_1.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

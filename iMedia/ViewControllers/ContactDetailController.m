@@ -98,9 +98,17 @@
     
     UIButton *albumButton;
     
-    self.albumArray = [[NSArray alloc] initWithObjects:
+    self.albumArray = [[NSMutableArray alloc] initWithObjects:
                        @"profile_face_1.png",@"profile_face_2.png",@"profile_face_1.png",@"profile_face_2.png",
-                       @"profile_face_1.png",@"profile_face_2.png",@"profile_face_1.png",@"profile_face_2.png",nil ];
+                       @"profile_face_1.png",@"profile_face_2.png", nil ];
+    
+    BOOL ALBUM_ADD = NO;
+
+    if ([self.albumArray count] < 8) {
+        [self.albumArray addObject:@"profile_add.png"];
+        ALBUM_ADD = YES;
+    }
+    
     for (int i = 0; i< [albumArray count]; i++) {
         albumButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         [albumButton setImage:[UIImage imageNamed:[albumArray objectAtIndex:i] ] forState:UIControlStateNormal];
@@ -108,8 +116,12 @@
         [albumButton.layer setMasksToBounds:YES];
         [albumButton.layer setCornerRadius:3.0];
         albumButton.tag = i;
-        [albumButton addTarget:self action:@selector(albumClick:) forControlEvents:UIControlEventTouchUpInside];
-        
+        if (ALBUM_ADD && i == [albumArray count] - 1 ) {
+            [albumButton addTarget:self action:@selector(addAlbum:) forControlEvents:UIControlEventTouchUpInside];
+        }else {
+            [albumButton addTarget:self action:@selector(albumClick:) forControlEvents:UIControlEventTouchUpInside];
+        }
+
         [self.albumView addSubview:albumButton];
     }
     
@@ -126,6 +138,12 @@
     [self.navigationController pushViewController:self.albumViewController animated:YES];
     NSLog(@"%d",sender.tag);
 }
+
+- (void)addAlbum:(UIButton *)sender
+{
+    
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark - status view

@@ -7,7 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AudioToolbox/AudioToolbox.h>
 
 @interface ShakeViewController : UIViewController
+{
+    SystemSoundID completeSound;
+}
+
+
+
 
 @end

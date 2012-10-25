@@ -37,7 +37,7 @@
 @property (strong, nonatomic) User *user;
 @property (strong, nonatomic) id   jsonData;
 
-@property (strong, nonatomic) NSArray *albumArray;
+@property (strong, nonatomic) NSMutableArray *albumArray;
 @property (strong, nonatomic) NSArray *infoArray;
 @property (strong, nonatomic) NSArray *infoDescArray;
 @property (strong, nonatomic) AlbumViewController* albumViewController;
