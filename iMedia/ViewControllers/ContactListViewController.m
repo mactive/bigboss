@@ -28,7 +28,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 #endif
 #define ROW_HEIGHT  60.0
 
-
 @interface ContactListViewController ()
 
 @end
@@ -46,7 +45,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         self.managedObjectContext = context;
         self.title = @"Contacts";
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(add:)];
+        
+//        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"ADD" style:UIBarButtonItemStyleDone target:self action:@selector(add:)];
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(add:)];        
     }
     return self;
 }

@@ -188,7 +188,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 - (void)initSNSView
 {
-    self.snsView = [[UIView alloc] initWithFrame:CGRectMake(VIEW_PADDING_LEFT, VIEW_ALBUM_HEIGHT + VIEW_STATUS_HEIGHT + 20, VIEW_COMMON_WIDTH, VIEW_SNS_HEIGHT)];
+    self.snsView = [[UIView alloc] initWithFrame:CGRectMake(VIEW_PADDING_LEFT, VIEW_ALBUM_HEIGHT + VIEW_STATUS_HEIGHT + 24, VIEW_COMMON_WIDTH, VIEW_SNS_HEIGHT)];
     
     NSArray *buttonNames = [NSArray arrayWithObjects:@"weibo", @"wechat", @"kaixin", @"douban", nil];
     NSUInteger _count = [buttonNames count];
