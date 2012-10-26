@@ -121,8 +121,7 @@
         NSURL *url=[NSURL URLWithString:urlAddress];
         NSURLRequest *resquestobj=[NSURLRequest requestWithURL:url];
         [self.webView loadRequest:resquestobj];
-        
-//        [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:self.dataInternal.data.text]]];
+//        [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:self.data.text]]];
         
         self.webView.scalesPageToFit = YES;
         self.webView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
