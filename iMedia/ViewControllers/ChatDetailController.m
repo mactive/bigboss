@@ -346,6 +346,8 @@
     [self addMessage:message toBubbleData:bubbleData];
     [bubbleTable reloadData];
 
+    
+    
     self.textView.text = nil;
     [self textViewDidChange:_textView];
     [self.textView resignFirstResponder];
@@ -355,9 +357,10 @@
 
 - (void)addMessage:(Message *)msg toBubbleData:(NSMutableArray *)data
 {
-    NSBubbleType type = BubbleTypeMine;
+    NSBubbleType type = BubbleTypeMine; // 默认是自己的
+    
     if (msg.from.ePostalID != [self appDelegate].me.ePostalID) {
-        type = BubbleTypeSomeoneElse;
+        type = BubbleTypeSomeoneElse;   // 如果发送过来的 jid 不同就是别人的
     }
     if (msg.type == [NSNumber numberWithInt:MessageTypeChat])
     {
@@ -365,8 +368,12 @@
         itemBubble.avatar = [UIImage imageNamed:@"face_1.png"];
         [bubbleData addObject:itemBubble];
         
+//        // self test webview
+//        NSBubbleData *itemBubble = [NSBubbleData dataWithText:msg.text date:msg.sentDate type:BubbleTypeWebview];
+//        [bubbleData addObject:itemBubble];
+        
     } else if (msg.type == [NSNumber numberWithInt:MessageTypePublish]) {
-        [bubbleData addObject:[NSBubbleData dataWithText:msg.text date:msg.sentDate type:BUbbleTypeWebview]];
+        [bubbleData addObject:[NSBubbleData dataWithText:msg.text date:msg.sentDate type:BubbleTypeWebview]];
     }
 }
 

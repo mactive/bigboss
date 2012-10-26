@@ -17,6 +17,7 @@
 @property (nonatomic, retain) UIView *customView;
 @property (nonatomic, retain) UIImageView *bubbleImage;
 @property (nonatomic, retain) UIImageView *avatarImage;
+@property (nonatomic, retain) UIWebView *webView;
 
 - (void) setupInternalData;
 
@@ -29,6 +30,7 @@
 @synthesize bubbleImage = _bubbleImage;
 @synthesize showAvatar = _showAvatar;
 @synthesize avatarImage;
+@synthesize webView;
 
 - (void)setFrame:(CGRect)frame
 {
@@ -103,8 +105,32 @@
         self.bubbleImage.image = [[UIImage imageNamed:@"bubbleSomeone.png"] stretchableImageWithLeftCapWidth:21 topCapHeight:14];
 
     }
-    else {
+    else if(type == BubbleTypeMine) {
         self.bubbleImage.image = [[UIImage imageNamed:@"bubbleMine.png"] stretchableImageWithLeftCapWidth:15 topCapHeight:14];
+    }
+    else if (type == BubbleTypeWebview){
+        
+        UIView *backWebView = [[UIView alloc] initWithFrame:CGRectMake(10, 0, 300,335)];
+        [backWebView setBackgroundColor:[UIColor whiteColor]];
+        [backWebView.layer setMasksToBounds:YES];
+        [backWebView.layer setCornerRadius:10.0];
+        
+        self.webView = [[UIWebView alloc]initWithFrame:CGRectMake(12.5, 12.5, 275, 320)];
+        
+        NSString *urlAddress=@"http://192.168.1.113/wingedstone/";
+        NSURL *url=[NSURL URLWithString:urlAddress];
+        NSURLRequest *resquestobj=[NSURLRequest requestWithURL:url];
+        [self.webView loadRequest:resquestobj];
+        
+//        [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:self.dataInternal.data.text]]];
+        
+        self.webView.scalesPageToFit = YES;
+        self.webView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+        
+        [self.customView removeFromSuperview];
+        [self.avatarImage removeFromSuperview];
+        [backWebView addSubview:self.webView];
+        [self.contentView addSubview:backWebView];
     }
     self.bubbleImage.frame = CGRectMake(x, y, width + self.data.insets.left + self.data.insets.right, height + self.data.insets.top + self.data.insets.bottom);
 }
