@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1487" systemVersion="11E53" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1811" systemVersion="12C60" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Channel" representedClassName="Channel" parentEntity="Identity" syncable="YES">
         <attribute name="csContactPostalID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="node" attributeType="String" indexed="YES" syncable="YES"/>
@@ -23,10 +23,18 @@
         <attribute name="state" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="type" attributeType="Integer 16" defaultValueString="0" indexed="YES" syncable="YES"/>
     </entity>
+    <entity name="Image" representedClassName="Image" syncable="YES">
+        <attribute name="image" attributeType="Transformable" valueTransformerName="ImageToDataTransformer" syncable="YES"/>
+        <attribute name="sequence" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="thumbnail" attributeType="Transformable" valueTransformerName="ImageToDataTransformer" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="me" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Me" inverseName="avatars" inverseEntity="Me" syncable="YES"/>
+    </entity>
     <entity name="Me" representedClassName="Me" parentEntity="User" syncable="YES">
         <attribute name="ePostalPassword" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="password" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="avatars" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Image" inverseName="me" inverseEntity="Image" syncable="YES"/>
     </entity>
     <entity name="Message" representedClassName="Message" syncable="YES">
         <attribute name="sentDate" optional="YES" attributeType="Date" syncable="YES"/>
@@ -45,8 +53,9 @@
         <element name="Channel" positionX="160" positionY="192" width="128" height="105"/>
         <element name="Conversation" positionX="0" positionY="0" width="128" height="165"/>
         <element name="Identity" positionX="160" positionY="192" width="128" height="120"/>
-        <element name="Me" positionX="0" positionY="0" width="128" height="90"/>
+        <element name="Me" positionX="0" positionY="0" width="128" height="105"/>
         <element name="Message" positionX="0" positionY="0" width="128" height="120"/>
         <element name="User" positionX="-234" positionY="141" width="128" height="105"/>
+        <element name="Image" positionX="160" positionY="192" width="128" height="120"/>
     </elements>
 </model>

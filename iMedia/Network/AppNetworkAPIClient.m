@@ -16,8 +16,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 static const int ddLogLevel = LOG_LEVEL_INFO;
 #endif
 
-//static NSString * const kAppNetworkAPIBaseURLString = @"http://192.168.1.104:8000/";
-static NSString * const kAppNetworkAPIBaseURLString = @"http://media.wingedstone.com:8000/";
+static NSString * const kAppNetworkAPIBaseURLString = @"http://192.168.1.104:8000/";
+//static NSString * const kAppNetworkAPIBaseURLString = @"http://media.wingedstone.com:8000/";
 
 NSString *const kXMPPmyJID = @"kXMPPmyJID";
 NSString *const kXMPPmyJIDPassword = @"kXMPPmyJIDPassword";
@@ -95,5 +95,25 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
         }
     }];
     
+}
+
+- (void)setAvatarImage:(UIImage *)image forMe:(Me *)me andOrder:(int)sequence withBlock:(void (^)(id, NSError *))block
+{
+    NSString* csrfToken = [[NSUserDefaults standardUserDefaults] valueForKey:@"csrfmiddlewaretoken"];
+    NSDictionary *paramDict = [NSDictionary dictionaryWithObjectsAndKeys: csrfToken, @"csrfmiddlewaretoken", UIImagePNGRepresentation(image), @"image", nil];
+    
+    [[AppNetworkAPIClient sharedClient] postPath:IMAGE_SERVER_PATH parameters:paramDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        //
+        DDLogInfo(@"upload image received response: %@", responseObject);
+        
+        if (block) {
+            block(responseObject, nil);
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        //
+        if (block) {
+            block(nil, error);
+        }
+    }];
 }
 @end
