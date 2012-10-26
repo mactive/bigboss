@@ -9,11 +9,19 @@
 #import "AFHTTPClient.h"
 
 //@class Channel;
+@class Me;
+@class Avatar;
 
 extern NSString *const kXMPPmyJID;
 extern NSString *const kXMPPmyJIDPassword;
 extern NSString *const kXMPPmyPassword;
 extern NSString *const kXMPPmyUsername;
+
+#define GET_CONFIG_PATH         @"/base/getconfig"
+#define LOGIN_PATH              @"/base/applogin"
+#define GET_DATA_PATH           @"/base/getjsondata"
+#define POST_DATA_PATH          @"/base/setdata"
+#define IMAGE_SERVER_PATH       @"/upload/image"
 
 
 @interface AppNetworkAPIClient : AFHTTPClient
@@ -23,4 +31,6 @@ extern NSString *const kXMPPmyUsername;
 //- (void)updateChannelInfo:(Channel *)channel withBlock:(void (^)(NSError *error))block;
 
 - (void)loginWithUsername:(NSString *)username andPassword:(NSString *)passwd withBlock:(void (^)(id responseObject, NSError *error))block;
+
+- (void)storeAvatar:(Avatar *)avatar forMe:(Me *)me andOrder:(int)sequence withBlock:(void (^)(id responseObject, NSError *error))block;
 @end

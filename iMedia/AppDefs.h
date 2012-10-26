@@ -32,10 +32,7 @@
 #define NAV_MAX_BUTTON 80
 #define TEMPLATE_CELL_HEIGHT 50
 
-#define GET_CONFIG_PATH         @"/base/getconfig"
-#define LOGIN_PATH              @"/base/applogin"
-#define GET_DATA_PATH           @"/base/getjsondata"
-#define POST_DATA_PATH          @"/base/setdata"
+
 
 #define NEW_MESSAGE_NOTIFICATION @"NewMessage"
 
