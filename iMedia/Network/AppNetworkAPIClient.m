@@ -16,6 +16,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 static const int ddLogLevel = LOG_LEVEL_INFO;
 #endif
 
+#import "Avatar.h"
+
 static NSString * const kAppNetworkAPIBaseURLString = @"http://192.168.1.104:8000/";
 //static NSString * const kAppNetworkAPIBaseURLString = @"http://media.wingedstone.com:8000/";
 
@@ -97,10 +99,10 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     
 }
 
-- (void)setAvatarImage:(UIImage *)image forMe:(Me *)me andOrder:(int)sequence withBlock:(void (^)(id, NSError *))block
-{
+- (void)storeAvatar:(Avatar *)avatar forMe:(Me *)me andOrder:(int)sequence withBlock:(void (^)(id, NSError *))block
+{    
     NSString* csrfToken = [[NSUserDefaults standardUserDefaults] valueForKey:@"csrfmiddlewaretoken"];
-    NSDictionary *paramDict = [NSDictionary dictionaryWithObjectsAndKeys: csrfToken, @"csrfmiddlewaretoken", UIImagePNGRepresentation(image), @"image", nil];
+    NSDictionary *paramDict = [NSDictionary dictionaryWithObjectsAndKeys: csrfToken, @"csrfmiddlewaretoken", UIImagePNGRepresentation(avatar.image), @"image", UIImagePNGRepresentation(avatar.thumbnail), @"thumbnail", nil];
     
     [[AppNetworkAPIClient sharedClient] postPath:IMAGE_SERVER_PATH parameters:paramDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
         //
