@@ -10,7 +10,7 @@
 @class Me;
 @class AlbumViewController;
 
-@interface ProfileMeController : UIViewController<UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate>
+@interface ProfileMeController : UIViewController<UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate,UIActionSheetDelegate>
 {
     Me *me;
     id jsonData;

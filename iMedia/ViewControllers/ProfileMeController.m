@@ -15,6 +15,8 @@
 #import "DDLog.h"
 #import <QuartzCore/QuartzCore.h>
 #import "AlbumViewController.h"
+#import "Avatar.h"
+#import "UIImage+Resize.h"
 
 @interface ProfileMeController ()
 
@@ -101,8 +103,10 @@
     
     UIButton *albumButton;
     
-    self.albumArray = [[NSMutableArray alloc] initWithObjects:
-                       @"profile_face_1.png",@"profile_face_2.png",@"profile_face_1.png",@"profile_face_2.png", nil ];
+    self.albumArray = [[NSMutableArray alloc] initWithArray:me.getOrderedAvatars];
+    
+//    self.albumArray = [[NSMutableArray alloc] initWithObjects:
+//                       @"profile_face_1.png",@"profile_face_2.png",@"profile_face_1.png",@"profile_face_2.png", nil ];
     
     BOOL ALBUM_ADD = NO;
     
@@ -142,10 +146,46 @@
 }
 
 
-#pragma mark - start camera
-#define kCameraSource       UIImagePickerControllerSourceTypeCamera
+//////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - actionsheet when add album
+/////////////////////////////////////////////////////////////////////////////////////////
 
 - (void)addAlbum:(UIButton *)sender
+{
+    
+    UIActionSheet *actionSheet = [[UIActionSheet alloc]  
+                                  initWithTitle:nil  
+                                  delegate:self  
+                                  cancelButtonTitle:T(@"取消")  
+                                  destructiveButtonTitle:nil 
+                                  otherButtonTitles:T(@"用户相册"), T(@"摄像头"),nil];  
+    actionSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;  
+    [actionSheet showInView:self.view];
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0) {  
+        [self takePhotoFromLibaray];  
+    }else if (buttonIndex == 1) {  
+        [self takePhotoFromCamera];  
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - UIImagePickerControllerDelegateMethods
+//////////////////////////////////////////////////////////////////////////////////////////
+#define kCameraSource       UIImagePickerControllerSourceTypeCamera
+- (void)takePhotoFromLibaray
+{
+    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+    picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    picker.delegate = self;
+	picker.allowsEditing = YES;
+    [self presentModalViewController:picker animated:YES];
+}
+
+- (void)takePhotoFromCamera
 {
     if (![UIImagePickerController isSourceTypeAvailable:kCameraSource]) {
         UIAlertView *cameraAlert = [[UIAlertView alloc] initWithTitle:T(@"cameraAlert") message:T(@"Camera is not available.") delegate:self cancelButtonTitle:nil otherButtonTitles:nil, nil];
@@ -158,28 +198,42 @@
     picker.sourceType = UIImagePickerControllerSourceTypeCamera;
 	picker.delegate = self;
 	picker.allowsEditing = YES;
-    
-    
-    [self presentModalViewController:picker animated:YES];
-    
-    //    self.tableView.allowsSelection = YES;
+
+    [self presentModalViewController:picker animated:YES];    
 }
 
-#pragma mark - UIImagePickerControllerDelegateMethods
-
+// UIImagePickerControllerSourceTypeCamera and UIImagePickerControllerSourceTypePhotoLibrary
 - (void)imagePickerController:(UIImagePickerController *)picker 
 didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
 	UIImage *image = [info objectForKey:UIImagePickerControllerEditedImage];
     //    self.image = image;
     
+    UIImage *thumbnail = [image resizedImageToSize:CGSizeMake(75, 75)];
+    
     self.addedImage = [[UIImageView alloc]initWithFrame:CGRectMake(100, 100, 75, 75)];
     [self.addedImage setImage:image];
     [self.albumView addSubview:self.addedImage];
     
+    Avatar *insertAvatar = [NSEntityDescription insertNewObjectForEntityForName:@"Avatar" inManagedObjectContext:self.managedObjectContext];
+    insertAvatar.thumbnail = thumbnail;
+    insertAvatar.image = image;
+    NSInteger sequence = [self.albumArray count] + 1;
+    insertAvatar.sequence = [NSNumber numberWithInt:sequence];
+    [me addAvatarsObject:insertAvatar];
+    
+    [self.albumView removeFromSuperview];
+    [self initAlbumView];
+    
+    //delete 
+//    [me removeAvatarsObject:insertAvatar];
+    //replace
+//    [insertAvatar setImage:image];
+//    [insertAvatar setThumbnail:image];
+    
+    
+    
     [picker dismissModalViewControllerAnimated:YES];
-    //after picker dismiss than pushview it will not quit
-    //    [self.navigationController pushViewController:self.controller animated:NO];
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
