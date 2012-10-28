@@ -1,13 +1,13 @@
 //
-//  ContactDetailController.m
+//  ProfileMeController.m
 //  iMedia
 //
-//  Created by Li Xiaosi on 9/19/12.
-//  Copyright (c) 2012 Li Xiaosi. All rights reserved.
+//  Created by qian meng on 12-10-28.
+//  Copyright (c) 2012年 Li Xiaosi. All rights reserved.
 //
 
-#import "ContactDetailController.h"
-#import "User.h"
+#import "ProfileMeController.h"
+#import "Me.h"
 #import "Channel.h"
 #import "ChatWithIdentity.h"
 #import "ModelHelper.h"
@@ -16,19 +16,17 @@
 #import <QuartzCore/QuartzCore.h>
 #import "AlbumViewController.h"
 
-@interface ContactDetailController ()
+@interface ProfileMeController ()
 
 @end
 
-@implementation ContactDetailController
-
+@implementation ProfileMeController
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize sendMsgButton = _sendMsgButton;
 @synthesize deleteUserButton;
 @synthesize reportUserButton;
 @synthesize nameLabel = _nameLabel;
-@synthesize user =_user;
-@synthesize delegate = _delegate;
+@synthesize me =_me;
 @synthesize jsonData;
 @synthesize contentView;
 
@@ -42,18 +40,23 @@
 @synthesize infoDescArray;
 @synthesize infoView;
 @synthesize infoTableView;
-@synthesize actionView;
 @synthesize addedImage;
-
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        
+        // Custom initialization
     }
     return self;
 }
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+	// Do any additional setup after loading the view.
+}
+
 
 #define VIEW_ALBUM_WIDTH 75
 #define VIEW_ALBUM_WIDTH 75
@@ -76,16 +79,15 @@
     [self.contentView setContentSize:CGSizeMake(self.view.frame.size.width, 600)];
     [self.contentView setScrollEnabled:YES];
     self.contentView.backgroundColor = RGBCOLOR(222, 224, 227);
-
+    
     
     [self initAlbumView];
     [self initStatusView];
     [self initSNSView];
     [self initInfoView];
-    [self initActionView];
     
     [self.view addSubview:self.contentView];
-
+    
 }
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -  ablum view
@@ -103,7 +105,7 @@
                        @"profile_face_1.png",@"profile_face_2.png",@"profile_face_1.png",@"profile_face_2.png", nil ];
     
     BOOL ALBUM_ADD = NO;
-
+    
     if ([self.albumArray count] < 8) {
         [self.albumArray addObject:@"profile_add.png"];
         ALBUM_ADD = YES;
@@ -121,7 +123,7 @@
         }else {
             [albumButton addTarget:self action:@selector(albumClick:) forControlEvents:UIControlEventTouchUpInside];
         }
-
+        
         [self.albumView addSubview:albumButton];
     }
     
@@ -151,7 +153,7 @@
 		return;
 	}
     
-//    self.tableView.allowsSelection = NO;
+    //    self.tableView.allowsSelection = NO;
     UIImagePickerController *picker = [[UIImagePickerController alloc] init];
     picker.sourceType = UIImagePickerControllerSourceTypeCamera;
 	picker.delegate = self;
@@ -160,7 +162,7 @@
     
     [self presentModalViewController:picker animated:YES];
     
-//    self.tableView.allowsSelection = YES;
+    //    self.tableView.allowsSelection = YES;
 }
 
 #pragma mark - UIImagePickerControllerDelegateMethods
@@ -169,7 +171,7 @@
 didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
 	UIImage *image = [info objectForKey:UIImagePickerControllerEditedImage];
-//    self.image = image;
+    //    self.image = image;
     
     self.addedImage = [[UIImageView alloc]initWithFrame:CGRectMake(100, 100, 75, 75)];
     [self.addedImage setImage:image];
@@ -177,14 +179,14 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     
     [picker dismissModalViewControllerAnimated:YES];
     //after picker dismiss than pushview it will not quit
-//    [self.navigationController pushViewController:self.controller animated:NO];
+    //    [self.navigationController pushViewController:self.controller animated:NO];
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
     /* keep the order first dismiss picker and pop controller */
     [picker dismissModalViewControllerAnimated:YES];
-//    [self.controller.navigationController popViewControllerAnimated:NO];
+    //    [self.controller.navigationController popViewControllerAnimated:NO];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -276,12 +278,12 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
         
         [self.snsView addSubview:snsButton];
     }
-
-
+    
+    
     
     
     [self.contentView addSubview: self.snsView];
-
+    
 }
 
 -(void)snsAction:(UIButton *)sender
@@ -352,7 +354,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     }
     
     return cell;
-
+    
 }
 #define SUMMARY_WIDTH 200
 #define LABEL_HEIGHT 20
@@ -376,9 +378,9 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     titleLabel.textColor = RGBCOLOR(155, 161, 172);
     titleLabel.backgroundColor = [UIColor clearColor];
     [cell addSubview:titleLabel];
-//    cell.textLabel.text = [self.infoArray objectAtIndex:indexPath.row];
-//    cell.textLabel.textColor = RGBCOLOR(155, 161, 172);
-
+    //    cell.textLabel.text = [self.infoArray objectAtIndex:indexPath.row];
+    //    cell.textLabel.textColor = RGBCOLOR(155, 161, 172);
+    
     // Create a label for the summary
     UILabel* descLabel;
 	CGRect rect = CGRectMake( 80, 10, 210, 30);
@@ -392,7 +394,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     
     CGSize summaryMaxSize = CGSizeMake(SUMMARY_WIDTH, LABEL_HEIGHT*4);
     CGFloat _labelHeight;
-
+    
     CGSize signitureSize = [signiture sizeWithFont:descLabel.font constrainedToSize:summaryMaxSize lineBreakMode: UILineBreakModeTailTruncation];
     if (signitureSize.height > 20) {
         _labelHeight = 6.0;
@@ -401,7 +403,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     }
     descLabel.text = signiture;
     descLabel.frame = CGRectMake(descLabel.frame.origin.x, _labelHeight, signitureSize.width , signitureSize.height );
-
+    
     
     if( indexPath.row == [self.infoArray count] -1 ){
         descLabel.frame = CGRectMake(20, _labelHeight + 25 , SUMMARY_WIDTH + 50 , signitureSize.height );
@@ -409,80 +411,11 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     
     
     [cell.contentView addSubview:descLabel];
-
+    
     return cell;
 }
 
 
-
-
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark - action view
-////////////////////////////////////////////////////////////////////////////////
-- (void)initActionView
-{
-    self.actionView = [[UIView alloc] initWithFrame:
-                       CGRectMake(0, self.view.frame.size.height - VIEW_ACTION_HEIGHT - VIEW_UINAV_HEIGHT, self.view.frame.size.width, VIEW_ACTION_HEIGHT)];
-    
-    UIImageView *actionViewBg = [[UIImageView alloc]initWithFrame:self.actionView.bounds];
-    [actionViewBg setImage:[UIImage imageNamed:@"profile_tabbar_bg.png"]];
-    [self.actionView addSubview:actionViewBg];
-    
-    
-    self.sendMsgButton = [[UIButton alloc] initWithFrame:CGRectMake(SMALL_GAP, 6, 93.5f, 29.0f)];
-    [self.sendMsgButton setTag:0];
-    [self.sendMsgButton.titleLabel setFont:[UIFont systemFontOfSize:TINY_FONT_HEIGHT]];
-    [self.sendMsgButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [self.sendMsgButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
-    [self.sendMsgButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 18, 0, 0)];
-    [self.actionView addSubview:self.sendMsgButton];
-    
-    self.reportUserButton = [[UIButton alloc] initWithFrame:CGRectMake(SMALL_GAP + 210.0f, 6, 93.5f, 29.0f)];
-    [self.reportUserButton setTag:3];
-    [self.reportUserButton.titleLabel setFont:[UIFont systemFontOfSize:TINY_FONT_HEIGHT]];
-    [self.reportUserButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [self.reportUserButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
-    [self.reportUserButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 18, 0, 0)];
-    [self.reportUserButton setTitle:NSLocalizedString(@"Report", nil) forState:UIControlStateNormal];
-    [self.reportUserButton setBackgroundImage:[UIImage imageNamed:@"profile_tabbar_btn3.png"] forState:UIControlStateNormal];
-    [self.actionView addSubview:self.reportUserButton];
-    
-    // Now set content. Either user or jsonData must have value
-    if (self.user == nil) {
-        self.title = [jsonData valueForKey:@"jid"];
-        [self.sendMsgButton setTitle:NSLocalizedString(@"Add friend", nil) forState:UIControlStateNormal];
-        [self.sendMsgButton setBackgroundImage:[UIImage imageNamed:@"profile_tabbar_btn2.png"] forState:UIControlStateNormal];
-        [self.sendMsgButton addTarget:self action:@selector(addFriendButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
-        
-    } else {
-        self.title = self.user.displayName;
-        [self.sendMsgButton setTitle:NSLocalizedString(@"Send Msg", nil) forState:UIControlStateNormal];
-        [self.sendMsgButton setBackgroundImage:[UIImage imageNamed:@"profile_tabbar_btn1.png"] forState:UIControlStateNormal];
-        [self.sendMsgButton addTarget:self action:@selector(sendMsgButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
-        
-        self.deleteUserButton = [[UIButton alloc] initWithFrame:CGRectMake(SMALL_GAP+105.0f, 6, 93.5f, 29.0f )];
-        [self.deleteUserButton setTag:2];
-        [self.deleteUserButton.titleLabel setFont:[UIFont systemFontOfSize:TINY_FONT_HEIGHT]];
-        [self.deleteUserButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [self.deleteUserButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
-        [self.deleteUserButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 18, 0, 0)];
-        [self.deleteUserButton setBackgroundImage:[UIImage imageNamed:@"profile_tabbar_btn4.png"] forState:UIControlStateNormal];
-        [self.deleteUserButton setTitle:NSLocalizedString(@"BlockUser", nil) forState:UIControlStateNormal];
-        [self.deleteUserButton addTarget:self action:@selector(deleteUserButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
-        [self.actionView addSubview:self.deleteUserButton];
-    }
-    
-    [self.view addSubview:self.actionView];
-}
-
-
-
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	// Do any additional setup after loading the view.
-}
 
 - (void)viewDidUnload
 {
@@ -493,46 +426,6 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-
-- (void) viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-}
-
--(void)sendMsgButtonPushed:(id)sender
-{
-    [self.delegate viewController:self didChatIdentity:self.user];
-}
-
--(void)addFriendButtonPushed:(id)sender
-{
-    NSLog(@"addFriendButtonPushed %@", jsonData);
-    
-    NSString *userJid = [jsonData valueForKey:@"jid"];
-
-    User *newUser = [ModelHelper findUserWithEPostalID:userJid inContext:self.managedObjectContext];
-    
-    if (newUser == nil) {
-        newUser = [NSEntityDescription insertNewObjectForEntityForName:@"User" inManagedObjectContext:self.managedObjectContext];
-    }
-    
-    NSLog(@"NewUSer %@",newUser);
-    
-    if (newUser.state.intValue != IdentityStateActive) {
-        [ModelHelper populateUser:newUser withJSONData:jsonData];
-        newUser.state = [NSNumber numberWithInt:IdentityStatePendingAddFriend];
-        NSLog(@"userJid %@",userJid);
-
-        [[XMPPNetworkCenter sharedClient] addBuddy:userJid withCallbackBlock:nil];
-    }
-}
-
--(void)deleteUserButtonPushed:(id)sender
-{
-    self.user.state = [NSNumber numberWithInt:IdentityStatePendingRemoveFriend];
-    [[XMPPNetworkCenter sharedClient] removeBuddy:self.user.ePostalID withCallbackBlock:nil];
 }
 
 @end

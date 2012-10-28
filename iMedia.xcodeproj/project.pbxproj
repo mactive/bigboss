@@ -69,6 +69,7 @@
 		2692532016353F6E000D7AFB /* POAPinyin.m in Sources */ = {isa = PBXBuildFile; fileRef = 2692531E16353F6E000D7AFB /* POAPinyin.m */; };
 		26C76E5A162EB01200298865 /* barbutton_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26C76E59162EB01200298865 /* barbutton_bg@2x.png */; };
 		26C76E65162EB4F400298865 /* UINavigationBar+Background.m in Sources */ = {isa = PBXBuildFile; fileRef = 26C76E64162EB4F400298865 /* UINavigationBar+Background.m */; };
+		26F759E4163CEF70005E9FB4 /* ProfileMeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F759E3163CEF6F005E9FB4 /* ProfileMeController.m */; };
 		56202F46162AA32F00F6306F /* AddFriendByIDController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56202F45162AA32F00F6306F /* AddFriendByIDController.m */; };
 		56202F49162AE85B00F6306F /* ChannelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56202F48162AE85A00F6306F /* ChannelViewController.m */; };
 		56202F4C162BBDDF00F6306F /* Channel.m in Sources */ = {isa = PBXBuildFile; fileRef = 56202F4B162BBDDF00F6306F /* Channel.m */; };
@@ -270,7 +271,6 @@
 		56EE29571613075700910CE5 /* FirstLoginController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56EE29551613075600910CE5 /* FirstLoginController.m */; };
 		56EE295D161318A000910CE5 /* NewUserWelcome.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 56EE295C161318A000910CE5 /* NewUserWelcome.storyboard */; };
 		56EE296016131E5700910CE5 /* StartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56EE295F16131E5600910CE5 /* StartViewController.m */; };
-		56EE2970161696FB00910CE5 /* ProfileController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56EE296F161696FA00910CE5 /* ProfileController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -389,6 +389,8 @@
 		26C76E59162EB01200298865 /* barbutton_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "barbutton_bg@2x.png"; path = "Resources/barbutton_bg@2x.png"; sourceTree = "<group>"; };
 		26C76E63162EB4F400298865 /* UINavigationBar+Background.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UINavigationBar+Background.h"; path = "ViewControllers/ViewCategory/UINavigationBar+Background.h"; sourceTree = "<group>"; };
 		26C76E64162EB4F400298865 /* UINavigationBar+Background.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UINavigationBar+Background.m"; path = "ViewControllers/ViewCategory/UINavigationBar+Background.m"; sourceTree = "<group>"; };
+		26F759E2163CEF6F005E9FB4 /* ProfileMeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProfileMeController.h; path = ViewControllers/ProfileMeController.h; sourceTree = "<group>"; };
+		26F759E3163CEF6F005E9FB4 /* ProfileMeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProfileMeController.m; path = ViewControllers/ProfileMeController.m; sourceTree = "<group>"; };
 		56202F44162AA32F00F6306F /* AddFriendByIDController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AddFriendByIDController.h; path = ViewControllers/AddFriendByIDController.h; sourceTree = "<group>"; };
 		56202F45162AA32F00F6306F /* AddFriendByIDController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AddFriendByIDController.m; path = ViewControllers/AddFriendByIDController.m; sourceTree = "<group>"; };
 		56202F47162AE85A00F6306F /* ChannelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChannelViewController.h; path = ViewControllers/ChannelViewController.h; sourceTree = "<group>"; };
@@ -737,8 +739,6 @@
 		56EE295C161318A000910CE5 /* NewUserWelcome.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = NewUserWelcome.storyboard; sourceTree = "<group>"; };
 		56EE295E16131E5600910CE5 /* StartViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StartViewController.h; path = ViewControllers/StartViewController.h; sourceTree = "<group>"; };
 		56EE295F16131E5600910CE5 /* StartViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StartViewController.m; path = ViewControllers/StartViewController.m; sourceTree = "<group>"; };
-		56EE296E161696F900910CE5 /* ProfileController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProfileController.h; path = ViewControllers/ProfileController.h; sourceTree = "<group>"; };
-		56EE296F161696FA00910CE5 /* ProfileController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProfileController.m; path = ViewControllers/ProfileController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1660,6 +1660,8 @@
 				26C76E62162EB4D900298865 /* ViewCategory */,
 				566E82601609A77D00A333EA /* ContactListViewController.h */,
 				566E82611609A77D00A333EA /* ContactListViewController.m */,
+				26F759E2163CEF6F005E9FB4 /* ProfileMeController.h */,
+				26F759E3163CEF6F005E9FB4 /* ProfileMeController.m */,
 				566E82661609AF2700A333EA /* ContactDetailController.h */,
 				566E82671609AF2700A333EA /* ContactDetailController.m */,
 				56202F47162AE85A00F6306F /* ChannelViewController.h */,
@@ -1670,8 +1672,6 @@
 				562DE704160ABFA100F782D2 /* ChatDetailController.m */,
 				26825BD816378FC7008DA7CC /* AlbumViewController.h */,
 				26825BD916378FC7008DA7CC /* AlbumViewController.m */,
-				56EE296E161696F900910CE5 /* ProfileController.h */,
-				56EE296F161696FA00910CE5 /* ProfileController.m */,
 				266A1A6D162E5AF2008EF1D5 /* ShakeViewController.h */,
 				266A1A6E162E5AF2008EF1D5 /* ShakeViewController.m */,
 				266A1A70162E5B0F008EF1D5 /* SettingViewController.h */,
@@ -2105,7 +2105,6 @@
 				5646FAFB160D4BA700175B78 /* ACPlaceholderTextView.m in Sources */,
 				56EE29571613075700910CE5 /* FirstLoginController.m in Sources */,
 				56EE296016131E5700910CE5 /* StartViewController.m in Sources */,
-				56EE2970161696FB00910CE5 /* ProfileController.m in Sources */,
 				56DF5E6516257F5600E75105 /* SBJsonParser.m in Sources */,
 				56DF5E6616257F5600E75105 /* SBJsonStreamParser.m in Sources */,
 				56DF5E6716257F5600E75105 /* SBJsonStreamParserAccumulator.m in Sources */,
@@ -2154,6 +2153,7 @@
 				26825BD716378FA3008DA7CC /* GCPagedScrollView.m in Sources */,
 				26825BDA16378FC7008DA7CC /* AlbumViewController.m in Sources */,
 				26816087163AA1D3007B0096 /* Avatar.m in Sources */,
+				26F759E4163CEF70005E9FB4 /* ProfileMeController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
