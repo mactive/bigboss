@@ -213,7 +213,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     
 
     
-    Avatar *insertAvatar = [NSEntityDescription insertNewObjectForEntityForName:@"Image" inManagedObjectContext:self.managedObjectContext];
+    Avatar *insertAvatar = [NSEntityDescription insertNewObjectForEntityForName:@"ImageLocal" inManagedObjectContext:self.managedObjectContext];
     insertAvatar.thumbnail = thumbnail;
     insertAvatar.image = image;
     NSInteger sequence = [self.albumArray count] + 1;

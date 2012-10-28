@@ -33,7 +33,6 @@
 		2673F5A0163003B3004DAACB /* cell_bg_highlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2673F59D163003B3004DAACB /* cell_bg_highlighted@2x.png */; };
 		2673F5A1163003B3004DAACB /* cell_bg_company@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2673F59E163003B3004DAACB /* cell_bg_company@2x.png */; };
 		2673F5A2163003B3004DAACB /* cell_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2673F59F163003B3004DAACB /* cell_bg@2x.png */; };
-		26816087163AA1D3007B0096 /* Avatar.m in Sources */ = {isa = PBXBuildFile; fileRef = 26816086163AA1D3007B0096 /* Avatar.m */; };
 		26825BD716378FA3008DA7CC /* GCPagedScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 26825BD616378FA3008DA7CC /* GCPagedScrollView.m */; };
 		26825BDA16378FC7008DA7CC /* AlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 26825BD916378FC7008DA7CC /* AlbumViewController.m */; };
 		26825BE21637A983008DA7CC /* location_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26825BDB1637A983008DA7CC /* location_icon@2x.png */; };
@@ -258,6 +257,7 @@
 		56B4CD5016280C8100E046CC /* Me.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CD4E16280C8100E046CC /* Me.m */; };
 		56B4CD531628101500E046CC /* AddFriendController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CD521628101500E046CC /* AddFriendController.m */; };
 		56B4CD541628101500E046CC /* AddFriendController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CD521628101500E046CC /* AddFriendController.m */; };
+		56D0C61B163D1F8A007FD7B2 /* Avatar.m in Sources */ = {isa = PBXBuildFile; fileRef = 56D0C61A163D1F8A007FD7B2 /* Avatar.m */; };
 		56DF5E6516257F5600E75105 /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 56DF5E5016257F5600E75105 /* SBJsonParser.m */; };
 		56DF5E6616257F5600E75105 /* SBJsonStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 56DF5E5216257F5600E75105 /* SBJsonStreamParser.m */; };
 		56DF5E6716257F5600E75105 /* SBJsonStreamParserAccumulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 56DF5E5416257F5600E75105 /* SBJsonStreamParserAccumulator.m */; };
@@ -349,8 +349,6 @@
 		2673F59D163003B3004DAACB /* cell_bg_highlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "cell_bg_highlighted@2x.png"; path = "Resources/cell_bg_highlighted@2x.png"; sourceTree = "<group>"; };
 		2673F59E163003B3004DAACB /* cell_bg_company@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "cell_bg_company@2x.png"; path = "Resources/cell_bg_company@2x.png"; sourceTree = "<group>"; };
 		2673F59F163003B3004DAACB /* cell_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "cell_bg@2x.png"; path = "Resources/cell_bg@2x.png"; sourceTree = "<group>"; };
-		26816085163AA1D3007B0096 /* Avatar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Avatar.h; path = Models/Avatar.h; sourceTree = "<group>"; };
-		26816086163AA1D3007B0096 /* Avatar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Avatar.m; path = Models/Avatar.m; sourceTree = "<group>"; };
 		26825BD516378FA3008DA7CC /* GCPagedScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GCPagedScrollView.h; path = GCPagedScrollView/GCPagedScrollView.h; sourceTree = "<group>"; };
 		26825BD616378FA3008DA7CC /* GCPagedScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GCPagedScrollView.m; path = GCPagedScrollView/GCPagedScrollView.m; sourceTree = "<group>"; };
 		26825BD816378FC7008DA7CC /* AlbumViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlbumViewController.h; path = ViewControllers/AlbumViewController.h; sourceTree = "<group>"; };
@@ -715,6 +713,8 @@
 		56B4CD4E16280C8100E046CC /* Me.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Me.m; path = Models/Me.m; sourceTree = "<group>"; };
 		56B4CD511628101400E046CC /* AddFriendController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AddFriendController.h; path = ViewControllers/AddFriendController.h; sourceTree = "<group>"; };
 		56B4CD521628101500E046CC /* AddFriendController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AddFriendController.m; path = ViewControllers/AddFriendController.m; sourceTree = "<group>"; };
+		56D0C619163D1F8A007FD7B2 /* Avatar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Avatar.h; path = Models/Avatar.h; sourceTree = "<group>"; };
+		56D0C61A163D1F8A007FD7B2 /* Avatar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Avatar.m; path = Models/Avatar.m; sourceTree = "<group>"; };
 		56DF5E4E16257F5600E75105 /* SBJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBJson.h; path = SBJson/SBJson.h; sourceTree = "<group>"; };
 		56DF5E4F16257F5600E75105 /* SBJsonParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBJsonParser.h; path = SBJson/SBJsonParser.h; sourceTree = "<group>"; };
 		56DF5E5016257F5600E75105 /* SBJsonParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBJsonParser.m; path = SBJson/SBJsonParser.m; sourceTree = "<group>"; };
@@ -1642,10 +1642,10 @@
 			isa = PBXGroup;
 			children = (
 				566E80B51609A24C00A333EA /* iMedia.xcdatamodeld */,
+				56D0C619163D1F8A007FD7B2 /* Avatar.h */,
+				56D0C61A163D1F8A007FD7B2 /* Avatar.m */,
 				5681B64F163D1BFC0056AFAD /* ImageRemote.h */,
 				5681B650163D1BFC0056AFAD /* ImageRemote.m */,
-				26816085163AA1D3007B0096 /* Avatar.h */,
-				26816086163AA1D3007B0096 /* Avatar.m */,
 				56202F54162BEDF000F6306F /* User.h */,
 				56202F55162BEDF000F6306F /* User.m */,
 				56202F4A162BBDDF00F6306F /* Channel.h */,
@@ -2162,10 +2162,10 @@
 				2692532016353F6E000D7AFB /* POAPinyin.m in Sources */,
 				26825BD716378FA3008DA7CC /* GCPagedScrollView.m in Sources */,
 				26825BDA16378FC7008DA7CC /* AlbumViewController.m in Sources */,
-				26816087163AA1D3007B0096 /* Avatar.m in Sources */,
 				26F759E4163CEF70005E9FB4 /* ProfileMeController.m in Sources */,
 				5681B651163D1BFC0056AFAD /* ImageRemote.m in Sources */,
 				26F759E7163D14F1005E9FB4 /* UIImage+Resize.m in Sources */,
+				56D0C61B163D1F8A007FD7B2 /* Avatar.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

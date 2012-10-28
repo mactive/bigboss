@@ -6,7 +6,7 @@
 build/
 xcuserdata/
 iMedia.xcodeproj/project.xcworkspace/xcuserdata/
-*.xcuserstate
+UserInterfaceState.xcuserstate
 
 *.pbxuser
 
