@@ -12,6 +12,7 @@
 #import "DDTTYLogger.h"
 #import "Message.h"
 #import "User.h"
+#import "ImageRemote.h"
 #import "Me.h"
 #import "Conversation.h"
 #import "AppDefs.h"
@@ -173,6 +174,11 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 {
     if(self.me == nil) {
         self.me = [NSEntityDescription insertNewObjectForEntityForName:@"Me" inManagedObjectContext:_managedObjectContext];
+        for (int i = 0; i < 8; i++) {
+            ImageRemote *image = [NSEntityDescription insertNewObjectForEntityForName:@"ImageRemote" inManagedObjectContext:_managedObjectContext];
+            image.sequence = 0;
+            [self.me addImagesObject:image];
+        }
         self.me.ePostalID = jidStr;
         self.me.ePostalPassword = jidPass;
         self.me.type = [NSNumber numberWithInt:IdentityTypeMe];

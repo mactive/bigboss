@@ -20,7 +20,8 @@
 @property (nonatomic, retain) NSNumber * type;
 @property (nonatomic, retain) NSSet *images;
 
-- (NSArray *)getOrderedImages;
+-(NSArray *)getOrderedImages;
+-(NSArray *)getOrderedNonNilImages;
 @end
 
 @interface Identity (CoreDataGeneratedAccessors)

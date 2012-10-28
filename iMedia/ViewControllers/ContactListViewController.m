@@ -18,6 +18,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "pinyin.h"
 #import "POAPinyin.h"
+#import "AppNetworkAPIClient.h"
 
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
@@ -490,11 +491,15 @@ NSInteger SortIndex(id char1, id char2, void* context)
     
     id obj = [_contacts objectAtIndex:indexPath.row];
     
+    // Update local data with latest server info
+    [[AppNetworkAPIClient sharedClient] updateIdentity:(Identity *)obj withBlock:nil];
+    
     if ([obj isKindOfClass:[User class]]) {
         ContactDetailController *detailViewController = [[ContactDetailController alloc] initWithNibName:nil bundle:nil];
         [detailViewController setHidesBottomBarWhenPushed:YES];
         detailViewController.user = obj;
         detailViewController.delegate = self;
+        
         // Pass the selected object to the new view controller.
         [self.navigationController pushViewController:detailViewController animated:YES];
     } else if ([obj isKindOfClass:[Channel class]]) {

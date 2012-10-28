@@ -515,7 +515,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     User *newUser = [ModelHelper findUserWithEPostalID:userJid inContext:self.managedObjectContext];
     
     if (newUser == nil) {
-        newUser = [NSEntityDescription insertNewObjectForEntityForName:@"User" inManagedObjectContext:self.managedObjectContext];
+        newUser = [ModelHelper newUserInContext:self.managedObjectContext];
     }
     
     NSLog(@"NewUSer %@",newUser);

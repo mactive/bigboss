@@ -482,7 +482,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     
     // insert user if it doesn't exist
     if (thisUser == nil || thisUser.state.intValue == IdentityStateInactive) {
-        thisUser = [NSEntityDescription insertNewObjectForEntityForName:@"User" inManagedObjectContext:_managedObjectContext];
+        thisUser = [ModelHelper newUserInContext:_managedObjectContext];
     }
     
     if (thisUser.state.intValue != IdentityStateActive) {
@@ -552,7 +552,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
         
         // insert user if it doesn't exist
         if ([array count] == 0) {
-            User *userNS = [NSEntityDescription insertNewObjectForEntityForName:@"User" inManagedObjectContext:_managedObjectContext];
+            User *userNS = [ModelHelper newUserInContext:moc];
             userNS.name = obj.nickname;
             userNS.ePostalID = [obj.jid bare];
             userNS.displayName = [userNS.ePostalID substringToIndex:[userNS.ePostalID rangeOfString: @"@"].location];

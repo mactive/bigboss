@@ -2,29 +2,33 @@
 //  Me.h
 //  iMedia
 //
-//  Created by Xiaosi Li on 10/26/12.
+//  Created by Xiaosi Li on 10/28/12.
 //  Copyright (c) 2012 Li Xiaosi. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
-#import "User.h"
+#import "Identity.h"
 
+@class Avatar;
 
-@interface Me : User
+@interface Me : Identity
 
 @property (nonatomic, retain) NSString * ePostalPassword;
 @property (nonatomic, retain) NSString * password;
 @property (nonatomic, retain) NSString * username;
+@property (nonatomic, retain) NSString * gender;
+@property (nonatomic, retain) NSString * name;
+@property (nonatomic, retain) NSString * signature;
 @property (nonatomic, retain) NSSet *avatars;
 
-- (NSArray *)getOrderedAvatars;
+-(NSArray *)getOrderedAvatars;
 @end
 
 @interface Me (CoreDataGeneratedAccessors)
 
-- (void)addAvatarsObject:(NSManagedObject *)value;
-- (void)removeAvatarsObject:(NSManagedObject *)value;
+- (void)addAvatarsObject:(Avatar *)value;
+- (void)removeAvatarsObject:(Avatar *)value;
 - (void)addAvatars:(NSSet *)values;
 - (void)removeAvatars:(NSSet *)values;
 

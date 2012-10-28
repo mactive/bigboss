@@ -19,4 +19,8 @@
 + (BOOL)populateUser:(User *)user withJSONData:(NSString *)json;
 + (BOOL)populateChannel:(Channel *)channel withServerJSONData:(NSString *)json;
 
++ (void)populateUser:(User *)user withJSONData:(NSString *)json inContext:(NSManagedObjectContext*)context;
+
++ (User *)newUserInContext:(NSManagedObjectContext *)context;
+
 @end

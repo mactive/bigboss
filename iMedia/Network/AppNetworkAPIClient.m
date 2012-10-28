@@ -17,6 +17,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 #endif
 
 #import "Avatar.h"
+#import "Identity.h"
+#import "User.h"
+#import "Channel.h"
+#import "ModelHelper.h"
 
 static NSString * const kAppNetworkAPIBaseURLString = @"http://192.168.1.104:8000/";
 //static NSString * const kAppNetworkAPIBaseURLString = @"http://media.wingedstone.com:8000/";
@@ -119,5 +123,44 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
             block(nil, error);
         }
     }];
+}
+
+- (void)updateIdentity:(Identity *)identity withBlock:(void (^)(id, NSError *))block
+{
+    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: identity.guid, @"guid", @"1", @"op", nil];
+    
+    [[AppNetworkAPIClient sharedClient] getPath:GET_DATA_PATH parameters:getDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        DDLogVerbose(@"get config JSON received: %@", responseObject);
+        
+        NSString* type = [responseObject valueForKey:@"type"];
+        
+        if ([type isEqualToString:@"error"]) {
+            if (block) {
+                block(nil, nil);
+            }
+        } else if ([type isEqualToString:@"user"]) {
+            [ModelHelper populateUser:(User *)identity withJSONData:responseObject];
+            
+            if (block) {
+                block (responseObject, nil);
+            }
+
+        } else if ([type isEqualToString:@"channel"]) {
+            [ModelHelper populateChannel:(Channel *)identity withServerJSONData:responseObject];
+            
+            if (block) {
+                block (responseObject, nil);
+            }
+
+        }
+         
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        //
+        DDLogVerbose(@"error received: %@", error);
+        if (block) {
+            block(nil, error);
+        }
+    }];
+
 }
 @end

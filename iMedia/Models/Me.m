@@ -2,7 +2,7 @@
 //  Me.m
 //  iMedia
 //
-//  Created by Xiaosi Li on 10/26/12.
+//  Created by Xiaosi Li on 10/28/12.
 //  Copyright (c) 2012 Li Xiaosi. All rights reserved.
 //
 
@@ -15,6 +15,9 @@
 @dynamic ePostalPassword;
 @dynamic password;
 @dynamic username;
+@dynamic gender;
+@dynamic name;
+@dynamic signature;
 @dynamic avatars;
 
 -(NSArray *)getOrderedAvatars

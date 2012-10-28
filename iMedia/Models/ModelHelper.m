@@ -9,6 +9,7 @@
 #import "ModelHelper.h"
 #import "User.h"
 #import "Channel.h"
+#import "ImageRemote.h"
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -79,7 +80,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 + (BOOL)populateUser:(User *)user withJSONData:(id)json
 {
     user.ePostalID = [json valueForKey:@"jid"];
-    user.gender = [json valueForKey:@"sex"];
+    user.gender = [json valueForKey:@"gender"];
     user.signature = [json valueForKey:@"signature"];
     user.displayName = [json valueForKey:@"nickname"];
     
@@ -96,6 +97,45 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     channel.type = [NSNumber numberWithInt:IdentityTypeChannel];
     
     return YES;
+}
+
++ (void)populateUser:(User *)user withJSONData:(NSString *)json inContext:(NSManagedObjectContext *)context
+{
+    [ModelHelper populateUser:user withJSONData:json];
+    
+    NSMutableArray *imageURLArray = [[NSMutableArray alloc] init];
+    for (int i = 1; i <=8; i++) {
+        NSString *key = [NSString stringWithFormat:@"avatar%d", i];
+        NSString *url = [json valueForKey:key];
+        if (url != nil && ![url isEqualToString:@""]) {
+            [imageURLArray addObject:url];
+        }
+    }
+    
+    // Update avatar with incoming data
+    NSArray *imageArray = [user getOrderedImages];
+    for (int i = 0; i < [imageArray count]; i++) {
+        ImageRemote *imageRemote = [imageArray objectAtIndex:i];
+        if (i < [imageURLArray count]) {
+            imageRemote.imageURL = [imageURLArray objectAtIndex:i];
+            imageRemote.sequence = [NSNumber numberWithInt:i];
+        } else {
+            imageRemote.imageURL = nil;
+            imageRemote.sequence = 0;
+        }
+    }
+}
+
++ (User *)newUserInContext:(NSManagedObjectContext *)context
+{
+    User *newUser = [NSEntityDescription insertNewObjectForEntityForName:@"User" inManagedObjectContext:context];
+    for (int i = 0; i < 8; i++) {
+        ImageRemote *image = [NSEntityDescription insertNewObjectForEntityForName:@"ImageRemote" inManagedObjectContext:context];
+        image.sequence = 0;
+        [newUser addImagesObject:image];
+    }
+    
+    return newUser;
 }
 
 @end

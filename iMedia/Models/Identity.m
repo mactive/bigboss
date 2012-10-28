@@ -19,6 +19,7 @@
 @dynamic type;
 @dynamic images;
 
+
 -(NSArray *)getOrderedImages
 {
     NSSortDescriptor *sortDesc = [NSSortDescriptor sortDescriptorWithKey:@"sequence" ascending:YES];
@@ -27,5 +28,15 @@
     return result;
 }
 
+-(NSArray *)getOrderedNonNilImages
+{
+    NSSortDescriptor *sortDesc = [NSSortDescriptor sortDescriptorWithKey:@"sequence" ascending:YES];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"sequence > 0"];
+    NSSet *filteredSet =[self.images filteredSetUsingPredicate:predicate];
+    NSArray *result = [filteredSet sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDesc]];
+    
+    return result;
+}
 
 @end
