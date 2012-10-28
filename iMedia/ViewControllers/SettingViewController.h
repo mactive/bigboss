@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+@class ProfileMeController;
 
 @interface SettingViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
 
@@ -16,6 +17,7 @@
 
 @property(nonatomic, strong) NSArray *settingTitleArray;
 @property(nonatomic, strong) NSArray *settingDescArray;
+
 
 @end
 

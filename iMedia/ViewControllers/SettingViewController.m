@@ -7,6 +7,7 @@
 //
 
 #import "SettingViewController.h"
+#import "ProfileMeController.h"
 
 @interface SettingViewController ()
 
@@ -127,7 +128,9 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.row == 0 && indexPath.section == 0 ) {
-        [self.navigationController pushViewController:self.albumViewController animated:YES];
+        ProfileMeController *profileMeController = [[ProfileMeController alloc] initWithNibName:nil bundle:nil];
+        [profileMeController setHidesBottomBarWhenPushed:YES];
+        [self.navigationController pushViewController:profileMeController animated:YES];
     }
 }
 
