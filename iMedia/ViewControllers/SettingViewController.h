@@ -8,6 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
-@interface SettingViewController : UIViewController
+@interface SettingViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
+
+
+@property(nonatomic, strong) UITableView *settingTableView;
+@property(nonatomic, strong) UIButton *loginButton;
+
+@property(nonatomic, strong) NSArray *settingTitleArray;
+@property(nonatomic, strong) NSArray *settingDescArray;
 
 @end
+

@@ -13,7 +13,7 @@
 @class AlbumViewController;
 
 
-@interface ContactDetailController : UIViewController<UITableViewDataSource, UITableViewDelegate>
+@interface ContactDetailController : UIViewController<UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate>
 {
     User  *_user;
     id    jsonData;
@@ -41,6 +41,8 @@
 @property (strong, nonatomic) NSArray *infoArray;
 @property (strong, nonatomic) NSArray *infoDescArray;
 @property (strong, nonatomic) AlbumViewController* albumViewController;
+
+@property (strong, nonatomic) UIImageView *addedImage;
 
 
 @property (strong, nonatomic) id <ChatWithIdentityDelegate> delegate;

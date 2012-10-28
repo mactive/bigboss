@@ -43,6 +43,7 @@
 @synthesize infoView;
 @synthesize infoTableView;
 @synthesize actionView;
+@synthesize addedImage;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -99,8 +100,7 @@
     UIButton *albumButton;
     
     self.albumArray = [[NSMutableArray alloc] initWithObjects:
-                       @"profile_face_1.png",@"profile_face_2.png",@"profile_face_1.png",@"profile_face_2.png",
-                       @"profile_face_1.png",@"profile_face_2.png", nil ];
+                       @"profile_face_1.png",@"profile_face_2.png",@"profile_face_1.png",@"profile_face_2.png", nil ];
     
     BOOL ALBUM_ADD = NO;
 
@@ -139,11 +139,53 @@
     NSLog(@"%d",sender.tag);
 }
 
+
+#pragma mark - start camera
+#define kCameraSource       UIImagePickerControllerSourceTypeCamera
+
 - (void)addAlbum:(UIButton *)sender
 {
+    if (![UIImagePickerController isSourceTypeAvailable:kCameraSource]) {
+        UIAlertView *cameraAlert = [[UIAlertView alloc] initWithTitle:T(@"cameraAlert") message:T(@"Camera is not available.") delegate:self cancelButtonTitle:nil otherButtonTitles:nil, nil];
+        [cameraAlert show];
+		return;
+	}
     
+//    self.tableView.allowsSelection = NO;
+    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+    picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+	picker.delegate = self;
+	picker.allowsEditing = YES;
+    
+    
+    [self presentModalViewController:picker animated:YES];
+    
+//    self.tableView.allowsSelection = YES;
 }
 
+#pragma mark - UIImagePickerControllerDelegateMethods
+
+- (void)imagePickerController:(UIImagePickerController *)picker 
+didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+	UIImage *image = [info objectForKey:UIImagePickerControllerEditedImage];
+//    self.image = image;
+    
+    self.addedImage = [[UIImageView alloc]initWithFrame:CGRectMake(100, 100, 75, 75)];
+    [self.addedImage setImage:image];
+    [self.albumView addSubview:self.addedImage];
+    
+    [picker dismissModalViewControllerAnimated:YES];
+    //after picker dismiss than pushview it will not quit
+//    [self.navigationController pushViewController:self.controller animated:NO];
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    /* keep the order first dismiss picker and pop controller */
+    [picker dismissModalViewControllerAnimated:YES];
+//    [self.controller.navigationController popViewControllerAnimated:NO];
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark - status view

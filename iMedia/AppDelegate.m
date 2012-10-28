@@ -22,7 +22,6 @@
 #import "ShakeViewController.h"
 #import "SettingViewController.h"
 #import "FirstLoginController.h"
-#import "ProfileController.h"
 
 #import "AppNetworkAPIClient.h"
 
