@@ -19,6 +19,7 @@
 @synthesize loginButton;
 @synthesize settingTitleArray;
 @synthesize settingDescArray;
+@synthesize managedObjectContext;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -108,7 +109,7 @@
     
 	UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     
-    [cell setSelectionStyle:UITableViewCellSelectionStyleGray];
+    [cell setSelectionStyle:UITableViewCellSelectionStyleBlue];
     cell.backgroundView.backgroundColor = RGBCOLOR(248, 248, 248);
     
     cell.selectedBackgroundView.backgroundColor =  RGBCOLOR(228, 228, 228);
@@ -129,7 +130,8 @@
 {
     if (indexPath.row == 0 && indexPath.section == 0 ) {
         ProfileMeController *profileMeController = [[ProfileMeController alloc] initWithNibName:nil bundle:nil];
-        [profileMeController setHidesBottomBarWhenPushed:YES];
+        profileMeController.managedObjectContext = self.managedObjectContext;
+//        [profileMeController setHidesBottomBarWhenPushed:YES];
         [self.navigationController pushViewController:profileMeController animated:YES];
     }
 }

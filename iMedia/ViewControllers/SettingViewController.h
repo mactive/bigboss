@@ -11,7 +11,7 @@
 
 @interface SettingViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
 
-
+@property(nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 @property(nonatomic, strong) UITableView *settingTableView;
 @property(nonatomic, strong) UIButton *loginButton;
 

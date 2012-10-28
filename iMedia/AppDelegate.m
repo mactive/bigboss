@@ -140,6 +140,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     NSLog(@"---- %@",NSStringFromCGRect(navController3.view.frame));
 
     self.settingController = [[SettingViewController alloc] init];
+    self.settingController.managedObjectContext = _managedObjectContext;
     UINavigationController *navController4 = [[UINavigationController alloc] initWithRootViewController:self.settingController];
     self.settingController.title = T(@"Setting");
     
