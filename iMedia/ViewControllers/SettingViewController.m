@@ -19,6 +19,7 @@
 @synthesize loginButton;
 @synthesize settingTitleArray;
 @synthesize settingDescArray;
+@synthesize managedObjectContext;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -129,6 +130,7 @@
 {
     if (indexPath.row == 0 && indexPath.section == 0 ) {
         ProfileMeController *profileMeController = [[ProfileMeController alloc] initWithNibName:nil bundle:nil];
+        profileMeController.managedObjectContext = self.managedObjectContext;
 //        [profileMeController setHidesBottomBarWhenPushed:YES];
         [self.navigationController pushViewController:profileMeController animated:YES];
     }

@@ -8,6 +8,7 @@
 
 #import "ProfileMeController.h"
 #import "Me.h"
+#import "Avatar.h"
 #import "Channel.h"
 #import "ChatWithIdentity.h"
 #import "ModelHelper.h"
@@ -15,7 +16,6 @@
 #import "DDLog.h"
 #import <QuartzCore/QuartzCore.h>
 #import "AlbumViewController.h"
-#import "Avatar.h"
 #import "UIImage+Resize.h"
 
 @interface ProfileMeController ()
@@ -211,14 +211,13 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     
     UIImage *thumbnail = [image resizedImageToSize:CGSizeMake(75, 75)];
     
-    self.addedImage = [[UIImageView alloc]initWithFrame:CGRectMake(100, 100, 75, 75)];
-    [self.addedImage setImage:image];
-    [self.albumView addSubview:self.addedImage];
+
     
-    Avatar *insertAvatar = [NSEntityDescription insertNewObjectForEntityForName:@"Avatar" inManagedObjectContext:self.managedObjectContext];
+    Avatar *insertAvatar = [NSEntityDescription insertNewObjectForEntityForName:@"Image" inManagedObjectContext:self.managedObjectContext];
     insertAvatar.thumbnail = thumbnail;
     insertAvatar.image = image;
     NSInteger sequence = [self.albumArray count] + 1;
+    
     insertAvatar.sequence = [NSNumber numberWithInt:sequence];
     [me addAvatarsObject:insertAvatar];
     
