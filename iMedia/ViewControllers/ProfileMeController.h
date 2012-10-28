@@ -10,7 +10,7 @@
 @class Me;
 @class AlbumViewController;
 
-@interface ProfileMeController : UIViewController<UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate,UIActionSheetDelegate>
+@interface ProfileMeController : UIViewController<UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate,UIActionSheetDelegate, UINavigationControllerDelegate>
 {
 }
 

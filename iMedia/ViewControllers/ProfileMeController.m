@@ -122,14 +122,18 @@
     
     for (int i = 0; i< [albumArray count]; i++) {
         albumButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        [albumButton setImage:[UIImage imageNamed:[albumArray objectAtIndex:i] ] forState:UIControlStateNormal];
         [albumButton setFrame:CGRectMake(VIEW_ALBUM_OFFSET * (i%4*2 + 1) + VIEW_ALBUM_WIDTH * (i%4), VIEW_ALBUM_OFFSET * (floor(i/4)*2+1) + VIEW_ALBUM_WIDTH * floor(i/4), VIEW_ALBUM_WIDTH, VIEW_ALBUM_WIDTH)];
         [albumButton.layer setMasksToBounds:YES];
         [albumButton.layer setCornerRadius:3.0];
         albumButton.tag = i;
         if (ALBUM_ADD && i == [albumArray count] - 1 ) {
+            [albumButton setImage:[UIImage imageNamed:[albumArray objectAtIndex:i] ] forState:UIControlStateNormal];
             [albumButton addTarget:self action:@selector(addAlbum:) forControlEvents:UIControlEventTouchUpInside];
         }else {
+            Avatar *avatar = [albumArray objectAtIndex:i];
+            [albumButton setImage:avatar.thumbnail forState:UIControlStateNormal];
+            //     [albumButton setImage:[UIImage imageNamed:[albumArray objectAtIndex:i] ] forState:UIControlStateNormal];
+
             [albumButton addTarget:self action:@selector(albumClick:) forControlEvents:UIControlEventTouchUpInside];
         }
         
