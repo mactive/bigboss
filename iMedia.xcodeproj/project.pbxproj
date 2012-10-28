@@ -223,6 +223,7 @@
 		566E82651609A79B00A333EA /* ConversationsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E82641609A79B00A333EA /* ConversationsController.m */; };
 		566E82681609AF2700A333EA /* ContactDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E82671609AF2700A333EA /* ContactDetailController.m */; };
 		566E826D1609B79900A333EA /* AppDefs.h in Sources */ = {isa = PBXBuildFile; fileRef = 566E826C1609B58100A333EA /* AppDefs.h */; };
+		5681B651163D1BFC0056AFAD /* ImageRemote.m in Sources */ = {isa = PBXBuildFile; fileRef = 5681B650163D1BFC0056AFAD /* ImageRemote.m */; };
 		56B4CCDB1625818D00E046CC /* XMPPNetworkCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CCDA1625818D00E046CC /* XMPPNetworkCenter.m */; };
 		56B4CCF01626732500E046CC /* AFHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CCDE1626732500E046CC /* AFHTTPClient.m */; };
 		56B4CCF11626732500E046CC /* AFHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CCDE1626732500E046CC /* AFHTTPClient.m */; };
@@ -672,6 +673,8 @@
 		566E82661609AF2700A333EA /* ContactDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ContactDetailController.h; path = ViewControllers/ContactDetailController.h; sourceTree = "<group>"; };
 		566E82671609AF2700A333EA /* ContactDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ContactDetailController.m; path = ViewControllers/ContactDetailController.m; sourceTree = "<group>"; };
 		566E826C1609B58100A333EA /* AppDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDefs.h; sourceTree = "<group>"; };
+		5681B64F163D1BFC0056AFAD /* ImageRemote.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageRemote.h; path = Models/ImageRemote.h; sourceTree = "<group>"; };
+		5681B650163D1BFC0056AFAD /* ImageRemote.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ImageRemote.m; path = Models/ImageRemote.m; sourceTree = "<group>"; };
 		56B4CCD91625818D00E046CC /* XMPPNetworkCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPNetworkCenter.h; path = Network/XMPPNetworkCenter.h; sourceTree = "<group>"; };
 		56B4CCDA1625818D00E046CC /* XMPPNetworkCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMPPNetworkCenter.m; path = Network/XMPPNetworkCenter.m; sourceTree = "<group>"; };
 		56B4CCDD1626732500E046CC /* AFHTTPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPClient.h; sourceTree = "<group>"; };
@@ -1633,9 +1636,11 @@
 		566E825E1609A5FE00A333EA /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				566E80B51609A24C00A333EA /* iMedia.xcdatamodeld */,
+				5681B64F163D1BFC0056AFAD /* ImageRemote.h */,
+				5681B650163D1BFC0056AFAD /* ImageRemote.m */,
 				26816085163AA1D3007B0096 /* Avatar.h */,
 				26816086163AA1D3007B0096 /* Avatar.m */,
-				566E80B51609A24C00A333EA /* iMedia.xcdatamodeld */,
 				56202F54162BEDF000F6306F /* User.h */,
 				56202F55162BEDF000F6306F /* User.m */,
 				56202F4A162BBDDF00F6306F /* Channel.h */,
@@ -2154,6 +2159,7 @@
 				26825BDA16378FC7008DA7CC /* AlbumViewController.m in Sources */,
 				26816087163AA1D3007B0096 /* Avatar.m in Sources */,
 				26F759E4163CEF70005E9FB4 /* ProfileMeController.m in Sources */,
+				5681B651163D1BFC0056AFAD /* ImageRemote.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

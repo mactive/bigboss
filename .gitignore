@@ -4,8 +4,9 @@
 *~.nib
 
 build/
-xcuserdata
+xcuserdata/
 iMedia.xcodeproj/project.xcworkspace/xcuserdata/
+*.xcuserstate
 
 *.pbxuser
 
