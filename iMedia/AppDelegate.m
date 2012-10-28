@@ -16,6 +16,7 @@
 #import "Conversation.h"
 #import "AppDefs.h"
 #import <CocoaPlant/NSManagedObject+CocoaPlant.h>
+#import "AFNetworkActivityIndicatorManager.h"
 
 #import "ConversationsController.h"
 #import "ContactListViewController.h"
@@ -76,6 +77,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     // Setup the network
     [[XMPPNetworkCenter sharedClient] setupWithHostname:nil andPort:0];
     [XMPPNetworkCenter sharedClient].managedObjectContext = _managedObjectContext;
+    [[AFNetworkActivityIndicatorManager sharedManager] setEnabled:YES];
 
     
     // check whether first use
