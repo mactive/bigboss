@@ -12,8 +12,6 @@
 
 @interface ProfileMeController : UIViewController<UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate,UIActionSheetDelegate>
 {
-    Me *me;
-    id jsonData;
 }
 
 
@@ -33,7 +31,7 @@
 @property (strong, nonatomic) UILabel  *nameLabel;
 
 @property (strong, nonatomic) Me *me;
-@property (strong, nonatomic) id jsonData;
+
 
 @property (strong, nonatomic) NSMutableArray *albumArray;
 @property (strong, nonatomic) NSArray *infoArray;

@@ -76,11 +76,13 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
                 [[NSUserDefaults standardUserDefaults] setObject:jPassword forKey:kXMPPmyJIDPassword];
                 [[NSUserDefaults standardUserDefaults] setObject:username forKey:kXMPPmyUsername];
                 [[NSUserDefaults standardUserDefaults] setObject:passwd forKey:kXMPPmyPassword];
+                
+                if (block ) {
+                    block(responseObject, nil);
+                }
             }
             
-            if (block ) {
-                block(responseObject, nil);
-            }
+            
         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             //
             DDLogVerbose(@"login failed: %@", error);

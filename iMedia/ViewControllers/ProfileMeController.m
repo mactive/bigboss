@@ -17,19 +17,19 @@
 #import <QuartzCore/QuartzCore.h>
 #import "AlbumViewController.h"
 #import "UIImage+Resize.h"
+#import "AppDelegate.h"
 
 @interface ProfileMeController ()
 
 @end
 
 @implementation ProfileMeController
-@synthesize managedObjectContext = _managedObjectContext;
+@synthesize managedObjectContext;
 @synthesize sendMsgButton = _sendMsgButton;
 @synthesize deleteUserButton;
 @synthesize reportUserButton;
 @synthesize nameLabel = _nameLabel;
-@synthesize me =_me;
-@synthesize jsonData;
+@synthesize me;
 @synthesize contentView;
 
 @synthesize albumView;
@@ -48,9 +48,14 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
+        self.me = [self appDelegate].me ;
     }
     return self;
+}
+
+- (AppDelegate *)appDelegate
+{
+	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
 - (void)viewDidLoad
@@ -103,7 +108,7 @@
     
     UIButton *albumButton;
     
-    self.albumArray = [[NSMutableArray alloc] initWithArray:me.getOrderedAvatars];
+    self.albumArray = [[NSMutableArray alloc] initWithArray: [self.me getOrderedAvatars]];
     
 //    self.albumArray = [[NSMutableArray alloc] initWithObjects:
 //                       @"profile_face_1.png",@"profile_face_2.png",@"profile_face_1.png",@"profile_face_2.png", nil ];
@@ -211,15 +216,13 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     
     UIImage *thumbnail = [image resizedImageToSize:CGSizeMake(75, 75)];
     
-
-    
-    Avatar *insertAvatar = [NSEntityDescription insertNewObjectForEntityForName:@"ImageLocal" inManagedObjectContext:self.managedObjectContext];
+    Avatar *insertAvatar = [NSEntityDescription insertNewObjectForEntityForName:@"ImageLocal" inManagedObjectContext:self.managedObjectContext ];
     insertAvatar.thumbnail = thumbnail;
     insertAvatar.image = image;
     NSInteger sequence = [self.albumArray count] + 1;
     
     insertAvatar.sequence = [NSNumber numberWithInt:sequence];
-    [me addAvatarsObject:insertAvatar];
+    [self.me addAvatarsObject:insertAvatar];
     
     [self.albumView removeFromSuperview];
     [self initAlbumView];
