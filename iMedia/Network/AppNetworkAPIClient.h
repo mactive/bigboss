@@ -33,4 +33,5 @@ extern NSString *const kXMPPmyUsername;
 - (void)loginWithUsername:(NSString *)username andPassword:(NSString *)passwd withBlock:(void (^)(id responseObject, NSError *error))block;
 
 - (void)storeAvatar:(Avatar *)avatar forMe:(Me *)me andOrder:(int)sequence withBlock:(void (^)(id responseObject, NSError *error))block;
+
 @end
