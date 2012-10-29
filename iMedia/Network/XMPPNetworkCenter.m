@@ -24,8 +24,8 @@
 
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
-//static NSString * const pubsubhost = @"pubsub.192.168.1.104"
-static NSString * const pubsubhost = @"pubsub.121.12.104.95";
+static NSString * const pubsubhost = @"pubsub.192.168.1.104";
+//static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 
 @interface XMPPNetworkCenter () <XMPPRosterDelegate, XMPPPubSubDelegate, XMPPRosterMemoryStorageDelegate>
 {
@@ -255,10 +255,10 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     return YES;
 }
 
--(void)subscribeToChannel:(NSString *)nodeName withCallbackBlock:(void (^)(NSError *))block
+-(NSString *)subscribeToChannel:(NSString *)nodeName withCallbackBlock:(void (^)(NSError *))block
 {
     DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-    [xmppPubsub subscribeToNode:nodeName withOptions:nil];
+    return[xmppPubsub subscribeToNode:nodeName withOptions:nil];
 }
 
 -(void)addBuddy:(NSString *)jidStr withCallbackBlock:(void (^)(NSError *))block
@@ -567,47 +567,31 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 #pragma mark XMPPRosterDelegate
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (void)xmppRoster:(XMPPRoster *)sender didReceiveBuddyRequest:(XMPPPresence *)presence
+- (void)xmppRoster:(XMPPRoster *)sender didReceivePresenceSubscriptionRequest:(XMPPPresence *)presence
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-    /*
-     XMPPUserMemoryStorageObject *user = [xmppRosterStorage userForJID:[presence from]];
-     
-     NSString *displayName = [user displayName];
-     NSString *jidStrBare = [presence fromStr];
-     NSString *body = nil;
-     
-     if (![displayName isEqualToString:jidStrBare])
-     {
-     body = [NSString stringWithFormat:@"Buddy request from %@ <%@>", displayName, jidStrBare];
-     }
-     else
-     {
-     body = [NSString stringWithFormat:@"Buddy request from %@", displayName];
-     }
-     
-     
-     if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive)
-     {
-     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:displayName
-     message:body
-     delegate:nil
-     cancelButtonTitle:@"Not implemented"
-     otherButtonTitles:nil];
-     [alertView show];
-     }
-     else
-     {
-     // We are not active, so use a local notification instead
-     UILocalNotification *localNotification = [[UILocalNotification alloc] init];
-     localNotification.alertAction = @"Not implemented";
-     localNotification.alertBody = body;
-     
-     [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
-     }
-     */
+    
+    // MyNotificationName defined globally
+    NSNotification *myNotification =
+    [NSNotification notificationWithName:NEW_FRIEND_NOTIFICATION object:[[presence from] bare]];
+    [[NSNotificationQueue defaultQueue]
+     enqueueNotification:myNotification
+     postingStyle:NSPostWhenIdle
+     coalesceMask:NSNotificationNoCoalescing
+     forModes:nil];
+
 }
 
+- (void)acceptPresenceSubscriptionRequestFrom:(NSString *)jidStr andAddToRoster:(BOOL)flag
+{
+    XMPPJID *jid = [XMPPJID jidWithString:jidStr];
+    [xmppRoster acceptPresenceSubscriptionRequestFrom:jid andAddToRoster:flag];
+}
+
+- (void)rejectPresenceSubscriptionRequestFrom:(NSString *)jidStr
+{
+    [xmppRoster rejectPresenceSubscriptionRequestFrom:[XMPPJID jidWithString:jidStr]];
+}
 
 
 
@@ -666,12 +650,18 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     
 
     NSXMLElement *pubsub = [iq elementForName:@"pubsub"];
+    NSString *subrequestID = [iq attributeStringValueForName:@"id"];
     NSXMLElement *subscription = [pubsub elementForName:@"subscription"];
     NSString* subID = [subscription attributeStringValueForName:@"subid"];
     NSString *nodeStr = [subscription attributeStringValueForName:@"node"];
     
     //add the Channel to the addressbook
-    Channel *channel = [ModelHelper findChannelWithNode:nodeStr inContext:_managedObjectContext];
+    Channel *channel;
+    if (nodeStr == nil)
+        channel = [ModelHelper findChannelWithSubrequestID:subrequestID inContext:_managedObjectContext];
+    else
+        channel = [ModelHelper findChannelWithNode:nodeStr inContext:_managedObjectContext];
+    
     if (channel && channel.state.intValue == IdentityStatePendingAddSubscription) {
         channel.state = [NSNumber numberWithInt:IdentityStateActive];
         channel.subID = subID;

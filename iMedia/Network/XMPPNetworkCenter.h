@@ -14,6 +14,9 @@
 
 #define NS_PUBSUB          @"http://jabber.org/protocol/pubsub"
 
+#define NEW_MESSAGE_NOTIFICATION @"NewMessage"
+#define NEW_FRIEND_NOTIFICATION   @"FriendRequest"
+
 @class Message;
 
 @interface XMPPNetworkCenter : NSObject
@@ -30,8 +33,12 @@
 -(BOOL)isConnected;
 
 -(BOOL)sendMessage:(Message *)message;
--(void)subscribeToChannel:(NSString *)nodeName withCallbackBlock:(void (^)(NSError *error))block;
+-(NSString *)subscribeToChannel:(NSString *)nodeName withCallbackBlock:(void (^)(NSError *error))block;
 -(void)addBuddy:(NSString *)jidStr withCallbackBlock:(void (^)(NSError *error))block;
 -(void)removeBuddy:(NSString *)jidStr withCallbackBlock:(void (^)(NSError *erro))block;
+
+- (void)acceptPresenceSubscriptionRequestFrom:(NSString *)jidStr andAddToRoster:(BOOL)flag;
+- (void)rejectPresenceSubscriptionRequestFrom:(NSString *)jidStr;
+
 
 @end

@@ -1,41 +1,52 @@
 //
-//  SettingViewController.m
+//  FunctionListViewController.m
 //  iMedia
 //
-//  Created by qian meng on 12-10-17.
-//  Copyright (c) 2012年 Li Xiaosi. All rights reserved.
+//  Created by Xiaosi Li on 10/29/12.
+//  Copyright (c) 2012 Li Xiaosi. All rights reserved.
 //
 
-#import "SettingViewController.h"
-#import "ProfileMeController.h"
-#import "RequestViewController.h"
+#import "FunctionListViewController.h"
+#import "ShakeViewController.h"
+#import "XMPPNetworkCenter.h"
+#import "AppNetworkAPIClient.h"
+#import "AppDelegate.h" 
 
-@interface SettingViewController () 
+#import "DDLog.h"
+// Log levels: off, error, warn, info, verbose
+#if DEBUG
+static const int ddLogLevel = LOG_LEVEL_VERBOSE;
+#else
+static const int ddLogLevel = LOG_LEVEL_INFO;
+#endif
+
+
+@interface FunctionListViewController () <UITableViewDataSource, UITableViewDelegate>
+
+@property(nonatomic, strong) UITableView *settingTableView;
+
+@property(nonatomic, strong) NSArray *settingTitleArray;
+@property(nonatomic, strong) NSArray *settingDescArray;
 
 @end
 
-@implementation SettingViewController
+@implementation FunctionListViewController
 
 @synthesize settingTableView;
-@synthesize loginButton;
-@synthesize settingTitleArray;
 @synthesize settingDescArray;
-@synthesize managedObjectContext;
+@synthesize settingTitleArray;
+@synthesize friendRequestDict;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(friendRequestReceived:)
+                                                     name:NEW_FRIEND_NOTIFICATION object:nil];
     }
     return self;
-}
-
-- (void)loadView{
-    [super loadView];
-//    UIImageView *tabbarBgView  = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"navigationBar_bg.png"]];
-//    [self.navigationController.navigationBar insertSubview:tabbarBgView atIndex:1];
-//    [self.navigationController.navigationBar setBackgroundColor:[UIColor blackColor]];
 }
 
 - (void)viewDidLoad
@@ -43,25 +54,26 @@
     [super viewDidLoad];
     
     self.settingTitleArray = [[NSArray alloc] initWithObjects:
-                              [[NSArray alloc] initWithObjects:@"个人设置",@"我的相册",@"新浪微博",@"微信朋友圈",@"好友请求", nil],
-                              [[NSArray alloc] initWithObjects:@"去给翼石打个分吧",@"帮助与反馈",@"关于翼石",@"App精品推荐", nil],
+                              [[NSArray alloc] initWithObjects:@"附近的人", nil],
+                              [[NSArray alloc] initWithObjects:@"摇一摇", nil],
                               nil ];
     
     
     self.settingDescArray = [[NSArray alloc] initWithObjects:
-                          @"夫和实生物，同则不继。以他平他谓之和故能丰长而物归之",
-                          @"老莫  13899763487",
-                          @"IT工程师",
-                          @"山东 聊城",
-                          @"我不是那个史上最牛历史老师！我们中国的教科书属于秽史，请同学们考完试抓紧把它们烧了，放家里一天，都脏你屋子。", nil];
+                             @"夫和实生物，同则不继。以他平他谓之和故能丰长而物归之",
+                             @"老莫  13899763487",
+                             @"IT工程师",
+                             @"山东 聊城",
+                             @"我不是那个史上最牛历史老师！我们中国的教科书属于秽史，请同学们考完试抓紧把它们烧了，放家里一天，都脏你屋子。", nil];
     
     self.settingTableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
     self.settingTableView.dataSource = self;
     self.settingTableView.delegate = self;
-//    [self.settingTableView setBackgroundColor:[UIColor clearColor]];
+    //    [self.settingTableView setBackgroundColor:[UIColor clearColor]];
     [self.view addSubview:self.settingTableView];
     
 }
+
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark - tableview
 ////////////////////////////////////////////////////////////////////////////////
@@ -93,7 +105,6 @@
     }
     return cell;
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark - tableViewCellWithReuseIdentifier
@@ -130,30 +141,43 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.row == 0 && indexPath.section == 0 ) {
-        ProfileMeController *profileMeController = [[ProfileMeController alloc] initWithNibName:nil bundle:nil];
-        profileMeController.managedObjectContext = self.managedObjectContext;
-        //        [profileMeController setHidesBottomBarWhenPushed:YES];
-        
-        [self.navigationController pushViewController:profileMeController animated:YES];
+
     }
     
-    if (indexPath.row == 4 && indexPath.section == 0 ) {
-        RequestViewController *requestViewController = [[RequestViewController alloc] initWithNibName:nil bundle:nil];        
+    if (indexPath.row == 0 && indexPath.section == 1 ) {
+        ShakeViewController *requestViewController = [[ShakeViewController alloc] initWithNibName:nil bundle:nil];
         [self.navigationController pushViewController:requestViewController animated:YES];
     }
 }
 
-
-
-- (void)viewDidUnload
+- (void)friendRequestReceived:(NSNotification *)notification
 {
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
+    NSString* fromJid = [notification object];
+    
+    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: fromJid, @"jid", @"2", @"op", nil];
+    
+    [[AppNetworkAPIClient sharedClient] getPath:GET_DATA_PATH parameters:getDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        DDLogVerbose(@"get config JSON received: %@", responseObject);
+        
+        NSString* type = [responseObject valueForKey:@"type"];
+        if ([type isEqualToString:@"user"]) {
+            [self.friendRequestDict setValue:responseObject forKey:fromJid];
+            
+#warning TODO - add flag mark new friend request
+            [self appDelegate].tabController.tabBarItem.badgeValue =  [NSString stringWithFormat:@"%d", [self.friendRequestDict count]];
+        }
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        //
+        DDLogVerbose(@"error received: %@", error);
+    }];
+    
+
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+- (AppDelegate *)appDelegate
 {
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
 @end

@@ -127,7 +127,9 @@
     
     XMPPMessage *msg = [XMPPMessage messageWithType:@"chat" to:[XMPPJID jidWithString:toJid]];
     NSXMLElement *body = [NSXMLElement elementWithName:@"body" stringValue:message.text];
+    NSXMLElement *thread = [NSXMLElement elementWithName:@"thread" stringValue:message.conversation.channel.node];
     [msg  addChild:body];
+    [msg addChild:thread];
     
     return msg;
 }

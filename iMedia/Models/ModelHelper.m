@@ -21,6 +21,16 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 @implementation ModelHelper
 
++ (SBJsonParser *)sharedJSONParser {
+    static SBJsonParser *_sharedClient = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _sharedClient = [[SBJsonParser alloc] init];
+    });
+    
+    return _sharedClient;
+}
+
 + (User *)findUserWithEPostalID:(NSString *)ePostalID inContext:(NSManagedObjectContext *)context
 {
     NSManagedObjectContext *moc = context;
@@ -77,31 +87,41 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     }
 }
 
++ (Channel *)findChannelWithSubrequestID:(NSString *)subID inContext:(NSManagedObjectContext *)context
+{
+    NSManagedObjectContext *moc = context;
+    NSEntityDescription *entityDescription = [NSEntityDescription
+                                              entityForName:@"Channel" inManagedObjectContext:moc];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDescription];
+    
+    // Set example predicate and sort orderings...
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:
+                              @"(subrequestID = %@)", subID];
+    [request setPredicate:predicate];
+    
+    NSError *error = nil;
+    NSArray *array = [moc executeFetchRequest:request error:&error];
+    
+    if ([array count] == 0)
+    {
+        DDLogError(@"Channel doesn't exist: %@", error);
+        return nil;
+    } else {
+        if ([array count] > 1) {
+            DDLogError(@"More than one user object with same postal id: %@", subID);
+        }
+        return [array objectAtIndex:0];
+    }
+}
+
+
 + (BOOL)populateUser:(User *)user withJSONData:(id)json
 {
     user.ePostalID = [json valueForKey:@"jid"];
     user.gender = [json valueForKey:@"gender"];
     user.signature = [json valueForKey:@"signature"];
     user.displayName = [json valueForKey:@"nickname"];
-    
-    return YES;
-}
-
-+ (BOOL)populateChannel:(Channel *)channel withServerJSONData:(NSString *)json
-{
-    channel.guid = [json valueForKey:@"global_id"];
-    channel.node = [json valueForKey:@"node_address"];
-    channel.displayName = [json valueForKey:@"name"];
-    channel.ePostalID = [json valueForKey:@"receive_jid"];
-    channel.csContactPostalID = [json valueForKey:@"receive_jid"];
-    channel.type = [NSNumber numberWithInt:IdentityTypeChannel];
-    
-    return YES;
-}
-
-+ (void)populateUser:(User *)user withJSONData:(NSString *)json inContext:(NSManagedObjectContext *)context
-{
-    [ModelHelper populateUser:user withJSONData:json];
     
     NSMutableArray *imageURLArray = [[NSMutableArray alloc] init];
     for (int i = 1; i <=8; i++) {
@@ -124,6 +144,29 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             imageRemote.sequence = 0;
         }
     }
+
+    return YES;
+}
+
++ (NSString *)convertNumberToStringIfNumber:(id)obj
+{
+    if ([obj isKindOfClass:[NSNumber class]]) {
+        return [obj stringValue];
+    }
+    return obj;
+}
+
++ (BOOL)populateChannel:(Channel *)channel withServerJSONData:(NSString *)json
+{
+    
+    channel.guid = [self convertNumberToStringIfNumber:[json valueForKey:@"global_id"]] ;
+    channel.node = [self convertNumberToStringIfNumber:[json valueForKey:@"node_address"]];
+    channel.displayName = [self convertNumberToStringIfNumber:[json valueForKey:@"name"]];
+    channel.ePostalID = [self convertNumberToStringIfNumber:[json valueForKey:@"receive_jid"]];
+    channel.csContactPostalID = [self convertNumberToStringIfNumber:[json valueForKey:@"receive_jid"]];
+    channel.type = [NSNumber numberWithInt:IdentityTypeChannel];
+    
+    return YES;
 }
 
 + (User *)newUserInContext:(NSManagedObjectContext *)context

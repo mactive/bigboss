@@ -21,7 +21,7 @@
 
 #import "ConversationsController.h"
 #import "ContactListViewController.h"
-#import "ShakeViewController.h"
+#import "FunctionListViewController.h"
 #import "SettingViewController.h"
 #import "FirstLoginController.h"
 
@@ -46,7 +46,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     SystemSoundID           _messageReceivedSystemSoundID;
     SystemSoundID           _messageSentSystemSoundID;
 }
-- (void)setupRoster;
 -(void)startIntroSession;
 
 @end
@@ -58,7 +57,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 @synthesize tabController = _tabController;
 @synthesize conversationController;
 @synthesize contactListController;
-@synthesize shakeController;
+@synthesize functionListController;
 @synthesize settingController;
 
 @synthesize me = _me;
@@ -78,6 +77,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [[XMPPNetworkCenter sharedClient] setupWithHostname:nil andPort:0];
     [XMPPNetworkCenter sharedClient].managedObjectContext = _managedObjectContext;
     [[AFNetworkActivityIndicatorManager sharedManager] setEnabled:YES];
+    NSURLCache *URLCache = [[NSURLCache alloc] initWithMemoryCapacity:4 * 1024 * 1024 diskCapacity:20 * 1024 * 1024 diskPath:nil];
+    [NSURLCache setSharedURLCache:URLCache];
 
     
     // check whether first use
@@ -134,9 +135,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 //    self.contactListController.managedObjectContext = _managedObjectContext;
     self.contactListController.title = T(@"Contacts");
     
-    self.shakeController = [[ShakeViewController alloc] init];
-    UINavigationController *navController3 = [[UINavigationController alloc] initWithRootViewController:self.shakeController];
-    self.shakeController.title = T(@"Shake!");
+    self.functionListController = [[FunctionListViewController alloc] init];
+    UINavigationController *navController3 = [[UINavigationController alloc] initWithRootViewController:self.functionListController];
+    self.functionListController.title = T(@"Functions");
     
     NSLog(@"---- %@",NSStringFromCGRect(navController3.view.frame));
 

@@ -64,6 +64,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [self setField:jidField forKey:kXMPPmyJID];
     [self setField:passwordField forKey:kXMPPmyPassword];
     
+    
     [[AppNetworkAPIClient sharedClient] loginWithUsername:jidField.text andPassword:passwordField.text withBlock:^(id responseObject, NSError *error) {
         if (error == nil) {
             
