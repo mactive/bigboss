@@ -78,7 +78,6 @@
 		26F759E7163D14F1005E9FB4 /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F759E6163D14F1005E9FB4 /* UIImage+Resize.m */; };
 		56202F46162AA32F00F6306F /* AddFriendByIDController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56202F45162AA32F00F6306F /* AddFriendByIDController.m */; };
 		56202F49162AE85B00F6306F /* ChannelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56202F48162AE85A00F6306F /* ChannelViewController.m */; };
-		56202F4C162BBDDF00F6306F /* Channel.m in Sources */ = {isa = PBXBuildFile; fileRef = 56202F4B162BBDDF00F6306F /* Channel.m */; };
 		56202F56162BEDF000F6306F /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 56202F55162BEDF000F6306F /* User.m */; };
 		562DE705160ABFA100F782D2 /* ChatDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 562DE704160ABFA100F782D2 /* ChatDetailController.m */; };
 		562DE70F160AC3C600F782D2 /* bubbleMine.png in Resources */ = {isa = PBXBuildFile; fileRef = 562DE707160AC3C600F782D2 /* bubbleMine.png */; };
@@ -102,6 +101,9 @@
 		5646FAFD160D4BC400175B78 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5646FAFC160D4BC400175B78 /* QuartzCore.framework */; };
 		5646FAFF160F1EBF00175B78 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5646FAFE160F1EBF00175B78 /* libicucore.dylib */; };
 		5646FB23160F246500175B78 /* libCocoaPlant.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5646FB1C160F243200175B78 /* libCocoaPlant.a */; };
+		5661561B163E867A00199DB4 /* Channel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5661561A163E867A00199DB4 /* Channel.m */; };
+		5661561E163E90ED00199DB4 /* FunctionListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5661561D163E90EC00199DB4 /* FunctionListViewController.m */; };
+		56615621163E9A1A00199DB4 /* FriendRequestListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56615620163E9A1900199DB4 /* FriendRequestListViewController.m */; };
 		566E80A21609A24C00A333EA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 566E80A11609A24C00A333EA /* UIKit.framework */; };
 		566E80A41609A24C00A333EA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 566E80A31609A24C00A333EA /* Foundation.framework */; };
 		566E80A61609A24C00A333EA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 566E80A51609A24C00A333EA /* CoreGraphics.framework */; };
@@ -409,8 +411,6 @@
 		56202F45162AA32F00F6306F /* AddFriendByIDController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AddFriendByIDController.m; path = ViewControllers/AddFriendByIDController.m; sourceTree = "<group>"; };
 		56202F47162AE85A00F6306F /* ChannelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChannelViewController.h; path = ViewControllers/ChannelViewController.h; sourceTree = "<group>"; };
 		56202F48162AE85A00F6306F /* ChannelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChannelViewController.m; path = ViewControllers/ChannelViewController.m; sourceTree = "<group>"; };
-		56202F4A162BBDDF00F6306F /* Channel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Channel.h; path = Models/Channel.h; sourceTree = "<group>"; };
-		56202F4B162BBDDF00F6306F /* Channel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Channel.m; path = Models/Channel.m; sourceTree = "<group>"; };
 		56202F50162BCB4100F6306F /* ChatWithIdentity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ChatWithIdentity.h; path = ViewControllers/ChatWithIdentity.h; sourceTree = "<group>"; };
 		56202F54162BEDF000F6306F /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = User.h; path = Models/User.h; sourceTree = "<group>"; };
 		56202F55162BEDF000F6306F /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = User.m; path = Models/User.m; sourceTree = "<group>"; };
@@ -438,6 +438,12 @@
 		5646FAFC160D4BC400175B78 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		5646FAFE160F1EBF00175B78 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		5646FB11160F243200175B78 /* CocoaPlant.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CocoaPlant.xcodeproj; path = CocoaPlant/CocoaPlant.xcodeproj; sourceTree = "<group>"; };
+		56615619163E867A00199DB4 /* Channel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Channel.h; path = Models/Channel.h; sourceTree = "<group>"; };
+		5661561A163E867A00199DB4 /* Channel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Channel.m; path = Models/Channel.m; sourceTree = "<group>"; };
+		5661561C163E90EC00199DB4 /* FunctionListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FunctionListViewController.h; path = ViewControllers/FunctionListViewController.h; sourceTree = "<group>"; };
+		5661561D163E90EC00199DB4 /* FunctionListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FunctionListViewController.m; path = ViewControllers/FunctionListViewController.m; sourceTree = "<group>"; };
+		5661561F163E9A1900199DB4 /* FriendRequestListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FriendRequestListViewController.h; path = ViewControllers/FriendRequestListViewController.h; sourceTree = "<group>"; };
+		56615620163E9A1900199DB4 /* FriendRequestListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FriendRequestListViewController.m; path = ViewControllers/FriendRequestListViewController.m; sourceTree = "<group>"; };
 		566E809D1609A24C00A333EA /* iMedia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iMedia.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		566E80A11609A24C00A333EA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		566E80A31609A24C00A333EA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1659,6 +1665,8 @@
 			isa = PBXGroup;
 			children = (
 				566E80B51609A24C00A333EA /* iMedia.xcdatamodeld */,
+				56615619163E867A00199DB4 /* Channel.h */,
+				5661561A163E867A00199DB4 /* Channel.m */,
 				56D0C623163D43E1007FD7B2 /* Me.h */,
 				56D0C624163D43E1007FD7B2 /* Me.m */,
 				56D0C620163D406E007FD7B2 /* Identity.h */,
@@ -1669,8 +1677,6 @@
 				5681B650163D1BFC0056AFAD /* ImageRemote.m */,
 				56202F54162BEDF000F6306F /* User.h */,
 				56202F55162BEDF000F6306F /* User.m */,
-				56202F4A162BBDDF00F6306F /* Channel.h */,
-				56202F4B162BBDDF00F6306F /* Channel.m */,
 				56B4CD441627E55400E046CC /* Message.h */,
 				56B4CD451627E55400E046CC /* Message.m */,
 				56B4CD1F1627AAFB00E046CC /* Conversation.h */,
@@ -1701,11 +1707,15 @@
 				26825BD916378FC7008DA7CC /* AlbumViewController.m */,
 				266A1A6D162E5AF2008EF1D5 /* ShakeViewController.h */,
 				266A1A6E162E5AF2008EF1D5 /* ShakeViewController.m */,
+				5661561C163E90EC00199DB4 /* FunctionListViewController.h */,
+				5661561D163E90EC00199DB4 /* FunctionListViewController.m */,
 				266A1A70162E5B0F008EF1D5 /* SettingViewController.h */,
 				266A1A71162E5B0F008EF1D5 /* SettingViewController.m */,
 				56202F50162BCB4100F6306F /* ChatWithIdentity.h */,
 				264AA536163E534A00607861 /* RequestViewController.h */,
 				264AA537163E534A00607861 /* RequestViewController.m */,
+				5661561F163E9A1900199DB4 /* FriendRequestListViewController.h */,
+				56615620163E9A1900199DB4 /* FriendRequestListViewController.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -2169,7 +2179,6 @@
 				56B4CD531628101500E046CC /* AddFriendController.m in Sources */,
 				56202F46162AA32F00F6306F /* AddFriendByIDController.m in Sources */,
 				56202F49162AE85B00F6306F /* ChannelViewController.m in Sources */,
-				56202F4C162BBDDF00F6306F /* Channel.m in Sources */,
 				56202F56162BEDF000F6306F /* User.m in Sources */,
 				266A1A6F162E5AF3008EF1D5 /* ShakeViewController.m in Sources */,
 				266A1A72162E5B10008EF1D5 /* SettingViewController.m in Sources */,
@@ -2191,6 +2200,9 @@
 				56D0C622163D406E007FD7B2 /* Identity.m in Sources */,
 				56D0C625163D43E1007FD7B2 /* Me.m in Sources */,
 				264AA538163E534A00607861 /* RequestViewController.m in Sources */,
+				5661561B163E867A00199DB4 /* Channel.m in Sources */,
+				5661561E163E90ED00199DB4 /* FunctionListViewController.m in Sources */,
+				56615621163E9A1A00199DB4 /* FriendRequestListViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
