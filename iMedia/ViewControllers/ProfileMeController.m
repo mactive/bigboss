@@ -21,6 +21,8 @@
 
 @interface ProfileMeController ()
 
+@property(strong, nonatomic) NSMutableArray * albumButtonArray;
+
 @end
 
 @implementation ProfileMeController
@@ -42,8 +44,12 @@
 @synthesize infoDescArray;
 @synthesize infoView;
 @synthesize infoTableView;
-@synthesize addedImage;
+@synthesize addAlbumButton;
+
 @synthesize EDITMODEL;
+@synthesize editProfileButton;
+@synthesize albumCount;
+@synthesize albumButtonArray;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -53,36 +59,67 @@
     }
     return self;
 }
+////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - edit model
+////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)setEditModel
 {
     self.EDITMODEL = YES;
+    UIBarButtonItem *ttButton = [[UIBarButtonItem alloc] initWithTitle:T(@"保存") 
+                                                              style:UIBarButtonItemStyleDone 
+                                                             target:self
+                                                             action:@selector(cancelEditModel)];
+    [ttButton setTintColor:RGBCOLOR(80, 192, 77)];
+    self.navigationItem.rightBarButtonItem = ttButton;    
+    
+    //album can do image
+    
+    // table into setting
+//    for (int i = 0 ; i < self.albumCount; i++) {
+//        UIButton *btnTemp;
+//        btnTemp = (UIButton*)[self.albumView viewWithTag:i];
+//        
+//        [btnTemp setTitle:@"dddd" forState:UIControlStateNormal];
+//        [btnTemp addTarget:self action:@selector(removeOrReplace:) forControlEvents:UIControlEventTouchUpInside];
+//    }
+    
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - actionsheet when add album
+/////////////////////////////////////////////////////////////////////////////////////////
+
+- (void)removeOrReplace:(UIButton *)sender
+{   
+    UIActionSheet *actionSheet2 = [[UIActionSheet alloc]  
+                                  initWithTitle:nil  
+                                  delegate:self  
+                                  cancelButtonTitle:T(@"取消")  
+                                  destructiveButtonTitle:nil 
+                                  otherButtonTitles:T(@"替换照片"), T(@"删除照片"),nil];  
+    actionSheet2.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+    [actionSheet2 showInView:self.view];
+}
+
+
+
+- (void)actionSheet2:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0) {  
+//        [self takePhotoFromLibaray];  
+    }else if (buttonIndex == 1) {  
+//        [self takePhotoFromCamera]; 
+    }
+}
+
+
 - (void)cancelEditModel
 {
     self.EDITMODEL = NO;
     // save and upload
-}
-
-
-- (AppDelegate *)appDelegate
-{
-	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	// Do any additional setup after loading the view.
-    self.EDITMODEL = NO;
-    self.title = T(@"个人设置");
+    self.navigationItem.rightBarButtonItem = self.editProfileButton;
     
-    if (self.EDITMODEL) {
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:T(@"保存") style:UIBarButtonItemStyleDone target:self action:@selector(cancelEditModel)];
-    }else{
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:T(@"编辑") style:UIBarButtonItemStyleDone target:self action:@selector(setEditModel)];
-    }
-
+//    [self.addAlbumButton removeFromSuperview];
 }
 
 
@@ -99,6 +136,34 @@
 
 #define VIEW_COMMON_WIDTH 296
 
+- (CGRect)calcRect:(NSInteger)index
+{
+    CGFloat x = VIEW_ALBUM_OFFSET * (index % 4 * 2 + 1) + VIEW_ALBUM_WIDTH * (index % 4) ; 
+    CGFloat y = VIEW_ALBUM_OFFSET * (floor(index / 4) * 2 + 1) + VIEW_ALBUM_WIDTH * floor(index / 4);
+    return  CGRectMake( x, y, VIEW_ALBUM_WIDTH, VIEW_ALBUM_WIDTH);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (AppDelegate *)appDelegate
+{
+	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+	// Do any additional setup after loading the view.
+    self.title = T(@"个人设置");
+    self.editProfileButton = [[UIBarButtonItem alloc] initWithTitle:T(@"编辑") 
+                                                          style:UIBarButtonItemStyleDone 
+                                                         target:self 
+                                                         action:@selector(setEditModel)];
+    
+    self.navigationItem.rightBarButtonItem = self.editProfileButton;
+}
+
 - (void)loadView
 {
     [super loadView];
@@ -109,7 +174,19 @@
     self.contentView.backgroundColor = RGBCOLOR(222, 224, 227);
     
     
+    self.addAlbumButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [self.addAlbumButton.layer setMasksToBounds:YES];
+    [self.addAlbumButton.layer setCornerRadius:3.0];
+    self.addAlbumButton.tag = 1000;    
+    [self.addAlbumButton setImage:[UIImage imageNamed:@"profile_add.png"] forState:UIControlStateNormal];
+    [self.addAlbumButton addTarget:self action:@selector(addAlbum:) forControlEvents:UIControlEventTouchUpInside];
+    [self.addAlbumButton setFrame:[self calcRect:0]];
+    [self.albumView addSubview:self.addAlbumButton];
+
+    self.EDITMODEL = NO;
+    
     [self initAlbumView];
+    [self refreshAlbumView];
     [self initStatusView];
     [self initSNSView];
     [self initInfoView];
@@ -120,49 +197,59 @@
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -  ablum view
 ////////////////////////////////////////////////////////////////////////////////
-
+#define MAX_ALBUN_COUNT 8
 - (void)initAlbumView
 {
+    self.albumButtonArray = [[NSMutableArray alloc] init];
     self.albumView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, VIEW_ALBUM_HEIGHT)];
     UIImageView *albumViewBg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"profile_image_bg.png"]];
     [self.albumView addSubview:albumViewBg];
     
     UIButton *albumButton;
-    
-    self.albumArray = [[NSMutableArray alloc] initWithArray: [self.me getOrderedNonNilImages]];
-    
 //    self.albumArray = [[NSMutableArray alloc] initWithObjects:
 //                       @"profile_face_1.png",@"profile_face_2.png",@"profile_face_1.png",@"profile_face_2.png", nil ];
     
-    BOOL ALBUM_ADD = NO;
-    
-    if ([self.albumArray count] < 8) {
-        [self.albumArray addObject:@"profile_add.png"];
-        ALBUM_ADD = YES;
-    }
-    
-    for (int i = 0; i< [albumArray count]; i++) {
+
+    for (int i = 0; i< MAX_ALBUN_COUNT; i++) {
         albumButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        [albumButton setFrame:CGRectMake(VIEW_ALBUM_OFFSET * (i%4*2 + 1) + VIEW_ALBUM_WIDTH * (i%4), VIEW_ALBUM_OFFSET * (floor(i/4)*2+1) + VIEW_ALBUM_WIDTH * floor(i/4), VIEW_ALBUM_WIDTH, VIEW_ALBUM_WIDTH)];
+        [albumButton setFrame:[self calcRect:i]];
         [albumButton.layer setMasksToBounds:YES];
         [albumButton.layer setCornerRadius:3.0];
-        albumButton.tag = i;
-        if (ALBUM_ADD && i == [albumArray count] - 1 ) {
-            [albumButton setImage:[UIImage imageNamed:[albumArray objectAtIndex:i] ] forState:UIControlStateNormal];
-            [albumButton addTarget:self action:@selector(addAlbum:) forControlEvents:UIControlEventTouchUpInside];
-        }else {
-            Avatar *avatar = [albumArray objectAtIndex:i];
-            [albumButton setImage:avatar.thumbnail forState:UIControlStateNormal];
-            //     [albumButton setImage:[UIImage imageNamed:[albumArray objectAtIndex:i] ] forState:UIControlStateNormal];
-
-            [albumButton addTarget:self action:@selector(albumClick:) forControlEvents:UIControlEventTouchUpInside];
-        }
+        albumButton.tag = i ;
+        [albumButton addTarget:self action:@selector(albumClick:) forControlEvents:UIControlEventTouchUpInside];
         
         [self.albumView addSubview:albumButton];
+        [albumButton setHidden:YES];
+        [self.albumButtonArray addObject:albumButton];
     }
-    
     [self.contentView addSubview:self.albumView];
     
+}
+
+- (void)refreshAlbumView
+{
+    self.albumArray = [[NSMutableArray alloc] initWithArray: [self.me getOrderedAvatars]];
+    self.albumCount = [self.albumArray count];
+    
+
+    
+    for (int j = 0; j < 8; j++) {
+        UIButton *albumButton = [self.albumButtonArray objectAtIndex:j];
+        if (j < albumCount) {
+            Avatar *avatar = [self.albumArray objectAtIndex:j];
+            [albumButton setImage:avatar.thumbnail forState:UIControlStateNormal]; 
+            [albumButton setHidden:NO];
+        } else {
+            [albumButton setHidden:YES];
+        }
+    }
+
+
+    if (self.albumCount < MAX_ALBUN_COUNT) {
+        CGRect rect = [self calcRect:self.albumCount];
+        [self.addAlbumButton setFrame:rect];
+        [self.albumView addSubview:self.addAlbumButton];
+    }
 }
 
 - (void)albumClick:(UIButton *)sender
@@ -249,8 +336,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     insertAvatar.sequence = [NSNumber numberWithInt:sequence];
     [self.me addAvatarsObject:insertAvatar];
     
-    [self.albumView removeFromSuperview];
-    [self initAlbumView];
+    [self refreshAlbumView];
     
     //delete 
 //    [me removeAvatarsObject:insertAvatar];

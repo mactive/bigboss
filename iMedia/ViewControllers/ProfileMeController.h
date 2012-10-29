@@ -32,13 +32,15 @@
 
 @property (strong, nonatomic) Me *me;
 @property (readwrite, nonatomic) BOOL EDITMODEL;
-
+@property (strong, nonatomic) UIBarButtonItem *editProfileButton;
 
 @property (strong, nonatomic) NSMutableArray *albumArray;
 @property (strong, nonatomic) NSArray *infoArray;
 @property (strong, nonatomic) NSArray *infoDescArray;
 @property (strong, nonatomic) AlbumViewController* albumViewController;
 
-@property (strong, nonatomic) UIImageView *addedImage;
+@property (strong, nonatomic) UIButton *addAlbumButton;
+@property (readwrite, nonatomic) NSUInteger albumCount;
+
 
 @end
