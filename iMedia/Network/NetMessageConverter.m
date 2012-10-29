@@ -24,17 +24,16 @@
 
 +(Message *)newMessageFromXMPPMessage:(XMPPMessage *)msg inContext:(NSManagedObjectContext *)context
 {
-    Message *message = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:context];
-        
     NSString* jid = [[msg from] bare];
-        
     User *from = [ModelHelper findUserWithEPostalID:jid inContext:context];
-        
     if (from == nil)
     {
         // it is from a CS repre
+        return nil;
     }
-        
+    
+    Message *message = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:context];
+    
     message.from = from;
     message.sentDate = [NSDate date];
     message.text = [[msg elementForName:@"body"] stringValue];

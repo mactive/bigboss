@@ -417,6 +417,9 @@ static NSString * const pubsubhost = @"pubsub.192.168.1.104";
 		{
             Message *msg = [NetMessageConverter newMessageFromXMPPMessage:message inContext:_managedObjectContext];
             
+            if (msg == nil) {
+                return;
+            }
             // MyNotificationName defined globally
             NSNotification *myNotification =
             [NSNotification notificationWithName:NEW_MESSAGE_NOTIFICATION object:msg.conversation];
@@ -492,7 +495,8 @@ static NSString * const pubsubhost = @"pubsub.192.168.1.104";
         thisUser = [ModelHelper newUserInContext:_managedObjectContext];
     }
     
-    if (thisUser.state.intValue != IdentityStateActive) {
+ 
+    if (thisUser.state.intValue != IdentityStateActive && thisUser.state.intValue != IdentityStatePendingAddFriend) {
         thisUser.name = user.nickname;
         thisUser.ePostalID = [user.jid bare];
         thisUser.displayName = [thisUser.ePostalID substringToIndex:[thisUser.ePostalID rangeOfString: @"@"].location];
@@ -585,15 +589,26 @@ static NSString * const pubsubhost = @"pubsub.192.168.1.104";
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
     
-    // MyNotificationName defined globally
-    NSNotification *myNotification =
-    [NSNotification notificationWithName:NEW_FRIEND_NOTIFICATION object:[[presence from] bare]];
-    [[NSNotificationQueue defaultQueue]
-     enqueueNotification:myNotification
-     postingStyle:NSPostWhenIdle
-     coalesceMask:NSNotificationNoCoalescing
-     forModes:nil];
-
+    NSString* ePostalID = [[presence from] bare];
+        
+    User* thisUser = [ModelHelper findUserWithEPostalID:ePostalID inContext:_managedObjectContext];
+    
+    // if user doesn't exist - it is a new subscription request - send notificatio and wait for process
+    // if not, it is a reply for a previous add friend request. allow it to proceed
+    if (thisUser == nil || thisUser.state.intValue == IdentityStateInactive) {
+        // MyNotificationName defined globally
+        NSNotification *myNotification =
+        [NSNotification notificationWithName:NEW_FRIEND_NOTIFICATION object:[[presence from] bare]];
+        [[NSNotificationQueue defaultQueue]
+         enqueueNotification:myNotification
+         postingStyle:NSPostWhenIdle
+         coalesceMask:NSNotificationNoCoalescing
+         forModes:nil];
+    } else if (thisUser.state.intValue == IdentityStatePendingAddFriend) {
+        thisUser.state = [NSNumber numberWithInt:IdentityStateActive];
+        MOCSave(_managedObjectContext);
+    }
+    
 }
 
 - (void)acceptPresenceSubscriptionRequestFrom:(NSString *)jidStr andAddToRoster:(BOOL)flag
