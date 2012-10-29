@@ -7,6 +7,7 @@
 //
 
 #import "AlbumViewController.h"
+#import "Avatar.h"
 
 @implementation AlbumViewController
 @synthesize albumArray;
@@ -48,7 +49,8 @@
                                                             self.view.frame.size.height - 50)];
     view.backgroundColor = [UIColor blackColor];
     UIImageView* imageView = [[UIImageView alloc]initWithFrame:view.bounds];
-    [imageView setImage:[UIImage imageNamed:[self.albumArray objectAtIndex:index]]];
+    Avatar * singleAvatar = [self.albumArray objectAtIndex:index];
+    [imageView setImage:singleAvatar.image];
     [imageView setContentMode:UIViewContentModeScaleAspectFit];
 
     [view addSubview:imageView];

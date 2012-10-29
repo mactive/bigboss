@@ -58,7 +58,7 @@
     self.settingTableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
     self.settingTableView.dataSource = self;
     self.settingTableView.delegate = self;
-//    [self.settingTableView setBackgroundColor:[UIColor clearColor]];
+
     [self.view addSubview:self.settingTableView];
     
 }
@@ -110,10 +110,7 @@
     
 	UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     
-    [cell setSelectionStyle:UITableViewCellSelectionStyleBlue];
-    cell.backgroundView.backgroundColor = RGBCOLOR(248, 248, 248);
-    
-    cell.selectedBackgroundView.backgroundColor =  RGBCOLOR(228, 228, 228);
+    cell.backgroundView.backgroundColor = RGBCOLOR(86, 184, 225);
     
     UILabel* titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 12, 140, 20)];
     titleLabel.text = [[self.settingTitleArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
@@ -121,18 +118,18 @@
     titleLabel.textColor = RGBCOLOR(77, 77, 77);
     titleLabel.backgroundColor = [UIColor clearColor];
     [cell addSubview:titleLabel];
-    //    cell.textLabel.text = [self.infoArray objectAtIndex:indexPath.row];
-    //    cell.textLabel.textColor = RGBCOLOR(155, 161, 172);
     
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+
     if (indexPath.row == 0 && indexPath.section == 0 ) {
         ProfileMeController *profileMeController = [[ProfileMeController alloc] initWithNibName:nil bundle:nil];
         profileMeController.managedObjectContext = self.managedObjectContext;
-        //        [profileMeController setHidesBottomBarWhenPushed:YES];
+        //        [profileMeController  :YES];
         
         [self.navigationController pushViewController:profileMeController animated:YES];
     }

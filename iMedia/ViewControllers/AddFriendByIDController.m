@@ -100,6 +100,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             NSLog(@"self delegate %@",[self appDelegate]);
             
             // Pass the selected object to the new view controller.
+            [controller setHidesBottomBarWhenPushed:YES];
             [self.navigationController pushViewController:controller animated:YES];
             
         } else if ([type isEqualToString:@"channel"]) {

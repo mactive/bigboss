@@ -43,7 +43,6 @@
 @synthesize infoView;
 @synthesize infoTableView;
 @synthesize actionView;
-@synthesize addedImage;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -98,15 +97,7 @@
     
     UIButton *albumButton;
     
-    self.albumArray = [[NSMutableArray alloc] initWithObjects:
-                       @"profile_face_1.png",@"profile_face_2.png",@"profile_face_1.png",@"profile_face_2.png", nil ];
-    
-    BOOL ALBUM_ADD = NO;
-
-    if ([self.albumArray count] < 8) {
-        [self.albumArray addObject:@"profile_add.png"];
-        ALBUM_ADD = YES;
-    }
+    self.albumArray = [self.user getOrderedNonNilImages];
     
     for (int i = 0; i< [albumArray count]; i++) {
         albumButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -115,11 +106,8 @@
         [albumButton.layer setMasksToBounds:YES];
         [albumButton.layer setCornerRadius:3.0];
         albumButton.tag = i;
-        if (ALBUM_ADD && i == [albumArray count] - 1 ) {
-            [albumButton addTarget:self action:@selector(addAlbum:) forControlEvents:UIControlEventTouchUpInside];
-        }else {
-            [albumButton addTarget:self action:@selector(albumClick:) forControlEvents:UIControlEventTouchUpInside];
-        }
+
+        [albumButton addTarget:self action:@selector(albumClick:) forControlEvents:UIControlEventTouchUpInside];
 
         [self.albumView addSubview:albumButton];
     }
@@ -136,54 +124,6 @@
     // Pass the selected object to the new view controller.
     [self.navigationController pushViewController:self.albumViewController animated:YES];
     NSLog(@"%d",sender.tag);
-}
-
-
-#pragma mark - start camera
-#define kCameraSource       UIImagePickerControllerSourceTypeCamera
-
-- (void)addAlbum:(UIButton *)sender
-{
-    if (![UIImagePickerController isSourceTypeAvailable:kCameraSource]) {
-        UIAlertView *cameraAlert = [[UIAlertView alloc] initWithTitle:T(@"cameraAlert") message:T(@"Camera is not available.") delegate:self cancelButtonTitle:nil otherButtonTitles:nil, nil];
-        [cameraAlert show];
-		return;
-	}
-    
-//    self.tableView.allowsSelection = NO;
-    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-    picker.sourceType = UIImagePickerControllerSourceTypeCamera;
-	picker.delegate = self;
-	picker.allowsEditing = YES;
-    
-    
-    [self presentModalViewController:picker animated:YES];
-    
-//    self.tableView.allowsSelection = YES;
-}
-
-#pragma mark - UIImagePickerControllerDelegateMethods
-
-- (void)imagePickerController:(UIImagePickerController *)picker 
-didFinishPickingMediaWithInfo:(NSDictionary *)info
-{
-	UIImage *image = [info objectForKey:UIImagePickerControllerEditedImage];
-//    self.image = image;
-    
-    self.addedImage = [[UIImageView alloc]initWithFrame:CGRectMake(100, 100, 75, 75)];
-    [self.addedImage setImage:image];
-    [self.albumView addSubview:self.addedImage];
-    
-    [picker dismissModalViewControllerAnimated:YES];
-    //after picker dismiss than pushview it will not quit
-//    [self.navigationController pushViewController:self.controller animated:NO];
-}
-
-- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
-{
-    /* keep the order first dismiss picker and pop controller */
-    [picker dismissModalViewControllerAnimated:YES];
-//    [self.controller.navigationController popViewControllerAnimated:NO];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
