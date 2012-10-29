@@ -10,7 +10,7 @@
 #import "ProfileMeController.h"
 #import "RequestViewController.h"
 
-@interface SettingViewController ()
+@interface SettingViewController () 
 
 @end
 

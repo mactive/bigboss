@@ -34,7 +34,6 @@
 
 
 
-#define NEW_MESSAGE_NOTIFICATION @"NewMessage"
 
 #define UIKeyboardNotificationsObserve() \
 NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter]; \

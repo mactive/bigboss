@@ -20,4 +20,6 @@
 @property(nonatomic, strong) UIButton * confirmButton;
 @property(nonatomic, strong) UIButton * cancelButton;
 
+@property (nonatomic, strong) id  jsonData;
+
 @end

@@ -12,7 +12,7 @@
 
 @class ContactListViewController;
 @class ConversationsController;
-@class ShakeViewController;
+@class FunctionListViewController;
 @class SettingViewController;
 @class Message;
 @class Me;
@@ -23,7 +23,7 @@
 @property (strong, nonatomic) UITabBarController *tabController;
 @property (strong, nonatomic) ConversationsController *conversationController;
 @property (strong, nonatomic) ContactListViewController *contactListController;
-@property (strong, nonatomic) ShakeViewController *shakeController;
+@property (strong, nonatomic) FunctionListViewController *functionListController;
 @property (strong, nonatomic) SettingViewController *settingController;
 
 // Here comes one of the bigges assumptions. This me is the only instance in the Me entity. If me exists, it means

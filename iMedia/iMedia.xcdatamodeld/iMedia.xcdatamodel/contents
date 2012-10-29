@@ -4,6 +4,7 @@
         <attribute name="csContactPostalID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="node" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="subID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="subrequestID" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="conversation" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Conversation" inverseName="channel" inverseEntity="Conversation" syncable="YES"/>
     </entity>
     <entity name="Conversation" representedClassName="Conversation" syncable="YES">
@@ -22,7 +23,7 @@
         <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="state" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="type" attributeType="Integer 16" defaultValueString="0" indexed="YES" syncable="YES"/>
-        <relationship name="images" toMany="YES" minCount="8" maxCount="8" deletionRule="Nullify" destinationEntity="ImageRemote" inverseName="owner" inverseEntity="ImageRemote" syncable="YES"/>
+        <relationship name="images" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ImageRemote" inverseName="owner" inverseEntity="ImageRemote" syncable="YES"/>
     </entity>
     <entity name="ImageLocal" representedClassName="Avatar" syncable="YES">
         <attribute name="image" attributeType="Transformable" valueTransformerName="ImageToDataTransformer" syncable="YES"/>
@@ -61,7 +62,7 @@
         <relationship name="conversations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Conversation" inverseName="users" inverseEntity="Conversation" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Channel" positionX="160" positionY="192" width="128" height="105"/>
+        <element name="Channel" positionX="160" positionY="192" width="128" height="120"/>
         <element name="Conversation" positionX="0" positionY="0" width="128" height="165"/>
         <element name="Identity" positionX="160" positionY="192" width="128" height="135"/>
         <element name="ImageLocal" positionX="160" positionY="192" width="128" height="120"/>

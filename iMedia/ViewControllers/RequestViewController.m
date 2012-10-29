@@ -11,6 +11,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "NSDate+timesince.h"
 #import "UIImageView+AFNetworking.h"
+#import "XMPPNetworkCenter.h"
 
 @interface RequestViewController ()
 
@@ -25,6 +26,7 @@
 @synthesize confirmButton;
 @synthesize cancelButton;
 @synthesize requestDict;
+@synthesize jsonData;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -147,12 +149,14 @@
 
 - (void)confirmRequest
 {
-    
+    NSString *jidStr = [self.jsonData valueForKey:@"ePostalID"];
+    [[XMPPNetworkCenter sharedClient] acceptPresenceSubscriptionRequestFrom:jidStr andAddToRoster:YES];
 }
 
 - (void)cancelRequest
 {
-    
+    NSString *jidStr = [self.jsonData valueForKey:@"ePostalID"];
+    [[XMPPNetworkCenter sharedClient] rejectPresenceSubscriptionRequestFrom:jidStr];
 }
 
 

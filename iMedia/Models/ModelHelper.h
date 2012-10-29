@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "SBJson.h"
 
 @class User;
 @class Channel;
@@ -15,12 +16,13 @@
 
 + (User *)findUserWithEPostalID:(NSString *)ePostalID inContext:(NSManagedObjectContext*)context;
 + (Channel *)findChannelWithNode:(NSString *)node inContext:(NSManagedObjectContext *)context;
++ (Channel *)findChannelWithSubrequestID:(NSString *)subID inContext:(NSManagedObjectContext *)context;
 
 + (BOOL)populateUser:(User *)user withJSONData:(NSString *)json;
 + (BOOL)populateChannel:(Channel *)channel withServerJSONData:(NSString *)json;
 
-+ (void)populateUser:(User *)user withJSONData:(NSString *)json inContext:(NSManagedObjectContext*)context;
-
 + (User *)newUserInContext:(NSManagedObjectContext *)context;
+
++ (SBJsonParser *)sharedJSONParser;
 
 @end

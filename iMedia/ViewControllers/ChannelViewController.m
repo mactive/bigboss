@@ -95,6 +95,6 @@
         newChannel.state = [NSNumber numberWithInt:IdentityStatePendingAddSubscription];
     }
     
-    [[XMPPNetworkCenter sharedClient] subscribeToChannel:nodeStr withCallbackBlock:nil];
+    newChannel.subrequestID = [[XMPPNetworkCenter sharedClient] subscribeToChannel:nodeStr withCallbackBlock:nil];
 }
 @end
