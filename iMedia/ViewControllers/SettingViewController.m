@@ -8,6 +8,7 @@
 
 #import "SettingViewController.h"
 #import "ProfileMeController.h"
+#import "RequestViewController.h"
 
 @interface SettingViewController ()
 
@@ -32,9 +33,9 @@
 
 - (void)loadView{
     [super loadView];
-    UIImageView *tabbarBgView  = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"navigationBar_bg.png"]];
-    [self.navigationController.navigationBar insertSubview:tabbarBgView atIndex:1];
-    [self.navigationController.navigationBar setBackgroundColor:[UIColor blackColor]];
+//    UIImageView *tabbarBgView  = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"navigationBar_bg.png"]];
+//    [self.navigationController.navigationBar insertSubview:tabbarBgView atIndex:1];
+//    [self.navigationController.navigationBar setBackgroundColor:[UIColor blackColor]];
 }
 
 - (void)viewDidLoad
@@ -42,7 +43,7 @@
     [super viewDidLoad];
     
     self.settingTitleArray = [[NSArray alloc] initWithObjects:
-                              [[NSArray alloc] initWithObjects:@"个人信息",@"我的相册",@"新浪微博",@"微信朋友圈", nil],
+                              [[NSArray alloc] initWithObjects:@"个人设置",@"我的相册",@"新浪微博",@"微信朋友圈",@"好友请求", nil],
                               [[NSArray alloc] initWithObjects:@"去给翼石打个分吧",@"帮助与反馈",@"关于翼石",@"App精品推荐", nil],
                               nil ];
     
@@ -131,8 +132,14 @@
     if (indexPath.row == 0 && indexPath.section == 0 ) {
         ProfileMeController *profileMeController = [[ProfileMeController alloc] initWithNibName:nil bundle:nil];
         profileMeController.managedObjectContext = self.managedObjectContext;
-//        [profileMeController setHidesBottomBarWhenPushed:YES];
+        //        [profileMeController setHidesBottomBarWhenPushed:YES];
+        
         [self.navigationController pushViewController:profileMeController animated:YES];
+    }
+    
+    if (indexPath.row == 4 && indexPath.section == 0 ) {
+        RequestViewController *requestViewController = [[RequestViewController alloc] initWithNibName:nil bundle:nil];        
+        [self.navigationController pushViewController:requestViewController animated:YES];
     }
 }
 

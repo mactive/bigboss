@@ -10,7 +10,7 @@
 @class Me;
 @class AlbumViewController;
 
-@interface ProfileMeController : UIViewController<UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate,UIActionSheetDelegate, UINavigationControllerDelegate>
+@interface ProfileMeController : UIViewController<UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate,UIActionSheetDelegate,UINavigationControllerDelegate>
 {
 }
 
@@ -31,6 +31,7 @@
 @property (strong, nonatomic) UILabel  *nameLabel;
 
 @property (strong, nonatomic) Me *me;
+@property (readwrite, nonatomic) BOOL EDITMODEL;
 
 
 @property (strong, nonatomic) NSMutableArray *albumArray;

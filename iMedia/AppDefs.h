@@ -117,7 +117,7 @@ alpha:(a)]
 #define HSVACOLOR(h,s,v,a) [UIColor colorWithHue:(h) saturation:(s) value:(v) alpha:(a)]
 
 #define RGBA(r,g,b,a) (r)/255.0f, (g)/255.0f, (b)/255.0f, (a)
-#define BGCOLOR [UIColor colorWithRed:222.0f green:224.0f blue:227.0f alpha:1]
+#define BGCOLOR [UIColor colorWithRed:222.0f/255.0f green:224.0f/255.0f blue:227.0f/255.0f alpha:1]
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 #define NAMEFIRSTLATTER	@"ABCDEFGHIJKLMNOPQRSTUVWXYZ#"

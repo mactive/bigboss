@@ -23,6 +23,12 @@
 		2631C4EB16310026004DE7FB /* face_2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2631C4EA16310026004DE7FB /* face_2@2x.png */; };
 		2631C4ED1631035D004DE7FB /* time_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2631C4EC1631035D004DE7FB /* time_icon@2x.png */; };
 		2631C52A16313033004DE7FB /* NSDate+timesince.m in Sources */ = {isa = PBXBuildFile; fileRef = 2631C52916313033004DE7FB /* NSDate+timesince.m */; };
+		264AA538163E534A00607861 /* RequestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 264AA537163E534A00607861 /* RequestViewController.m */; };
+		264AA53E163E673300607861 /* contact_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 264AA539163E673300607861 /* contact_icon@2x.png */; };
+		264AA53F163E673300607861 /* right_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 264AA53A163E673300607861 /* right_icon@2x.png */; };
+		264AA540163E673300607861 /* add_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 264AA53B163E673300607861 /* add_icon@2x.png */; };
+		264AA541163E673300607861 /* button_cancel_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 264AA53C163E673300607861 /* button_cancel_bg@2x.png */; };
+		264AA542163E673300607861 /* button_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 264AA53D163E673300607861 /* button_bg@2x.png */; };
 		2659A09516391C840090EADB /* profile_add@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2659A09416391C840090EADB /* profile_add@2x.png */; };
 		2659A0971639211A0090EADB /* shake_view@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2659A0961639211A0090EADB /* shake_view@2x.png */; };
 		2659A0A0163940FF0090EADB /* message_3.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2659A09E163940FF0090EADB /* message_3.wav */; };
@@ -336,6 +342,13 @@
 		2631C4EC1631035D004DE7FB /* time_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "time_icon@2x.png"; path = "Resources/time_icon@2x.png"; sourceTree = "<group>"; };
 		2631C52816313033004DE7FB /* NSDate+timesince.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDate+timesince.h"; path = "contrib/NSDate+timesince.h"; sourceTree = "<group>"; };
 		2631C52916313033004DE7FB /* NSDate+timesince.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDate+timesince.m"; path = "contrib/NSDate+timesince.m"; sourceTree = "<group>"; };
+		264AA536163E534A00607861 /* RequestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RequestViewController.h; path = ViewControllers/RequestViewController.h; sourceTree = "<group>"; };
+		264AA537163E534A00607861 /* RequestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RequestViewController.m; path = ViewControllers/RequestViewController.m; sourceTree = "<group>"; };
+		264AA539163E673300607861 /* contact_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "contact_icon@2x.png"; path = "Resources/contact_icon@2x.png"; sourceTree = "<group>"; };
+		264AA53A163E673300607861 /* right_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "right_icon@2x.png"; path = "Resources/right_icon@2x.png"; sourceTree = "<group>"; };
+		264AA53B163E673300607861 /* add_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "add_icon@2x.png"; path = "Resources/add_icon@2x.png"; sourceTree = "<group>"; };
+		264AA53C163E673300607861 /* button_cancel_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "button_cancel_bg@2x.png"; path = "Resources/button_cancel_bg@2x.png"; sourceTree = "<group>"; };
+		264AA53D163E673300607861 /* button_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "button_bg@2x.png"; path = "Resources/button_bg@2x.png"; sourceTree = "<group>"; };
 		2659A09416391C840090EADB /* profile_add@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "profile_add@2x.png"; path = "Resources/profile_add@2x.png"; sourceTree = "<group>"; };
 		2659A0961639211A0090EADB /* shake_view@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "shake_view@2x.png"; path = "Resources/shake_view@2x.png"; sourceTree = "<group>"; };
 		2659A09E163940FF0090EADB /* message_3.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = message_3.wav; path = Resources/message_3.wav; sourceTree = "<group>"; };
@@ -845,6 +858,11 @@
 			isa = PBXGroup;
 			children = (
 				562DE75D1610446000F782D2 /* MessageInputBarBackground.png */,
+				264AA539163E673300607861 /* contact_icon@2x.png */,
+				264AA53A163E673300607861 /* right_icon@2x.png */,
+				264AA53B163E673300607861 /* add_icon@2x.png */,
+				264AA53C163E673300607861 /* button_cancel_bg@2x.png */,
+				264AA53D163E673300607861 /* button_bg@2x.png */,
 				2659A0A2163941050090EADB /* message_1.wav */,
 				2659A09E163940FF0090EADB /* message_3.wav */,
 				2659A09F163940FF0090EADB /* message_2.wav */,
@@ -1686,6 +1704,8 @@
 				266A1A70162E5B0F008EF1D5 /* SettingViewController.h */,
 				266A1A71162E5B0F008EF1D5 /* SettingViewController.m */,
 				56202F50162BCB4100F6306F /* ChatWithIdentity.h */,
+				264AA536163E534A00607861 /* RequestViewController.h */,
+				264AA537163E534A00607861 /* RequestViewController.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -1967,6 +1987,11 @@
 				2659A0A0163940FF0090EADB /* message_3.wav in Resources */,
 				2659A0A1163940FF0090EADB /* message_2.wav in Resources */,
 				2659A0A3163941050090EADB /* message_1.wav in Resources */,
+				264AA53E163E673300607861 /* contact_icon@2x.png in Resources */,
+				264AA53F163E673300607861 /* right_icon@2x.png in Resources */,
+				264AA540163E673300607861 /* add_icon@2x.png in Resources */,
+				264AA541163E673300607861 /* button_cancel_bg@2x.png in Resources */,
+				264AA542163E673300607861 /* button_bg@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2165,6 +2190,7 @@
 				56D0C61B163D1F8A007FD7B2 /* Avatar.m in Sources */,
 				56D0C622163D406E007FD7B2 /* Identity.m in Sources */,
 				56D0C625163D43E1007FD7B2 /* Me.m in Sources */,
+				264AA538163E534A00607861 /* RequestViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

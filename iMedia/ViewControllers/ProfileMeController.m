@@ -43,6 +43,7 @@
 @synthesize infoView;
 @synthesize infoTableView;
 @synthesize addedImage;
+@synthesize EDITMODEL;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -52,6 +53,17 @@
     }
     return self;
 }
+#pragma mark - edit model
+- (void)setEditModel
+{
+    self.EDITMODEL = YES;
+}
+- (void)cancelEditModel
+{
+    self.EDITMODEL = NO;
+    // save and upload
+}
+
 
 - (AppDelegate *)appDelegate
 {
@@ -62,6 +74,15 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    self.EDITMODEL = NO;
+    self.title = T(@"个人设置");
+    
+    if (self.EDITMODEL) {
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:T(@"保存") style:UIBarButtonItemStyleDone target:self action:@selector(cancelEditModel)];
+    }else{
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:T(@"编辑") style:UIBarButtonItemStyleDone target:self action:@selector(setEditModel)];
+    }
+
 }
 
 
@@ -108,7 +129,7 @@
     
     UIButton *albumButton;
     
-    self.albumArray = [[NSMutableArray alloc] initWithArray: [self.me getOrderedAvatars]];
+    self.albumArray = [[NSMutableArray alloc] initWithArray: [self.me getOrderedNonNilImages]];
     
 //    self.albumArray = [[NSMutableArray alloc] initWithObjects:
 //                       @"profile_face_1.png",@"profile_face_2.png",@"profile_face_1.png",@"profile_face_2.png", nil ];
