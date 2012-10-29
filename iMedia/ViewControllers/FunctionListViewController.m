@@ -11,6 +11,8 @@
 #import "XMPPNetworkCenter.h"
 #import "AppNetworkAPIClient.h"
 #import "AppDelegate.h" 
+#import "RequestViewController.h"
+#import "FriendRequestListViewController.h"
 
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
@@ -42,6 +44,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        self.friendRequestDict = [NSMutableDictionary dictionaryWithCapacity:5];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(friendRequestReceived:)
                                                      name:NEW_FRIEND_NOTIFICATION object:nil];
@@ -141,7 +144,15 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.row == 0 && indexPath.section == 0 ) {
-
+        if ([self.friendRequestDict count] == 1) {
+            RequestViewController *controller = [[RequestViewController alloc] initWithNibName:nil bundle:nil];
+            controller.jsonData = [[self.friendRequestDict allValues] objectAtIndex:0];
+            [self.navigationController pushViewController:controller animated:YES];
+        } else if ([self.friendRequestDict count] > 1) {
+            FriendRequestListViewController *controller = [[FriendRequestListViewController alloc] initWithNibName:nil bundle:nil];
+            controller.friendRequestJSONDict = self.friendRequestDict;
+            [self.navigationController pushViewController:controller animated:YES];
+        }
     }
     
     if (indexPath.row == 0 && indexPath.section == 1 ) {

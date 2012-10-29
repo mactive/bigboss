@@ -10,6 +10,6 @@
 
 @interface FunctionListViewController : UIViewController
 
-@property (nonatomic, strong) NSDictionary* friendRequestDict;
+@property (nonatomic, strong) NSMutableDictionary* friendRequestDict;
 
 @end

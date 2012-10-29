@@ -63,7 +63,7 @@
 	self.titleLabel.textAlignment = UITextAlignmentLeft;
     self.titleLabel.textColor = RGBCOLOR(107, 107, 107);
     self.titleLabel.backgroundColor = [UIColor clearColor];
-    self.titleLabel.text = [[NSString alloc] initWithFormat:@" %@  %@",[self.requestDict objectForKey:@"name"], T(@"请求加你为好友") ];
+    self.titleLabel.text = [[NSString alloc] initWithFormat:@" %@  %@",[self.jsonData objectForKey:@"guid"], T(@"请求加你为好友") ];
     
     self.timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 40, 250, 20)];
 	self.timeLabel.font = [UIFont boldSystemFontOfSize:14.0];

@@ -11,6 +11,7 @@
 #import "DDLog.h"
 
 #import "User.h"
+#import "Me.h"
 #import "Message.h"
 #import "Channel.h"
 #import "Conversation.h"
@@ -472,9 +473,15 @@ static NSString * const pubsubhost = @"pubsub.192.168.1.104";
     DDLogVerbose(@"add user: %@", user);
     
     NSString* ePostalID = [user.jid bare];
+    NSString *meID ;
     
     XMPPUserMemoryStorageObject *me = [sender myUser];
-    if ([ePostalID isEqualToString:[me.jid bare]]) {
+    if (me == nil) {
+        meID = [self appDelegate].me.ePostalID;
+    } else {
+        meID = [me.jid bare];
+    }
+    if ([ePostalID isEqualToString:meID]) {
         return;
     }
     
@@ -525,12 +532,19 @@ static NSString * const pubsubhost = @"pubsub.192.168.1.104";
 {
     DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
     
+    NSString *meID ;
     XMPPUserMemoryStorageObject *me = [sender myUser];
+    if (me == nil) {
+        meID = [self appDelegate].me.ePostalID;
+    } else {
+        meID = [me.jid bare];
+    }
+
     NSArray* roster = [sender unsortedUsers];
     NSInteger count = [roster count];
     for (int i = 0 ; i < count ; i++) {
         XMPPUserMemoryStorageObject *obj = [roster objectAtIndex:i];
-        if ([obj.jid isEqualToJID:me.jid options:XMPPJIDCompareBare]) {
+        if ([[obj.jid bare] isEqualToString:meID]) {
             continue;
         }
         
