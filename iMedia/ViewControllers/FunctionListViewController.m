@@ -58,16 +58,11 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
     self.settingTitleArray = [[NSArray alloc] initWithObjects:
                               [[NSArray alloc] initWithObjects:@"附近的人", nil],
+                              [[NSArray alloc] initWithObjects:@"打招呼的人", nil],
                               [[NSArray alloc] initWithObjects:@"摇一摇", nil],
                               nil ];
     
     
-    self.settingDescArray = [[NSArray alloc] initWithObjects:
-                             @"夫和实生物，同则不继。以他平他谓之和故能丰长而物归之",
-                             @"老莫  13899763487",
-                             @"IT工程师",
-                             @"山东 聊城",
-                             @"我不是那个史上最牛历史老师！我们中国的教科书属于秽史，请同学们考完试抓紧把它们烧了，放家里一天，都脏你屋子。", nil];
     
     self.settingTableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
     self.settingTableView.dataSource = self;

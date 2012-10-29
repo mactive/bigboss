@@ -18,10 +18,14 @@
 #import "AlbumViewController.h"
 #import "UIImage+Resize.h"
 #import "AppDelegate.h"
+#import "AppNetworkAPIClient.h"
 
 @interface ProfileMeController ()
 
 @property(strong, nonatomic) NSMutableArray * albumButtonArray;
+@property(strong, nonatomic) UIActionSheet *photoActionsheet;
+@property(strong, nonatomic) UIActionSheet *editActionsheet;
+@property(readwrite, nonatomic) NSUInteger editingAlbumIndex;
 
 @end
 
@@ -50,6 +54,9 @@
 @synthesize editProfileButton;
 @synthesize albumCount;
 @synthesize albumButtonArray;
+@synthesize photoActionsheet;
+@synthesize editActionsheet;
+@synthesize editingAlbumIndex;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -75,13 +82,15 @@
     //album can do image
     
     // table into setting
-//    for (int i = 0 ; i < self.albumCount; i++) {
-//        UIButton *btnTemp;
-//        btnTemp = (UIButton*)[self.albumView viewWithTag:i];
-//        
-//        [btnTemp setTitle:@"dddd" forState:UIControlStateNormal];
-//        [btnTemp addTarget:self action:@selector(removeOrReplace:) forControlEvents:UIControlEventTouchUpInside];
-//    }
+    for (int j = 0; j < 8; j++) {
+        UIButton *albumButton = [self.albumButtonArray objectAtIndex:j];
+        if (j < self.albumCount) {
+            [albumButton removeTarget:self action:@selector(albumClick:) forControlEvents:UIControlEventTouchUpInside];
+            [albumButton addTarget:self action:@selector(removeOrReplace:) forControlEvents:UIControlEventTouchUpInside];
+        } else {
+            [albumButton setHidden:YES];
+        }
+    }
     
 }
 
@@ -91,25 +100,15 @@
 
 - (void)removeOrReplace:(UIButton *)sender
 {   
-    UIActionSheet *actionSheet2 = [[UIActionSheet alloc]  
+    self.editActionsheet = [[UIActionSheet alloc]  
                                   initWithTitle:nil  
                                   delegate:self  
                                   cancelButtonTitle:T(@"取消")  
                                   destructiveButtonTitle:nil 
                                   otherButtonTitles:T(@"替换照片"), T(@"删除照片"),nil];  
-    actionSheet2.actionSheetStyle = UIActionSheetStyleBlackOpaque;
-    [actionSheet2 showInView:self.view];
-}
-
-
-
-- (void)actionSheet2:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (buttonIndex == 0) {  
-//        [self takePhotoFromLibaray];  
-    }else if (buttonIndex == 1) {  
-//        [self takePhotoFromCamera]; 
-    }
+    self.editActionsheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+    [self.editActionsheet showInView:self.view];
+    self.editingAlbumIndex = sender.tag;
 }
 
 
@@ -230,9 +229,7 @@
 {
     self.albumArray = [[NSMutableArray alloc] initWithArray: [self.me getOrderedAvatars]];
     self.albumCount = [self.albumArray count];
-    
 
-    
     for (int j = 0; j < 8; j++) {
         UIButton *albumButton = [self.albumButtonArray objectAtIndex:j];
         if (j < albumCount) {
@@ -243,7 +240,6 @@
             [albumButton setHidden:YES];
         }
     }
-
 
     if (self.albumCount < MAX_ALBUN_COUNT) {
         CGRect rect = [self calcRect:self.albumCount];
@@ -270,23 +266,35 @@
 - (void)addAlbum:(UIButton *)sender
 {
     
-    UIActionSheet *actionSheet = [[UIActionSheet alloc]  
+    self.photoActionsheet = [[UIActionSheet alloc]  
                                   initWithTitle:nil  
                                   delegate:self  
                                   cancelButtonTitle:T(@"取消")  
                                   destructiveButtonTitle:nil 
                                   otherButtonTitles:T(@"用户相册"), T(@"摄像头"),nil];  
-    actionSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;  
-    [actionSheet showInView:self.view];
+    self.photoActionsheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;  
+    [self.photoActionsheet showInView:self.view];
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (buttonIndex == 0) {  
-        [self takePhotoFromLibaray];  
-    }else if (buttonIndex == 1) {  
-        [self takePhotoFromCamera];  
+    if (actionSheet == self.photoActionsheet) {
+        if (buttonIndex == 0) {  
+            [self takePhotoFromLibaray];  
+        }else if (buttonIndex == 1) {  
+            [self takePhotoFromCamera];  
+        }
     }
+    
+    if (actionSheet == self.editActionsheet) {
+        if (buttonIndex == 0) {  
+            [self addAlbum:nil];
+        }else if (buttonIndex == 1) {  
+            
+        }
+    }
+    
+    
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -336,11 +344,18 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     insertAvatar.sequence = [NSNumber numberWithInt:sequence];
     [self.me addAvatarsObject:insertAvatar];
     
+    //网路传输
+    [[AppNetworkAPIClient sharedClient] storeAvatar:insertAvatar forMe:self.me andOrder:sequence withBlock:nil];
+    
+    
     [self refreshAlbumView];
     
     //delete 
 //    [me removeAvatarsObject:insertAvatar];
     //replace
+    if (self.editingAlbumIndex != nil) {
+        
+    }
 //    [insertAvatar setImage:image];
 //    [insertAvatar setThumbnail:image];
     
