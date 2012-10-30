@@ -13,7 +13,16 @@
 + (NSString *)getNicknameFromServerJSON:(NSString *)jsonData;
 + (NSString *)getSignatureFromServerJSON:(NSString *)jsonData;
 + (NSString *)getAvatarFromServerJSON:(NSString *)jsonData;
-+ (NSDate *)getDateFromServerJSON:(NSString *)jsonData;
-
++ (NSString *)getGUIDFromServerJSON:(NSString *)jsonData;
++ (NSString *)getGenderFromServerJSON:(NSString *)jsonData;
++ (NSString *)getSelfIntroductionFromServerJSON:(NSString *)jsonData;
++ (NSString *)getCareerFromServerJSON:(NSString *)jsonData;
++ (NSString *)getHometownFromServerJSON:(NSString *)jsonData;
++ (NSString *)getCellFromServerJSON:(NSString *)jsonData;
++ (NSString *)getNodeFromServerJSON:(NSString *)jsonData;
++ (NSString *)getCSContactIDFromServerJSON:(NSString *)jsonData;
++ (NSString *)getChannelEPostalIDFromServerJSON:(NSString *)jsonData;
++ (NSString *)getEPostalIDFromServerJSON:(NSString *)jsonData;
++ (NSDate *)getBirthdateFromServerJSON:(NSString *)jsonData;
 
 @end

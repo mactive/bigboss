@@ -10,6 +10,7 @@
 #import "Me.h"
 #import "Avatar.h"
 #import "Channel.h"
+#import "ImageRemote.h"
 #import "ChatWithIdentity.h"
 #import "ModelHelper.h"
 #import "XMPPNetworkCenter.h"
@@ -379,7 +380,22 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
         [self.me addAvatarsObject:insertAvatar];
         
         //网路传输
-        [[AppNetworkAPIClient sharedClient] storeAvatar:insertAvatar forMe:self.me andOrder:sequence withBlock:nil];
+        [[AppNetworkAPIClient sharedClient] storeAvatar:insertAvatar forMe:self.me andOrder:sequence withBlock:^(id responseObject, NSError *error) {
+            if (error == nil) {
+                
+                NSString* url = [responseObject valueForKey:@"image"];
+                NSString *thumbnailURL = [responseObject valueForKey:@"thumbnail"];
+                
+                NSArray *imagesURLArray = [self.me getOrderedImages];
+                ImageRemote *imageRemote = [imagesURLArray objectAtIndex:(sequence-1)];
+                imageRemote.sequence = [NSNumber numberWithInt:sequence];
+                imageRemote.imageThumbnailURL = thumbnailURL;
+                imageRemote.imageURL = url;
+            } else {
+                NSLog (@"NSError received during login: %@", error);
+            }
+            
+        }];
     }
     
 

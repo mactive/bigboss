@@ -22,6 +22,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 #import "Channel.h"
 #import "ModelHelper.h"
 #import "Me.h"
+#import "ImageRemote.h"
 
 static NSString * const kAppNetworkAPIBaseURLString = @"http://192.168.1.104:8000/";
 //static NSString * const kAppNetworkAPIBaseURLString = @"http://media.wingedstone.com:8000/";
@@ -156,4 +157,49 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     }];
 
 }
+
+-(void)uploadMe:(Me *)me withBlock:(void (^)(id, NSError *))block
+{
+    NSString* csrfToken = [[NSUserDefaults standardUserDefaults] valueForKey:@"csrfmiddlewaretoken"];
+  
+    NSMutableDictionary *postDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                              me.avatarURL, @"avatar",
+                              me.cell, @"cell",
+                              me.signature, @"signature",
+                              me.hometown, @"hometown",
+                              me.displayName, @"nickname",
+                              me.gender, @"gender",
+                              me.selfIntroduction, @"self_introduction",
+                              csrfToken, @"csrfmiddlewaretoken", @"3", @"op", nil];
+    NSArray *imagesURLArray = [me getOrderedImages];
+    for (int i = 0; i < 8; i++) {
+        ImageRemote* remoteImage = [imagesURLArray objectAtIndex:i];
+        NSString *key1 = [NSString stringWithFormat:@"avatar%d", i];
+        NSString *key2 = [NSString stringWithFormat:@"thumbnail%d", i];
+        [postDict setObject:remoteImage.imageURL forKey:key1];
+        [postDict setObject:remoteImage.imageThumbnailURL forKey:key2];
+    }
+    
+    [[AppNetworkAPIClient sharedClient] postPath:LOGIN_PATH parameters:postDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        DDLogVerbose(@"login JSON received: %@", responseObject);
+        
+        NSString* status = [responseObject valueForKey:@"status"];
+        if ([status isEqualToString:@"success"]) {
+            if (block ) {
+                block(responseObject, nil);
+            }
+        }
+        
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        //
+        DDLogVerbose(@"login failed: %@", error);
+        if (block) {
+            block(nil, error);
+        }
+    }];
+
+    
+}
+
 @end

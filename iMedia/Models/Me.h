@@ -25,6 +25,7 @@
 @property (nonatomic, retain) NSString * hometown;
 @property (nonatomic, retain) NSString * selfIntroduction;
 @property (nonatomic, retain) NSString * career;
+@property (nonatomic, retain) NSString * avatarURL;
 @property (nonatomic, retain) NSSet *avatars;
 
 -(NSArray *)getOrderedAvatars;

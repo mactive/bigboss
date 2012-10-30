@@ -37,4 +37,6 @@ extern NSString *const kXMPPmyUsername;
 
 - (void)updateIdentity:(Identity *)identity withBlock:(void (^)(id responseObject, NSError *error))block;
 
+- (void)uploadMe:(Me *)me withBlock:(void (^)(id responseObject, NSError *error))block;
+
 @end

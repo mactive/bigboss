@@ -10,15 +10,6 @@
 
 @interface RequestViewController : UIViewController
 
-@property(nonatomic, strong) NSDictionary * requestDict;
-@property(nonatomic, strong) UIView * requestView;
-@property(nonatomic, strong) UILabel * titleLabel;
-@property(nonatomic, strong) UILabel * timeLabel;
-
-@property(nonatomic, strong) UIView * contentView;
-
-@property(nonatomic, strong) UIButton * confirmButton;
-@property(nonatomic, strong) UIButton * cancelButton;
 
 @property (nonatomic, strong) id  jsonData;
 

@@ -237,7 +237,7 @@ static NSString * const pubsubhost = @"pubsub.192.168.1.104";
 
 - (BOOL)disconnect
 {
-	[self goOffline];
+	//[self goOffline];
 	[xmppStream disconnect];
     
     return YES;
