@@ -138,11 +138,19 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row == 0 && indexPath.section == 0 ) {
-        if ([self.friendRequestDict count] == 1) {
-            RequestViewController *controller = [[RequestViewController alloc] initWithNibName:nil bundle:nil];
-            controller.jsonData = [[self.friendRequestDict allValues] objectAtIndex:0];
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+
+    if (indexPath.row == 0 && indexPath.section == 1 ) {
+
+        if ([self.friendRequestDict count] == 1) { // 1
+//            RequestViewController *controller = [[RequestViewController alloc] initWithNibName:nil bundle:nil];
+//            controller.jsonData = [[self.friendRequestDict allValues] objectAtIndex:0];
+//            [self.navigationController pushViewController:controller animated:YES];
+            
+            FriendRequestListViewController *controller = [[FriendRequestListViewController alloc] initWithNibName:nil bundle:nil];
+            controller.friendRequestJSONDict = self.friendRequestDict;
             [self.navigationController pushViewController:controller animated:YES];
+            
         } else if ([self.friendRequestDict count] > 1) {
             FriendRequestListViewController *controller = [[FriendRequestListViewController alloc] initWithNibName:nil bundle:nil];
             controller.friendRequestJSONDict = self.friendRequestDict;
@@ -150,9 +158,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         }
     }
     
-    if (indexPath.row == 0 && indexPath.section == 1 ) {
-        ShakeViewController *requestViewController = [[ShakeViewController alloc] initWithNibName:nil bundle:nil];
-        [self.navigationController pushViewController:requestViewController animated:YES];
+    if (indexPath.row == 0 && indexPath.section == 2 ) {
+        ShakeViewController *shakeViewController = [[ShakeViewController alloc] initWithNibName:nil bundle:nil];
+        [self.navigationController pushViewController:shakeViewController animated:YES];
     }
 }
 

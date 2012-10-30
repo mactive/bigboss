@@ -75,7 +75,9 @@
 	
 	if ([s length] == 0) {
 		s = justNow;
-	}
+	}else {
+        s = [NSString stringWithFormat:@"%@ %@", s, T(@"ago")];
+    }
 	
 	return s;
 }

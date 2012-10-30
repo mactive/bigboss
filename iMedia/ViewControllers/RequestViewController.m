@@ -12,6 +12,8 @@
 #import "NSDate+timesince.h"
 #import "UIImageView+AFNetworking.h"
 #import "XMPPNetworkCenter.h"
+#import "UIImageView+AFNetworking.h"
+#import "ServerDataTransformer.h"
 
 @interface RequestViewController ()
 
@@ -42,14 +44,15 @@
     [super viewDidLoad];
     self.title = T(@"Request");
     self.view.backgroundColor = BGCOLOR;
+    NSLog(@"%@",self.jsonData);
     // fake data
-    NSDate * date = [[NSDate alloc] initWithTimeIntervalSince1970:1320000000]; 
-    NSURL * avatarUrl = [[NSURL alloc] initWithString:@"http://ww1.sinaimg.cn/bmiddle/48933ee4jw1dyc21091eyj.jpg"]; 
+    NSDate * date = [ServerDataTransformer getDateFromServerJSON:jsonData];
+    NSURL * avatarUrl = [[NSURL alloc] initWithString:[ServerDataTransformer getAvatarFromServerJSON:jsonData]]; 
     self.requestDict = [[NSDictionary alloc] initWithObjectsAndKeys:
-                            @"曹菲菲",@"name",
-                            date,@"date", 
+                            [ServerDataTransformer getNicknameFromServerJSON:jsonData],@"name",
+                            date,@"date",
                             avatarUrl,@"avatar",
-                            @"我想有个自己房间,面朝大海,春暖花开",@"signature", nil];
+                            [ServerDataTransformer getSignatureFromServerJSON:jsonData],@"signature", nil];
 
 	// Do any additional setup after loading the view.
     
@@ -76,7 +79,7 @@
     
     self.confirmButton = 
     
-    self.confirmButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 160, 275, 40)];
+    self.confirmButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 200, 275, 40)];
     [self.confirmButton.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
     [self.confirmButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [self.confirmButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
@@ -86,7 +89,7 @@
     [self.confirmButton addTarget:self action:@selector(confirmRequest) forControlEvents:UIControlEventTouchUpInside];
     
     
-    self.cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 210, 275, 40)];
+    self.cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 250, 275, 40)];
     [self.cancelButton.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
     [self.cancelButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
     [self.cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
@@ -107,12 +110,12 @@
 
 - (void)initContentView
 {
-    self.contentView = [[UIView alloc] initWithFrame:CGRectMake(15, 70, 270, 60)];
+    self.contentView = [[UIView alloc] initWithFrame:CGRectMake(15, 70, 270, 100)];
     self.contentView.backgroundColor = RGBCOLOR(235, 235, 235);
     [self.contentView.layer setMasksToBounds:YES];
     [self.contentView.layer setCornerRadius:5.0];
     
-    UIImageView *avatarImage = [[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 50, 50)];
+    UIImageView *avatarImage = [[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 75, 75)];
     CALayer *avatarLayer = [avatarImage layer];
     [avatarLayer setMasksToBounds:YES];
     [avatarLayer setCornerRadius:5.0];
@@ -124,7 +127,7 @@
 
     
     UILabel *label;
-    label = [[UILabel alloc] initWithFrame:CGRectMake(60, 5, 220, 20)];
+    label = [[UILabel alloc] initWithFrame:CGRectMake(90, 5, 220, 20)];
 	label.font = [UIFont boldSystemFontOfSize:14.0];
 	label.textAlignment = UITextAlignmentLeft;
     label.textColor = RGBCOLOR(127, 127, 127);
@@ -132,10 +135,11 @@
     label.text = [self.requestDict objectForKey:@"name"];
     [self.contentView addSubview:label];
 
-    label = [[UILabel alloc] initWithFrame:CGRectMake(60, 30, 220, 20)];
+    label = [[UILabel alloc] initWithFrame:CGRectMake(90, 30, 170, 60)];
 	label.font = [UIFont boldSystemFontOfSize:12.0];
     label.textAlignment = UITextAlignmentLeft;
     label.textColor = RGBCOLOR(158, 158, 158);
+    label.numberOfLines = 0;
     label.backgroundColor = [UIColor clearColor];
     label.text = [self.requestDict objectForKey:@"signature"];
     [self.contentView addSubview:label];   
