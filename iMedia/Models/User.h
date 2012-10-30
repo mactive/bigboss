@@ -2,7 +2,7 @@
 //  User.h
 //  iMedia
 //
-//  Created by Xiaosi Li on 10/15/12.
+//  Created by Xiaosi Li on 10/30/12.
 //  Copyright (c) 2012 Li Xiaosi. All rights reserved.
 //
 
@@ -17,6 +17,10 @@
 @property (nonatomic, retain) NSString * gender;
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * signature;
+@property (nonatomic, retain) NSDate * birthdate;
+@property (nonatomic, retain) NSString * hometown;
+@property (nonatomic, retain) NSString * selfIntroduction;
+@property (nonatomic, retain) NSString * career;
 @property (nonatomic, retain) NSSet *conversations;
 @end
 

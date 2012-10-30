@@ -78,7 +78,6 @@
 		26F759E7163D14F1005E9FB4 /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F759E6163D14F1005E9FB4 /* UIImage+Resize.m */; };
 		56202F46162AA32F00F6306F /* AddFriendByIDController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56202F45162AA32F00F6306F /* AddFriendByIDController.m */; };
 		56202F49162AE85B00F6306F /* ChannelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56202F48162AE85A00F6306F /* ChannelViewController.m */; };
-		56202F56162BEDF000F6306F /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 56202F55162BEDF000F6306F /* User.m */; };
 		562DE705160ABFA100F782D2 /* ChatDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 562DE704160ABFA100F782D2 /* ChatDetailController.m */; };
 		562DE70F160AC3C600F782D2 /* bubbleMine.png in Resources */ = {isa = PBXBuildFile; fileRef = 562DE707160AC3C600F782D2 /* bubbleMine.png */; };
 		562DE710160AC3C600F782D2 /* bubbleMine@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 562DE708160AC3C600F782D2 /* bubbleMine@2x.png */; };
@@ -104,6 +103,8 @@
 		5661561B163E867A00199DB4 /* Channel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5661561A163E867A00199DB4 /* Channel.m */; };
 		5661561E163E90ED00199DB4 /* FunctionListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5661561D163E90EC00199DB4 /* FunctionListViewController.m */; };
 		56615621163E9A1A00199DB4 /* FriendRequestListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56615620163E9A1900199DB4 /* FriendRequestListViewController.m */; };
+		56615625163FB8A900199DB4 /* LocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 56615624163FB8A900199DB4 /* LocationManager.m */; };
+		5661562C163FCA6900199DB4 /* User.m in Sources */ = {isa = PBXBuildFile; fileRef = 5661562B163FCA6900199DB4 /* User.m */; };
 		566E80A21609A24C00A333EA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 566E80A11609A24C00A333EA /* UIKit.framework */; };
 		566E80A41609A24C00A333EA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 566E80A31609A24C00A333EA /* Foundation.framework */; };
 		566E80A61609A24C00A333EA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 566E80A51609A24C00A333EA /* CoreGraphics.framework */; };
@@ -412,8 +413,6 @@
 		56202F47162AE85A00F6306F /* ChannelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChannelViewController.h; path = ViewControllers/ChannelViewController.h; sourceTree = "<group>"; };
 		56202F48162AE85A00F6306F /* ChannelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChannelViewController.m; path = ViewControllers/ChannelViewController.m; sourceTree = "<group>"; };
 		56202F50162BCB4100F6306F /* ChatWithIdentity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ChatWithIdentity.h; path = ViewControllers/ChatWithIdentity.h; sourceTree = "<group>"; };
-		56202F54162BEDF000F6306F /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = User.h; path = Models/User.h; sourceTree = "<group>"; };
-		56202F55162BEDF000F6306F /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = User.m; path = Models/User.m; sourceTree = "<group>"; };
 		562DE703160ABFA100F782D2 /* ChatDetailController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChatDetailController.h; path = ViewControllers/ChatDetailController.h; sourceTree = "<group>"; };
 		562DE704160ABFA100F782D2 /* ChatDetailController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChatDetailController.m; path = ViewControllers/ChatDetailController.m; sourceTree = "<group>"; };
 		562DE707160AC3C600F782D2 /* bubbleMine.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bubbleMine.png; path = Resources/bubbleMine.png; sourceTree = "<group>"; };
@@ -444,6 +443,10 @@
 		5661561D163E90EC00199DB4 /* FunctionListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FunctionListViewController.m; path = ViewControllers/FunctionListViewController.m; sourceTree = "<group>"; };
 		5661561F163E9A1900199DB4 /* FriendRequestListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FriendRequestListViewController.h; path = ViewControllers/FriendRequestListViewController.h; sourceTree = "<group>"; };
 		56615620163E9A1900199DB4 /* FriendRequestListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FriendRequestListViewController.m; path = ViewControllers/FriendRequestListViewController.m; sourceTree = "<group>"; };
+		56615623163FB8A900199DB4 /* LocationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LocationManager.h; path = Location/LocationManager.h; sourceTree = "<group>"; };
+		56615624163FB8A900199DB4 /* LocationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LocationManager.m; path = Location/LocationManager.m; sourceTree = "<group>"; };
+		5661562A163FCA6900199DB4 /* User.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = User.h; path = Models/User.h; sourceTree = "<group>"; };
+		5661562B163FCA6900199DB4 /* User.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = User.m; path = Models/User.m; sourceTree = "<group>"; };
 		566E809D1609A24C00A333EA /* iMedia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iMedia.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		566E80A11609A24C00A333EA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		566E80A31609A24C00A333EA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -963,6 +966,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		56615622163FB57700199DB4 /* Location */ = {
+			isa = PBXGroup;
+			children = (
+				56615623163FB8A900199DB4 /* LocationManager.h */,
+				56615624163FB8A900199DB4 /* LocationManager.m */,
+			);
+			name = Location;
+			sourceTree = "<group>";
+		};
 		566E80921609A24C00A333EA = {
 			isa = PBXGroup;
 			children = (
@@ -1012,6 +1024,7 @@
 				566E80B31609A24C00A333EA /* AppDelegate.m */,
 				566E826C1609B58100A333EA /* AppDefs.h */,
 				56DF5E1A162564D100E75105 /* Network */,
+				56615622163FB57700199DB4 /* Location */,
 				5646FAF7160D4B7B00175B78 /* Views */,
 				566E825F1609A61B00A333EA /* ViewControllers */,
 				566E825E1609A5FE00A333EA /* Models */,
@@ -1665,6 +1678,8 @@
 			isa = PBXGroup;
 			children = (
 				566E80B51609A24C00A333EA /* iMedia.xcdatamodeld */,
+				5661562A163FCA6900199DB4 /* User.h */,
+				5661562B163FCA6900199DB4 /* User.m */,
 				56615619163E867A00199DB4 /* Channel.h */,
 				5661561A163E867A00199DB4 /* Channel.m */,
 				56D0C623163D43E1007FD7B2 /* Me.h */,
@@ -1675,8 +1690,6 @@
 				56D0C61A163D1F8A007FD7B2 /* Avatar.m */,
 				5681B64F163D1BFC0056AFAD /* ImageRemote.h */,
 				5681B650163D1BFC0056AFAD /* ImageRemote.m */,
-				56202F54162BEDF000F6306F /* User.h */,
-				56202F55162BEDF000F6306F /* User.m */,
 				56B4CD441627E55400E046CC /* Message.h */,
 				56B4CD451627E55400E046CC /* Message.m */,
 				56B4CD1F1627AAFB00E046CC /* Conversation.h */,
@@ -2179,7 +2192,6 @@
 				56B4CD531628101500E046CC /* AddFriendController.m in Sources */,
 				56202F46162AA32F00F6306F /* AddFriendByIDController.m in Sources */,
 				56202F49162AE85B00F6306F /* ChannelViewController.m in Sources */,
-				56202F56162BEDF000F6306F /* User.m in Sources */,
 				266A1A6F162E5AF3008EF1D5 /* ShakeViewController.m in Sources */,
 				266A1A72162E5B10008EF1D5 /* SettingViewController.m in Sources */,
 				26C76E65162EB4F400298865 /* UINavigationBar+Background.m in Sources */,
@@ -2203,6 +2215,8 @@
 				5661561B163E867A00199DB4 /* Channel.m in Sources */,
 				5661561E163E90ED00199DB4 /* FunctionListViewController.m in Sources */,
 				56615621163E9A1A00199DB4 /* FriendRequestListViewController.m in Sources */,
+				56615625163FB8A900199DB4 /* LocationManager.m in Sources */,
+				5661562C163FCA6900199DB4 /* User.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

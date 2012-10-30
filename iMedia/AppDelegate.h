@@ -35,7 +35,7 @@
 @property (strong, nonatomic) Me *me;
 
 - (void)startMainSession;
-- (void)createMeWithUsername:(NSString *)username password:(NSString *)passwd jid:(NSString *)jidStr andJidPasswd:(NSString *)jidPass;
+- (void)createMeWithUsername:(NSString *)username password:(NSString *)passwd jid:(NSString *)jidStr jidPasswd:(NSString *)jidPass andGUID:(NSString *)guid;
 - (NSManagedObjectContext *)context;
 
 @end

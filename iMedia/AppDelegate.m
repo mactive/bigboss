@@ -26,6 +26,7 @@
 #import "FirstLoginController.h"
 
 #import "AppNetworkAPIClient.h"
+#import "LocationManager.h"
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -80,6 +81,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     NSURLCache *URLCache = [[NSURLCache alloc] initWithMemoryCapacity:4 * 1024 * 1024 diskCapacity:20 * 1024 * 1024 diskPath:nil];
     [NSURLCache setSharedURLCache:URLCache];
 
+    //Start Location Service and needs to prompt user to turn it on if not
+    if ([LocationManager sharedInstance].isAllowed == NO) {
+        // do sth here
+    }
     
     // check whether first use
     NSArray *fetchedUsers = MOCFetchAll(_managedObjectContext, @"Me");
@@ -92,6 +97,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     } else {
         DDLogVerbose(@"%@: %@ multiple ME instance", THIS_FILE, THIS_METHOD);
     }
+
         
     // Global UINavigationBar style 
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:NO];
@@ -171,7 +177,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [self.window makeKeyAndVisible];
 }
 
--(void)createMeWithUsername:(NSString *)username password:(NSString *)passwd jid:(NSString *)jidStr andJidPasswd:(NSString *)jidPass
+-(void)createMeWithUsername:(NSString *)username password:(NSString *)passwd jid:(NSString *)jidStr jidPasswd:(NSString *)jidPass andGUID:(NSString *)guid
 {
     if(self.me == nil) {
         self.me = [NSEntityDescription insertNewObjectForEntityForName:@"Me" inManagedObjectContext:_managedObjectContext];
@@ -186,7 +192,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         self.me.displayName = jidStr;
         self.me.username = username;
         self.me.password = passwd;
+        self.me.guid = guid;
         self.me.state = [NSNumber numberWithInt:IdentityStateActive];
+        
+        [[AppNetworkAPIClient sharedClient] updateIdentity:self.me withBlock:nil];
         
         MOCSave(_managedObjectContext);
     }

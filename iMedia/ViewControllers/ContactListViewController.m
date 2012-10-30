@@ -208,16 +208,20 @@ NSInteger SortIndex(id char1, id char2, void* context)
     for (int i = 0; i < [contacts count]; i++) {
         User *user =  [contacts objectAtIndex:i];
         NSString* _pinyin = [POAPinyin quickConvert:user.displayName];
-        
         NSString* _section = nil;
         NSUInteger _first_letter;
-        _section = [[NSString stringWithFormat:@"%c", [_pinyin characterAtIndex:0] ] uppercaseString];
         
-        // if the section is
-        if ([_section isEqualToString:@"0"]) {
+        if (_pinyin == nil || [_pinyin isEqualToString:@""]) {
             _first_letter = 26;
-        }else{
+        } else {
+            _section = [[NSString stringWithFormat:@"%c", [_pinyin characterAtIndex:0] ] uppercaseString];
+        
+            // if the section is
+            if ([_section isEqualToString:@"0"]) {
+                    _first_letter = 26;
+            }else{
             _first_letter = [NAMEFIRSTLATTER rangeOfString:[_section substringToIndex:1]].location;
+            }
         }
         
         

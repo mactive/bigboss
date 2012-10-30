@@ -18,6 +18,11 @@
 @dynamic gender;
 @dynamic name;
 @dynamic signature;
+@dynamic birthdate;
+@dynamic cell;
+@dynamic career;
+@dynamic selfIntroduction;
+@dynamic hometown;
 @dynamic avatars;
 
 -(NSArray *)getOrderedAvatars

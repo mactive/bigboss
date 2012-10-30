@@ -8,6 +8,7 @@
 
 #import "ModelHelper.h"
 #import "User.h"
+#import "Me.h"
 #import "Channel.h"
 #import "ImageRemote.h"
 #import "DDLog.h"
@@ -18,6 +19,13 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 static const int ddLogLevel = LOG_LEVEL_INFO;
 #endif
 
+@interface ModelHelper ()
+
++ (BOOL)populateUser:(User *)user withJSONData:(NSString *)json;
++ (BOOL)populateMe:(Me *)user withJSONData:(NSString *)json;
++ (BOOL)populateChannel:(Channel *)channel withServerJSONData:(NSString *)json;
+
+@end
 
 @implementation ModelHelper
 
@@ -115,6 +123,34 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     }
 }
 
++ (void)populateIdentity:(Identity *)identity withJSONData:(NSString *)json
+{
+    if ([identity isKindOfClass:[User class]]) {
+        [self populateUser:(User *)identity withJSONData:json];
+    } else if ([identity isKindOfClass:[Channel class]]) {
+        [self populateChannel:(Channel *)identity withServerJSONData:json];
+    } else {
+        [self populateMe:(Me *)identity withJSONData:json];
+    }
+}
+
++ (BOOL)populateMe:(Me *)user withJSONData:(id)json
+{
+    user.ePostalID = [json valueForKey:@"jid"];
+    user.gender = [json valueForKey:@"gender"];
+    user.signature = [json valueForKey:@"signature"];
+    user.displayName = [json valueForKey:@"nickname"];
+    //user.birthdate = [json valueForKey:@"birthdate"];
+    NSTimeInterval secondsPerFiveYear = 24 * 60 * 60 *365 *5;
+    NSDate *today = [[NSDate alloc] init];
+    user.birthdate = [today dateByAddingTimeInterval:-secondsPerFiveYear];
+    user.career = [json valueForKey:@"career"];
+    user.selfIntroduction = [json valueForKey:@"self_introduction"];
+    user.hometown = [json valueForKey:@"hometown"];
+    user.guid = [self convertNumberToStringIfNumber:[json valueForKey:@"guid"]];
+        
+    return YES;
+}
 
 + (BOOL)populateUser:(User *)user withJSONData:(id)json
 {
@@ -122,6 +158,13 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     user.gender = [json valueForKey:@"gender"];
     user.signature = [json valueForKey:@"signature"];
     user.displayName = [json valueForKey:@"nickname"];
+    //user.birthdate = [json valueForKey:@"birthdate"];
+    NSTimeInterval secondsPerFiveYear = 24 * 60 * 60 *365 *5;
+    NSDate *today = [[NSDate alloc] init];
+    user.birthdate = [today dateByAddingTimeInterval:-secondsPerFiveYear];
+    user.career = [json valueForKey:@"career"];
+    user.selfIntroduction = [json valueForKey:@"self_introduction"];
+    user.hometown = [json valueForKey:@"hometown"];
     user.guid = [self convertNumberToStringIfNumber:[json valueForKey:@"guid"]];
     
     NSMutableArray *imageURLArray = [[NSMutableArray alloc] init];
