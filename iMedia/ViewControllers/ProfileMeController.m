@@ -50,7 +50,6 @@
 @synthesize infoTableView;
 @synthesize addAlbumButton;
 
-@synthesize EDITMODEL;
 @synthesize editProfileButton;
 @synthesize albumCount;
 @synthesize albumButtonArray;
@@ -71,19 +70,23 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)setEditModel
 {
-    self.EDITMODEL = YES;
     UIBarButtonItem *ttButton = [[UIBarButtonItem alloc] initWithTitle:T(@"保存") 
                                                               style:UIBarButtonItemStyleDone 
                                                              target:self
                                                              action:@selector(cancelEditModel)];
     [ttButton setTintColor:RGBCOLOR(80, 192, 77)];
-    self.navigationItem.rightBarButtonItem = ttButton;    
+    self.navigationItem.rightBarButtonItem = ttButton;
     
     //album can do image
+    [self.addAlbumButton setHidden:YES];
     
     // table into setting
     for (int j = 0; j < 8; j++) {
         UIButton *albumButton = [self.albumButtonArray objectAtIndex:j];
+        
+        [albumButton.layer setBorderColor:[UIColor whiteColor].CGColor];
+        [albumButton.layer setBorderWidth:3.0f];
+        
         if (j < self.albumCount) {
             [albumButton removeTarget:self action:@selector(albumClick:) forControlEvents:UIControlEventTouchUpInside];
             [albumButton addTarget:self action:@selector(removeOrReplace:) forControlEvents:UIControlEventTouchUpInside];
@@ -91,8 +94,24 @@
             [albumButton setHidden:YES];
         }
     }
-    
 }
+
+
+- (void)cancelEditModel
+{
+    // save and upload
+    self.navigationItem.rightBarButtonItem = self.editProfileButton;
+    
+    [self.addAlbumButton setHidden:NO];
+
+    // table into setting
+    for (int j = 0; j < 8; j++) {
+        UIButton *albumButton = [self.albumButtonArray objectAtIndex:j];
+        [albumButton.layer setBorderColor:[UIColor clearColor].CGColor];
+        [albumButton.layer setBorderWidth:0.0f];
+    }
+}
+
 
 //////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - actionsheet when add album
@@ -107,20 +126,9 @@
                                   destructiveButtonTitle:nil 
                                   otherButtonTitles:T(@"替换照片"), T(@"删除照片"),nil];  
     self.editActionsheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
-    [self.editActionsheet showInView:self.view];
+    [self.editActionsheet showFromTabBar:[[self tabBarController] tabBar]];
     self.editingAlbumIndex = sender.tag;
 }
-
-
-- (void)cancelEditModel
-{
-    self.EDITMODEL = NO;
-    // save and upload
-    self.navigationItem.rightBarButtonItem = self.editProfileButton;
-    
-//    [self.addAlbumButton removeFromSuperview];
-}
-
 
 #define VIEW_ALBUM_WIDTH 75
 #define VIEW_ALBUM_WIDTH 75
@@ -172,6 +180,7 @@
     [self.contentView setScrollEnabled:YES];
     self.contentView.backgroundColor = RGBCOLOR(222, 224, 227);
     
+    self.editingAlbumIndex = NSNotFound;
     
     self.addAlbumButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [self.addAlbumButton.layer setMasksToBounds:YES];
@@ -181,8 +190,6 @@
     [self.addAlbumButton addTarget:self action:@selector(addAlbum:) forControlEvents:UIControlEventTouchUpInside];
     [self.addAlbumButton setFrame:[self calcRect:0]];
     [self.albumView addSubview:self.addAlbumButton];
-
-    self.EDITMODEL = NO;
     
     [self initAlbumView];
     [self refreshAlbumView];
@@ -266,14 +273,14 @@
 - (void)addAlbum:(UIButton *)sender
 {
     
-    self.photoActionsheet = [[UIActionSheet alloc]  
-                                  initWithTitle:nil  
-                                  delegate:self  
-                                  cancelButtonTitle:T(@"取消")  
-                                  destructiveButtonTitle:nil 
-                                  otherButtonTitles:T(@"用户相册"), T(@"摄像头"),nil];  
-    self.photoActionsheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;  
-    [self.photoActionsheet showInView:self.view];
+    self.photoActionsheet = [[UIActionSheet alloc] 
+                                  initWithTitle:nil
+                                  delegate:self
+                                  cancelButtonTitle:T(@"取消")
+                                  destructiveButtonTitle:nil
+                                  otherButtonTitles:T(@"用户相册"), T(@"摄像头"),nil];
+    self.photoActionsheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+    [self.photoActionsheet showFromTabBar:[[self tabBarController] tabBar]];
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
@@ -289,12 +296,26 @@
     if (actionSheet == self.editActionsheet) {
         if (buttonIndex == 0) {  
             [self addAlbum:nil];
-        }else if (buttonIndex == 1) {  
-            
+        }else if (buttonIndex == 1) {
+            [self removeAlbum];
         }
     }
     
     
+}
+
+- (void)removeAlbum
+{    
+    Avatar *removeAvatar = [self.albumArray objectAtIndex:self.editingAlbumIndex];
+    [self.me removeAvatarsObject:removeAvatar];
+    
+    // network
+//    [[AppNetworkAPIClient sharedClient] storeAvatar:removeAvatar forMe:self.me andOrder:sequence withBlock:nil];
+
+    // display
+    UIButton *albumButton = [self.albumButtonArray objectAtIndex:self.editingAlbumIndex];
+    [albumButton removeTarget:self action:@selector(removeOrReplace:) forControlEvents:UIControlEventTouchUpInside];
+    [albumButton setHidden:YES];
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -333,34 +354,32 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
 	UIImage *image = [info objectForKey:UIImagePickerControllerEditedImage];
     //    self.image = image;
-    
     UIImage *thumbnail = [image resizedImageToSize:CGSizeMake(75, 75)];
     
-    Avatar *insertAvatar = [NSEntityDescription insertNewObjectForEntityForName:@"ImageLocal" inManagedObjectContext:self.managedObjectContext ];
-    insertAvatar.thumbnail = thumbnail;
-    insertAvatar.image = image;
-    NSInteger sequence = [self.albumArray count] + 1;
+    if (self.editingAlbumIndex != NSNotFound) {
+        Avatar *replaceAvatar = [self.albumArray objectAtIndex:self.editingAlbumIndex];
+        replaceAvatar.image = image;
+        replaceAvatar.thumbnail = thumbnail;
+        [[AppNetworkAPIClient sharedClient] storeAvatar:replaceAvatar forMe:self.me andOrder:self.editingAlbumIndex withBlock:nil];
+        
+        self.editingAlbumIndex = NSNotFound;
+
+    }else {
+        Avatar *insertAvatar = [NSEntityDescription insertNewObjectForEntityForName:@"ImageLocal" inManagedObjectContext:self.managedObjectContext ];
+        insertAvatar.thumbnail = thumbnail;
+        insertAvatar.image = image;
+        NSInteger sequence = [self.albumArray count] + 1;
+        
+        insertAvatar.sequence = [NSNumber numberWithInt:sequence];
+        [self.me addAvatarsObject:insertAvatar];
+        
+        //网路传输
+        [[AppNetworkAPIClient sharedClient] storeAvatar:insertAvatar forMe:self.me andOrder:sequence withBlock:nil];
+    }
     
-    insertAvatar.sequence = [NSNumber numberWithInt:sequence];
-    [self.me addAvatarsObject:insertAvatar];
-    
-    //网路传输
-    [[AppNetworkAPIClient sharedClient] storeAvatar:insertAvatar forMe:self.me andOrder:sequence withBlock:nil];
-    
+
     
     [self refreshAlbumView];
-    
-    //delete 
-//    [me removeAvatarsObject:insertAvatar];
-    //replace
-    if (self.editingAlbumIndex != nil) {
-        
-    }
-//    [insertAvatar setImage:image];
-//    [insertAvatar setThumbnail:image];
-    
-    
-    
     [picker dismissModalViewControllerAnimated:YES];
 }
 
