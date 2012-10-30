@@ -122,6 +122,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     user.gender = [json valueForKey:@"gender"];
     user.signature = [json valueForKey:@"signature"];
     user.displayName = [json valueForKey:@"nickname"];
+    user.guid = [self convertNumberToStringIfNumber:[json valueForKey:@"guid"]];
     
     NSMutableArray *imageURLArray = [[NSMutableArray alloc] init];
     for (int i = 1; i <=8; i++) {
