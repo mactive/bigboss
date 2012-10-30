@@ -115,7 +115,7 @@
     [self.contentView.layer setMasksToBounds:YES];
     [self.contentView.layer setCornerRadius:5.0];
     
-    UIImageView *avatarImage = [[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 75, 75)];
+    UIImageView *avatarImage = [[UIImageView alloc] initWithFrame:CGRectMake(10, 10, 75, 75)];
     CALayer *avatarLayer = [avatarImage layer];
     [avatarLayer setMasksToBounds:YES];
     [avatarLayer setCornerRadius:5.0];
@@ -127,7 +127,7 @@
 
     
     UILabel *label;
-    label = [[UILabel alloc] initWithFrame:CGRectMake(90, 5, 220, 20)];
+    label = [[UILabel alloc] initWithFrame:CGRectMake(100, 10, 170, 20)];
 	label.font = [UIFont boldSystemFontOfSize:14.0];
 	label.textAlignment = UITextAlignmentLeft;
     label.textColor = RGBCOLOR(127, 127, 127);
@@ -135,7 +135,7 @@
     label.text = [self.requestDict objectForKey:@"name"];
     [self.contentView addSubview:label];
 
-    label = [[UILabel alloc] initWithFrame:CGRectMake(90, 30, 170, 60)];
+    label = [[UILabel alloc] initWithFrame:CGRectMake(100, 30, 170, 60)];
 	label.font = [UIFont boldSystemFontOfSize:12.0];
     label.textAlignment = UITextAlignmentLeft;
     label.textColor = RGBCOLOR(158, 158, 158);

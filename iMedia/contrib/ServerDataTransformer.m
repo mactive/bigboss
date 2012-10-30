@@ -14,7 +14,7 @@
 {
     NSString* name = [jsonData valueForKey:@"nickname"];
     if (name == nil || [name isEqualToString:@""]) {
-        return @"placeholder for nil";
+        return @"Steve Jobs";
     }
 }
 
@@ -22,7 +22,7 @@
 {
     NSString* name = [jsonData valueForKey:@"signature"];
     if (name == nil || [name isEqualToString:@""]) {
-        return @"A singnature no singed";
+        return @"No wind no rain means no love.";
     }
 }
 

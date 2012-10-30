@@ -142,18 +142,18 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
     if (indexPath.row == 0 && indexPath.section == 1 ) {
 
-        if ([self.friendRequestDict count] == 1) { // 1
-//            RequestViewController *controller = [[RequestViewController alloc] initWithNibName:nil bundle:nil];
-//            controller.jsonData = [[self.friendRequestDict allValues] objectAtIndex:0];
-//            [self.navigationController pushViewController:controller animated:YES];
-            
-            FriendRequestListViewController *controller = [[FriendRequestListViewController alloc] initWithNibName:nil bundle:nil];
-            controller.friendRequestJSONArray = [self.friendRequestDict allValues];
+        if ([self.friendRequestDict count] == 1) { 
+            RequestViewController *controller = [[RequestViewController alloc] initWithNibName:nil bundle:nil];
+            controller.jsonData = [[self.friendRequestDict allValues] objectAtIndex:0];
             [self.navigationController pushViewController:controller animated:YES];
+            
+//            FriendRequestListViewController *controller = [[FriendRequestListViewController alloc] initWithNibName:nil bundle:nil];
+//            controller.friendRequestJSONArray = [NSMutableArray arrayWithArray:[self.friendRequestDict allValues]];
+//            [self.navigationController pushViewController:controller animated:YES];
             
         } else if ([self.friendRequestDict count] > 1) {
             FriendRequestListViewController *controller = [[FriendRequestListViewController alloc] initWithNibName:nil bundle:nil];
-            controller.friendRequestJSONArray = [self.friendRequestDict allValues];
+            controller.friendRequestJSONArray = [NSMutableArray arrayWithArray:[self.friendRequestDict allValues]];
             [self.navigationController pushViewController:controller animated:YES];
         }
     }

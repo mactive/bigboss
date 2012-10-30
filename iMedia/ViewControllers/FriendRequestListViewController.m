@@ -140,12 +140,12 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [cell.contentView addSubview:avatarImage];
     
     
-    // Create a label for the user name.
-	rect = CGRectMake(LEFT_COLUMN_OFFSET, LABEL_HEIGHT, MIDDLE_COLUMN_WIDTH, LABEL_HEIGHT);
+    // Create a label for the time.
+	rect = CGRectMake(LEFT_COLUMN_OFFSET, LABEL_HEIGHT -5,  MIDDLE_COLUMN_WIDTH , LABEL_HEIGHT);
 	label = [[UILabel alloc] initWithFrame:rect];
 	label.tag = TIME_TAG;
     label.numberOfLines = 1;
-	label.font = [UIFont boldSystemFontOfSize:MAIN_FONT_SIZE];
+	label.font = [UIFont systemFontOfSize:SUMMARY_FONT_SIZE];
 	label.textAlignment = UITextAlignmentLeft;
     label.textColor = RGBCOLOR(153, 153, 153);
     label.backgroundColor = [UIColor clearColor];
@@ -153,7 +153,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
     
     // Create a label for the user name.
-	rect = CGRectMake(MIDDLE_COLUMN_OFFSET, (ROW_HEIGHT - LABEL_HEIGHT) / 2.0, MIDDLE_COLUMN_WIDTH, LABEL_HEIGHT);
+	rect = CGRectMake(MIDDLE_COLUMN_OFFSET, TOP_OFFEST , MIDDLE_COLUMN_WIDTH, LABEL_HEIGHT);
 	label = [[UILabel alloc] initWithFrame:rect];
 	label.tag = NAME_TAG;
     label.numberOfLines = 2;
@@ -163,13 +163,24 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     label.backgroundColor = [UIColor clearColor];
     [cell.contentView addSubview:label];
     
+    // Create a label for the add btn.
+	rect = CGRectMake(240, 113,  60 , LABEL_HEIGHT);
+	label = [[UILabel alloc] initWithFrame:rect];
+    label.numberOfLines = 1;
+	label.font = [UIFont boldSystemFontOfSize:MAIN_FONT_SIZE];
+	label.textAlignment = UITextAlignmentLeft;
+    label.textColor = RGBCOLOR(198, 198, 198);
+    label.backgroundColor = [UIColor clearColor];
+    label.text = T(@"添加");
+    [cell.contentView addSubview:label];
+    
     // set avatar
     NSMutableArray *snsArray = [[NSMutableArray alloc] initWithObjects:@"weibo",@"douban", nil];
     UIImageView *snsImage;
     
     for(int i=0;i<[snsArray count];i++)  
     {  
-        snsRect = CGRectMake(MIDDLE_COLUMN_OFFSET + MIDDLE_COLUMN_WIDTH + (SNS_SIDE + 3)* i, (ROW_HEIGHT - SNS_SIDE) / 2.0, SNS_SIDE, SNS_SIDE);
+        snsRect = CGRectMake(MIDDLE_COLUMN_OFFSET + MIDDLE_COLUMN_WIDTH + (SNS_SIDE + 3)* i, TOP_OFFEST+3 , SNS_SIDE, SNS_SIDE);
         snsImage = [[UIImageView alloc] initWithFrame:snsRect];
         snsImage.tag = SNS_TAG + i;
         
@@ -178,7 +189,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
     
     // Create a label for the summary
-	rect = CGRectMake(self.view.frame.size.width - SUMMARY_WIDTH - SUMMARY_WIDTH_OFFEST , (ROW_HEIGHT - LABEL_HEIGHT) / 2.0, SUMMARY_WIDTH, LABEL_HEIGHT);
+	rect = CGRectMake(MIDDLE_COLUMN_OFFSET, TOP_OFFEST + LABEL_HEIGHT, SUMMARY_WIDTH, LABEL_HEIGHT);
 	label = [[UILabel alloc] initWithFrame:rect];
 	label.tag = SUMMARY_TAG;
     label.numberOfLines = 2;
@@ -199,8 +210,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     id obj = [self.friendRequestJSONArray objectAtIndex:indexPath.row];
     
     // set max size
-    CGSize nameMaxSize = CGSizeMake(MIDDLE_COLUMN_WIDTH, LABEL_HEIGHT*2);
-    CGSize summaryMaxSize = CGSizeMake(SUMMARY_WIDTH, LABEL_HEIGHT*2);
+    CGSize nameMaxSize = CGSizeMake(MIDDLE_COLUMN_WIDTH, LABEL_HEIGHT*1);
+    CGSize summaryMaxSize = CGSizeMake(MIDDLE_COLUMN_WIDTH, LABEL_HEIGHT*2);
     
     
     // set the avatar
@@ -247,7 +258,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         _labelHeight = 20.0;
     }
     nameLabel.text = _nameString;
-    nameLabel.frame = CGRectMake(nameLabel.frame.origin.x, _labelHeight, labelSize.width, labelSize.height);
+    nameLabel.frame = CGRectMake(nameLabel.frame.origin.x, TOP_OFFEST, labelSize.width, labelSize.height);
     
     // set the user signiture
     UILabel *signitureLabel = (UILabel *)[cell viewWithTag:SUMMARY_TAG];
@@ -255,9 +266,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
     CGSize signitureSize = [signiture sizeWithFont:signitureLabel.font constrainedToSize:summaryMaxSize lineBreakMode: UILineBreakModeTailTruncation];
     if (signitureSize.height > LABEL_HEIGHT) {
-        _labelHeight = 10.0;
+        _labelHeight = TOP_OFFEST+LABEL_HEIGHT+2;
     }else {
-        _labelHeight = 20.0;
+        _labelHeight = TOP_OFFEST+LABEL_HEIGHT+10;
     }
     signitureLabel.text = signiture;
     signitureLabel.frame = CGRectMake(signitureLabel.frame.origin.x, _labelHeight, signitureSize.width + SUMMARY_PADDING, signitureSize.height+SUMMARY_PADDING);
@@ -315,6 +326,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     // Navigation logic may go here. Create and push another view controller.
     RequestViewController *requestViewController = [[RequestViewController alloc]initWithNibName:nil bundle:nil];    
     requestViewController.jsonData = [self.friendRequestJSONArray objectAtIndex:indexPath.row];
+    NSLog(@"%@",[self.friendRequestJSONArray objectAtIndex:indexPath.row]);
     [self.navigationController pushViewController:requestViewController animated:YES];
 
 }
