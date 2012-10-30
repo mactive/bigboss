@@ -31,7 +31,6 @@
 @property (strong, nonatomic) UILabel  *nameLabel;
 
 @property (strong, nonatomic) Me *me;
-@property (readwrite, nonatomic) BOOL EDITMODEL;
 @property (strong, nonatomic) UIBarButtonItem *editProfileButton;
 
 @property (strong, nonatomic) NSMutableArray *albumArray;
