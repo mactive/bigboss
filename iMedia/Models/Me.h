@@ -28,6 +28,7 @@
 @property (nonatomic, retain) NSSet *avatars;
 
 -(NSArray *)getOrderedAvatars;
+
 @end
 
 @interface Me (CoreDataGeneratedAccessors)
