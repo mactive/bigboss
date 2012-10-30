@@ -37,8 +37,7 @@
 + (NSDate *)getDateFromServerJSON:(NSString *)jsonData
 {
     NSString* name = [jsonData valueForKey:@"birthdate"];
-    if (name == nil || 
-        [name isEqualToString:@""]) {
+    if (name == nil || [name isEqualToString:@""]) {
         return [[NSDate alloc] initWithTimeIntervalSince1970:1320000000];
     }
 }

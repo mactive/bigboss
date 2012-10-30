@@ -70,6 +70,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             
             NSString* jid = [responseObject valueForKey:@"jid"];
             NSString *jPassword = [responseObject valueForKey:@"jpass"];
+            NSString *guid= [[responseObject valueForKey:@"guid"] stringValue];
             
             [self performSegueWithIdentifier:@"WelcomeMsg" sender:self];
             
@@ -78,7 +79,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
                 DDLogVerbose(@"%@: %@ cannot connect to XMPP server", THIS_FILE, THIS_METHOD);
             }
             
-            [[self appDelegate] createMeWithUsername:jidField.text password:passwordField.text jid:jid andJidPasswd:jPassword];
+            [[self appDelegate] createMeWithUsername:jidField.text password:passwordField.text jid:jid jidPasswd:jPassword andGUID:guid];
         } else {
             DDLogError(@"NSError received during login: %@", error);
         }

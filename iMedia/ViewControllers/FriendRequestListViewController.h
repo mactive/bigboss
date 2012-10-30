@@ -10,7 +10,7 @@
 
 @interface FriendRequestListViewController : UITableViewController
 
-@property (nonatomic, strong) NSDictionary* friendRequestJSONDict;
+@property (nonatomic, strong) NSMutableArray* friendRequestJSONArray;
 
 
 @end

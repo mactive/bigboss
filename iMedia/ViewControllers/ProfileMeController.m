@@ -182,14 +182,7 @@
     
     self.editingAlbumIndex = NSNotFound;
     
-    self.addAlbumButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [self.addAlbumButton.layer setMasksToBounds:YES];
-    [self.addAlbumButton.layer setCornerRadius:3.0];
-    self.addAlbumButton.tag = 1000;    
-    [self.addAlbumButton setImage:[UIImage imageNamed:@"profile_add.png"] forState:UIControlStateNormal];
-    [self.addAlbumButton addTarget:self action:@selector(addAlbum:) forControlEvents:UIControlEventTouchUpInside];
-    [self.addAlbumButton setFrame:[self calcRect:0]];
-    [self.albumView addSubview:self.addAlbumButton];
+    self.EDITMODEL = NO;
     
     [self initAlbumView];
     [self refreshAlbumView];
@@ -206,11 +199,22 @@
 #define MAX_ALBUN_COUNT 8
 - (void)initAlbumView
 {
-    self.albumButtonArray = [[NSMutableArray alloc] init];
     self.albumView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, VIEW_ALBUM_HEIGHT)];
     UIImageView *albumViewBg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"profile_image_bg.png"]];
     [self.albumView addSubview:albumViewBg];
+    [self.contentView addSubview:self.albumView];
     
+    self.addAlbumButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [self.addAlbumButton.layer setMasksToBounds:YES];
+    [self.addAlbumButton.layer setCornerRadius:3.0];
+    self.addAlbumButton.tag = 1000;
+    [self.addAlbumButton setImage:[UIImage imageNamed:@"profile_add.png"] forState:UIControlStateNormal];
+    [self.addAlbumButton addTarget:self action:@selector(addAlbum:) forControlEvents:UIControlEventTouchUpInside];
+    [self.addAlbumButton setFrame:[self calcRect:0]];
+    [self.albumView addSubview:self.addAlbumButton];
+
+    
+    self.albumButtonArray = [[NSMutableArray alloc] init];
     UIButton *albumButton;
 //    self.albumArray = [[NSMutableArray alloc] initWithObjects:
 //                       @"profile_face_1.png",@"profile_face_2.png",@"profile_face_1.png",@"profile_face_2.png", nil ];
@@ -228,8 +232,6 @@
         [albumButton setHidden:YES];
         [self.albumButtonArray addObject:albumButton];
     }
-    [self.contentView addSubview:self.albumView];
-    
 }
 
 - (void)refreshAlbumView
@@ -244,6 +246,7 @@
             [albumButton setImage:avatar.thumbnail forState:UIControlStateNormal]; 
             [albumButton setHidden:NO];
         } else {
+            [albumButton setImage:nil forState:UIControlStateNormal];
             [albumButton setHidden:YES];
         }
     }
@@ -251,7 +254,9 @@
     if (self.albumCount < MAX_ALBUN_COUNT) {
         CGRect rect = [self calcRect:self.albumCount];
         [self.addAlbumButton setFrame:rect];
-        [self.albumView addSubview:self.addAlbumButton];
+        [self.addAlbumButton setHidden:NO];
+    } else {
+        [self.addAlbumButton setHidden:YES];
     }
 }
 
@@ -290,7 +295,7 @@
             [self takePhotoFromLibaray];  
         }else if (buttonIndex == 1) {  
             [self takePhotoFromCamera];  
-        }
+        } 
     }
     
     if (actionSheet == self.editActionsheet) {
@@ -400,48 +405,35 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     self.statusView = [[UIView alloc] initWithFrame:CGRectMake(VIEW_PADDING_LEFT, VIEW_ALBUM_HEIGHT + 12, VIEW_COMMON_WIDTH, 15)];
     
     // Create a label icon for the sex.
-    UIImageView* sexView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"sex_female_bg.png"]];
+    NSString* bgImgStr ;
+        if ([me.gender isEqualToString:@"m"]) {
+        bgImgStr = @"sex_male_bg.png";
+    } else if ([me.gender isEqualToString:@"f"]) {
+        bgImgStr = @"sex_female_bg.png";
+    } else {
+        bgImgStr = @"sex_unknown_bg.png";
+    }
+    
+    UIImageView* sexView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:bgImgStr]];
     [sexView setFrame:CGRectMake(0, 0, 40, 15)];
+    
+    
+    NSDate *now = [NSDate date];
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    //unsigned int unitFlags = NSMonthCalendarUnit | NSDayCalendarUnit;
+    NSDateComponents *comps = [gregorian components:NSYearCalendarUnit fromDate:self.me.birthdate  toDate:now  options:0];
+    NSString* ageStr = [NSString stringWithFormat:@"%d", comps.year];
     
     UILabel* sexLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 15, 15)];
     [sexLabel setBackgroundColor:[UIColor clearColor]];
-    sexLabel.text  = @"18";
+    sexLabel.text  = ageStr;
     [sexLabel setFont:[UIFont systemFontOfSize:12.0]];
     [sexLabel setTextColor:[UIColor whiteColor]];
     [sexView addSubview:sexLabel];
     
     
-    // Create a label icon for the time.
-    UIImageView *timeIconView = [[UIImageView alloc] initWithFrame:CGRectMake(210, 0 , 15, 15)];
-    timeIconView.image = [UIImage imageNamed:@"time_icon.png"];
-    
-    UILabel* timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(228, 0 ,60, 15)];
-	timeLabel.font = [UIFont systemFontOfSize:12.0];
-	timeLabel.textAlignment = UITextAlignmentLeft;
-	timeLabel.textColor = RGBCOLOR(140, 140, 140);
-    timeLabel.backgroundColor = [UIColor clearColor];
-    timeLabel.text  = @"6 hours ago";
-    [timeLabel sizeToFit];
-    
-    // Create a label icon for the time.
-    UIImageView *locationIconView = [[UIImageView alloc] initWithFrame:CGRectMake(140, 0 , 15, 15)];
-    locationIconView.image = [UIImage imageNamed:@"location_icon.png"];
-    
-    UILabel* locationLabel = [[UILabel alloc] initWithFrame:CGRectMake(158, 0 ,40, 15)];
-	locationLabel.font = [UIFont systemFontOfSize:12.0];
-	locationLabel.textAlignment = UITextAlignmentLeft;
-	locationLabel.textColor = RGBCOLOR(140, 140, 140);
-    locationLabel.backgroundColor = [UIColor clearColor];
-    locationLabel.text  = @"200M";
-    [locationLabel sizeToFit];
-    
     // add to the statusView
-    [self.statusView addSubview:sexView];
-    [self.statusView addSubview:timeIconView];
-	[self.statusView addSubview:timeLabel];
-    [self.statusView addSubview:locationIconView];
-	[self.statusView addSubview:locationLabel];
-    
+    [self.statusView addSubview:sexView];    
     [self.contentView addSubview: self.statusView];
     
 }
@@ -503,11 +495,12 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     
     self.infoArray = [[NSArray alloc] initWithObjects: @"签名",@"手机",@"职业",@"家乡",@"个人说明",nil ];    
     self.infoDescArray = [[NSArray alloc] initWithObjects:
-                          @"夫和实生物，同则不继。以他平他谓之和故能丰长而物归之",
-                          @"老莫  13899763487",
-                          @"IT工程师",
-                          @"山东 聊城",
-                          @"我不是那个史上最牛历史老师！我们中国的教科书属于秽史，请同学们考完试抓紧把它们烧了，放家里一天，都脏你屋子。", nil];
+                          self.me.signature ,
+                          self.me.cell,
+                          self.me.career,
+                          self.me.hometown,
+                          self.me.selfIntroduction,
+                          nil];
     
     self.infoTableView = [[UITableView alloc]initWithFrame:self.infoView.bounds style:UITableViewStyleGrouped];
     self.infoTableView.dataSource = self;
@@ -591,18 +584,21 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
 	descLabel.textAlignment = UITextAlignmentLeft;
     descLabel.textColor = RGBCOLOR(125, 125, 125);
     descLabel.backgroundColor = [UIColor clearColor];
-    NSString *signiture = [self.infoDescArray objectAtIndex:indexPath.row];
+   
+    NSString *text = @"";
+    if (indexPath.row < [self.infoDescArray count])
+        text = [self.infoDescArray objectAtIndex:indexPath.row];
     
     CGSize summaryMaxSize = CGSizeMake(SUMMARY_WIDTH, LABEL_HEIGHT*4);
     CGFloat _labelHeight;
     
-    CGSize signitureSize = [signiture sizeWithFont:descLabel.font constrainedToSize:summaryMaxSize lineBreakMode: UILineBreakModeTailTruncation];
+    CGSize signitureSize = [text sizeWithFont:descLabel.font constrainedToSize:summaryMaxSize lineBreakMode: UILineBreakModeTailTruncation];
     if (signitureSize.height > 20) {
         _labelHeight = 6.0;
     }else {
         _labelHeight = 14.0;
     }
-    descLabel.text = signiture;
+    descLabel.text = text;
     descLabel.frame = CGRectMake(descLabel.frame.origin.x, _labelHeight, signitureSize.width , signitureSize.height );
     
     

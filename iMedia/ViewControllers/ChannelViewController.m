@@ -91,7 +91,7 @@
     Channel *newChannel = [ModelHelper findChannelWithNode:nodeStr inContext:self.managedObjectContext];
     if (newChannel == nil) {
         newChannel = [NSEntityDescription insertNewObjectForEntityForName:@"Channel" inManagedObjectContext:self.managedObjectContext];
-        [ModelHelper populateChannel:newChannel withServerJSONData:jsonData];
+        [ModelHelper populateIdentity:newChannel withJSONData:jsonData];
         newChannel.state = [NSNumber numberWithInt:IdentityStatePendingAddSubscription];
     }
     

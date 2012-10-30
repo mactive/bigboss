@@ -20,6 +20,11 @@
 @property (nonatomic, retain) NSString * gender;
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * signature;
+@property (nonatomic, retain) NSDate   * birthdate;
+@property (nonatomic, retain) NSString * cell;
+@property (nonatomic, retain) NSString * hometown;
+@property (nonatomic, retain) NSString * selfIntroduction;
+@property (nonatomic, retain) NSString * career;
 @property (nonatomic, retain) NSSet *avatars;
 
 -(NSArray *)getOrderedAvatars;

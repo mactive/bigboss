@@ -460,7 +460,7 @@
     NSLog(@"NewUSer %@",newUser);
     
     if (newUser.state.intValue != IdentityStateActive) {
-        [ModelHelper populateUser:newUser withJSONData:jsonData];
+        [ModelHelper populateIdentity:newUser withJSONData:jsonData];
         newUser.state = [NSNumber numberWithInt:IdentityStatePendingAddFriend];
         NSLog(@"userJid %@",userJid);
 

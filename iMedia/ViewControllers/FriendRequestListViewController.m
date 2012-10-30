@@ -29,7 +29,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 @implementation FriendRequestListViewController
 
-@synthesize friendRequestJSONDict;
+@synthesize friendRequestJSONArray;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -66,7 +66,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [self.friendRequestJSONDict count];
+    return [self.friendRequestJSONArray count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -196,7 +196,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 - (void)configureCell:(UITableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath {
     
-    id obj = [self.friendRequestJSONDict objectForKey:[[self.friendRequestJSONDict allKeys] objectAtIndex:indexPath.row]];
+    id obj = [self.friendRequestJSONArray objectAtIndex:indexPath.row];
     
     // set max size
     CGSize nameMaxSize = CGSizeMake(MIDDLE_COLUMN_WIDTH, LABEL_HEIGHT*2);
@@ -314,7 +314,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 {
     // Navigation logic may go here. Create and push another view controller.
     RequestViewController *requestViewController = [[RequestViewController alloc]initWithNibName:nil bundle:nil];    
-    requestViewController.jsonData = [[self.friendRequestJSONDict allValues] objectAtIndex:indexPath.row];
+    requestViewController.jsonData = [self.friendRequestJSONArray objectAtIndex:indexPath.row];
     [self.navigationController pushViewController:requestViewController animated:YES];
 
 }
