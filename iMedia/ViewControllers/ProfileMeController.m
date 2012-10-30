@@ -62,6 +62,8 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.me = [self appDelegate].me ;
+        [self.infoTableView setAllowsSelection:NO];
+
     }
     return self;
 }
@@ -76,6 +78,9 @@
                                                              action:@selector(cancelEditModel)];
     [ttButton setTintColor:RGBCOLOR(80, 192, 77)];
     self.navigationItem.rightBarButtonItem = ttButton;
+    
+    //
+    [self.infoTableView setEditing:YES];
     
     //album can do image
     [self.addAlbumButton setHidden:YES];
@@ -181,9 +186,7 @@
     self.contentView.backgroundColor = RGBCOLOR(222, 224, 227);
     
     self.editingAlbumIndex = NSNotFound;
-    
-    self.EDITMODEL = NO;
-    
+        
     [self initAlbumView];
     [self refreshAlbumView];
     [self initStatusView];
@@ -560,11 +563,9 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
 	 */
     
 	UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
-    //    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//    cell.selectionStyle = UITableViewCellSelectionStyleNone;    
+    cell.backgroundView.backgroundColor = RGBCOLOR(86, 184, 225);
     
-    cell.backgroundView.backgroundColor = RGBCOLOR(248, 248, 248);
-    
-    cell.selectedBackgroundView.backgroundColor =  RGBCOLOR(228, 228, 228);
     
     UILabel* titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 10, 70, 20)];
     titleLabel.text = [self.infoArray objectAtIndex:indexPath.row];
