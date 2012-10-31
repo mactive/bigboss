@@ -1,0 +1,24 @@
+//
+//  EditViewController.h
+//  iMedia
+//
+//  Created by qian meng on 12-10-31.
+//  Copyright (c) 2012年 Li Xiaosi. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "PassValueDelegate.h"
+
+@interface EditViewController : UIViewController<UITextViewDelegate,UIPickerViewDataSource,UIPickerViewDelegate>
+{
+    
+}
+
+@property(nonatomic,assign) NSObject<PassValueDelegate> *delegate;
+
+@property(strong, nonatomic) NSString * nameText;
+@property(strong, nonatomic) NSString * valueText;
+@property(assign, nonatomic) NSUInteger valueIndex;
+@property(assign, nonatomic) NSString * valueType;
+
+@end

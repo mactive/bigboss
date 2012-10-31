@@ -40,6 +40,7 @@
 		2673F5A1163003B3004DAACB /* cell_bg_company@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2673F59E163003B3004DAACB /* cell_bg_company@2x.png */; };
 		2673F5A2163003B3004DAACB /* cell_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2673F59F163003B3004DAACB /* cell_bg@2x.png */; };
 		267F5087164015BD00B42D21 /* sex_unknown_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 267F5086164015BD00B42D21 /* sex_unknown_bg@2x.png */; };
+		267F508E1640DAAD00B42D21 /* EditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 267F508D1640DAAD00B42D21 /* EditViewController.m */; };
 		26825BD716378FA3008DA7CC /* GCPagedScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 26825BD616378FA3008DA7CC /* GCPagedScrollView.m */; };
 		26825BDA16378FC7008DA7CC /* AlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 26825BD916378FC7008DA7CC /* AlbumViewController.m */; };
 		26825BE21637A983008DA7CC /* location_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26825BDB1637A983008DA7CC /* location_icon@2x.png */; };
@@ -371,6 +372,9 @@
 		2673F59E163003B3004DAACB /* cell_bg_company@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "cell_bg_company@2x.png"; path = "Resources/cell_bg_company@2x.png"; sourceTree = "<group>"; };
 		2673F59F163003B3004DAACB /* cell_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "cell_bg@2x.png"; path = "Resources/cell_bg@2x.png"; sourceTree = "<group>"; };
 		267F5086164015BD00B42D21 /* sex_unknown_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "sex_unknown_bg@2x.png"; path = "Resources/sex_unknown_bg@2x.png"; sourceTree = "<group>"; };
+		267F508C1640DAAC00B42D21 /* EditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EditViewController.h; path = ViewControllers/EditViewController.h; sourceTree = "<group>"; };
+		267F508D1640DAAD00B42D21 /* EditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EditViewController.m; path = ViewControllers/EditViewController.m; sourceTree = "<group>"; };
+		267F508F1641041600B42D21 /* PassValueDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PassValueDelegate.h; path = ViewControllers/PassValueDelegate.h; sourceTree = "<group>"; };
 		26825BD516378FA3008DA7CC /* GCPagedScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GCPagedScrollView.h; path = GCPagedScrollView/GCPagedScrollView.h; sourceTree = "<group>"; };
 		26825BD616378FA3008DA7CC /* GCPagedScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GCPagedScrollView.m; path = GCPagedScrollView/GCPagedScrollView.m; sourceTree = "<group>"; };
 		26825BD816378FC7008DA7CC /* AlbumViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AlbumViewController.h; path = ViewControllers/AlbumViewController.h; sourceTree = "<group>"; };
@@ -1745,10 +1749,13 @@
 				266A1A70162E5B0F008EF1D5 /* SettingViewController.h */,
 				266A1A71162E5B0F008EF1D5 /* SettingViewController.m */,
 				56202F50162BCB4100F6306F /* ChatWithIdentity.h */,
+				267F508F1641041600B42D21 /* PassValueDelegate.h */,
 				264AA536163E534A00607861 /* RequestViewController.h */,
 				264AA537163E534A00607861 /* RequestViewController.m */,
 				5661561F163E9A1900199DB4 /* FriendRequestListViewController.h */,
 				56615620163E9A1900199DB4 /* FriendRequestListViewController.m */,
+				267F508C1640DAAC00B42D21 /* EditViewController.h */,
+				267F508D1640DAAD00B42D21 /* EditViewController.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -2243,6 +2250,7 @@
 				268E9BF7163FBD8000CD0C22 /* ServerDataTransformer.m in Sources */,
 				56615625163FB8A900199DB4 /* LocationManager.m in Sources */,
 				5661562C163FCA6900199DB4 /* User.m in Sources */,
+				267F508E1640DAAD00B42D21 /* EditViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

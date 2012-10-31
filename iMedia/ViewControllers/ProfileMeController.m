@@ -19,6 +19,12 @@
 #import "UIImage+Resize.h"
 #import "AppDelegate.h"
 #import "AppNetworkAPIClient.h"
+#import "EditViewController.h"
+
+#define SUMMARY_WIDTH 200
+#define LABEL_HEIGHT 20
+#define kCameraSource       UIImagePickerControllerSourceTypeCamera
+#define MAX_ALBUN_COUNT 8
 
 @interface ProfileMeController ()
 
@@ -26,6 +32,9 @@
 @property(strong, nonatomic) UIActionSheet *photoActionsheet;
 @property(strong, nonatomic) UIActionSheet *editActionsheet;
 @property(readwrite, nonatomic) NSUInteger editingAlbumIndex;
+@property(readwrite, nonatomic) BOOL SETEDITING;
+
+@property(strong, nonatomic) NSMutableArray *infoCellArray;
 
 @end
 
@@ -56,6 +65,8 @@
 @synthesize photoActionsheet;
 @synthesize editActionsheet;
 @synthesize editingAlbumIndex;
+@synthesize infoCellArray;
+@synthesize SETEDITING;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -78,9 +89,11 @@
                                                              action:@selector(cancelEditModel)];
     [ttButton setTintColor:RGBCOLOR(80, 192, 77)];
     self.navigationItem.rightBarButtonItem = ttButton;
+    self.SETEDITING = YES;
     
-    //
-    [self.infoTableView setEditing:YES];
+    //setEditing
+//    [self.infoTableView setEditing:YES];
+    [self infoTableEditing];
     
     //album can do image
     [self.addAlbumButton setHidden:YES];
@@ -101,6 +114,68 @@
     }
 }
 
+- (void)infoTableEditing{
+    for (int index =0; index < [self.infoCellArray count]; index++) {
+        
+        UITableViewCell *cell = [self.infoCellArray objectAtIndex:index];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+//    UITableViewCell *cell = [self.infoCellArray objectAtIndex:indexPath.row];
+    
+    if (self.SETEDITING) {
+        NSLog(@"click the %d",indexPath.row);
+        
+        EditViewController *controller = [[EditViewController alloc] initWithNibName:nil bundle:nil];
+        controller.nameText = [self.infoArray objectAtIndex:indexPath.row];
+        controller.valueText = [self.infoDescArray objectAtIndex:indexPath.row];
+        controller.valueIndex = indexPath.row;
+        controller.delegate = self;
+        
+        if (indexPath.row == 1  ) {
+            controller.valueType = @"sex";
+        }else {
+            controller.valueType = nil;
+        }
+        
+        [self.navigationController pushViewController:controller animated:YES];
+
+    }
+}
+// Protocl function
+-(void)passValue:(NSString *)value andIndex:(NSUInteger )index;
+{
+    NSLog(@"*** %@ %d ***",value,index);
+    UITableViewCell *cell = [self.infoCellArray objectAtIndex:index];
+    UILabel *descLabel = [cell viewWithTag:1002];
+    
+    // resize the label for multiline
+    CGSize summaryMaxSize = CGSizeMake(SUMMARY_WIDTH, LABEL_HEIGHT*2);
+    CGFloat _labelHeight;
+    
+    CGSize signitureSize = [value sizeWithFont:descLabel.font constrainedToSize:summaryMaxSize lineBreakMode: UILineBreakModeTailTruncation];
+    if (signitureSize.height > 20) {
+        _labelHeight = 6.0;
+    }else {
+        _labelHeight = 14.0;
+    }
+    descLabel.text = value;
+    descLabel.frame = CGRectMake(descLabel.frame.origin.x, _labelHeight, signitureSize.width , signitureSize.height );
+    
+    [self.infoDescArray replaceObjectAtIndex:index withObject:value];
+    
+}
+
+- (void)infoTableCommitEdit{
+    for (int index =0; index < [self.infoCellArray count]; index++) {
+        UITableViewCell *cell = [self.infoCellArray objectAtIndex:index];
+        cell.accessoryType = UITableViewCellAccessoryNone;        
+    }
+}
 
 - (void)cancelEditModel
 {
@@ -108,6 +183,10 @@
     self.navigationItem.rightBarButtonItem = self.editProfileButton;
     
     [self.addAlbumButton setHidden:NO];
+    self.SETEDITING = NO;
+    //setEditing
+//    [self.infoTableView setEditing:NO];
+    [self infoTableCommitEdit];
 
     // table into setting
     for (int j = 0; j < 8; j++) {
@@ -172,7 +251,7 @@
                                                           style:UIBarButtonItemStyleDone 
                                                          target:self 
                                                          action:@selector(setEditModel)];
-    
+    self.SETEDITING = NO;
     self.navigationItem.rightBarButtonItem = self.editProfileButton;
 }
 
@@ -181,7 +260,7 @@
     [super loadView];
     self.contentView = [[UIScrollView alloc]initWithFrame:
                         CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - VIEW_ACTION_HEIGHT - VIEW_UINAV_HEIGHT)];
-    [self.contentView setContentSize:CGSizeMake(self.view.frame.size.width, 600)];
+    [self.contentView setContentSize:CGSizeMake(self.view.frame.size.width, 720)];
     [self.contentView setScrollEnabled:YES];
     self.contentView.backgroundColor = RGBCOLOR(222, 224, 227);
     
@@ -199,7 +278,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -  ablum view
 ////////////////////////////////////////////////////////////////////////////////
-#define MAX_ALBUN_COUNT 8
 - (void)initAlbumView
 {
     self.albumView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, VIEW_ALBUM_HEIGHT)];
@@ -329,7 +407,8 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - UIImagePickerControllerDelegateMethods
 //////////////////////////////////////////////////////////////////////////////////////////
-#define kCameraSource       UIImagePickerControllerSourceTypeCamera
+
+
 - (void)takePhotoFromLibaray
 {
     UIImagePickerController *picker = [[UIImagePickerController alloc] init];
@@ -493,12 +572,23 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
 - (void)initInfoView
 {
     self.infoView = [[UIView alloc] initWithFrame:
-                     CGRectMake(0, VIEW_ALBUM_HEIGHT + VIEW_STATUS_HEIGHT + VIEW_SNS_HEIGHT + 30, self.view.frame.size.width, 400)];
+                     CGRectMake(0, VIEW_ALBUM_HEIGHT + VIEW_STATUS_HEIGHT + VIEW_SNS_HEIGHT + 30, self.view.frame.size.width, 520)];
     self.infoView.backgroundColor = [UIColor clearColor];
+    self.infoCellArray = [[NSMutableArray alloc] init];
+
+    self.infoArray = [[NSArray alloc] initWithObjects:@"昵称",@"性别",@"生日",@"签名",@"手机",@"职业",@"家乡",@"个人说明",nil ];
     
-    self.infoArray = [[NSArray alloc] initWithObjects: @"签名",@"手机",@"职业",@"家乡",@"个人说明",nil ];    
-    self.infoDescArray = [[NSArray alloc] initWithObjects:
-                          self.me.signature ,
+    
+    // brithdate transform
+    NSDateFormatter *df = [[NSDateFormatter alloc] init]; 
+    [df setDateFormat:@"yyyy-MM-dd"];
+    NSString* dateString = [df stringFromDate:self.me.birthdate];
+    
+    self.infoDescArray = [[NSMutableArray alloc] initWithObjects:
+                          self.me.displayName,
+                          self.me.gender,
+                          dateString,
+                          self.me.signature,
                           self.me.cell,
                           self.me.career,
                           self.me.hometown,
@@ -548,13 +638,12 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [self tableViewCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
+        [self.infoCellArray addObject:cell];
     }
     
     return cell;
     
 }
-#define SUMMARY_WIDTH 200
-#define LABEL_HEIGHT 20
 
 - (UITableViewCell *)tableViewCellWithReuseIdentifier:(NSString *)identifier forIndexPath:(NSIndexPath *)indexPath {
 	
@@ -564,7 +653,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     
 	UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
 //    cell.selectionStyle = UITableViewCellSelectionStyleNone;    
-    cell.backgroundView.backgroundColor = RGBCOLOR(86, 184, 225);
+    cell.backgroundView.backgroundColor = RGBCOLOR(79, 83, 89);
     
     
     UILabel* titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 10, 70, 20)];
@@ -576,6 +665,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     //    cell.textLabel.text = [self.infoArray objectAtIndex:indexPath.row];
     //    cell.textLabel.textColor = RGBCOLOR(155, 161, 172);
     
+    
     // Create a label for the summary
     UILabel* descLabel;
 	CGRect rect = CGRectMake( 80, 10, 210, 30);
@@ -585,6 +675,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
 	descLabel.textAlignment = UITextAlignmentLeft;
     descLabel.textColor = RGBCOLOR(125, 125, 125);
     descLabel.backgroundColor = [UIColor clearColor];
+    descLabel.tag = 1002;
    
     NSString *text = @"";
     if (indexPath.row < [self.infoDescArray count])

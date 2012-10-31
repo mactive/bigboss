@@ -7,11 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PassValueDelegate.h"
+
 @class Me;
 @class AlbumViewController;
 
-@interface ProfileMeController : UIViewController<UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate,UIActionSheetDelegate,UINavigationControllerDelegate>
+@interface ProfileMeController : UIViewController<UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate,UIActionSheetDelegate,UINavigationControllerDelegate,PassValueDelegate>
 {
+    
 }
 
 
@@ -35,11 +38,13 @@
 
 @property (strong, nonatomic) NSMutableArray *albumArray;
 @property (strong, nonatomic) NSArray *infoArray;
-@property (strong, nonatomic) NSArray *infoDescArray;
+@property (strong, nonatomic) NSMutableArray *infoDescArray;
 @property (strong, nonatomic) AlbumViewController* albumViewController;
 
 @property (strong, nonatomic) UIButton *addAlbumButton;
 @property (readwrite, nonatomic) NSUInteger albumCount;
 
-
+- (void) setValue:(NSString *) value;
 @end
+
+
