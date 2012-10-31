@@ -216,7 +216,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     channel.guid = [ServerDataTransformer getGUIDFromServerJSON:json];
     channel.node = [ServerDataTransformer getNodeFromServerJSON:json];
     channel.displayName = [ServerDataTransformer getNicknameFromServerJSON:json];
-    channel.ePostalID = [ServerDataTransformer getEPostalIDFromServerJSON:json];
+    channel.ePostalID = [ServerDataTransformer getCSContactIDFromServerJSON:json];
     channel.csContactPostalID = [ServerDataTransformer getCSContactIDFromServerJSON:json];
 
     channel.type = [NSNumber numberWithInt:IdentityTypeChannel];
