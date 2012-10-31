@@ -10,6 +10,7 @@
 #import "AFJSONRequestOperation.h"
 #import "AFNetworking.h"
 #import "AFHTTPRequestOperation.h"
+#import "NSData+Godzippa.h"
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -149,7 +150,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: identity.guid, @"guid", @"1", @"op", nil];
     
     [[AppNetworkAPIClient sharedClient] getPath:GET_DATA_PATH parameters:getDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        DDLogVerbose(@"get config JSON received: %@", responseObject);
+        DDLogVerbose(@"get user %@ data received: %@", identity, responseObject);
         
         NSString* type = [responseObject valueForKey:@"type"];
         
@@ -168,6 +169,8 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         //
         DDLogVerbose(@"error received: %@", error);
+        
+       
         if (block) {
             block(nil, error);
         }
@@ -180,6 +183,8 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     NSString* csrfToken = [[NSUserDefaults standardUserDefaults] valueForKey:@"csrfmiddlewaretoken"];
   
     NSMutableDictionary *postDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                              csrfToken, @"csrfmiddlewaretoken",
+                              @"3", @"op", 
                               me.avatarURL, @"avatar",
                               me.cell, @"cell",
                               me.signature, @"signature",
@@ -187,7 +192,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
                               me.displayName, @"nickname",
                               me.gender, @"gender",
                               me.selfIntroduction, @"self_introduction",
-                              csrfToken, @"csrfmiddlewaretoken", @"3", @"op", nil];
+                              nil];
     NSArray *imagesURLArray = [me getOrderedNonNilImages];
     for (int i = 0; i < [imagesURLArray count]; i++) {
         ImageRemote* remoteImage = [imagesURLArray objectAtIndex:i];
@@ -201,25 +206,36 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
         [postDict setObject:remoteImage.imageThumbnailURL forKey:key2];
     }
     
-    [[AppNetworkAPIClient sharedClient] postPath:POST_DATA_PATH parameters:postDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        DDLogVerbose(@"login JSON received: %@", responseObject);
-        
+    NSMutableURLRequest *postRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"POST" path:POST_DATA_PATH parameters:postDict];
+    
+    // Compress data
+    /*
+    NSData *originalData = [postRequest HTTPBody];
+    NSData *compressedData = [originalData dataByGZipCompressingWithError:nil];
+    [postRequest setHTTPBody:compressedData];
+    [postRequest setValue:@"gzip" forHTTPHeaderField:@"Content-Encoding"];
+    */
+    
+    AFHTTPRequestOperation *operation = [[AppNetworkAPIClient sharedClient] HTTPRequestOperationWithRequest:postRequest success:nil failure:nil];
+    
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        DDLogInfo(@"upload me received response: %@", responseObject);
         NSString* status = [responseObject valueForKey:@"status"];
         if ([status isEqualToString:@"success"]) {
             if (block ) {
                 block(responseObject, nil);
             }
         }
-        
-        
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        //
-        DDLogVerbose(@"login failed: %@", error);
+        DDLogError(@"upload me failed: %@", error);
         if (block) {
             block(nil, error);
         }
     }];
-
+    
+    DDLogInfo(@"http request: %@", operation);
+    
+    [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:operation];
     
 }
 

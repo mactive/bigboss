@@ -171,7 +171,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: fromJid, @"jid", @"2", @"op", nil];
     
     [[AppNetworkAPIClient sharedClient] getPath:GET_DATA_PATH parameters:getDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        DDLogVerbose(@"get config JSON received: %@", responseObject);
+        DDLogVerbose(@"friend request - get user %s data received: %@", fromJid, responseObject);
         
         NSString* type = [responseObject valueForKey:@"type"];
         if ([type isEqualToString:@"user"] && [self.friendRequestDict valueForKey:fromJid] == nil) {
