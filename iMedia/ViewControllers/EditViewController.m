@@ -8,13 +8,18 @@
 
 #import "EditViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import "ServerDataTransformer.h"
 
 @interface EditViewController ()
 
 @property(strong, nonatomic) UILabel * nameLabel;
 @property(strong, nonatomic) UITextView * valueTextView;
 @property(strong, nonatomic) UIPickerView *sexPicker;
-@property(strong, nonatomic) NSArray *sexTitleArray;
+@property(strong, nonatomic) NSDictionary *sexTitleDict;
+@property(strong, nonatomic) NSArray *sexTitleValue;
+@property(strong, nonatomic) NSArray *sexTitleKey;
+@property(strong, nonatomic) UIDatePicker *datePicker;
+@property(strong, nonatomic) NSDateFormatter *dateFormatter;
 
 @end
 
@@ -27,7 +32,11 @@
 @synthesize valueIndex;
 @synthesize valueType;
 @synthesize sexPicker;
-@synthesize sexTitleArray;
+@synthesize sexTitleDict;
+@synthesize sexTitleValue;
+@synthesize sexTitleKey;
+@synthesize datePicker;
+@synthesize dateFormatter;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -41,6 +50,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.dateFormatter = [[NSDateFormatter alloc] init];
+    [self.dateFormatter setDateFormat: @"yyyy-MM-dd"];
     
     self.nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 20, 300 , 30)];
     [self.nameLabel setBackgroundColor:[UIColor clearColor]];
@@ -65,17 +77,36 @@
     self.sexPicker.delegate = self;
     [self.sexPicker setFrame:CGRectMake(0, 60, 320, 200)];
     self.sexPicker.showsSelectionIndicator = YES;
-    self.sexTitleArray = [[NSArray alloc]initWithObjects:@"男滴",@"女滴",@"你说嘞",nil];
+    self.sexTitleDict = [ServerDataTransformer sexDict];
+    self.sexTitleValue = [self.sexTitleDict allValues];
+    self.sexTitleKey = [self.sexTitleDict allKeys];
+    
+    self.datePicker = [[UIDatePicker alloc]init];
+    [self.datePicker setFrame:CGRectMake(0, 60, 320, 300)];
+    [self.datePicker setDatePickerMode:UIDatePickerModeDate];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     if ([self.valueType isEqualToString:@"sex"]) {
+//        [self.sexPicker selectRow:1 inComponent:1 animated:YES];
+        NSInteger index =  [self.sexTitleKey indexOfObject:self.valueText];
+        [self.sexPicker selectRow:index inComponent:0 animated:YES];
         [self.view addSubview:self.sexPicker];
-    }else {
+        
+    }else if([self.valueType isEqualToString:@"date"])
+    {
+        NSDate *_date = [self.dateFormatter dateFromString:self.valueText];
+        NSLog(@"date:%@", _date);
+        [self.datePicker setDate:_date animated:YES];
+        [self.datePicker addTarget:self action:@selector(dateChanged) forControlEvents:UIControlEventValueChanged];
+        [self.view addSubview:self.datePicker];
+    }
+    else {
         [self.view addSubview:self.valueTextView];
     }
 }
+
 
 /////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - uipickerview delegate
@@ -92,7 +123,7 @@
 {
     NSInteger result = 0;
     if ([pickerView isEqual:self.sexPicker]) {
-        result = [self.sexTitleArray count];
+        result = [self.sexTitleKey count];
     }
     return result;
 }
@@ -101,16 +132,25 @@
 {
     NSString* result = @"";
     if ([pickerView isEqual:self.sexPicker]) {
-        result = [self.sexTitleArray objectAtIndex:row];
+        result = [self.sexTitleValue objectAtIndex:row];
     }
     return result;
 }
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
-    [self.delegate passValue:[self.sexTitleArray objectAtIndex:row] andIndex:self.valueIndex];
+    if ([pickerView isEqual:self.sexPicker]) {
+        [self.delegate passValue:[self.sexTitleKey objectAtIndex:row] andIndex:self.valueIndex];
+    }
 }
+/////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - datepicker delegate
+/////////////////////////////////////////////////////////////////////////////////////
 
-
+- (void)dateChanged
+{
+    NSString * _tmp = [[NSString alloc] initWithString:[self.dateFormatter stringFromDate:self.datePicker.date]];
+    [self.delegate passValue:_tmp  andIndex:self.valueIndex];
+}
 /////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - textview delegate
 /////////////////////////////////////////////////////////////////////////////////////

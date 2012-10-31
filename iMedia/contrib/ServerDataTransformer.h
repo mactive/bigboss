@@ -26,4 +26,7 @@
 + (NSString *)getRealNameFromServerJSON:(NSString *)jsonData;
 + (NSDate *)getBirthdateFromServerJSON:(NSString *)jsonData;
 
+// static dict
++ (NSDictionary *)sexDict;
+
 @end

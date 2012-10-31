@@ -21,11 +21,14 @@
 #import "AppDelegate.h"
 #import "AppNetworkAPIClient.h"
 #import "EditViewController.h"
+#import "ServerDataTransformer.h"
 
 #define SUMMARY_WIDTH 200
 #define LABEL_HEIGHT 20
 #define kCameraSource       UIImagePickerControllerSourceTypeCamera
 #define MAX_ALBUN_COUNT 8
+#define SEX_ITEM_INDEX 1
+#define BRITH_ITEM_INDEX 2
 
 @interface ProfileMeController ()
 
@@ -133,12 +136,19 @@
         
         EditViewController *controller = [[EditViewController alloc] initWithNibName:nil bundle:nil];
         controller.nameText = [self.infoArray objectAtIndex:indexPath.row];
-        controller.valueText = [self.infoDescArray objectAtIndex:indexPath.row];
+//        NSLog(@"%@",[self.infoDescArray objectAtIndex:indexPath.row]);
+        if ([self.infoDescArray objectAtIndex:indexPath.row] != NULL) {
+            controller.valueText = [self.infoDescArray objectAtIndex:indexPath.row];
+        }else {
+            NSLog(@"---");
+        }
         controller.valueIndex = indexPath.row;
         controller.delegate = self;
         
-        if (indexPath.row == 1  ) {
+        if (indexPath.row == SEX_ITEM_INDEX  ) {
             controller.valueType = @"sex";
+        }else if (indexPath.row == BRITH_ITEM_INDEX) {
+            controller.valueType = @"date";
         }else {
             controller.valueType = nil;
         }
@@ -151,6 +161,12 @@
 -(void)passValue:(NSString *)value andIndex:(NSUInteger )index;
 {
     NSLog(@"*** %@ %d ***",value,index);
+    
+    // sex dict
+    if (index == SEX_ITEM_INDEX) {
+        value = [[ServerDataTransformer sexDict] objectForKey:value];
+    }
+    
     UITableViewCell *cell = [self.infoCellArray objectAtIndex:index];
     UILabel *descLabel = [cell viewWithTag:1002];
     
@@ -701,8 +717,14 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     descLabel.tag = 1002;
    
     NSString *text = @"";
-    if (indexPath.row < [self.infoDescArray count])
+    if (indexPath.row < [self.infoDescArray count]){
         text = [self.infoDescArray objectAtIndex:indexPath.row];
+        // sex dict
+        if (indexPath.row == SEX_ITEM_INDEX) {
+            NSString *_tmp = [self.infoDescArray objectAtIndex:indexPath.row];
+            text = [[ServerDataTransformer sexDict] objectForKey:_tmp];
+        }
+    }
     
     CGSize summaryMaxSize = CGSizeMake(SUMMARY_WIDTH, LABEL_HEIGHT*4);
     CGFloat _labelHeight;

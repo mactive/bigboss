@@ -29,6 +29,20 @@
     return _sharedClient;
 }
 
++ (NSDictionary *)sexDict {
+    static NSDictionary *_sharedClient = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _sharedClient = [[NSDictionary alloc] initWithObjectsAndKeys:
+                         T(@"男滴"),   @"m",
+                         T(@"女滴"),   @"f",
+                         T(@"你说嘞"),  @"o",
+                         nil];
+    });
+    
+    return _sharedClient;
+}
+
 
 + (NSString *)getNicknameFromServerJSON:(NSString *)jsonData
 {
