@@ -120,6 +120,14 @@
         [self.view addSubview:self.datePicker];
     }
     else {
+        if (self.valueIndex == 3 || self.valueIndex == 7) {
+            [self.doneButton  setFrame:CGRectMake(22.5, 180, 275, 40)];
+            [self.valueTextView  setFrame:CGRectMake(20 , 60, 280 , 100)];
+        }else{
+            [self.doneButton  setFrame:CGRectMake(22.5, 120, 275, 40)];
+            [self.valueTextView  setFrame:CGRectMake(20 , 60, 280 , 40)];
+        }
+        
         [self.view addSubview:self.valueTextView];
     }
 }

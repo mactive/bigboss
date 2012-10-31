@@ -174,7 +174,13 @@
     UILabel *descLabel = [cell viewWithTag:1002];
     
     // resize the label for multiline
-    CGSize summaryMaxSize = CGSizeMake(SUMMARY_WIDTH, LABEL_HEIGHT*2);
+    
+    CGSize summaryMaxSize = CGSizeZero;
+    if( index == [self.infoArray count] -1 ){
+        summaryMaxSize = CGSizeMake(SUMMARY_WIDTH, LABEL_HEIGHT*4);
+    }else{
+        summaryMaxSize = CGSizeMake(SUMMARY_WIDTH, LABEL_HEIGHT*2);
+    }
     CGFloat _labelHeight;
     
     CGSize signitureSize = [value sizeWithFont:descLabel.font constrainedToSize:summaryMaxSize lineBreakMode: UILineBreakModeTailTruncation];
@@ -186,7 +192,7 @@
     descLabel.text = value;
     descLabel.frame = CGRectMake(descLabel.frame.origin.x, _labelHeight, signitureSize.width , signitureSize.height );
     if( index == [self.infoArray count] -1 ){
-        descLabel.frame = CGRectMake(20, _labelHeight + 25 , SUMMARY_WIDTH + 50 , signitureSize.height );
+        descLabel.frame = CGRectMake(20, _labelHeight + 30 , SUMMARY_WIDTH + 50 , signitureSize.height );
     }
     
     [self.infoDescArray replaceObjectAtIndex:index withObject:value];
@@ -551,7 +557,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     NSDateComponents *comps = [gregorian components:NSYearCalendarUnit fromDate:self.me.birthdate  toDate:now  options:0];
     NSString* ageStr = [NSString stringWithFormat:@"%d", comps.year];
     
-    UILabel* sexLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 15, 15)];
+    UILabel* sexLabel = [[UILabel alloc]initWithFrame:CGRectMake(18, 0, 15, 15)];
     [sexLabel setBackgroundColor:[UIColor clearColor]];
     sexLabel.text  = ageStr;
     [sexLabel setFont:[UIFont systemFontOfSize:12.0]];
@@ -702,7 +708,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     cell.backgroundView.backgroundColor = RGBCOLOR(79, 83, 89);
     
     
-    UILabel* titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 10, 70, 20)];
+    UILabel* titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 12, 70, 20)];
     titleLabel.text = [self.infoArray objectAtIndex:indexPath.row];
     titleLabel.font = [UIFont boldSystemFontOfSize:16.0];
     titleLabel.textColor = RGBCOLOR(155, 161, 172);
