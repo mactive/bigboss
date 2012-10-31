@@ -245,7 +245,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
     // set the time text
     UILabel *timeLabel = (UILabel *)[cell viewWithTag:TIME_TAG];
-    timeLabel.text =  [[ServerDataTransformer getDateFromServerJSON:obj] timesince];
+    timeLabel.text =  [[obj valueForKey:@"add_friend_request_date"] timesince];
     
     // set the name text
     UILabel *nameLabel = (UILabel *)[cell viewWithTag:NAME_TAG];

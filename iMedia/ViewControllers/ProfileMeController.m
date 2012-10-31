@@ -10,6 +10,7 @@
 #import "Me.h"
 #import "Avatar.h"
 #import "Channel.h"
+#import "ImageRemote.h"
 #import "ChatWithIdentity.h"
 #import "ModelHelper.h"
 #import "XMPPNetworkCenter.h"
@@ -86,7 +87,7 @@
     UIBarButtonItem *ttButton = [[UIBarButtonItem alloc] initWithTitle:T(@"保存") 
                                                               style:UIBarButtonItemStyleDone 
                                                              target:self
-                                                             action:@selector(cancelEditModel)];
+                                                                action:@selector(saveEditModel:)];
     [ttButton setTintColor:RGBCOLOR(80, 192, 77)];
     self.navigationItem.rightBarButtonItem = ttButton;
     self.SETEDITING = YES;
@@ -177,9 +178,11 @@
     }
 }
 
-- (void)cancelEditModel
+- (void)saveEditModel:(id)sender
 {
     // save and upload
+    [[AppNetworkAPIClient sharedClient] uploadMe:self.me withBlock:nil];
+
     self.navigationItem.rightBarButtonItem = self.editProfileButton;
     
     [self.addAlbumButton setHidden:NO];
@@ -443,28 +446,48 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     //    self.image = image;
     UIImage *thumbnail = [image resizedImageToSize:CGSizeMake(75, 75)];
     
+    Avatar *avatar;
+    
     if (self.editingAlbumIndex != NSNotFound) {
-        Avatar *replaceAvatar = [self.albumArray objectAtIndex:self.editingAlbumIndex];
-        replaceAvatar.image = image;
-        replaceAvatar.thumbnail = thumbnail;
-        [[AppNetworkAPIClient sharedClient] storeAvatar:replaceAvatar forMe:self.me andOrder:self.editingAlbumIndex withBlock:nil];
+        avatar = [self.albumArray objectAtIndex:self.editingAlbumIndex];
+        avatar.image = image;
+        avatar.thumbnail = thumbnail;
         
         self.editingAlbumIndex = NSNotFound;
 
     }else {
-        Avatar *insertAvatar = [NSEntityDescription insertNewObjectForEntityForName:@"ImageLocal" inManagedObjectContext:self.managedObjectContext ];
-        insertAvatar.thumbnail = thumbnail;
-        insertAvatar.image = image;
+        avatar = [NSEntityDescription insertNewObjectForEntityForName:@"ImageLocal" inManagedObjectContext:self.managedObjectContext ];
+        avatar.thumbnail = thumbnail;
+        avatar.image = image;
         NSInteger sequence = [self.albumArray count] + 1;
         
-        insertAvatar.sequence = [NSNumber numberWithInt:sequence];
-        [self.me addAvatarsObject:insertAvatar];
+        avatar.sequence = [NSNumber numberWithInt:sequence];
+        [self.me addAvatarsObject:avatar];
         
-        //网路传输
-        [[AppNetworkAPIClient sharedClient] storeAvatar:insertAvatar forMe:self.me andOrder:sequence withBlock:nil];
     }
-    
+    //网路传输
+    [[AppNetworkAPIClient sharedClient] storeAvatar:avatar forMe:self.me andOrder:avatar.sequence.intValue withBlock:^(id responseObject, NSError *error) {
+        if (error == nil) {
+            
+            NSString* url = [responseObject valueForKey:@"image"];
+            NSString *thumbnailURL = [responseObject valueForKey:@"thumbnail"];
+            
+            NSArray *imagesURLArray = [self.me getOrderedImages];
+            ImageRemote *imageRemote = [imagesURLArray objectAtIndex:(avatar.sequence.intValue-1)];
+            imageRemote.sequence = avatar.sequence;
+            imageRemote.imageThumbnailURL = thumbnailURL;
+            imageRemote.imageURL = url;
+            
+            if (avatar.sequence.intValue == 1) {
+                self.me.avatarURL = imageRemote.imageURL;
+            }
+        } else {
+            NSLog (@"NSError received during login: %@", error);
+        }
+        
+    }];
 
+    
     
     [self refreshAlbumView];
     [picker dismissModalViewControllerAnimated:YES];

@@ -184,6 +184,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         for (int i = 0; i < 8; i++) {
             ImageRemote *image = [NSEntityDescription insertNewObjectForEntityForName:@"ImageRemote" inManagedObjectContext:_managedObjectContext];
             image.sequence = 0;
+            image.imageThumbnailURL = @"";
+            image.imageURL=@"";
+            image.title = @"";
             [self.me addImagesObject:image];
         }
         self.me.ePostalID = jidStr;

@@ -11,6 +11,7 @@
 #import "Me.h"
 #import "Channel.h"
 #import "ImageRemote.h"
+#import "ServerDataTransformer.h"
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -29,15 +30,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 @implementation ModelHelper
 
-+ (SBJsonParser *)sharedJSONParser {
-    static SBJsonParser *_sharedClient = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _sharedClient = [[SBJsonParser alloc] init];
-    });
-    
-    return _sharedClient;
-}
 
 + (User *)findUserWithEPostalID:(NSString *)ePostalID inContext:(NSManagedObjectContext *)context
 {
@@ -136,36 +128,61 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 + (BOOL)populateMe:(Me *)user withJSONData:(id)json
 {
-    user.ePostalID = [json valueForKey:@"jid"];
-    user.gender = [json valueForKey:@"gender"];
-    user.signature = [json valueForKey:@"signature"];
-    user.displayName = [json valueForKey:@"nickname"];
-    //user.birthdate = [json valueForKey:@"birthdate"];
+    user.ePostalID = [ServerDataTransformer getEPostalIDFromServerJSON:json];
+    user.gender = [ServerDataTransformer getGenderFromServerJSON:json];
+    user.signature = [ServerDataTransformer getSignatureFromServerJSON:json];
+    user.displayName = [ServerDataTransformer getNicknameFromServerJSON:json];
+    //user.birthdate = [ServerDataTransformer getBirthdateFromServerJSON:json];
     NSTimeInterval secondsPerFiveYear = 24 * 60 * 60 *365 *5;
     NSDate *today = [[NSDate alloc] init];
     user.birthdate = [today dateByAddingTimeInterval:-secondsPerFiveYear];
-    user.career = [json valueForKey:@"career"];
-    user.selfIntroduction = [json valueForKey:@"self_introduction"];
-    user.hometown = [json valueForKey:@"hometown"];
-    user.guid = [self convertNumberToStringIfNumber:[json valueForKey:@"guid"]];
+    user.career = [ServerDataTransformer getCareerFromServerJSON:json];
+    user.selfIntroduction = [ServerDataTransformer getSelfIntroductionFromServerJSON:json];
+    user.hometown = [ServerDataTransformer getHometownFromServerJSON:json];
+    user.avatarURL = [ServerDataTransformer getAvatarFromServerJSON:json];
+    user.cell = [ServerDataTransformer getCellFromServerJSON:json];
+    user.name = [ServerDataTransformer getNicknameFromServerJSON:json];
+    
+    NSMutableArray *imageURLArray = [[NSMutableArray alloc] init];
+    for (int i = 1; i <=8; i++) {
+        NSString *key = [NSString stringWithFormat:@"avatar%d", i];
+        NSString *url = [json valueForKey:key];
+        if (url != nil && ![url isEqualToString:@""]) {
+            [imageURLArray addObject:url];
+        }
+    }
+    
+    // Update avatar with incoming data
+    NSArray *imageArray = [user getOrderedImages];
+    for (int i = 0; i < [imageArray count]; i++) {
+        ImageRemote *imageRemote = [imageArray objectAtIndex:i];
+        if (i < [imageURLArray count]) {
+            imageRemote.imageURL = [imageURLArray objectAtIndex:i];
+            imageRemote.sequence = [NSNumber numberWithInt:i];
+        } else {
+            imageRemote.imageURL = nil;
+            imageRemote.sequence = 0;
+        }
+    }
+
         
     return YES;
 }
 
 + (BOOL)populateUser:(User *)user withJSONData:(id)json
 {
-    user.ePostalID = [json valueForKey:@"jid"];
-    user.gender = [json valueForKey:@"gender"];
-    user.signature = [json valueForKey:@"signature"];
-    user.displayName = [json valueForKey:@"nickname"];
-    //user.birthdate = [json valueForKey:@"birthdate"];
+    user.ePostalID = [ServerDataTransformer getEPostalIDFromServerJSON:json];
+    user.gender = [ServerDataTransformer getGenderFromServerJSON:json];
+    user.signature = [ServerDataTransformer getSignatureFromServerJSON:json];
+    user.displayName = [ServerDataTransformer getNicknameFromServerJSON:json];
+    //user.birthdate = [ServerDataTransformer getBirthdateFromServerJSON:json];
     NSTimeInterval secondsPerFiveYear = 24 * 60 * 60 *365 *5;
     NSDate *today = [[NSDate alloc] init];
     user.birthdate = [today dateByAddingTimeInterval:-secondsPerFiveYear];
-    user.career = [json valueForKey:@"career"];
-    user.selfIntroduction = [json valueForKey:@"self_introduction"];
-    user.hometown = [json valueForKey:@"hometown"];
-    user.guid = [self convertNumberToStringIfNumber:[json valueForKey:@"guid"]];
+    user.career = [ServerDataTransformer getCareerFromServerJSON:json];
+    user.selfIntroduction = [ServerDataTransformer getSelfIntroductionFromServerJSON:json];
+    user.hometown = [ServerDataTransformer getHometownFromServerJSON:json];
+    user.guid = [ServerDataTransformer getGUIDFromServerJSON:json];
     
     NSMutableArray *imageURLArray = [[NSMutableArray alloc] init];
     for (int i = 1; i <=8; i++) {
@@ -192,22 +209,15 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     return YES;
 }
 
-+ (NSString *)convertNumberToStringIfNumber:(id)obj
-{
-    if ([obj isKindOfClass:[NSNumber class]]) {
-        return [obj stringValue];
-    }
-    return obj;
-}
 
 + (BOOL)populateChannel:(Channel *)channel withServerJSONData:(NSString *)json
 {
-    
-    channel.guid = [self convertNumberToStringIfNumber:[json valueForKey:@"global_id"]] ;
-    channel.node = [self convertNumberToStringIfNumber:[json valueForKey:@"node_address"]];
-    channel.displayName = [self convertNumberToStringIfNumber:[json valueForKey:@"name"]];
-    channel.ePostalID = [self convertNumberToStringIfNumber:[json valueForKey:@"receive_jid"]];
-    channel.csContactPostalID = [self convertNumberToStringIfNumber:[json valueForKey:@"receive_jid"]];
+    channel.guid = [ServerDataTransformer getGUIDFromServerJSON:json];
+    channel.node = [ServerDataTransformer getNodeFromServerJSON:json];
+    channel.displayName = [ServerDataTransformer getNicknameFromServerJSON:json];
+    channel.ePostalID = [ServerDataTransformer getEPostalIDFromServerJSON:json];
+    channel.csContactPostalID = [ServerDataTransformer getCSContactIDFromServerJSON:json];
+
     channel.type = [NSNumber numberWithInt:IdentityTypeChannel];
     
     return YES;

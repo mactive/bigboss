@@ -14,8 +14,19 @@
 #import "XMPPNetworkCenter.h"
 #import "UIImageView+AFNetworking.h"
 #import "ServerDataTransformer.h"
+#import "AppDelegate.h"
+#import "FunctionListViewController.h"
 
 @interface RequestViewController ()
+
+@property(nonatomic, strong) UIView * requestView;
+@property(nonatomic, strong) UILabel * titleLabel;
+@property(nonatomic, strong) UILabel * timeLabel;
+
+@property(nonatomic, strong) UIView * contentView;
+
+@property(nonatomic, strong) UIButton * confirmButton;
+@property(nonatomic, strong) UIButton * cancelButton;
 
 @end
 
@@ -27,7 +38,6 @@
 @synthesize contentView;
 @synthesize confirmButton;
 @synthesize cancelButton;
-@synthesize requestDict;
 @synthesize jsonData;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -39,6 +49,11 @@
     return self;
 }
 
+- (AppDelegate *)appDelegate
+{
+	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -46,13 +61,8 @@
     self.view.backgroundColor = BGCOLOR;
     NSLog(@"%@",self.jsonData);
     // fake data
-    NSDate * date = [ServerDataTransformer getDateFromServerJSON:jsonData];
+    NSDate * date = [jsonData valueForKey:@"add_friend_request_date"];
     NSURL * avatarUrl = [[NSURL alloc] initWithString:[ServerDataTransformer getAvatarFromServerJSON:jsonData]]; 
-    self.requestDict = [[NSDictionary alloc] initWithObjectsAndKeys:
-                            [ServerDataTransformer getNicknameFromServerJSON:jsonData],@"name",
-                            date,@"date",
-                            avatarUrl,@"avatar",
-                            [ServerDataTransformer getSignatureFromServerJSON:jsonData],@"signature", nil];
 
 	// Do any additional setup after loading the view.
     
@@ -73,7 +83,7 @@
 	self.timeLabel.textAlignment = UITextAlignmentLeft;
     self.timeLabel.textColor = RGBCOLOR(153, 153, 153);
     self.timeLabel.backgroundColor = [UIColor clearColor];
-    self.timeLabel.text = [[self.requestDict objectForKey:@"date"] timesince];
+    self.timeLabel.text = [date timesince];
     
     [self initContentView];
     
@@ -122,7 +132,7 @@
     [avatarLayer setBorderWidth:1.0];
     [avatarLayer setBorderColor:[[UIColor whiteColor] CGColor]];
 //    avatarImage setImage:
-    [avatarImage setImageWithURL:[self.requestDict objectForKey:@"avatar"]];
+    [avatarImage setImageWithURL:[NSURL URLWithString:[ServerDataTransformer getAvatarFromServerJSON:jsonData]]];
     [self.contentView addSubview:avatarImage];
 
     
@@ -132,7 +142,7 @@
 	label.textAlignment = UITextAlignmentLeft;
     label.textColor = RGBCOLOR(127, 127, 127);
     label.backgroundColor = [UIColor clearColor];
-    label.text = [self.requestDict objectForKey:@"name"];
+    label.text = [ServerDataTransformer getNicknameFromServerJSON:jsonData];
     [self.contentView addSubview:label];
 
     label = [[UILabel alloc] initWithFrame:CGRectMake(100, 30, 170, 60)];
@@ -141,7 +151,7 @@
     label.textColor = RGBCOLOR(158, 158, 158);
     label.numberOfLines = 0;
     label.backgroundColor = [UIColor clearColor];
-    label.text = [self.requestDict objectForKey:@"signature"];
+    label.text = [ServerDataTransformer getSignatureFromServerJSON:jsonData];
     [self.contentView addSubview:label];   
 
     [self.requestView addSubview:self.contentView];
@@ -155,12 +165,16 @@
 {
     NSString *jidStr = [self.jsonData valueForKey:@"ePostalID"];
     [[XMPPNetworkCenter sharedClient] acceptPresenceSubscriptionRequestFrom:jidStr andAddToRoster:YES];
+    
+    [[self appDelegate].functionListController.friendRequestDict removeObjectForKey:jidStr];
 }
 
 - (void)cancelRequest
 {
     NSString *jidStr = [self.jsonData valueForKey:@"ePostalID"];
     [[XMPPNetworkCenter sharedClient] rejectPresenceSubscriptionRequestFrom:jidStr];
+    
+    [[self appDelegate].functionListController.friendRequestDict removeObjectForKey:jidStr];
 }
 
 

@@ -174,8 +174,12 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         DDLogVerbose(@"get config JSON received: %@", responseObject);
         
         NSString* type = [responseObject valueForKey:@"type"];
-        if ([type isEqualToString:@"user"]) {
-            [self.friendRequestDict setValue:responseObject forKey:fromJid];
+        if ([type isEqualToString:@"user"] && [self.friendRequestDict valueForKey:fromJid] == nil) {
+            
+            NSMutableDictionary *result = [NSMutableDictionary dictionaryWithDictionary:responseObject];
+            [result setValue:[NSDate date] forKey:@"add_friend_request_date"];
+            
+            [self.friendRequestDict setValue:result forKey:fromJid];
             
 #warning TODO - add flag mark new friend request
             [self appDelegate].tabController.tabBarItem.badgeValue =  [NSString stringWithFormat:@"%d", [self.friendRequestDict count]];
