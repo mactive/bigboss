@@ -697,6 +697,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
 	 */
     
 	UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+    
 //    cell.selectionStyle = UITableViewCellSelectionStyleNone;    
     cell.backgroundView.backgroundColor = RGBCOLOR(79, 83, 89);
     
