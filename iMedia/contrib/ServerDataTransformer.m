@@ -78,6 +78,9 @@
 + (NSString *)getChannelEPostalIDFromServerJSON:(NSString *)jsonData{
     return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"receive_jid"];
 }
++ (NSString *)getRealNameFromServerJSON:(NSString *)jsonData{
+    return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"true_name"];
+}
 + (NSDate *)getBirthdateFromServerJSON:(NSString *)jsonData
 {
     NSString *dateStr = [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"birthdate"];

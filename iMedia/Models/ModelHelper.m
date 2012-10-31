@@ -139,8 +139,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     user.career = [ServerDataTransformer getCareerFromServerJSON:json];
     user.selfIntroduction = [ServerDataTransformer getSelfIntroductionFromServerJSON:json];
     user.hometown = [ServerDataTransformer getHometownFromServerJSON:json];
-    user.guid = [ServerDataTransformer getGUIDFromServerJSON:json];
     user.avatarURL = [ServerDataTransformer getAvatarFromServerJSON:json];
+    user.cell = [ServerDataTransformer getCellFromServerJSON:json];
+    user.name = [ServerDataTransformer getNicknameFromServerJSON:json];
     
     NSMutableArray *imageURLArray = [[NSMutableArray alloc] init];
     for (int i = 1; i <=8; i++) {

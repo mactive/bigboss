@@ -8,6 +8,8 @@
 
 #import "AppNetworkAPIClient.h"
 #import "AFJSONRequestOperation.h"
+#import "AFNetworking.h"
+#import "AFHTTPRequestOperation.h"
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -110,21 +112,36 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 - (void)storeAvatar:(Avatar *)avatar forMe:(Me *)me andOrder:(int)sequence withBlock:(void (^)(id, NSError *))block
 {    
     NSString* csrfToken = [[NSUserDefaults standardUserDefaults] valueForKey:@"csrfmiddlewaretoken"];
-    NSDictionary *paramDict = [NSDictionary dictionaryWithObjectsAndKeys: csrfToken, @"csrfmiddlewaretoken", UIImagePNGRepresentation(avatar.image), @"image", UIImagePNGRepresentation(avatar.thumbnail), @"thumbnail", nil];
+    NSDictionary *paramDict = [NSDictionary dictionaryWithObjectsAndKeys: csrfToken, @"csrfmiddlewaretoken", nil];
+    NSMutableURLRequest *postRequest = [[AppNetworkAPIClient sharedClient] multipartFormRequestWithMethod:@"POST" path:IMAGE_SERVER_PATH parameters:paramDict constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        [formData appendPartWithFileData:UIImagePNGRepresentation(avatar.image) name:@"image" fileName:@"testimage" mimeType:@"image/png"];
+        [formData appendPartWithFileData:UIImagePNGRepresentation(avatar.thumbnail) name:@"thumbnail" fileName:@"testimageThumb" mimeType:@"image/png"];
+    }];
     
-    [[AppNetworkAPIClient sharedClient] postPath:IMAGE_SERVER_PATH parameters:paramDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    AFHTTPRequestOperation *operation = [[AppNetworkAPIClient sharedClient] HTTPRequestOperationWithRequest:postRequest success:^(AFHTTPRequestOperation *operation, id responseObject) {
         //
+        DDLogInfo(@"upload image generated operation: %@", responseObject);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        //
+        DDLogError(@"upload image failed generate operation: %@", error);
+    }];
+    
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         DDLogInfo(@"upload image received response: %@", responseObject);
-        
         if (block) {
             block(responseObject, nil);
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        //
+        DDLogError(@"upload image failed: %@", error);
         if (block) {
             block(nil, error);
         }
     }];
+    
+    DDLogInfo(@"http request: %@", operation);
+    
+    [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:operation];
+    
 }
 
 - (void)updateIdentity:(Identity *)identity withBlock:(void (^)(id, NSError *))block
@@ -171,16 +188,20 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
                               me.gender, @"gender",
                               me.selfIntroduction, @"self_introduction",
                               csrfToken, @"csrfmiddlewaretoken", @"3", @"op", nil];
-    NSArray *imagesURLArray = [me getOrderedImages];
-    for (int i = 0; i < 8; i++) {
+    NSArray *imagesURLArray = [me getOrderedNonNilImages];
+    for (int i = 0; i < [imagesURLArray count]; i++) {
         ImageRemote* remoteImage = [imagesURLArray objectAtIndex:i];
-        NSString *key1 = [NSString stringWithFormat:@"avatar%d", i];
-        NSString *key2 = [NSString stringWithFormat:@"thumbnail%d", i];
+        if (remoteImage.sequence == 0) {
+            //empty, skip
+            continue;
+        }
+        NSString *key1 = [NSString stringWithFormat:@"avatar%d", (i+1)];
+        NSString *key2 = [NSString stringWithFormat:@"thumbnail%d", (i+1)];
         [postDict setObject:remoteImage.imageURL forKey:key1];
         [postDict setObject:remoteImage.imageThumbnailURL forKey:key2];
     }
     
-    [[AppNetworkAPIClient sharedClient] postPath:LOGIN_PATH parameters:postDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [[AppNetworkAPIClient sharedClient] postPath:POST_DATA_PATH parameters:postDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
         DDLogVerbose(@"login JSON received: %@", responseObject);
         
         NSString* status = [responseObject valueForKey:@"status"];

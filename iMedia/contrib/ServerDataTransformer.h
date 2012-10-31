@@ -23,6 +23,7 @@
 + (NSString *)getCSContactIDFromServerJSON:(NSString *)jsonData;
 + (NSString *)getChannelEPostalIDFromServerJSON:(NSString *)jsonData;
 + (NSString *)getEPostalIDFromServerJSON:(NSString *)jsonData;
++ (NSString *)getRealNameFromServerJSON:(NSString *)jsonData;
 + (NSDate *)getBirthdateFromServerJSON:(NSString *)jsonData;
 
 @end
