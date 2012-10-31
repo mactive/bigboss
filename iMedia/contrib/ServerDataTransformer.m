@@ -9,6 +9,8 @@
 #import "ServerDataTransformer.h"
 #import "SBJson.h"
 
+#define DATETIME_FORMATE @"yyyy-MM-dd hh:mm:ss"
+#define DATE_FORMATE @"yyyy-MM-dd"
 
 @interface ServerDataTransformer ()
 
@@ -60,7 +62,10 @@
     return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"avatar"];
 
 }
-
++ (NSString *)getThumbnailFromServerJSON:(NSString *)jsonData
+{
+    return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"thumbnail"];
+}
 + (NSString *)getGUIDFromServerJSON:(NSString *)jsonData
 {
     return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"guid"];
@@ -114,6 +119,51 @@
         return [obj stringValue];
     }
     return obj;
+}
+
++ (NSDate *)dateFromNSDatetimeStr:(NSString *)dateStr
+{
+    static NSDateFormatter *dateFormatter = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:DATETIME_FORMATE];
+    });
+    
+    return [dateFormatter dateFromString:dateStr];
+}
+
++ (NSString *)datetimeStrfromNSDate:(NSDate *)date
+{
+    static NSDateFormatter *dateFormatter = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:DATETIME_FORMATE];
+    });
+    
+    if (date == nil) {
+        return @"";
+    } else {
+        return [dateFormatter stringFromDate:date];
+    }
+}
+
++ (NSString *)dateStrfromNSDate:(NSDate *)date
+{
+    static NSDateFormatter *dateFormatter = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:DATE_FORMATE];
+    });
+    
+    if (date == nil) {
+        return @"";
+    } else {
+        return [dateFormatter stringFromDate:date];
+    }
+
 }
 
 @end

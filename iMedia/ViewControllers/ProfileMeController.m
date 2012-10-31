@@ -27,8 +27,15 @@
 #define LABEL_HEIGHT 20
 #define kCameraSource       UIImagePickerControllerSourceTypeCamera
 #define MAX_ALBUN_COUNT 8
-#define SEX_ITEM_INDEX 1
-#define BRITH_ITEM_INDEX 2
+
+#define NICKNAME_INDEX      0
+#define SEX_ITEM_INDEX      1
+#define BIRTH_ITEM_INDEX    2
+#define SIGNATURE_ITEM_INDEX  3
+#define CELL_ITEM_INDEX     4
+#define CAREER_ITEM_INDEX   5
+#define HOMETOWN_ITEM_INDEX 6
+#define SELF_INTRO_ITEM_INDEX 7
 
 @interface ProfileMeController ()
 
@@ -149,7 +156,7 @@
         
         if (indexPath.row == SEX_ITEM_INDEX  ) {
             controller.valueType = @"sex";
-        }else if (indexPath.row == BRITH_ITEM_INDEX) {
+        }else if (indexPath.row == BIRTH_ITEM_INDEX) {
             controller.valueType = @"date";
         }else {
             controller.valueType = nil;
@@ -161,7 +168,7 @@
     }
 }
 // Protocl function
--(void)passValue:(NSString *)value andIndex:(NSUInteger )index;
+-(void)passStringValue:(NSString *)value andIndex:(NSUInteger )index;
 {
     NSLog(@"*** %@ %d ***",value,index);
     
@@ -197,6 +204,60 @@
     
     [self.infoDescArray replaceObjectAtIndex:index withObject:value];
     
+    switch (index) {
+        case NICKNAME_INDEX:
+            self.me.displayName = value;
+            break;
+        case SEX_ITEM_INDEX:
+            self.me.gender = value;
+            break;
+        case SIGNATURE_ITEM_INDEX:
+            self.me.signature = value;
+            break;
+        case CELL_ITEM_INDEX:
+            self.me.cell = value;
+            break;
+        case CAREER_ITEM_INDEX:
+            self.me.career = value;
+            break;
+        case HOMETOWN_ITEM_INDEX:
+            self.me.hometown = value;
+            break;
+        case SELF_INTRO_ITEM_INDEX:
+            self.me.selfIntroduction = value;
+            break;
+        default:
+            break;
+    }
+    
+}
+
+- (void)passNSDateValue:(NSDate *)value andIndex:(NSUInteger)index
+{
+
+    UITableViewCell *cell = [self.infoCellArray objectAtIndex:index];
+    UILabel *descLabel = [cell viewWithTag:1002];
+    
+    // resize the label for multiline
+    CGSize summaryMaxSize = CGSizeMake(SUMMARY_WIDTH, LABEL_HEIGHT*2);
+    CGFloat _labelHeight;
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat: @"yyyy-MM-dd"];
+    NSString * valueStr = [[NSString alloc] initWithString:[dateFormatter stringFromDate:value]];
+    
+    CGSize signitureSize = [valueStr sizeWithFont:descLabel.font constrainedToSize:summaryMaxSize lineBreakMode: UILineBreakModeTailTruncation];
+    if (signitureSize.height > 20) {
+        _labelHeight = 6.0;
+    }else {
+        _labelHeight = 14.0;
+    }
+    descLabel.text = valueStr;
+    descLabel.frame = CGRectMake(descLabel.frame.origin.x, _labelHeight, signitureSize.width , signitureSize.height );
+    
+    [self.infoDescArray replaceObjectAtIndex:index withObject:valueStr];
+    
+    self.me.birthdate = value;
 }
 
 - (void)infoTableCommitEdit{
@@ -508,6 +569,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
             
             if (avatar.sequence.intValue == 1) {
                 self.me.avatarURL = imageRemote.imageURL;
+                self.me.thumbnailURL = imageRemote.imageThumbnailURL;
             }
         } else {
             NSLog (@"NSError received during login: %@", error);

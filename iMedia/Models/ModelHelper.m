@@ -140,6 +140,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     user.selfIntroduction = [ServerDataTransformer getSelfIntroductionFromServerJSON:json];
     user.hometown = [ServerDataTransformer getHometownFromServerJSON:json];
     user.avatarURL = [ServerDataTransformer getAvatarFromServerJSON:json];
+    user.thumbnailURL = [ServerDataTransformer getThumbnailFromServerJSON:json];
     user.cell = [ServerDataTransformer getCellFromServerJSON:json];
     user.name = [ServerDataTransformer getNicknameFromServerJSON:json];
     

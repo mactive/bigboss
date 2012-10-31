@@ -164,7 +164,7 @@
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
 {
     if ([pickerView isEqual:self.sexPicker]) {
-        [self.delegate passValue:[self.sexTitleKey objectAtIndex:row] andIndex:self.valueIndex];
+        [self.delegate passStringValue:[self.sexTitleKey objectAtIndex:row] andIndex:self.valueIndex];
     }
 }
 /////////////////////////////////////////////////////////////////////////////////////
@@ -173,8 +173,7 @@
 
 - (void)dateChanged
 {
-    NSString * _tmp = [[NSString alloc] initWithString:[self.dateFormatter stringFromDate:self.datePicker.date]];
-    [self.delegate passValue:_tmp  andIndex:self.valueIndex];
+    [self.delegate passNSDateValue:self.datePicker.date  andIndex:self.valueIndex];
 }
 /////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - textview delegate
@@ -182,7 +181,7 @@
 
 - (void)textViewDidEndEditing:(UITextView *)textView
 {
-    [self.delegate passValue:self.valueTextView.text andIndex:self.valueIndex];
+    [self.delegate passStringValue:self.valueTextView.text andIndex:self.valueIndex];
 }
 
 

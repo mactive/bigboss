@@ -10,6 +10,8 @@
 
 @protocol PassValueDelegate <NSObject>
 
--(void)passValue:(NSString *)value andIndex:(NSUInteger )index;
+@optional
+-(void)passStringValue:(NSString *)value andIndex:(NSUInteger )index;
+-(void)passNSDateValue:(NSDate *)value andIndex:(NSUInteger)index;
 
 @end

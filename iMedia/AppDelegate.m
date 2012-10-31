@@ -126,6 +126,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 - (void)startMainSession
 {
+    [LocationManager sharedInstance].me = self.me;
+    // Update local data with latest server info
+    [[AppNetworkAPIClient sharedClient] updateIdentity:(Identity *)self.me withBlock:nil];
+    
     //
     // Creating all the initial controllers
     //
@@ -198,7 +202,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         self.me.guid = guid;
         self.me.state = [NSNumber numberWithInt:IdentityStateActive];
         
-        [[AppNetworkAPIClient sharedClient] updateIdentity:self.me withBlock:nil];
+        [LocationManager sharedInstance].me = self.me;
         
         MOCSave(_managedObjectContext);
     }
