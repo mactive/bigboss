@@ -7,11 +7,13 @@
 //
 
 #import "LocationManager.h"
+#import "Me.h"
 
 @interface LocationManager () <CLLocationManagerDelegate>
 {
     CLLocationManager *_manager;
     CLLocationManager *_significantChangeManager;
+    Me                *_me;
 }
 
 @end
@@ -32,6 +34,18 @@
     return _sharedClient;
 }
 
+- (void)setMe:(Me *)me
+{
+    _me = me;
+    if (lastLocation != nil) {
+        _me.lastGPSUpdated = lastLocation.timestamp;
+        _me.lastGPSLocation = [NSString stringWithFormat:@"%f,%f", lastLocation.coordinate.latitude, lastLocation.coordinate.longitude];
+    } else {
+        _me.lastGPSLocation = @"";
+        _me.lastGPSUpdated = nil;
+    }
+}
+
 - (id)init {
     self = [super init];
     if (self) {
@@ -42,7 +56,7 @@
         _manager.desiredAccuracy = kCLLocationAccuracyHundredMeters;
         _manager.distanceFilter = 100;
         
-     //   [_manager startUpdatingLocation];
+        [_manager startUpdatingLocation];
         
         _significantChangeManager = [[CLLocationManager alloc] init];
         _significantChangeManager.delegate = self;
@@ -57,6 +71,11 @@
     self.lastLocation = newLocation;
     if (oldLocation != nil) {
         [self.pastLocations addObject:oldLocation];
+    }
+    
+    if (_me != nil) {
+        _me.lastGPSUpdated = newLocation.timestamp;
+        _me.lastGPSLocation = [NSString stringWithFormat:@"%f,%f", newLocation.coordinate.latitude, newLocation.coordinate.longitude];
     }
     
     NSLog(@"location information received: %@, from old location %@", newLocation, oldLocation);

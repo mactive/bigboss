@@ -11,6 +11,7 @@
 #import "AFNetworking.h"
 #import "AFHTTPRequestOperation.h"
 #import "NSData+Godzippa.h"
+#import "ServerDataTransformer.h"
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -186,12 +187,16 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
                               csrfToken, @"csrfmiddlewaretoken",
                               @"3", @"op", 
                               me.avatarURL, @"avatar",
+                              me.thumbnailURL, @"thumbnail",
                               me.cell, @"cell",
                               me.signature, @"signature",
                               me.hometown, @"hometown",
                               me.displayName, @"nickname",
                               me.gender, @"gender",
                               me.selfIntroduction, @"self_introduction",
+                              [ServerDataTransformer dateStrfromNSDate:me.birthdate], @"birthdate",
+                              [ServerDataTransformer datetimeStrfromNSDate:me.lastGPSUpdated], @"last_gps_updated",
+                              me.lastGPSLocation, @"last_gps_loc",
                               nil];
     NSArray *imagesURLArray = [me getOrderedNonNilImages];
     for (int i = 0; i < [imagesURLArray count]; i++) {

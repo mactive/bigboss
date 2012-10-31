@@ -13,6 +13,7 @@
 + (NSString *)getNicknameFromServerJSON:(NSString *)jsonData;
 + (NSString *)getSignatureFromServerJSON:(NSString *)jsonData;
 + (NSString *)getAvatarFromServerJSON:(NSString *)jsonData;
++ (NSString *)getThumbnailFromServerJSON:(NSString *)jsonData;
 + (NSString *)getGUIDFromServerJSON:(NSString *)jsonData;
 + (NSString *)getGenderFromServerJSON:(NSString *)jsonData;
 + (NSString *)getSelfIntroductionFromServerJSON:(NSString *)jsonData;
@@ -28,5 +29,9 @@
 
 // static dict
 + (NSDictionary *)sexDict;
+
++ (NSString *)datetimeStrfromNSDate:(NSDate *)date;
++ (NSString *)dateStrfromNSDate:(NSDate *)date;
++ (NSDate *)dateFromNSDatetimeStr:(NSString *)dateStr;
 
 @end

@@ -9,12 +9,16 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 
+@class Me;
+
 @interface LocationManager : NSObject
 
 @property (nonatomic, strong) CLLocation *lastLocation;
 @property (nonatomic) BOOL               isAllowed;
 
 @property (nonatomic, strong) NSMutableArray *pastLocations;
+
+- (void)setMe:(Me *)me;
 
 + (LocationManager *)sharedInstance;
 

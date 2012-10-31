@@ -24,6 +24,9 @@
 @dynamic selfIntroduction;
 @dynamic hometown;
 @dynamic avatarURL;
+@dynamic thumbnailURL;
+@dynamic lastGPSLocation;
+@dynamic lastGPSUpdated;
 @dynamic avatars;
 
 -(NSArray *)getOrderedAvatars

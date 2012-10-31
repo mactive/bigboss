@@ -47,10 +47,13 @@
         <attribute name="ePostalPassword" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="gender" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="hometown" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastGPSLocation" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastGPSUpdated" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="password" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="selfIntroduction" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="signature" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="thumbnailURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="avatars" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ImageLocal" inverseName="me" inverseEntity="ImageLocal" syncable="YES"/>
     </entity>
@@ -77,7 +80,7 @@
         <element name="Identity" positionX="160" positionY="192" width="128" height="135"/>
         <element name="ImageLocal" positionX="160" positionY="192" width="128" height="120"/>
         <element name="ImageRemote" positionX="160" positionY="192" width="128" height="120"/>
-        <element name="Me" positionX="0" positionY="0" width="128" height="240"/>
+        <element name="Me" positionX="0" positionY="0" width="128" height="285"/>
         <element name="Message" positionX="0" positionY="0" width="128" height="120"/>
         <element name="User" positionX="-234" positionY="141" width="128" height="165"/>
     </elements>
