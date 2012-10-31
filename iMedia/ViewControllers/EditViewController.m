@@ -20,6 +20,7 @@
 @property(strong, nonatomic) NSArray *sexTitleKey;
 @property(strong, nonatomic) UIDatePicker *datePicker;
 @property(strong, nonatomic) NSDateFormatter *dateFormatter;
+@property(strong, nonatomic) UIButton* doneButton;
 
 @end
 
@@ -37,6 +38,7 @@
 @synthesize sexTitleKey;
 @synthesize datePicker;
 @synthesize dateFormatter;
+@synthesize doneButton;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -54,7 +56,7 @@
     self.dateFormatter = [[NSDateFormatter alloc] init];
     [self.dateFormatter setDateFormat: @"yyyy-MM-dd"];
     
-    self.nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 20, 300 , 30)];
+    self.nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(30, 20, 300 , 30)];
     [self.nameLabel setBackgroundColor:[UIColor clearColor]];
     [self.nameLabel setFont:[UIFont boldSystemFontOfSize:20.0]];
     [self.nameLabel setTextColor:[UIColor grayColor]];
@@ -63,7 +65,7 @@
     self.nameLabel.shadowOffset = CGSizeMake(0, 1);
     [self.view addSubview:self.nameLabel];
 
-    self.valueTextView = [[UITextView alloc] initWithFrame:CGRectMake(20 , 50, 280 , 80)];
+    self.valueTextView = [[UITextView alloc] initWithFrame:CGRectMake(20 , 60, 280 , 100)];
     [self.valueTextView.layer setMasksToBounds:YES];
     [self.valueTextView.layer setCornerRadius:5.0];    
     [self.valueTextView.inputView setFrame:CGRectMake(20, 10, 240, 60)];
@@ -75,7 +77,7 @@
     
     self.sexPicker = [[UIPickerView alloc]init ];
     self.sexPicker.delegate = self;
-    [self.sexPicker setFrame:CGRectMake(0, 60, 320, 200)];
+    [self.sexPicker setFrame:CGRectMake(0, 60, 320, 240)];
     self.sexPicker.showsSelectionIndicator = YES;
     self.sexTitleDict = [ServerDataTransformer sexDict];
     self.sexTitleValue = [self.sexTitleDict allValues];
@@ -84,6 +86,21 @@
     self.datePicker = [[UIDatePicker alloc]init];
     [self.datePicker setFrame:CGRectMake(0, 60, 320, 300)];
     [self.datePicker setDatePickerMode:UIDatePickerModeDate];
+    
+    self.doneButton  = [[UIButton alloc] initWithFrame:CGRectMake(22.5, 300, 275, 40)];
+    [self.doneButton.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
+    [self.doneButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.doneButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
+    [self.doneButton.titleLabel setTextAlignment:UITextAlignmentCenter];
+    [self.doneButton setTitle:T(@"完成") forState:UIControlStateNormal];
+    [self.doneButton setBackgroundImage:[UIImage imageNamed:@"button_arrow_bg.png"] forState:UIControlStateNormal];
+    [self.doneButton addTarget:self action:@selector(doneAction) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.doneButton];
+}
+
+- (void)doneAction
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (void)viewWillAppear:(BOOL)animated

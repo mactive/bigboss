@@ -107,7 +107,9 @@
     [self infoTableEditing];
     
     //album can do image
-    [self.addAlbumButton setHidden:YES];
+    [self.addAlbumButton setHidden:NO];
+    CGRect rect = [self calcRect:self.albumCount];
+    [self.addAlbumButton setFrame:rect];
     
     // table into setting
     for (int j = 0; j < 8; j++) {
@@ -160,6 +162,7 @@
             controller.valueType = nil;
         }
         
+        [controller setHidesBottomBarWhenPushed:YES];
         [self.navigationController pushViewController:controller animated:YES];
 
     }
@@ -189,6 +192,9 @@
     }
     descLabel.text = value;
     descLabel.frame = CGRectMake(descLabel.frame.origin.x, _labelHeight, signitureSize.width , signitureSize.height );
+    if( index == [self.infoArray count] -1 ){
+        descLabel.frame = CGRectMake(20, _labelHeight + 25 , SUMMARY_WIDTH + 50 , signitureSize.height );
+    }
     
     [self.infoDescArray replaceObjectAtIndex:index withObject:value];
     
@@ -412,7 +418,7 @@
         }
     }
 
-    if (self.albumCount < MAX_ALBUN_COUNT) {
+    if (self.albumCount == 0 ) {
         CGRect rect = [self calcRect:self.albumCount];
         [self.addAlbumButton setFrame:rect];
         [self.addAlbumButton setHidden:NO];
@@ -753,6 +759,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
 	 */
     
 	UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+    
 //    cell.selectionStyle = UITableViewCellSelectionStyleNone;    
     cell.backgroundView.backgroundColor = RGBCOLOR(79, 83, 89);
     

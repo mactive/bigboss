@@ -27,6 +27,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self.tableView setBackgroundColor:[UIColor clearColor]];
 
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -45,16 +46,14 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-#warning Potentially incomplete method implementation.
     // Return the number of sections.
-    return 2;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-#warning Incomplete method implementation.
     // Return the number of rows in the section.
-    return 1;
+    return 2;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -63,19 +62,45 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-    }
-    
-    // Configure the cell...
-    if (indexPath.section == 0) {
-        // search cell
-        cell.textLabel.text = @"search by ID";
-    } else if (indexPath.section == 1) {
-        //test cell
-        cell.textLabel.text = @"Add from phone address book";
+        cell = [self tableViewCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
     }
     
     return cell;
+}
+- (UITableViewCell *)tableViewCellWithReuseIdentifier:(NSString *)identifier forIndexPath:(NSIndexPath *)indexPath {
+    
+    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+
+    cell.backgroundView.backgroundColor = [UIColor whiteColor];
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    
+    UIImageView *iconImage = [[UIImageView alloc]initWithFrame:CGRectMake(24, 15, 20, 20)];
+    
+    UILabel* titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(60, 15, 140, 20)];
+    titleLabel.font = [UIFont boldSystemFontOfSize:16.0];
+    titleLabel.textColor = RGBCOLOR(77, 77, 77);
+    titleLabel.backgroundColor = [UIColor clearColor];
+    
+    // Configure the cell...
+    if (indexPath.row == 0) {
+        // search cell
+        [iconImage setImage:[UIImage imageNamed:@"add_icon.png"]];
+        titleLabel.text = T(@"搜索用户名,用户ID");
+    } else if (indexPath.row == 1) {
+        //test cell
+        [iconImage setImage:[UIImage imageNamed:@"contact_icon.png"]];
+        titleLabel.text = T(@"从通讯录中添加");
+    }
+    
+    [cell addSubview:iconImage];
+    [cell addSubview:titleLabel];
+    
+    return cell;
+    
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 50.0f;
 }
 
 /*
