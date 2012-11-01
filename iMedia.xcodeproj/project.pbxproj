@@ -107,7 +107,6 @@
 		5646FAFD160D4BC400175B78 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5646FAFC160D4BC400175B78 /* QuartzCore.framework */; };
 		5646FAFF160F1EBF00175B78 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5646FAFE160F1EBF00175B78 /* libicucore.dylib */; };
 		5646FB23160F246500175B78 /* libCocoaPlant.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5646FB1C160F243200175B78 /* libCocoaPlant.a */; };
-		5661561B163E867A00199DB4 /* Channel.m in Sources */ = {isa = PBXBuildFile; fileRef = 5661561A163E867A00199DB4 /* Channel.m */; };
 		5661561E163E90ED00199DB4 /* FunctionListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5661561D163E90EC00199DB4 /* FunctionListViewController.m */; };
 		56615621163E9A1A00199DB4 /* FriendRequestListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56615620163E9A1900199DB4 /* FriendRequestListViewController.m */; };
 		56615625163FB8A900199DB4 /* LocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 56615624163FB8A900199DB4 /* LocationManager.m */; };
@@ -115,6 +114,7 @@
 		566743BD164123ED0043A29C /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 566743BC164123EC0043A29C /* libz.dylib */; };
 		566743C5164129630043A29C /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 566743C0164129630043A29C /* LICENSE */; };
 		566743C6164129630043A29C /* NSData+Godzippa.m in Sources */ = {isa = PBXBuildFile; fileRef = 566743C2164129630043A29C /* NSData+Godzippa.m */; };
+		566743DA164248CE0043A29C /* Channel.m in Sources */ = {isa = PBXBuildFile; fileRef = 566743D9164248CE0043A29C /* Channel.m */; };
 		566E80A21609A24C00A333EA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 566E80A11609A24C00A333EA /* UIKit.framework */; };
 		566E80A41609A24C00A333EA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 566E80A31609A24C00A333EA /* Foundation.framework */; };
 		566E80A61609A24C00A333EA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 566E80A51609A24C00A333EA /* CoreGraphics.framework */; };
@@ -443,8 +443,6 @@
 		5646FAFC160D4BC400175B78 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		5646FAFE160F1EBF00175B78 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		5646FB11160F243200175B78 /* CocoaPlant.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CocoaPlant.xcodeproj; path = CocoaPlant/CocoaPlant.xcodeproj; sourceTree = "<group>"; };
-		56615619163E867A00199DB4 /* Channel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Channel.h; path = Models/Channel.h; sourceTree = "<group>"; };
-		5661561A163E867A00199DB4 /* Channel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Channel.m; path = Models/Channel.m; sourceTree = "<group>"; };
 		5661561C163E90EC00199DB4 /* FunctionListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FunctionListViewController.h; path = ViewControllers/FunctionListViewController.h; sourceTree = "<group>"; };
 		5661561D163E90EC00199DB4 /* FunctionListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FunctionListViewController.m; path = ViewControllers/FunctionListViewController.m; sourceTree = "<group>"; };
 		5661561F163E9A1900199DB4 /* FriendRequestListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FriendRequestListViewController.h; path = ViewControllers/FriendRequestListViewController.h; sourceTree = "<group>"; };
@@ -457,6 +455,8 @@
 		566743C0164129630043A29C /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		566743C1164129630043A29C /* NSData+Godzippa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Godzippa.h"; sourceTree = "<group>"; };
 		566743C2164129630043A29C /* NSData+Godzippa.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Godzippa.m"; sourceTree = "<group>"; };
+		566743D8164248CD0043A29C /* Channel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Channel.h; path = Models/Channel.h; sourceTree = "<group>"; };
+		566743D9164248CE0043A29C /* Channel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Channel.m; path = Models/Channel.m; sourceTree = "<group>"; };
 		566E809D1609A24C00A333EA /* iMedia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iMedia.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		566E80A11609A24C00A333EA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		566E80A31609A24C00A333EA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1629,10 +1629,10 @@
 			isa = PBXGroup;
 			children = (
 				566E80B51609A24C00A333EA /* iMedia.xcdatamodeld */,
+				566743D8164248CD0043A29C /* Channel.h */,
+				566743D9164248CE0043A29C /* Channel.m */,
 				5661562A163FCA6900199DB4 /* User.h */,
 				5661562B163FCA6900199DB4 /* User.m */,
-				56615619163E867A00199DB4 /* Channel.h */,
-				5661561A163E867A00199DB4 /* Channel.m */,
 				56D0C623163D43E1007FD7B2 /* Me.h */,
 				56D0C624163D43E1007FD7B2 /* Me.m */,
 				56D0C620163D406E007FD7B2 /* Identity.h */,
@@ -2159,7 +2159,6 @@
 				56D0C622163D406E007FD7B2 /* Identity.m in Sources */,
 				56D0C625163D43E1007FD7B2 /* Me.m in Sources */,
 				264AA538163E534A00607861 /* RequestViewController.m in Sources */,
-				5661561B163E867A00199DB4 /* Channel.m in Sources */,
 				5661561E163E90ED00199DB4 /* FunctionListViewController.m in Sources */,
 				56615621163E9A1A00199DB4 /* FriendRequestListViewController.m in Sources */,
 				268E9BF7163FBD8000CD0C22 /* ServerDataTransformer.m in Sources */,
@@ -2167,6 +2166,7 @@
 				5661562C163FCA6900199DB4 /* User.m in Sources */,
 				267F508E1640DAAD00B42D21 /* EditViewController.m in Sources */,
 				566743C6164129630043A29C /* NSData+Godzippa.m in Sources */,
+				566743DA164248CE0043A29C /* Channel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

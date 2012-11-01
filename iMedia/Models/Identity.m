@@ -15,6 +15,8 @@
 @dynamic displayName;
 @dynamic ePostalID;
 @dynamic guid;
+@dynamic avatarURL;
+@dynamic thumbnailURL;
 @dynamic state;
 @dynamic type;
 @dynamic images;

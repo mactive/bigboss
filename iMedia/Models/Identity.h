@@ -16,6 +16,8 @@
 @property (nonatomic, retain) NSString * displayName;
 @property (nonatomic, retain) NSString * ePostalID;
 @property (nonatomic, retain) NSString * guid;
+@property (nonatomic, retain) NSString * avatarURL;
+@property (nonatomic, retain) NSString * thumbnailURL;
 @property (nonatomic, retain) NSNumber * state;
 @property (nonatomic, retain) NSNumber * type;
 @property (nonatomic, retain) NSSet *images;

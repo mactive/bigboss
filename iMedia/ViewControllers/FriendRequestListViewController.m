@@ -260,18 +260,18 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     nameLabel.text = _nameString;
     nameLabel.frame = CGRectMake(nameLabel.frame.origin.x, TOP_OFFEST, labelSize.width, labelSize.height);
     
-    // set the user signiture
-    UILabel *signitureLabel = (UILabel *)[cell viewWithTag:SUMMARY_TAG];
-    NSString *signiture =[ServerDataTransformer getSignatureFromServerJSON:obj];
+    // set the user signature
+    UILabel *signatureLabel = (UILabel *)[cell viewWithTag:SUMMARY_TAG];
+    NSString *signature =[ServerDataTransformer getSignatureFromServerJSON:obj];
     
-    CGSize signitureSize = [signiture sizeWithFont:signitureLabel.font constrainedToSize:summaryMaxSize lineBreakMode: UILineBreakModeTailTruncation];
-    if (signitureSize.height > LABEL_HEIGHT) {
+    CGSize signatureSize = [signature sizeWithFont:signatureLabel.font constrainedToSize:summaryMaxSize lineBreakMode: UILineBreakModeTailTruncation];
+    if (signatureSize.height > LABEL_HEIGHT) {
         _labelHeight = TOP_OFFEST+LABEL_HEIGHT+2;
     }else {
         _labelHeight = TOP_OFFEST+LABEL_HEIGHT+10;
     }
-    signitureLabel.text = signiture;
-    signitureLabel.frame = CGRectMake(signitureLabel.frame.origin.x, _labelHeight, signitureSize.width + SUMMARY_PADDING, signitureSize.height+SUMMARY_PADDING);
+    signatureLabel.text = signature;
+    signatureLabel.frame = CGRectMake(signatureLabel.frame.origin.x, _labelHeight, signatureSize.width + SUMMARY_PADDING, signatureSize.height+SUMMARY_PADDING);
     
 }
 
