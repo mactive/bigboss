@@ -637,6 +637,16 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     [sexLabel setFont:[UIFont systemFontOfSize:12.0]];
     [sexLabel setTextColor:[UIColor whiteColor]];
     [sexView addSubview:sexLabel];
+
+    
+    UILabel* guidLabel = [[UILabel alloc]initWithFrame:CGRectMake(210, 0, 100, 20)];
+    [guidLabel setBackgroundColor:[UIColor clearColor]];
+    guidLabel.text  = [ NSString stringWithFormat:@" %@: %@",T(@"ID"),self.me.guid ];
+    [guidLabel setFont:[UIFont boldSystemFontOfSize:14.0]];
+    [guidLabel setShadowColor:[UIColor whiteColor]];
+    [guidLabel setShadowOffset:CGSizeMake(0, 1)];
+    [guidLabel setTextColor:RGBCOLOR(97, 97, 97)];
+    [self.statusView addSubview:guidLabel];
     
     
     // add to the statusView

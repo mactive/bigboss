@@ -257,7 +257,7 @@ NSInteger SortIndex(id char1, id char2, void* context)
 #define LEFT_COLUMN_WIDTH 36.0
 
 #define MIDDLE_COLUMN_OFFSET 70.0
-#define MIDDLE_COLUMN_WIDTH 80.0
+#define MIDDLE_COLUMN_WIDTH 100.0
 
 #define RIGHT_COLUMN_OFFSET 230.0
 #define RIGHT_COLUMN_WIDTH  60
@@ -308,7 +308,7 @@ NSInteger SortIndex(id char1, id char2, void* context)
     [cell.contentView addSubview:label];
     
     // set avatar
-    NSMutableArray *snsArray = [[NSMutableArray alloc] initWithObjects:@"weibo",@"douban", nil];
+    NSMutableArray *snsArray = [[NSMutableArray alloc] initWithObjects:@"weibo", nil];
     UIImageView *snsImage;
     
     for(int i=0;i<[snsArray count];i++)  
@@ -318,7 +318,7 @@ NSInteger SortIndex(id char1, id char2, void* context)
         snsImage.tag = SNS_TAG + i;
 
         [cell.contentView addSubview:snsImage];
-    } 
+    }
     
     
     // Create a label for the summary
