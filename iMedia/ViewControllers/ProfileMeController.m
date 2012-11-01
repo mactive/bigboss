@@ -450,6 +450,7 @@
 {
     self.albumViewController = [[AlbumViewController alloc] init];
     self.albumViewController.albumArray = self.albumArray;
+    self.albumViewController.albumIndex = sender.tag;
     [self.albumViewController setHidesBottomBarWhenPushed:YES];
     // Pass the selected object to the new view controller.
     [self.navigationController pushViewController:self.albumViewController animated:YES];

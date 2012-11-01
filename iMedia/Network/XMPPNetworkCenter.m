@@ -491,7 +491,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     User* thisUser = [ModelHelper findUserWithEPostalID:ePostalID inContext:_managedObjectContext];
     
     // insert user if it doesn't exist
-    if (thisUser == nil || thisUser.state.intValue == IdentityStateInactive) {
+    if (thisUser == nil) {
         thisUser = [ModelHelper newUserInContext:_managedObjectContext];
     }
     
@@ -527,6 +527,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
         DDLogError(@"user have to exist! ERROR NEED CHECK: %@", user);
     } else if (thisUser.state.intValue == IdentityStateActive || thisUser.state.intValue == IdentityStatePendingRemoveFriend) {
         thisUser.state = [NSNumber numberWithInt:IdentityStateInactive];
+        [[self appDelegate].contactListController contentChanged];
     }
 }
 
