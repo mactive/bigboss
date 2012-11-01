@@ -94,7 +94,12 @@
     bubbleTable.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
     bubbleTable.backgroundColor = RGBCOLOR(222, 224, 227);
     bubbleTable.separatorStyle = UITableViewCellSeparatorStyleNone;
-   
+    
+    bubbleTable.bubbleDataSource = self;
+    bubbleTable.snapInterval = 100;
+    bubbleTable.typingBubble = NSBubbleTypingTypeNobody;
+    bubbleTable.showAvatars = YES;
+    
     NSSet *messages = conversation.messages;
     bubbleData = [[NSMutableArray alloc] initWithCapacity:[messages count]];
     NSEnumerator *enumerator = [conversation.messages objectEnumerator];
@@ -102,12 +107,6 @@
     while (aMessage = [enumerator nextObject]) {
         [self addMessage:aMessage toBubbleData:bubbleData];
     }
-    
-    bubbleTable.bubbleDataSource = self;
-    bubbleTable.snapInterval = 100;
-    bubbleTable.typingBubble = NSBubbleTypingTypeNobody;
-    bubbleTable.showAvatars = YES;
-    
     
     // Create messageInputBar to contain _textView, messageInputBarBackgroundImageView, & _sendButton.
     UIImageView *messageInputBar = [[UIImageView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height-kChatBarHeight1, self.view.frame.size.width, kChatBarHeight1)];
@@ -366,14 +365,10 @@
     {
         NSBubbleData *itemBubble = [NSBubbleData dataWithText:msg.text date:msg.sentDate type:type];
         itemBubble.avatar = [UIImage imageNamed:@"face_1.png"];
-        [bubbleData addObject:itemBubble];
-        
-//        // self test webview
-//        NSBubbleData *itemBubble = [NSBubbleData dataWithText:msg.text date:msg.sentDate type:BubbleTypeWebview];
-//        [bubbleData addObject:itemBubble];
-        
+        [bubbleData addObject:itemBubble];        
     } else if (msg.type == [NSNumber numberWithInt:MessageTypePublish]) {
         [bubbleData addObject:[NSBubbleData dataWithText:msg.text date:msg.sentDate type:BubbleTypeWebview]];
+        bubbleTable.showAvatars = NO;
     }
 }
 

@@ -20,6 +20,7 @@
 @synthesize view = _view;
 @synthesize insets = _insets;
 @synthesize avatar = _avatar;
+@synthesize content = _content;
 
 #pragma mark - Lifecycle
 
@@ -68,7 +69,7 @@ const UIEdgeInsets textInsetsSomeone = {5, 15, 11, 10};
 #endif
     
     UIEdgeInsets insets = (type == BubbleTypeMine ? textInsetsMine : textInsetsSomeone);
-    return [self initWithView:label date:date type:type insets:insets];
+    return [self initWithView:label date:date content:text type:type insets:insets];
 }
 
 #pragma mark - Image bubble
@@ -119,7 +120,7 @@ const UIEdgeInsets imageInsetsSomeone = {11, 18, 16, 14};
 #endif    
 }
 
-- (id)initWithView:(UIView *)view date:(NSDate *)date type:(NSBubbleType)type insets:(UIEdgeInsets)insets  
+- (id)initWithView:(UIView *)view date:(NSDate *)date content:(NSString *)content type:(NSBubbleType)type insets:(UIEdgeInsets)insets
 {
     self = [super init];
     if (self)
@@ -132,6 +133,7 @@ const UIEdgeInsets imageInsetsSomeone = {11, 18, 16, 14};
         _date = date;
 #endif
         _type = type;
+        _content = content;
         _insets = insets;
     }
     return self;
