@@ -70,7 +70,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [self.field setBorderStyle:UITextBorderStyleRoundedRect];
 //    [self.field.layer setMasksToBounds:YES];
 //    [self.field.layer setCornerRadius:5.0];
-    self.field.placeholder = @"input here";
     self.field.textColor = [UIColor grayColor];
     self.field.backgroundColor = [UIColor whiteColor];
     self.field.delegate = self;
@@ -81,7 +80,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [self.doneButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [self.doneButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
     [self.doneButton.titleLabel setTextAlignment:UITextAlignmentCenter];
-    [self.doneButton setTitle:T(@"完成") forState:UIControlStateNormal];
+    [self.doneButton setTitle:T(@"搜索") forState:UIControlStateNormal];
     [self.doneButton setBackgroundImage:[UIImage imageNamed:@"button_arrow_bg.png"] forState:UIControlStateNormal];
     [self.doneButton addTarget:self action:@selector(doneAction) forControlEvents:UIControlEventTouchUpInside];
     

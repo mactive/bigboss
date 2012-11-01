@@ -274,7 +274,11 @@
 
     self.navigationItem.rightBarButtonItem = self.editProfileButton;
     
-    [self.addAlbumButton setHidden:NO];
+    if (self.albumCount == 0) {
+        [self.addAlbumButton setHidden:NO];
+    }else{
+        [self.addAlbumButton setHidden:YES];
+    }
     self.SETEDITING = NO;
     //setEditing
 //    [self.infoTableView setEditing:NO];
@@ -285,6 +289,8 @@
         UIButton *albumButton = [self.albumButtonArray objectAtIndex:j];
         [albumButton.layer setBorderColor:[UIColor clearColor].CGColor];
         [albumButton.layer setBorderWidth:0.0f];
+        [albumButton removeTarget:self action:@selector(removeOrReplace:) forControlEvents:UIControlEventTouchUpInside];
+        [albumButton addTarget:self action:@selector(albumClick:) forControlEvents:UIControlEventTouchUpInside];
     }
 }
 
@@ -429,7 +435,13 @@
         [self.addAlbumButton setFrame:rect];
         [self.addAlbumButton setHidden:NO];
     } else {
-        [self.addAlbumButton setHidden:YES];
+        if (self.SETEDITING) {
+            CGRect rect = [self calcRect:self.albumCount];
+            [self.addAlbumButton setFrame:rect];
+            [self.addAlbumButton setHidden:NO];
+        }else{
+            [self.addAlbumButton setHidden:YES];
+        }
     }
 }
 
@@ -712,7 +724,6 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     self.infoTableView.dataSource = self;
     self.infoTableView.delegate = self;
     [self.infoTableView setBackgroundColor:[UIColor clearColor]];
-    
     
     [self.infoView addSubview:self.infoTableView];
     

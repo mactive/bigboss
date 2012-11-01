@@ -45,6 +45,12 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        UIBarButtonItem *ttButton = [[UIBarButtonItem alloc] initWithTitle:T(@"完成")
+                                                                     style:UIBarButtonItemStyleDone
+                                                                    target:self
+                                                                    action:@selector(doneAction)];
+        [ttButton setTintColor:RGBCOLOR(77, 139, 192)];
+        self.navigationItem.rightBarButtonItem = ttButton;
     }
     return self;
 }
@@ -95,7 +101,8 @@
     [self.doneButton setTitle:T(@"完成") forState:UIControlStateNormal];
     [self.doneButton setBackgroundImage:[UIImage imageNamed:@"button_arrow_bg.png"] forState:UIControlStateNormal];
     [self.doneButton addTarget:self action:@selector(doneAction) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:self.doneButton];
+//    [self.view addSubview:self.doneButton];
+    
 }
 
 - (void)doneAction
