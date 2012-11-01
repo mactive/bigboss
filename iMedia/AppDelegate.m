@@ -23,7 +23,7 @@
 #import "ContactListViewController.h"
 #import "FunctionListViewController.h"
 #import "SettingViewController.h"
-#import "FirstLoginController.h"
+#import "LoginViewController.h"
 
 #import "AppNetworkAPIClient.h"
 #import "LocationManager.h"
@@ -116,11 +116,11 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];
     
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"NewUserWelcome" bundle:nil];
-    FirstLoginController *loginViewController = [storyboard instantiateInitialViewController];
+    LoginViewController *loginViewController = [[LoginViewController alloc]initWithNibName:nil bundle:nil];
+    UINavigationController *tt  = [[UINavigationController alloc]initWithRootViewController:loginViewController];
     
-    [self.window addSubview:loginViewController.view];
-    [self.window setRootViewController:loginViewController];
+
+    [self.window setRootViewController:tt];
     [self.window makeKeyAndVisible];
 }
 

@@ -24,6 +24,8 @@
 		2631C4EB16310026004DE7FB /* face_2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2631C4EA16310026004DE7FB /* face_2@2x.png */; };
 		2631C4ED1631035D004DE7FB /* time_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2631C4EC1631035D004DE7FB /* time_icon@2x.png */; };
 		2631C52A16313033004DE7FB /* NSDate+timesince.m in Sources */ = {isa = PBXBuildFile; fileRef = 2631C52916313033004DE7FB /* NSDate+timesince.m */; };
+		2640031F1642B45E00A1B779 /* WelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2640031E1642B45E00A1B779 /* WelcomeViewController.m */; };
+		264003211642B87200A1B779 /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 264003201642B87200A1B779 /* logo@2x.png */; };
 		264AA538163E534A00607861 /* RequestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 264AA537163E534A00607861 /* RequestViewController.m */; };
 		264AA53E163E673300607861 /* contact_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 264AA539163E673300607861 /* contact_icon@2x.png */; };
 		264AA53F163E673300607861 /* right_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 264AA53A163E673300607861 /* right_icon@2x.png */; };
@@ -82,6 +84,8 @@
 		2692532016353F6E000D7AFB /* POAPinyin.m in Sources */ = {isa = PBXBuildFile; fileRef = 2692531E16353F6E000D7AFB /* POAPinyin.m */; };
 		26C76E5A162EB01200298865 /* barbutton_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26C76E59162EB01200298865 /* barbutton_bg@2x.png */; };
 		26C76E65162EB4F400298865 /* UINavigationBar+Background.m in Sources */ = {isa = PBXBuildFile; fileRef = 26C76E64162EB4F400298865 /* UINavigationBar+Background.m */; };
+		26F3BF1916428DDB00E2899C /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F3BF1816428DDB00E2899C /* MBProgressHUD.m */; };
+		26F3BF23164294AC00E2899C /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F3BF22164294AC00E2899C /* LoginViewController.m */; };
 		26F759E4163CEF70005E9FB4 /* ProfileMeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F759E3163CEF6F005E9FB4 /* ProfileMeController.m */; };
 		26F759E7163D14F1005E9FB4 /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F759E6163D14F1005E9FB4 /* UIImage+Resize.m */; };
 		56202F46162AA32F00F6306F /* AddFriendByIDController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56202F45162AA32F00F6306F /* AddFriendByIDController.m */; };
@@ -343,6 +347,9 @@
 		2631C4EC1631035D004DE7FB /* time_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "time_icon@2x.png"; path = "Resources/time_icon@2x.png"; sourceTree = "<group>"; };
 		2631C52816313033004DE7FB /* NSDate+timesince.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDate+timesince.h"; path = "contrib/NSDate+timesince.h"; sourceTree = "<group>"; };
 		2631C52916313033004DE7FB /* NSDate+timesince.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDate+timesince.m"; path = "contrib/NSDate+timesince.m"; sourceTree = "<group>"; };
+		2640031D1642B45E00A1B779 /* WelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WelcomeViewController.h; path = ViewControllers/Welcome/WelcomeViewController.h; sourceTree = "<group>"; };
+		2640031E1642B45E00A1B779 /* WelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WelcomeViewController.m; path = ViewControllers/Welcome/WelcomeViewController.m; sourceTree = "<group>"; };
+		264003201642B87200A1B779 /* logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "logo@2x.png"; path = "Resources/logo@2x.png"; sourceTree = "<group>"; };
 		264AA536163E534A00607861 /* RequestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RequestViewController.h; path = ViewControllers/RequestViewController.h; sourceTree = "<group>"; };
 		264AA537163E534A00607861 /* RequestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RequestViewController.m; path = ViewControllers/RequestViewController.m; sourceTree = "<group>"; };
 		264AA539163E673300607861 /* contact_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "contact_icon@2x.png"; path = "Resources/contact_icon@2x.png"; sourceTree = "<group>"; };
@@ -412,6 +419,10 @@
 		26C76E59162EB01200298865 /* barbutton_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "barbutton_bg@2x.png"; path = "Resources/barbutton_bg@2x.png"; sourceTree = "<group>"; };
 		26C76E63162EB4F400298865 /* UINavigationBar+Background.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UINavigationBar+Background.h"; path = "ViewControllers/ViewCategory/UINavigationBar+Background.h"; sourceTree = "<group>"; };
 		26C76E64162EB4F400298865 /* UINavigationBar+Background.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UINavigationBar+Background.m"; path = "ViewControllers/ViewCategory/UINavigationBar+Background.m"; sourceTree = "<group>"; };
+		26F3BF1716428DDB00E2899C /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBProgressHUD.h; path = contrib/MBProgressHUD.h; sourceTree = "<group>"; };
+		26F3BF1816428DDB00E2899C /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBProgressHUD.m; path = contrib/MBProgressHUD.m; sourceTree = "<group>"; };
+		26F3BF21164294AC00E2899C /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginViewController.h; path = ViewControllers/Welcome/LoginViewController.h; sourceTree = "<group>"; };
+		26F3BF22164294AC00E2899C /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginViewController.m; path = ViewControllers/Welcome/LoginViewController.m; sourceTree = "<group>"; };
 		26F759E2163CEF6F005E9FB4 /* ProfileMeController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProfileMeController.h; path = ViewControllers/ProfileMeController.h; sourceTree = "<group>"; };
 		26F759E3163CEF6F005E9FB4 /* ProfileMeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProfileMeController.m; path = ViewControllers/ProfileMeController.m; sourceTree = "<group>"; };
 		26F759E5163D14F1005E9FB4 /* UIImage+Resize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+Resize.h"; path = "contrib/UIImage+Resize.h"; sourceTree = "<group>"; };
@@ -795,6 +806,8 @@
 		2631C5271631301E004DE7FB /* contrib */ = {
 			isa = PBXGroup;
 			children = (
+				26F3BF1716428DDB00E2899C /* MBProgressHUD.h */,
+				26F3BF1816428DDB00E2899C /* MBProgressHUD.m */,
 				268E9BF5163FBD8000CD0C22 /* ServerDataTransformer.h */,
 				268E9BF6163FBD8000CD0C22 /* ServerDataTransformer.m */,
 				2631C52816313033004DE7FB /* NSDate+timesince.h */,
@@ -856,6 +869,7 @@
 		562DE706160AC3A300F782D2 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				264003201642B87200A1B779 /* logo@2x.png */,
 				562DE75D1610446000F782D2 /* MessageInputBarBackground.png */,
 				267F5086164015BD00B42D21 /* sex_unknown_bg@2x.png */,
 				268E9BF8163FD0BE00CD0C22 /* request_list_bg@2x.png */,
@@ -1736,6 +1750,10 @@
 		56B4CD551628126A00E046CC /* WelcomeScreenPart */ = {
 			isa = PBXGroup;
 			children = (
+				2640031D1642B45E00A1B779 /* WelcomeViewController.h */,
+				2640031E1642B45E00A1B779 /* WelcomeViewController.m */,
+				26F3BF21164294AC00E2899C /* LoginViewController.h */,
+				26F3BF22164294AC00E2899C /* LoginViewController.m */,
 				56EE29541613075600910CE5 /* FirstLoginController.h */,
 				56EE29551613075600910CE5 /* FirstLoginController.m */,
 				56EE295E16131E5600910CE5 /* StartViewController.h */,
@@ -1982,6 +2000,7 @@
 				268E9BF9163FD0BE00CD0C22 /* request_list_bg@2x.png in Resources */,
 				267F5087164015BD00B42D21 /* sex_unknown_bg@2x.png in Resources */,
 				566743C5164129630043A29C /* LICENSE in Resources */,
+				264003211642B87200A1B779 /* logo@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2173,6 +2192,9 @@
 				267F508E1640DAAD00B42D21 /* EditViewController.m in Sources */,
 				566743C6164129630043A29C /* NSData+Godzippa.m in Sources */,
 				566743DA164248CE0043A29C /* Channel.m in Sources */,
+				26F3BF1916428DDB00E2899C /* MBProgressHUD.m in Sources */,
+				26F3BF23164294AC00E2899C /* LoginViewController.m in Sources */,
+				2640031F1642B45E00A1B779 /* WelcomeViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

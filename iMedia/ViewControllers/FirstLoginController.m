@@ -13,6 +13,8 @@
 #import "XMPPNetworkCenter.h"
 #import "SBJson.h"
 #import "DDLog.h"
+#import <unistd.h>
+
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
@@ -64,7 +66,14 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [self setField:jidField forKey:kXMPPmyJID];
     [self setField:passwordField forKey:kXMPPmyPassword];
     
-    
+    HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+    self.view.backgroundColor = [UIColor redColor];
+    [self.navigationController.view addSubview:HUD];
+	
+	HUD.delegate = self;
+	HUD.labelText = @"Loading";
+//    [HUD showWhileExecuting:@selector(myTask) onTarget:self withObject:nil animated:YES];
+
     [[AppNetworkAPIClient sharedClient] loginWithUsername:jidField.text andPassword:passwordField.text withBlock:^(id responseObject, NSError *error) {
         if (error == nil) {
             
@@ -79,7 +88,12 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
                 DDLogVerbose(@"%@: %@ cannot connect to XMPP server", THIS_FILE, THIS_METHOD);
             }
             
-            [[self appDelegate] createMeWithUsername:jidField.text password:passwordField.text jid:jid jidPasswd:jPassword andGUID:guid];
+            [HUD hide:YES afterDelay:2];
+            if (HUD.hidden){
+                [[self appDelegate] createMeWithUsername:jidField.text password:passwordField.text jid:jid jidPasswd:jPassword andGUID:guid];
+            }
+
+            
         } else {
             DDLogError(@"NSError received during login: %@", error);
         }

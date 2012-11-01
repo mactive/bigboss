@@ -7,11 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MBProgressHUD.h"
 
 
 
-@interface FirstLoginController : UIViewController
+@interface FirstLoginController : UIViewController<MBProgressHUDDelegate>
 {
+    MBProgressHUD *HUD;
     UITextField *jidField;
     UITextField *passwordField;
 }
