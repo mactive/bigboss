@@ -361,7 +361,7 @@
     [self initAlbumView];
     [self refreshAlbumView];
     [self initStatusView];
-    [self initSNSView];
+//    [self initSNSView];
     [self initInfoView];
     
     [self.view addSubview:self.contentView];
@@ -685,7 +685,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
 - (void)initInfoView
 {
     self.infoView = [[UIView alloc] initWithFrame:
-                     CGRectMake(0, VIEW_ALBUM_HEIGHT + VIEW_STATUS_HEIGHT + VIEW_SNS_HEIGHT + 30, self.view.frame.size.width, 520)];
+                     CGRectMake(0, VIEW_ALBUM_HEIGHT + VIEW_STATUS_HEIGHT + 15, self.view.frame.size.width, 520)];
     self.infoView.backgroundColor = [UIColor clearColor];
     self.infoCellArray = [[NSMutableArray alloc] init];
 

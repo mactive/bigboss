@@ -87,7 +87,6 @@
     
     [self initContentView];
     
-    self.confirmButton = 
     
     self.confirmButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 200, 275, 40)];
     [self.confirmButton.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];

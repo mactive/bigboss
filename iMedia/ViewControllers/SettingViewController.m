@@ -42,12 +42,12 @@
     [super viewDidLoad];
     
     self.settingTitleArray = [[NSArray alloc] initWithObjects:
-                              [[NSArray alloc] initWithObjects:@"个人设置",@"我的相册",@"新浪微博",@"微信朋友圈", nil],
-                              [[NSArray alloc] initWithObjects:@"去给翼石打个分吧",@"帮助与反馈",@"关于翼石",@"App精品推荐", nil],
+                              [[NSArray alloc] initWithObjects:@"个人设置", @"App精品推荐", nil],
+                              [[NSArray alloc] initWithObjects:@"去给翼石打个分吧",@"帮助与反馈",@"关于翼石", nil],
                               nil ];
+    //,@"我的相册",@"新浪微博",@"微信朋友圈"
     
-    
-    CGRect rect = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, self.view.frame.size.width - 50);
+    CGRect rect = CGRectMake(0, 0, 320, 370);
     self.settingTableView = [[UITableView alloc] initWithFrame:rect style:UITableViewStyleGrouped];
     self.settingTableView.dataSource = self;
     self.settingTableView.delegate = self;

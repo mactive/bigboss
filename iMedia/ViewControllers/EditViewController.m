@@ -52,7 +52,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    self.view.backgroundColor = BGCOLOR;
     self.dateFormatter = [[NSDateFormatter alloc] init];
     [self.dateFormatter setDateFormat: @"yyyy-MM-dd"];
     
