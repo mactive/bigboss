@@ -18,6 +18,7 @@
 #import "UIBubbleTableViewDataSource.h"
 #import "ACPlaceholderTextView.h"
 #import <CocoaPlant/CocoaPlant.h>
+#import "UIImageView+AFNetworking.h"
 
 // TODO: Rename to CHAT_BAR_HEIGHT_1, etc.
 #define kChatBarHeight1                      40
@@ -364,7 +365,12 @@
     if (msg.type == [NSNumber numberWithInt:MessageTypeChat])
     {
         NSBubbleData *itemBubble = [NSBubbleData dataWithText:msg.text date:msg.sentDate type:type];
-        itemBubble.avatar = [UIImage imageNamed:@"face_1.png"];
+        
+        UIImageView *_tmpImageView = [[UIImageView alloc]init];
+        [_tmpImageView setImageWithURL:[NSURL URLWithString:msg.from.thumbnailURL]];
+        itemBubble.avatar = _tmpImageView.image ;
+        
+        
         [bubbleData addObject:itemBubble];        
     } else if (msg.type == [NSNumber numberWithInt:MessageTypePublish]) {
         [bubbleData addObject:[NSBubbleData dataWithText:msg.text date:msg.sentDate type:BubbleTypeWebview]];
