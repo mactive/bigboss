@@ -123,8 +123,8 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     NSString* csrfToken = [[NSUserDefaults standardUserDefaults] valueForKey:@"csrfmiddlewaretoken"];
     NSDictionary *paramDict = [NSDictionary dictionaryWithObjectsAndKeys: csrfToken, @"csrfmiddlewaretoken", nil];
     NSMutableURLRequest *postRequest = [[AppNetworkAPIClient sharedClient] multipartFormRequestWithMethod:@"POST" path:IMAGE_SERVER_PATH parameters:paramDict constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
-        [formData appendPartWithFileData:UIImagePNGRepresentation(avatar.image) name:@"image" fileName:@"testimage" mimeType:@"image/png"];
-        [formData appendPartWithFileData:UIImagePNGRepresentation(avatar.thumbnail) name:@"thumbnail" fileName:@"testimageThumb" mimeType:@"image/png"];
+        [formData appendPartWithFileData:UIImageJPEGRepresentation(avatar.image, 1.0) name:@"image" fileName:@"testimage" mimeType:@"image/jpeg"];
+        [formData appendPartWithFileData:UIImageJPEGRepresentation(avatar.thumbnail, 1.0) name:@"thumbnail" fileName:@"testimageThumb" mimeType:@"image/jpeg"];
     }];
     
     AFHTTPRequestOperation *operation = [[AppNetworkAPIClient sharedClient] HTTPRequestOperationWithRequest:postRequest success:^(AFHTTPRequestOperation *operation, id responseObject) {
