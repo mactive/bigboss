@@ -103,7 +103,12 @@
 + (NSDate *)getBirthdateFromServerJSON:(NSString *)jsonData
 {
     NSString *dateStr = [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"birthdate"];
-    return [self dateFromNSDateStr:dateStr];
+    NSDate *date = [self dateFromNSDateStr:dateStr];
+    if (date == nil) {
+        return [NSDate dateWithTimeIntervalSince1970:0];
+    }else{
+        return date;
+    }
 }
 + (NSDate *)getLastGPSUpdatedFromServerJSON:(NSString *)jsonData
 {

@@ -548,13 +548,15 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     NSData *imageData = UIImageJPEGRepresentation(originalImage, JPEG_QUALITY);
     UIImage *image = [UIImage imageWithData:imageData];
     
-    // Save Video to Photo Album
-    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-    [library writeImageDataToSavedPhotosAlbum:imageData
-                                     metadata:nil
-                              completionBlock:^(NSURL *assetURL, NSError *error){}];
     
-    
+    if (picker.sourceType == UIImagePickerControllerSourceTypeCamera) {
+        // Save Video to Photo Album
+        ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+        [library writeImageDataToSavedPhotosAlbum:imageData
+                                         metadata:nil
+                                  completionBlock:^(NSURL *assetURL, NSError *error){}];
+    }
+
     UIImage *thumbnail = [image resizedImageToSize:CGSizeMake(75, 75)];
     Avatar *avatar;
     

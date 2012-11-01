@@ -199,6 +199,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         self.me.password = passwd;
         self.me.guid = guid;
         self.me.state = [NSNumber numberWithInt:IdentityStatePendingServerDataUpdate];
+        self.me.birthdate = [NSDate dateWithTimeIntervalSince1970:0];
         
         [LocationManager sharedInstance].me = self.me;
         
