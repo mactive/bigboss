@@ -27,6 +27,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 #import "ModelHelper.h"
 #import "Me.h"
 #import "ImageRemote.h"
+#import "AppDelegate.h" 
+#import "ContactListViewController.h"
 
 //static NSString * const kAppNetworkAPIBaseURLString = @"http://192.168.1.104:8000/";
 static NSString * const kAppNetworkAPIBaseURLString = @"http://media.wingedstone.com:8000/";
@@ -46,6 +48,11 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     });
     
     return _sharedClient;
+}
+
+- (AppDelegate *)appDelegate
+{
+	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
 - (id)initWithBaseURL:(NSURL *)url {
@@ -148,7 +155,12 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 
 - (void)updateIdentity:(Identity *)identity withBlock:(void (^)(id, NSError *))block
 {
-    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: identity.guid, @"guid", @"1", @"op", nil];
+    NSDictionary *getDict ;
+    if (identity.guid != nil) {
+        getDict = [NSDictionary dictionaryWithObjectsAndKeys: identity.guid, @"guid", @"1", @"op", nil];
+    } else {
+        getDict = [NSDictionary dictionaryWithObjectsAndKeys: identity.ePostalID, @"jid", @"2", @"op", nil];
+    }
     
     [[AppNetworkAPIClient sharedClient] getPath:GET_DATA_PATH parameters:getDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
         DDLogVerbose(@"get user %@ data received: %@", identity, responseObject);
@@ -161,7 +173,10 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
             }
         } else if ([type isEqualToString:@"user"] || [type isEqualToString:@"channel"]) {
             [ModelHelper populateIdentity:identity withJSONData:responseObject];
-            
+            if (identity.state.intValue == IdentityStatePendingServerDataUpdate) {
+                identity.state = [NSNumber numberWithInt:IdentityStateActive];
+                [[self appDelegate].contactListController contentChanged];
+            }
             if (block) {
                 block (responseObject, nil);
             }

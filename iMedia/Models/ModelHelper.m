@@ -117,6 +117,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 + (void)populateIdentity:(Identity *)identity withJSONData:(NSString *)json
 {
+    
     if ([identity isKindOfClass:[User class]]) {
         [self populateUser:(User *)identity withJSONData:json];
     } else if ([identity isKindOfClass:[Channel class]]) {
@@ -169,7 +170,12 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 + (void)populateUser:(User *)user withJSONData:(id)json
 {
-    user.ePostalID = [ServerDataTransformer getEPostalIDFromServerJSON:json];
+    if (user.ePostalID == nil) {
+        user.ePostalID = [ServerDataTransformer getEPostalIDFromServerJSON:json];
+    } else {
+        ;
+    }
+    
     user.gender = [ServerDataTransformer getGenderFromServerJSON:json];
     user.signature = [ServerDataTransformer getSignatureFromServerJSON:json];
     user.displayName = [ServerDataTransformer getNicknameFromServerJSON:json];
@@ -183,6 +189,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     user.guid = [ServerDataTransformer getGUIDFromServerJSON:json];
     user.avatarURL = [ServerDataTransformer getAvatarFromServerJSON:json];
     user.thumbnailURL = [ServerDataTransformer getThumbnailFromServerJSON:json];
+    user.lastGPSUpdated = [ServerDataTransformer getLastGPSUpdatedFromServerJSON:json];
 
     NSMutableArray *imageURLArray = [[NSMutableArray alloc] init];
     for (int i = 1; i <=8; i++) {
@@ -218,6 +225,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     channel.avatarURL = [ServerDataTransformer getAvatarFromServerJSON:json];
     channel.thumbnailURL = [ServerDataTransformer getThumbnailFromServerJSON:json];
     channel.selfIntroduction = [ServerDataTransformer getSelfIntroductionFromServerJSON:json];
+    channel.lastGPSUpdated = [ServerDataTransformer getLastGPSUpdatedFromServerJSON:json];
 
     channel.type = [NSNumber numberWithInt:IdentityTypeChannel];
 }

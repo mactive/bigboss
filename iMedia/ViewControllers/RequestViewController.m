@@ -165,7 +165,7 @@
 
 - (void)confirmRequest
 {
-    NSString *jidStr = [self.jsonData valueForKey:@"ePostalID"];
+    NSString *jidStr = [ServerDataTransformer getEPostalIDFromServerJSON:self.jsonData];
     [[XMPPNetworkCenter sharedClient] acceptPresenceSubscriptionRequestFrom:jidStr andAddToRoster:YES];
     
     [[self appDelegate].functionListController.friendRequestDict removeObjectForKey:jidStr];
@@ -173,7 +173,7 @@
 
 - (void)cancelRequest
 {
-    NSString *jidStr = [self.jsonData valueForKey:@"ePostalID"];
+    NSString *jidStr = [ServerDataTransformer getEPostalIDFromServerJSON:self.jsonData];
     [[XMPPNetworkCenter sharedClient] rejectPresenceSubscriptionRequestFrom:jidStr];
     
     [[self appDelegate].functionListController.friendRequestDict removeObjectForKey:jidStr];

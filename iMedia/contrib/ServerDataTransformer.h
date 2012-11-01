@@ -26,6 +26,7 @@
 + (NSString *)getEPostalIDFromServerJSON:(NSString *)jsonData;
 + (NSString *)getRealNameFromServerJSON:(NSString *)jsonData;
 + (NSDate *)getBirthdateFromServerJSON:(NSString *)jsonData;
++ (NSDate *)getLastGPSUpdatedFromServerJSON:(NSString *)jsonData;
 
 // static dict
 + (NSDictionary *)sexDict;

@@ -501,8 +501,10 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
         thisUser.ePostalID = [user.jid bare];
         thisUser.displayName = [thisUser.ePostalID substringToIndex:[thisUser.ePostalID rangeOfString: @"@"].location];
         thisUser.type = [NSNumber numberWithInt:IdentityTypeUser];
-        thisUser.state = [NSNumber numberWithInt:IdentityStateActive];
+        thisUser.state = [NSNumber numberWithInt:IdentityStatePendingServerDataUpdate];
         MOCSave(_managedObjectContext);
+        
+        [[AppNetworkAPIClient sharedClient] updateIdentity:thisUser withBlock:nil];
     }
 }
 
@@ -575,7 +577,9 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
             userNS.ePostalID = [obj.jid bare];
             userNS.displayName = [userNS.ePostalID substringToIndex:[userNS.ePostalID rangeOfString: @"@"].location];
             userNS.type = [NSNumber numberWithInt:IdentityTypeUser];
-            userNS.state = [NSNumber numberWithInt:IdentityStateActive];
+            userNS.state = [NSNumber numberWithInt:IdentityStatePendingServerDataUpdate];
+            
+            [[AppNetworkAPIClient sharedClient] updateIdentity:userNS withBlock:nil];
         }
     }
     

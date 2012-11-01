@@ -25,8 +25,6 @@
 @property (nonatomic, retain) NSString * hometown;
 @property (nonatomic, retain) NSString * selfIntroduction;
 @property (nonatomic, retain) NSString * career;
-@property (nonatomic, retain) NSString * lastGPSLocation;
-@property (nonatomic, retain) NSDate * lastGPSUpdated;
 @property (nonatomic, retain) NSSet *avatars;
 
 -(NSArray *)getOrderedAvatars;

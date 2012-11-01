@@ -23,8 +23,6 @@
 @dynamic career;
 @dynamic selfIntroduction;
 @dynamic hometown;
-@dynamic lastGPSLocation;
-@dynamic lastGPSUpdated;
 @dynamic avatars;
 
 -(NSArray *)getOrderedAvatars
