@@ -20,7 +20,7 @@
 #import "ModelHelper.h"
 
 #import "AppNetworkAPIClient.h"
-
+#import "ContactListViewController.h"
 #import "AppDelegate.h"
 
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
@@ -699,6 +699,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     if (channel && channel.state.intValue == IdentityStatePendingAddSubscription) {
         channel.state = [NSNumber numberWithInt:IdentityStateActive];
         channel.subID = subID;
+        [[self appDelegate].contactListController contentChanged];
         MOCSave(_managedObjectContext);
     }
     
