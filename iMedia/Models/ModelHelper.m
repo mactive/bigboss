@@ -193,14 +193,22 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             [imageURLArray addObject:url];
         }
     }
-    
+    NSMutableArray *imageThumbnailURLArray = [[NSMutableArray alloc] init];
+    for (int i = 1; i <=8; i++) {
+        NSString *key = [NSString stringWithFormat:@"thumbnail%d", i];
+        NSString *url = [ServerDataTransformer getStringObjFromServerJSON:json byName:key];
+        if (url != nil && ![url isEqualToString:@""]) {
+            [imageThumbnailURLArray addObject:url];
+        }
+    }
     // Update avatar with incoming data
     NSArray *imageArray = [user getOrderedImages];
     for (int i = 0; i < [imageArray count]; i++) {
         ImageRemote *imageRemote = [imageArray objectAtIndex:i];
         if (i < [imageURLArray count]) {
             imageRemote.imageURL = [imageURLArray objectAtIndex:i];
-            imageRemote.sequence = [NSNumber numberWithInt:i];
+            imageRemote.imageThumbnailURL = [imageThumbnailURLArray objectAtIndex:i];
+            imageRemote.sequence = [NSNumber numberWithInt:(i+1)];
         } else {
             imageRemote.imageURL = nil;
             imageRemote.sequence = 0;

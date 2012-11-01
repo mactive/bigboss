@@ -16,6 +16,8 @@
 #import <QuartzCore/QuartzCore.h>
 #import "AlbumViewController.h"
 #import "ServerDataTransformer.h"
+#import "UIImageView+AFNetworking.h"
+#import "ImageRemote.h"
 
 @interface ContactDetailController ()
 
@@ -112,7 +114,10 @@
     
     for (int i = 0; i< [albumArray count]; i++) {
         albumButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        [albumButton setImage:[UIImage imageNamed:[albumArray objectAtIndex:i] ] forState:UIControlStateNormal];
+        ImageRemote* remote = [albumArray objectAtIndex:i];
+        UIImageView *view = [[UIImageView alloc] init];
+        [view setImageWithURL:[NSURL URLWithString:remote.imageThumbnailURL] placeholderImage:nil];
+        [albumButton setImage:view.image forState:UIControlStateNormal];
         [albumButton setFrame:CGRectMake(VIEW_ALBUM_OFFSET * (i%4*2 + 1) + VIEW_ALBUM_WIDTH * (i%4), VIEW_ALBUM_OFFSET * (floor(i/4)*2+1) + VIEW_ALBUM_WIDTH * floor(i/4), VIEW_ALBUM_WIDTH, VIEW_ALBUM_WIDTH)];
         [albumButton.layer setMasksToBounds:YES];
         [albumButton.layer setCornerRadius:3.0];
@@ -536,7 +541,7 @@
     if (self.user == nil) {
         comps = [gregorian components:unitFlags fromDate:[ServerDataTransformer getLastGPSUpdatedFromServerJSON:self.jsonData]  toDate:now  options:0];
     } else {
-        comps = [gregorian components:NSYearCalendarUnit fromDate:self.user.lastGPSUpdated  toDate:now  options:0];
+        comps = [gregorian components:unitFlags fromDate:self.user.lastGPSUpdated  toDate:now  options:0];
     }
     if (comps.day == 1) {
         return [NSString stringWithFormat:@"%d day ago", comps.day];

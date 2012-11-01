@@ -156,7 +156,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 - (void)updateIdentity:(Identity *)identity withBlock:(void (^)(id, NSError *))block
 {
     NSDictionary *getDict ;
-    if (identity.guid != nil) {
+    if (identity.guid != nil && ![identity.guid isEqualToString:@""]) {
         getDict = [NSDictionary dictionaryWithObjectsAndKeys: identity.guid, @"guid", @"1", @"op", nil];
     } else {
         getDict = [NSDictionary dictionaryWithObjectsAndKeys: identity.ePostalID, @"jid", @"2", @"op", nil];

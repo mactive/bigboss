@@ -16,6 +16,7 @@
 #import "AppDefs.h"
 #import <QuartzCore/QuartzCore.h>
 #import "NSDate+timesince.h"
+#import "UIImageView+AFNetworking.h"
 
 
 #import "DDLog.h"
@@ -369,7 +370,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	CGRect imageRect = CGRectMake(LEFT_COLUMN_OFFSET, (ROW_HEIGHT - IMAGE_SIDE) / 2.0, IMAGE_SIDE, IMAGE_SIDE);
 
     UIImageView *avatarImage = [[UIImageView alloc] initWithFrame:imageRect];
-    avatarImage.image = [UIImage imageNamed:@"face_2.png"];
     CALayer *avatarLayer = [avatarImage layer];
     [avatarLayer setMasksToBounds:YES];
     [avatarLayer setCornerRadius:5.0];
@@ -440,10 +440,14 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	// Set the conv name.
 	label = (UILabel *)[cell viewWithTag:NAME_TAG];
     label.text = @"";
-    NSEnumerator *enumerator = [conv.users objectEnumerator];
-    User* anUser;
-    while (anUser = [enumerator nextObject]) {
-        label.text = [label.text stringByAppendingFormat:@"%@ ", anUser.displayName];
+    if (conv.channel != nil) {
+        label.text = conv.channel.displayName;
+    } else {
+        NSEnumerator *enumerator = [conv.users objectEnumerator];
+        User* anUser;
+        while (anUser = [enumerator nextObject]) {
+            label.text = [label.text stringByAppendingFormat:@"%@ ", anUser.displayName];
+        }
     }
     // set the last msg text
     label = (UILabel *)[cell viewWithTag:SUMMARY_TAG];
@@ -457,8 +461,13 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	
 	// Set the image.
 	UIImageView *imageView = (UIImageView *)[cell viewWithTag:IMAGE_TAG];
-	imageView.image = nil;
-}    
+    if (conv.channel == nil) {
+        User *user = [conv.users anyObject];
+        [imageView setImageWithURL:[NSURL URLWithString:user.thumbnailURL] placeholderImage:nil];
+    } else {
+        [imageView setImageWithURL:[NSURL URLWithString:conv.channel.thumbnailURL] placeholderImage:nil];
+    }
+}
 
 - (void)newMessageReceived:(NSNotification *)notification
 {
