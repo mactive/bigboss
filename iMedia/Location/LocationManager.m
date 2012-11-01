@@ -78,7 +78,7 @@
         _me.lastGPSLocation = [NSString stringWithFormat:@"%f,%f", newLocation.coordinate.latitude, newLocation.coordinate.longitude];
     }
     
-    NSLog(@"location information received: %@, from old location %@", newLocation, oldLocation);
+//    NSLog(@"location information received: %@, from old location %@", newLocation, oldLocation);
 }
 
 @end

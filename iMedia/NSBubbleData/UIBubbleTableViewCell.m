@@ -35,7 +35,8 @@
 - (void)setFrame:(CGRect)frame
 {
     [super setFrame:frame];
-	[self setupInternalData];
+    [self setupInternalData];
+    
 }
 
 #if !__has_feature(objc_arc)
@@ -117,8 +118,7 @@
         
         self.webView = [[UIWebView alloc]initWithFrame:CGRectMake(12.5, 12.5, 275, 320)];
         
-        NSString *urlAddress=@"http://192.168.1.113/wingedstone/";
-        NSURL *url=[NSURL URLWithString:urlAddress];
+        NSURL *url=[NSURL URLWithString:self.data.content];
         NSURLRequest *resquestobj=[NSURLRequest requestWithURL:url];
         [self.webView loadRequest:resquestobj];
 //        [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:self.data.text]]];
