@@ -88,26 +88,17 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 {
     [super viewDidLoad];
 
-//    add a user
-//    User* thisUser = [NSEntityDescription insertNewObjectForEntityForName:@"User" inManagedObjectContext:self.managedObjectContext];
-//    thisUser.name = @"0001";
-//    thisUser.ePostalID = @"mact003@121.12.104.95";
-//    thisUser.displayName = @"#223";
-//    thisUser.type = [NSNumber numberWithInt:IdentityTypeUser];
-//    thisUser.state = [NSNumber numberWithInt:IdentityStateActive];
-//    MOCSave(self.managedObjectContext);
-    
-    
+    [self initializeData];
+}
+
+- (void) initializeData
+{
     NSManagedObjectContext *moc = self.managedObjectContext;
     NSEntityDescription *entityDescription = [NSEntityDescription entityForName:@"Identity"
                                                          inManagedObjectContext:moc];
     
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:entityDescription];
-    
-    //    NSSortDescriptor *sd1 = [[NSSortDescriptor alloc] initWithKey:@"displayName" ascending:YES];    
-    //    NSArray *sortDescriptors = [NSArray arrayWithObjects:sd1, nil];
-    //    [request setSortDescriptors:sortDescriptors];
     
     NSPredicate *predicate = [NSPredicate predicateWithFormat:
                               @"(state = %d)", IdentityStateActive];
@@ -117,26 +108,15 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     NSArray *array = [moc executeFetchRequest:request error:&error];
     self.contacts_list = [[NSMutableArray alloc] initWithArray:array];
     [self SerializeContacts:self.contacts_list Filter:nil];
-    
-}
 
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Add Romove user then refresh
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (void)addUser:(User *)userObject{
-    //add to fixnsaray
-    
-    [self.contacts_list addObject:userObject];
-    [self SerializeContacts:self.contacts_list Filter:nil];
-    [self.tableView reloadData];
-}
-
-- (void)removeUser:(User *)userObject{
-    //add to fixnsaray
-    
-    [self.contacts_list removeObject:userObject];
-    [self SerializeContacts:self.contacts_list Filter:nil];
+- (void)contentChanged
+{
+    [self initializeData];
     [self.tableView reloadData];
 }
 
@@ -208,8 +188,12 @@ NSInteger SortIndex(id char1, id char2, void* context)
     }
     
     for (int i = 0; i < [contacts count]; i++) {
-        User *user =  [contacts objectAtIndex:i];
-        NSString* _pinyin = [POAPinyin quickConvert:user.displayName];
+        Identity *identity = [contacts objectAtIndex:i];
+        if ([identity isKindOfClass:[Me class]]) {
+            // don't display me
+            continue;
+        }
+        NSString* _pinyin = [POAPinyin quickConvert:identity.displayName];
         NSString* _section = nil;
         NSUInteger _first_letter;
         
@@ -228,7 +212,7 @@ NSInteger SortIndex(id char1, id char2, void* context)
         
         
         if (_first_letter != NSNotFound) {
-            [[_section_temp objectAtIndex:_first_letter] addObject:user];
+            [[_section_temp objectAtIndex:_first_letter] addObject:identity];
         }
     }
     
@@ -343,7 +327,7 @@ NSInteger SortIndex(id char1, id char2, void* context)
     NSString* _section = [[[self.contacts_list_fix allKeys] sortedArrayUsingFunction:SortIndex context:NULL] objectAtIndex:indexPath.section];
     NSArray* _contacts = [contacts_list_fix objectForKey:_section];
         
-    Identity* identity = [_contacts objectAtIndex:indexPath.row];
+    const Identity* identity = [_contacts objectAtIndex:indexPath.row];
     
     // set max size
     CGSize nameMaxSize = CGSizeMake(MIDDLE_COLUMN_WIDTH, LABEL_HEIGHT*2);
@@ -524,5 +508,7 @@ NSInteger SortIndex(id char1, id char2, void* context)
     
        
 }
+
+
 
 @end

@@ -15,8 +15,20 @@
 #import "DDLog.h"
 #import <QuartzCore/QuartzCore.h>
 #import "AlbumViewController.h"
+#import "ServerDataTransformer.h"
+#import "UIImageView+AFNetworking.h"
+#import "ImageRemote.h"
 
 @interface ContactDetailController ()
+
+- (NSString *)getGender;
+- (NSString *)getAgeStr;
+- (NSString *)getLastGPSUpdatedTimeStr;
+- (NSString *)getSignature;
+- (NSString *)getCareer;
+- (NSString *)getHometown;
+- (NSString *)getSelfIntroduction;
+- (NSString *)getNickname;
 
 @end
 
@@ -49,6 +61,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
+        self.albumViewController = [[AlbumViewController alloc] init];
     }
     return self;
 }
@@ -101,7 +114,10 @@
     
     for (int i = 0; i< [albumArray count]; i++) {
         albumButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        [albumButton setImage:[UIImage imageNamed:[albumArray objectAtIndex:i] ] forState:UIControlStateNormal];
+        ImageRemote* remote = [albumArray objectAtIndex:i];
+        UIImageView *view = [[UIImageView alloc] init];
+        [view setImageWithURL:[NSURL URLWithString:remote.imageThumbnailURL] placeholderImage:nil];
+        [albumButton setImage:view.image forState:UIControlStateNormal];
         [albumButton setFrame:CGRectMake(VIEW_ALBUM_OFFSET * (i%4*2 + 1) + VIEW_ALBUM_WIDTH * (i%4), VIEW_ALBUM_OFFSET * (floor(i/4)*2+1) + VIEW_ALBUM_WIDTH * floor(i/4), VIEW_ALBUM_WIDTH, VIEW_ALBUM_WIDTH)];
         [albumButton.layer setMasksToBounds:YES];
         [albumButton.layer setCornerRadius:3.0];
@@ -118,8 +134,9 @@
 
 - (void)albumClick:(UIButton *)sender
 {
-    self.albumViewController = [[AlbumViewController alloc] init];
+
     self.albumViewController.albumArray = self.albumArray;
+    self.albumViewController.albumIndex = sender.tag;
     [self.albumViewController setHidesBottomBarWhenPushed:YES];
     // Pass the selected object to the new view controller.
     [self.navigationController pushViewController:self.albumViewController animated:YES];
@@ -131,17 +148,29 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
+
 - (void)initStatusView
 {
     self.statusView = [[UIView alloc] initWithFrame:CGRectMake(VIEW_PADDING_LEFT, VIEW_ALBUM_HEIGHT + 12, VIEW_COMMON_WIDTH, 15)];
     
     // Create a label icon for the sex.
-    UIImageView* sexView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"sex_female_bg.png"]];
+    NSString *gender = [self getGender];
+    NSString* bgImgStr ;
+    if ([gender isEqualToString:@"m"]) {
+        bgImgStr = @"sex_male_bg.png";
+    } else if ([gender isEqualToString:@"f"]) {
+        bgImgStr = @"sex_female_bg.png";
+    } else {
+        bgImgStr = @"sex_unknown_bg.png";
+    }
+    
+    UIImageView* sexView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:bgImgStr]];
     [sexView setFrame:CGRectMake(0, 0, 40, 15)];
+
     
     UILabel* sexLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 15, 15)];
     [sexLabel setBackgroundColor:[UIColor clearColor]];
-    sexLabel.text  = @"18";
+    sexLabel.text  = [self getAgeStr];
     [sexLabel setFont:[UIFont systemFontOfSize:12.0]];
     [sexLabel setTextColor:[UIColor whiteColor]];
     [sexView addSubview:sexLabel];
@@ -156,10 +185,11 @@
 	timeLabel.textAlignment = UITextAlignmentLeft;
 	timeLabel.textColor = RGBCOLOR(140, 140, 140);
     timeLabel.backgroundColor = [UIColor clearColor];
-    timeLabel.text  = @"6 hours ago";
+    timeLabel.text  = [self getLastGPSUpdatedTimeStr];
     [timeLabel sizeToFit];
     
     // Create a label icon for the time.
+    /*
     UIImageView *locationIconView = [[UIImageView alloc] initWithFrame:CGRectMake(140, 0 , 15, 15)];
     locationIconView.image = [UIImage imageNamed:@"location_icon.png"];
     
@@ -170,13 +200,14 @@
     locationLabel.backgroundColor = [UIColor clearColor];
     locationLabel.text  = @"200M";
     [locationLabel sizeToFit];
+    */
     
     // add to the statusView
     [self.statusView addSubview:sexView];
     [self.statusView addSubview:timeIconView];
 	[self.statusView addSubview:timeLabel];
-    [self.statusView addSubview:locationIconView];
-	[self.statusView addSubview:locationLabel];
+//    [self.statusView addSubview:locationIconView];
+//	[self.statusView addSubview:locationLabel];
     
     [self.contentView addSubview: self.statusView];
     
@@ -237,13 +268,13 @@
                      CGRectMake(0, VIEW_ALBUM_HEIGHT + VIEW_STATUS_HEIGHT + 15, self.view.frame.size.width, 400)];
     self.infoView.backgroundColor = [UIColor clearColor];
     
-    self.infoArray = [[NSArray alloc] initWithObjects: @"签名",@"手机",@"职业",@"家乡",@"个人说明",nil ];    
+    self.infoArray = [[NSArray alloc] initWithObjects: @"签名",@"职业",@"家乡",@"个人说明",nil ];    
     self.infoDescArray = [[NSArray alloc] initWithObjects:
-                          @"夫和实生物，同则不继。以他平他谓之和故能丰长而物归之",
-                          @"老莫  13899763487",
-                          @"IT工程师",
-                          @"山东 聊城",
-                          @"我不是那个史上最牛历史老师！我们中国的教科书属于秽史，请同学们考完试抓紧把它们烧了，放家里一天，都脏你屋子。", nil];
+                          [self getSignature],
+                          [self getCareer],
+                          [self getHometown],
+                          [self getSelfIntroduction],
+                          nil];
     
     self.infoTableView = [[UITableView alloc]initWithFrame:self.infoView.bounds style:UITableViewStyleGrouped];
     self.infoTableView.dataSource = self;
@@ -387,14 +418,13 @@
     [self.actionView addSubview:self.reportUserButton];
     
     // Now set content. Either user or jsonData must have value
+    self.title = [self getNickname];
     if (self.user == nil) {
-        self.title = [jsonData valueForKey:@"jid"];
         [self.sendMsgButton setTitle:NSLocalizedString(@"Add friend", nil) forState:UIControlStateNormal];
         [self.sendMsgButton setBackgroundImage:[UIImage imageNamed:@"profile_tabbar_btn2.png"] forState:UIControlStateNormal];
         [self.sendMsgButton addTarget:self action:@selector(addFriendButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
         
     } else {
-        self.title = self.user.displayName;
         [self.sendMsgButton setTitle:NSLocalizedString(@"Send Msg", nil) forState:UIControlStateNormal];
         [self.sendMsgButton setBackgroundImage:[UIImage imageNamed:@"profile_tabbar_btn1.png"] forState:UIControlStateNormal];
         [self.sendMsgButton addTarget:self action:@selector(sendMsgButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
@@ -472,6 +502,120 @@
 {
     self.user.state = [NSNumber numberWithInt:IdentityStatePendingRemoveFriend];
     [[XMPPNetworkCenter sharedClient] removeBuddy:self.user.ePostalID withCallbackBlock:nil];
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// Getter help to get data from either user or jsonData
+////////////////////////////////////////////////////////////////////////////////
+- (NSString *)getGender
+{
+    if (self.user == nil) {
+        return [ServerDataTransformer getGenderFromServerJSON:self.jsonData];
+    } else if (self.user.gender != nil){
+        return self.user.gender;
+    } else {
+        return @"";
+    }
+}
+
+- (NSString *)getAgeStr
+{
+    NSDate *now = [NSDate date];
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    //unsigned int unitFlags = NSMonthCalendarUnit | NSDayCalendarUnit;
+    NSDateComponents *comps ;
+    if (self.user == nil) {
+        comps = [gregorian components:NSYearCalendarUnit fromDate:[ServerDataTransformer getBirthdateFromServerJSON:self.jsonData]  toDate:now  options:0];
+    } else {
+        comps = [gregorian components:NSYearCalendarUnit fromDate:self.user.birthdate  toDate:now  options:0];
+    }
+    return [NSString stringWithFormat:@"%d", comps.year];
+}
+
+- (NSString *)getLastGPSUpdatedTimeStr
+{
+    NSDate *now = [NSDate date];
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    unsigned int unitFlags = NSDayCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit;
+    NSDateComponents *comps ;
+    if (self.user == nil) {
+        comps = [gregorian components:unitFlags fromDate:[ServerDataTransformer getLastGPSUpdatedFromServerJSON:self.jsonData]  toDate:now  options:0];
+    } else {
+        comps = [gregorian components:unitFlags fromDate:self.user.lastGPSUpdated  toDate:now  options:0];
+    }
+    if (comps.day == 1) {
+        return [NSString stringWithFormat:@"%d day ago", comps.day];
+    } else if (comps.day > 1) {
+        return [NSString stringWithFormat:@"%d days ago", comps.day];
+    } else if (comps.hour == 1) {
+        return [NSString stringWithFormat:@"%d hour ago", comps.hour];
+    } else if (comps.hour > 1) {
+        return [NSString stringWithFormat:@"%d hours ago", comps.hour];
+    } else if (comps.minute == 1) {
+        return [NSString stringWithFormat:@"%d minute ago", comps.minute];
+    } else if (comps.minute > 0) {
+        return [NSString stringWithFormat:@"%d minutes ago", comps.minute];
+    } else {
+        return T(@"now");
+    }
+}
+- (NSString *)getSignature
+{
+    if (self.user != nil && self.user.signature != nil) {
+        return self.user.signature;
+    } else if (self.jsonData != nil) {
+        return [ServerDataTransformer getSignatureFromServerJSON:self.jsonData];
+    } else {
+        return @"";
+    }
+}
+- (NSString *)getCareer
+{
+    if (self.user != nil && self.user.career != nil) {
+        return self.user.career;
+    } else if (self.jsonData != nil){
+        return [ServerDataTransformer getCareerFromServerJSON:self.jsonData];
+    } else {
+        return @"";
+    }
+}
+- (NSString *)getHometown
+{
+    if (self.user != nil && self.user.hometown != nil) {
+        return self.user.hometown;
+    } else if (self.jsonData != nil) {
+        return [ServerDataTransformer getHometownFromServerJSON:self.jsonData];
+    } else {
+        return @"";
+    }
+}
+- (NSString *)getSelfIntroduction
+{
+    if (self.user != nil && self.user.selfIntroduction != nil) {
+        return self.user.selfIntroduction;
+    } else if (self.jsonData != nil){
+        return [ServerDataTransformer getSelfIntroductionFromServerJSON:self.jsonData];
+    } else {
+        return @"";
+    }
+}
+- (NSString *)getNickname
+{
+    // if nickname is not available, use guid instead
+    if (self.user != nil) {
+        if (self.user.displayName == nil || [self.user.displayName isEqualToString:@""]) {
+            return self.user.guid;
+        } else {
+            return self.user.displayName;
+        }
+    } else {
+        NSString *nickname = [ServerDataTransformer getNicknameFromServerJSON:self.jsonData];
+        if (nickname == nil || [nickname isEqualToString:@""]) {
+            return [ServerDataTransformer getGUIDFromServerJSON:self.jsonData];
+        } else {
+            return [ServerDataTransformer getGUIDFromServerJSON:self.jsonData];
+        }
+    }
 }
 
 @end

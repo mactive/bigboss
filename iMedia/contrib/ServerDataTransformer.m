@@ -105,12 +105,20 @@
     NSString *dateStr = [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"birthdate"];
     return [self dateFromNSDateStr:dateStr];
 }
++ (NSDate *)getLastGPSUpdatedFromServerJSON:(NSString *)jsonData
+{
+    NSString *dateStr = [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"last_gps_updated"];
+    return [self dateFromNSDatetimeStr:dateStr];
+}
 
 
 
 +(NSString *)getStringObjFromServerJSON:(NSString *)jsonData byName:(NSString *)name
 {
-    return [self convertNumberToStringIfNumber:[jsonData valueForKey:name]];
+    id obj = [jsonData valueForKey:name];
+    if (obj == nil) return @"";
+    
+    return [self convertNumberToStringIfNumber:obj];
 }
 
 + (NSString *)convertNumberToStringIfNumber:(id)obj

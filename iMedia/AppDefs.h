@@ -83,7 +83,8 @@ typedef enum _IdentityState
     IdentityStatePendingAddSubscription     = 2,
     IdentityStatePendingAddFriend   = 3,
     IdentityStatePendingRemoveSubscription  = 4,
-    IdentityStatePendingRemoveFriend    =5
+    IdentityStatePendingRemoveFriend    =5,
+    IdentityStatePendingServerDataUpdate = 6
 } IdentityState;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

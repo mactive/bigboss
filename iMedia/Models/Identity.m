@@ -19,6 +19,8 @@
 @dynamic thumbnailURL;
 @dynamic state;
 @dynamic type;
+@dynamic lastGPSLocation;
+@dynamic lastGPSUpdated;
 @dynamic images;
 
 

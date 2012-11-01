@@ -20,6 +20,8 @@
 @property (nonatomic, retain) NSString * thumbnailURL;
 @property (nonatomic, retain) NSNumber * state;
 @property (nonatomic, retain) NSNumber * type;
+@property (nonatomic, retain) NSString * lastGPSLocation;
+@property (nonatomic, retain) NSDate * lastGPSUpdated;
 @property (nonatomic, retain) NSSet *images;
 
 -(NSArray *)getOrderedImages;

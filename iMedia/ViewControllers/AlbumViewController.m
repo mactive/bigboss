@@ -8,6 +8,8 @@
 
 #import "AlbumViewController.h"
 #import "Avatar.h"
+#import "ImageRemote.h"
+#import "UIImageView+AFNetworking.h"
 
 @implementation AlbumViewController
 @synthesize albumArray;
@@ -49,8 +51,15 @@
                                                             self.view.frame.size.height - 50)];
     view.backgroundColor = [UIColor blackColor];
     UIImageView* imageView = [[UIImageView alloc]initWithFrame:view.bounds];
-    Avatar * singleAvatar = [self.albumArray objectAtIndex:index];
-    [imageView setImage:singleAvatar.image];
+    id obj = [self.albumArray objectAtIndex:index];
+    if ([obj isKindOfClass:[Avatar class]]) {
+        Avatar * singleAvatar = obj;
+        [imageView setImage:singleAvatar.image];
+    } else if ([obj isKindOfClass:[ImageRemote class]]) {
+        ImageRemote *imageRemote = obj;
+        [imageView setImageWithURL:[NSURL URLWithString:imageRemote.imageThumbnailURL] placeholderImage:nil];
+    }
+    
     [imageView setContentMode:UIViewContentModeScaleAspectFit];
 
     [view addSubview:imageView];

@@ -117,6 +117,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 + (void)populateIdentity:(Identity *)identity withJSONData:(NSString *)json
 {
+    
     if ([identity isKindOfClass:[User class]]) {
         [self populateUser:(User *)identity withJSONData:json];
     } else if ([identity isKindOfClass:[Channel class]]) {
@@ -132,10 +133,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     user.gender = [ServerDataTransformer getGenderFromServerJSON:json];
     user.signature = [ServerDataTransformer getSignatureFromServerJSON:json];
     user.displayName = [ServerDataTransformer getNicknameFromServerJSON:json];
-    //user.birthdate = [ServerDataTransformer getBirthdateFromServerJSON:json];
-    NSTimeInterval secondsPerFiveYear = 24 * 60 * 60 *365 *5;
-    NSDate *today = [[NSDate alloc] init];
-    user.birthdate = [today dateByAddingTimeInterval:-secondsPerFiveYear];
+    user.birthdate = [ServerDataTransformer getBirthdateFromServerJSON:json];
     user.career = [ServerDataTransformer getCareerFromServerJSON:json];
     user.selfIntroduction = [ServerDataTransformer getSelfIntroductionFromServerJSON:json];
     user.hometown = [ServerDataTransformer getHometownFromServerJSON:json];
@@ -169,20 +167,23 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 + (void)populateUser:(User *)user withJSONData:(id)json
 {
-    user.ePostalID = [ServerDataTransformer getEPostalIDFromServerJSON:json];
+    if (user.ePostalID == nil) {
+        user.ePostalID = [ServerDataTransformer getEPostalIDFromServerJSON:json];
+    } else {
+        ;
+    }
+    
     user.gender = [ServerDataTransformer getGenderFromServerJSON:json];
     user.signature = [ServerDataTransformer getSignatureFromServerJSON:json];
     user.displayName = [ServerDataTransformer getNicknameFromServerJSON:json];
-    //user.birthdate = [ServerDataTransformer getBirthdateFromServerJSON:json];
-    NSTimeInterval secondsPerFiveYear = 24 * 60 * 60 *365 *5;
-    NSDate *today = [[NSDate alloc] init];
-    user.birthdate = [today dateByAddingTimeInterval:-secondsPerFiveYear];
+    user.birthdate = [ServerDataTransformer getBirthdateFromServerJSON:json];
     user.career = [ServerDataTransformer getCareerFromServerJSON:json];
     user.selfIntroduction = [ServerDataTransformer getSelfIntroductionFromServerJSON:json];
     user.hometown = [ServerDataTransformer getHometownFromServerJSON:json];
     user.guid = [ServerDataTransformer getGUIDFromServerJSON:json];
     user.avatarURL = [ServerDataTransformer getAvatarFromServerJSON:json];
     user.thumbnailURL = [ServerDataTransformer getThumbnailFromServerJSON:json];
+    user.lastGPSUpdated = [ServerDataTransformer getLastGPSUpdatedFromServerJSON:json];
 
     NSMutableArray *imageURLArray = [[NSMutableArray alloc] init];
     for (int i = 1; i <=8; i++) {
@@ -192,14 +193,22 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             [imageURLArray addObject:url];
         }
     }
-    
+    NSMutableArray *imageThumbnailURLArray = [[NSMutableArray alloc] init];
+    for (int i = 1; i <=8; i++) {
+        NSString *key = [NSString stringWithFormat:@"thumbnail%d", i];
+        NSString *url = [ServerDataTransformer getStringObjFromServerJSON:json byName:key];
+        if (url != nil && ![url isEqualToString:@""]) {
+            [imageThumbnailURLArray addObject:url];
+        }
+    }
     // Update avatar with incoming data
     NSArray *imageArray = [user getOrderedImages];
     for (int i = 0; i < [imageArray count]; i++) {
         ImageRemote *imageRemote = [imageArray objectAtIndex:i];
         if (i < [imageURLArray count]) {
             imageRemote.imageURL = [imageURLArray objectAtIndex:i];
-            imageRemote.sequence = [NSNumber numberWithInt:i];
+            imageRemote.imageThumbnailURL = [imageThumbnailURLArray objectAtIndex:i];
+            imageRemote.sequence = [NSNumber numberWithInt:(i+1)];
         } else {
             imageRemote.imageURL = nil;
             imageRemote.sequence = 0;
@@ -218,6 +227,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     channel.avatarURL = [ServerDataTransformer getAvatarFromServerJSON:json];
     channel.thumbnailURL = [ServerDataTransformer getThumbnailFromServerJSON:json];
     channel.selfIntroduction = [ServerDataTransformer getSelfIntroductionFromServerJSON:json];
+    channel.lastGPSUpdated = [ServerDataTransformer getLastGPSUpdatedFromServerJSON:json];
 
     channel.type = [NSNumber numberWithInt:IdentityTypeChannel];
 }
