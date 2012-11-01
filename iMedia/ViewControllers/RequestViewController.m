@@ -166,6 +166,7 @@
 - (void)confirmRequest
 {
     NSString *jidStr = [ServerDataTransformer getEPostalIDFromServerJSON:self.jsonData];
+
     [[XMPPNetworkCenter sharedClient] acceptPresenceSubscriptionRequestFrom:jidStr andAddToRoster:YES];
     
     [[self appDelegate].functionListController.friendRequestDict removeObjectForKey:jidStr];

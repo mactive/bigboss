@@ -609,7 +609,8 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
          coalesceMask:NSNotificationNoCoalescing
          forModes:nil];
     } else if (thisUser.state.intValue == IdentityStatePendingAddFriend) {
-        thisUser.state = [NSNumber numberWithInt:IdentityStateActive];
+        thisUser.state = [NSNumber numberWithInt:IdentityStatePendingServerDataUpdate];
+        [[AppNetworkAPIClient sharedClient] updateIdentity:thisUser withBlock:nil];
         MOCSave(_managedObjectContext);
     }
     
