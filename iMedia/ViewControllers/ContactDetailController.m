@@ -78,7 +78,7 @@
     
     [self initAlbumView];
     [self initStatusView];
-    [self initSNSView];
+//    [self initSNSView];
     [self initInfoView];
     [self initActionView];
     
@@ -234,7 +234,7 @@
 - (void)initInfoView
 {
     self.infoView = [[UIView alloc] initWithFrame:
-                     CGRectMake(0, VIEW_ALBUM_HEIGHT + VIEW_STATUS_HEIGHT + VIEW_SNS_HEIGHT + 30, self.view.frame.size.width, 400)];
+                     CGRectMake(0, VIEW_ALBUM_HEIGHT + VIEW_STATUS_HEIGHT + 15, self.view.frame.size.width, 400)];
     self.infoView.backgroundColor = [UIColor clearColor];
     
     self.infoArray = [[NSArray alloc] initWithObjects: @"签名",@"手机",@"职业",@"家乡",@"个人说明",nil ];    

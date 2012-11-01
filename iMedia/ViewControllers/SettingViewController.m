@@ -19,7 +19,6 @@
 @synthesize settingTableView;
 @synthesize loginButton;
 @synthesize settingTitleArray;
-@synthesize settingDescArray;
 @synthesize managedObjectContext;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -43,19 +42,13 @@
     [super viewDidLoad];
     
     self.settingTitleArray = [[NSArray alloc] initWithObjects:
-                              [[NSArray alloc] initWithObjects:@"个人设置",@"我的相册",@"新浪微博",@"微信朋友圈", nil],
-                              [[NSArray alloc] initWithObjects:@"去给翼石打个分吧",@"帮助与反馈",@"关于翼石",@"App精品推荐", nil],
+                              [[NSArray alloc] initWithObjects:@"个人设置", @"App精品推荐", nil],
+                              [[NSArray alloc] initWithObjects:@"去给翼石打个分吧",@"帮助与反馈",@"关于翼石", nil],
                               nil ];
+    //,@"我的相册",@"新浪微博",@"微信朋友圈"
     
-    
-    self.settingDescArray = [[NSArray alloc] initWithObjects:
-                          @"夫和实生物，同则不继。以他平他谓之和故能丰长而物归之",
-                          @"老莫  13899763487",
-                          @"IT工程师",
-                          @"山东 聊城",
-                          @"我不是那个史上最牛历史老师！我们中国的教科书属于秽史，请同学们考完试抓紧把它们烧了，放家里一天，都脏你屋子。", nil];
-    
-    self.settingTableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
+    CGRect rect = CGRectMake(0, 0, 320, 370);
+    self.settingTableView = [[UITableView alloc] initWithFrame:rect style:UITableViewStyleGrouped];
     self.settingTableView.dataSource = self;
     self.settingTableView.delegate = self;
 
