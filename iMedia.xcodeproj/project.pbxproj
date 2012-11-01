@@ -279,9 +279,6 @@
 		56DF5E6E16257F5600E75105 /* SBJsonUTF8Stream.m in Sources */ = {isa = PBXBuildFile; fileRef = 56DF5E6216257F5600E75105 /* SBJsonUTF8Stream.m */; };
 		56DF5E6F16257F5600E75105 /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 56DF5E6416257F5600E75105 /* SBJsonWriter.m */; };
 		56DF5E7216257F7A00E75105 /* NSObject+SBJson.m in Sources */ = {isa = PBXBuildFile; fileRef = 56DF5E7116257F7A00E75105 /* NSObject+SBJson.m */; };
-		56EE29571613075700910CE5 /* FirstLoginController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56EE29551613075600910CE5 /* FirstLoginController.m */; };
-		56EE295D161318A000910CE5 /* NewUserWelcome.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 56EE295C161318A000910CE5 /* NewUserWelcome.storyboard */; };
-		56EE296016131E5700910CE5 /* StartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56EE295F16131E5600910CE5 /* StartViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -758,11 +755,6 @@
 		56DF5E6416257F5600E75105 /* SBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBJsonWriter.m; path = SBJson/SBJsonWriter.m; sourceTree = "<group>"; };
 		56DF5E7016257F7A00E75105 /* NSObject+SBJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSObject+SBJson.h"; path = "SBJson/NSObject+SBJson.h"; sourceTree = "<group>"; };
 		56DF5E7116257F7A00E75105 /* NSObject+SBJson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSObject+SBJson.m"; path = "SBJson/NSObject+SBJson.m"; sourceTree = "<group>"; };
-		56EE29541613075600910CE5 /* FirstLoginController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FirstLoginController.h; path = ViewControllers/FirstLoginController.h; sourceTree = "<group>"; };
-		56EE29551613075600910CE5 /* FirstLoginController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FirstLoginController.m; path = ViewControllers/FirstLoginController.m; sourceTree = "<group>"; };
-		56EE295C161318A000910CE5 /* NewUserWelcome.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = NewUserWelcome.storyboard; sourceTree = "<group>"; };
-		56EE295E16131E5600910CE5 /* StartViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StartViewController.h; path = ViewControllers/StartViewController.h; sourceTree = "<group>"; };
-		56EE295F16131E5600910CE5 /* StartViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StartViewController.m; path = ViewControllers/StartViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1754,11 +1746,6 @@
 				2640031E1642B45E00A1B779 /* WelcomeViewController.m */,
 				26F3BF21164294AC00E2899C /* LoginViewController.h */,
 				26F3BF22164294AC00E2899C /* LoginViewController.m */,
-				56EE29541613075600910CE5 /* FirstLoginController.h */,
-				56EE29551613075600910CE5 /* FirstLoginController.m */,
-				56EE295E16131E5600910CE5 /* StartViewController.h */,
-				56EE295F16131E5600910CE5 /* StartViewController.m */,
-				56EE295C161318A000910CE5 /* NewUserWelcome.storyboard */,
 			);
 			name = WelcomeScreenPart;
 			sourceTree = "<group>";
@@ -1940,7 +1927,6 @@
 				562DE76A1610446000F782D2 /* SendButton@2x.png in Resources */,
 				562DE76B1610446000F782D2 /* SendButtonHighlighted.png in Resources */,
 				562DE76C1610446000F782D2 /* SendButtonHighlighted@2x.png in Resources */,
-				56EE295D161318A000910CE5 /* NewUserWelcome.storyboard in Resources */,
 				2605CC40162EA9F700234442 /* navigationBar_bg@2x.png in Resources */,
 				2605CC41162EA9F700234442 /* tabbar_bg@2x.png in Resources */,
 				2605CC42162EA9F700234442 /* tabbar_item_0@2x.png in Resources */,
@@ -2132,8 +2118,6 @@
 				566E82681609AF2700A333EA /* ContactDetailController.m in Sources */,
 				562DE705160ABFA100F782D2 /* ChatDetailController.m in Sources */,
 				5646FAFB160D4BA700175B78 /* ACPlaceholderTextView.m in Sources */,
-				56EE29571613075700910CE5 /* FirstLoginController.m in Sources */,
-				56EE296016131E5700910CE5 /* StartViewController.m in Sources */,
 				56DF5E6516257F5600E75105 /* SBJsonParser.m in Sources */,
 				56DF5E6616257F5600E75105 /* SBJsonStreamParser.m in Sources */,
 				56DF5E6716257F5600E75105 /* SBJsonStreamParserAccumulator.m in Sources */,
