@@ -140,7 +140,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [super viewDidLoad];
     
         
-    self.logoImage = [[UIImageView alloc]initWithFrame:CGRectMake(50, 10, 220, 50)];
+    self.logoImage = [[UIImageView alloc]initWithFrame:CGRectMake(50, 10,220, 50)];
     [self.logoImage setImage:[UIImage imageNamed:@"logo.png"]];
     
     self.usernameLabel = [[UILabel alloc] initWithFrame:CGRectMake(LEFT_OFFSET, LABEL_HEIGHT+LOGO_HEIGHT, LABEL_WIDTH, 30)];
