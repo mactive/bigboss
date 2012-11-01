@@ -36,6 +36,7 @@
 #define CAREER_ITEM_INDEX   5
 #define HOMETOWN_ITEM_INDEX 6
 #define SELF_INTRO_ITEM_INDEX 7
+#define JPEG_QUALITY 0.6
 
 @interface ProfileMeController ()
 
@@ -543,10 +544,18 @@
 - (void)imagePickerController:(UIImagePickerController *)picker 
 didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-	UIImage *image = [info objectForKey:UIImagePickerControllerEditedImage];
-    //    self.image = image;
-    UIImage *thumbnail = [image resizedImageToSize:CGSizeMake(75, 75)];
+	UIImage *originalImage = [info objectForKey:UIImagePickerControllerEditedImage];
+    NSData *imageData = UIImageJPEGRepresentation(originalImage, JPEG_QUALITY);
+    UIImage *image = [UIImage imageWithData:imageData];
     
+    // Save Video to Photo Album
+    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+    [library writeImageDataToSavedPhotosAlbum:imageData
+                                     metadata:nil
+                              completionBlock:^(NSURL *assetURL, NSError *error){}];
+    
+    
+    UIImage *thumbnail = [image resizedImageToSize:CGSizeMake(75, 75)];
     Avatar *avatar;
     
     if (self.editingAlbumIndex != NSNotFound) {

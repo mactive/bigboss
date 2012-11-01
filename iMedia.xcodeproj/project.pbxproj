@@ -20,6 +20,7 @@
 		2605CC44162EA9F700234442 /* tabbar_item_2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2605CC3D162EA9F700234442 /* tabbar_item_2@2x.png */; };
 		2605CC45162EA9F700234442 /* tabbar_item_3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2605CC3E162EA9F700234442 /* tabbar_item_3@2x.png */; };
 		2605CC46162EA9F700234442 /* tabbar_overlay@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2605CC3F162EA9F700234442 /* tabbar_overlay@2x.png */; };
+		2625096D16428282009ED7D8 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2625096C16428282009ED7D8 /* AssetsLibrary.framework */; };
 		2631C4EB16310026004DE7FB /* face_2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2631C4EA16310026004DE7FB /* face_2@2x.png */; };
 		2631C4ED1631035D004DE7FB /* time_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2631C4EC1631035D004DE7FB /* time_icon@2x.png */; };
 		2631C52A16313033004DE7FB /* NSDate+timesince.m in Sources */ = {isa = PBXBuildFile; fileRef = 2631C52916313033004DE7FB /* NSDate+timesince.m */; };
@@ -337,6 +338,7 @@
 		2605CC3D162EA9F700234442 /* tabbar_item_2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tabbar_item_2@2x.png"; path = "Resources/tabbar_item_2@2x.png"; sourceTree = "<group>"; };
 		2605CC3E162EA9F700234442 /* tabbar_item_3@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tabbar_item_3@2x.png"; path = "Resources/tabbar_item_3@2x.png"; sourceTree = "<group>"; };
 		2605CC3F162EA9F700234442 /* tabbar_overlay@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tabbar_overlay@2x.png"; path = "Resources/tabbar_overlay@2x.png"; sourceTree = "<group>"; };
+		2625096C16428282009ED7D8 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		2631C4EA16310026004DE7FB /* face_2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "face_2@2x.png"; path = "Resources/face_2@2x.png"; sourceTree = "<group>"; };
 		2631C4EC1631035D004DE7FB /* time_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "time_icon@2x.png"; path = "Resources/time_icon@2x.png"; sourceTree = "<group>"; };
 		2631C52816313033004DE7FB /* NSDate+timesince.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDate+timesince.h"; path = "contrib/NSDate+timesince.h"; sourceTree = "<group>"; };
@@ -757,6 +759,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2625096D16428282009ED7D8 /* AssetsLibrary.framework in Frameworks */,
 				566743BD164123ED0043A29C /* libz.dylib in Frameworks */,
 				562DE77716118E9800F782D2 /* AudioToolbox.framework in Frameworks */,
 				5646FB23160F246500175B78 /* libCocoaPlant.a in Frameworks */,
@@ -980,6 +983,7 @@
 		566E80921609A24C00A333EA = {
 			isa = PBXGroup;
 			children = (
+				2625096C16428282009ED7D8 /* AssetsLibrary.framework */,
 				566743DB164254A70043A29C /* MobileCoreServices.framework */,
 				566E80A91609A24C00A333EA /* iMedia */,
 				566E80C51609A24C00A333EA /* iMediaTests */,
