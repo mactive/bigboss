@@ -231,9 +231,6 @@
     [UIView animateWithDuration:animationDuration delay:0.0 options:(UIViewAnimationOptionsFromCurve(animationCurve) | UIViewAnimationOptionBeginFromCurrentState) animations:^{
         CGFloat viewHeight = [self.view convertRect:frameEnd fromView:nil].origin.y;
         UIView *messageInputBar = _textView.superview;
-        CGFloat tmp1 = viewHeight - messageInputBar.frame.size.height;
-        CGFloat tmp2 = messageInputBar.frame.size.height;
-        CGFloat tmp3 = self.view.frame.size.height;
         UIViewSetFrameY(messageInputBar, viewHeight-messageInputBar.frame.size.height);
         self.bubbleTable.contentInset = self.bubbleTable.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, self.view.frame.size.height-viewHeight, 0);
         

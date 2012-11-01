@@ -178,7 +178,7 @@
     }
     
     UITableViewCell *cell = [self.infoCellArray objectAtIndex:index];
-    UILabel *descLabel = [cell viewWithTag:1002];
+    UILabel *descLabel = (UILabel *)[cell viewWithTag:1002];
     
     // resize the label for multiline
     
@@ -236,7 +236,7 @@
 {
 
     UITableViewCell *cell = [self.infoCellArray objectAtIndex:index];
-    UILabel *descLabel = [cell viewWithTag:1002];
+    UILabel *descLabel = (UILabel *)[cell viewWithTag:1002];
     
     // resize the label for multiline
     CGSize summaryMaxSize = CGSizeMake(SUMMARY_WIDTH, LABEL_HEIGHT*2);

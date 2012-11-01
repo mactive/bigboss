@@ -24,6 +24,4 @@
 
 + (User *)newUserInContext:(NSManagedObjectContext *)context;
 
-+ (SBJsonParser *)sharedJSONParser;
-
 @end
