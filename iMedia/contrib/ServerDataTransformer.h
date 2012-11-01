@@ -34,4 +34,6 @@
 + (NSString *)dateStrfromNSDate:(NSDate *)date;
 + (NSDate *)dateFromNSDatetimeStr:(NSString *)dateStr;
 
++ (NSString *)getStringObjFromServerJSON:(NSString *)jsonData byName:(NSString *)name;
+
 @end

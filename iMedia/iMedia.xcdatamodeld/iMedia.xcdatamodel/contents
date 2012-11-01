@@ -3,6 +3,7 @@
     <entity name="Channel" representedClassName="Channel" parentEntity="Identity" syncable="YES">
         <attribute name="csContactPostalID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="node" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="selfIntroduction" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="subID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="subrequestID" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="conversation" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Conversation" inverseName="channel" inverseEntity="Conversation" syncable="YES"/>
@@ -18,10 +19,12 @@
         <relationship name="users" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="User" inverseName="conversations" inverseEntity="User" syncable="YES"/>
     </entity>
     <entity name="Identity" representedClassName="Identity" isAbstract="YES" syncable="YES">
+        <attribute name="avatarURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="displayName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ePostalID" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="state" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="thumbnailURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="type" attributeType="Integer 16" defaultValueString="0" indexed="YES" syncable="YES"/>
         <relationship name="images" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ImageRemote" inverseName="owner" inverseEntity="ImageRemote" syncable="YES"/>
     </entity>
@@ -40,7 +43,6 @@
         <relationship name="owner" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Identity" inverseName="images" inverseEntity="Identity" syncable="YES"/>
     </entity>
     <entity name="Me" representedClassName="Me" parentEntity="Identity" syncable="YES">
-        <attribute name="avatarURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="birthdate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="career" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="cell" optional="YES" attributeType="String" syncable="YES"/>
@@ -53,7 +55,6 @@
         <attribute name="password" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="selfIntroduction" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="signature" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="thumbnailURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="avatars" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ImageLocal" inverseName="me" inverseEntity="ImageLocal" syncable="YES"/>
     </entity>
@@ -75,12 +76,12 @@
         <relationship name="conversations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Conversation" inverseName="users" inverseEntity="Conversation" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Channel" positionX="160" positionY="192" width="128" height="120"/>
+        <element name="Channel" positionX="160" positionY="192" width="128" height="135"/>
         <element name="Conversation" positionX="0" positionY="0" width="128" height="165"/>
-        <element name="Identity" positionX="160" positionY="192" width="128" height="135"/>
+        <element name="Identity" positionX="160" positionY="192" width="128" height="165"/>
         <element name="ImageLocal" positionX="160" positionY="192" width="128" height="120"/>
         <element name="ImageRemote" positionX="160" positionY="192" width="128" height="120"/>
-        <element name="Me" positionX="0" positionY="0" width="128" height="285"/>
+        <element name="Me" positionX="0" positionY="0" width="128" height="255"/>
         <element name="Message" positionX="0" positionY="0" width="128" height="120"/>
         <element name="User" positionX="-234" positionY="141" width="128" height="165"/>
     </elements>

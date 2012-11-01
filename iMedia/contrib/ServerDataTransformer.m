@@ -15,7 +15,7 @@
 @interface ServerDataTransformer ()
 
 + (NSString *)convertNumberToStringIfNumber:(id)obj;
-+(NSString *)getStringObjFromServerJSON:(NSString *)jsonData byName:(NSString *)name;
+
 
 @end
 
@@ -103,7 +103,7 @@
 + (NSDate *)getBirthdateFromServerJSON:(NSString *)jsonData
 {
     NSString *dateStr = [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"birthdate"];
-    return [NSDate date];
+    return [self dateFromNSDateStr:dateStr];
 }
 
 
@@ -132,6 +132,18 @@
     
     return [dateFormatter dateFromString:dateStr];
 }
++ (NSDate *)dateFromNSDateStr:(NSString *)dateStr
+{
+    static NSDateFormatter *dateFormatter = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:DATE_FORMATE];
+    });
+    
+    return [dateFormatter dateFromString:dateStr];
+}
+
 
 + (NSString *)datetimeStrfromNSDate:(NSDate *)date
 {

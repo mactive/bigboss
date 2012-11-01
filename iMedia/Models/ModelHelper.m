@@ -184,11 +184,13 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     user.selfIntroduction = [ServerDataTransformer getSelfIntroductionFromServerJSON:json];
     user.hometown = [ServerDataTransformer getHometownFromServerJSON:json];
     user.guid = [ServerDataTransformer getGUIDFromServerJSON:json];
-    
+    user.avatarURL = [ServerDataTransformer getAvatarFromServerJSON:json];
+    user.thumbnailURL = [ServerDataTransformer getThumbnailFromServerJSON:json];
+
     NSMutableArray *imageURLArray = [[NSMutableArray alloc] init];
     for (int i = 1; i <=8; i++) {
         NSString *key = [NSString stringWithFormat:@"avatar%d", i];
-        NSString *url = [json valueForKey:key];
+        NSString *url = [ServerDataTransformer getStringObjFromServerJSON:json byName:key];
         if (url != nil && ![url isEqualToString:@""]) {
             [imageURLArray addObject:url];
         }
@@ -218,6 +220,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     channel.displayName = [ServerDataTransformer getNicknameFromServerJSON:json];
     channel.ePostalID = [ServerDataTransformer getCSContactIDFromServerJSON:json];
     channel.csContactPostalID = [ServerDataTransformer getCSContactIDFromServerJSON:json];
+    channel.avatarURL = [ServerDataTransformer getAvatarFromServerJSON:json];
+    channel.thumbnailURL = [ServerDataTransformer getThumbnailFromServerJSON:json];
+    channel.selfIntroduction = [ServerDataTransformer getSelfIntroductionFromServerJSON:json];
 
     channel.type = [NSNumber numberWithInt:IdentityTypeChannel];
     

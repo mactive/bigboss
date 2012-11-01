@@ -190,16 +190,16 @@
     }
     CGFloat _labelHeight;
     
-    CGSize signitureSize = [value sizeWithFont:descLabel.font constrainedToSize:summaryMaxSize lineBreakMode: UILineBreakModeTailTruncation];
-    if (signitureSize.height > 20) {
+    CGSize signatureSize = [value sizeWithFont:descLabel.font constrainedToSize:summaryMaxSize lineBreakMode: UILineBreakModeTailTruncation];
+    if (signatureSize.height > 20) {
         _labelHeight = 6.0;
     }else {
         _labelHeight = 14.0;
     }
     descLabel.text = value;
-    descLabel.frame = CGRectMake(descLabel.frame.origin.x, _labelHeight, signitureSize.width , signitureSize.height );
+    descLabel.frame = CGRectMake(descLabel.frame.origin.x, _labelHeight, signatureSize.width , signatureSize.height );
     if( index == [self.infoArray count] -1 ){
-        descLabel.frame = CGRectMake(20, _labelHeight + 30 , SUMMARY_WIDTH + 50 , signitureSize.height );
+        descLabel.frame = CGRectMake(20, _labelHeight + 25 , SUMMARY_WIDTH + 50 , signatureSize.height );
     }
     
     [self.infoDescArray replaceObjectAtIndex:index withObject:value];
@@ -246,14 +246,14 @@
     [dateFormatter setDateFormat: @"yyyy-MM-dd"];
     NSString * valueStr = [[NSString alloc] initWithString:[dateFormatter stringFromDate:value]];
     
-    CGSize signitureSize = [valueStr sizeWithFont:descLabel.font constrainedToSize:summaryMaxSize lineBreakMode: UILineBreakModeTailTruncation];
-    if (signitureSize.height > 20) {
+    CGSize signatureSize = [valueStr sizeWithFont:descLabel.font constrainedToSize:summaryMaxSize lineBreakMode: UILineBreakModeTailTruncation];
+    if (signatureSize.height > 20) {
         _labelHeight = 6.0;
     }else {
         _labelHeight = 14.0;
     }
     descLabel.text = valueStr;
-    descLabel.frame = CGRectMake(descLabel.frame.origin.x, _labelHeight, signitureSize.width , signitureSize.height );
+    descLabel.frame = CGRectMake(descLabel.frame.origin.x, _labelHeight, signatureSize.width , signatureSize.height );
     
     [self.infoDescArray replaceObjectAtIndex:index withObject:valueStr];
     
@@ -804,18 +804,18 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     CGSize summaryMaxSize = CGSizeMake(SUMMARY_WIDTH, LABEL_HEIGHT*4);
     CGFloat _labelHeight;
     
-    CGSize signitureSize = [text sizeWithFont:descLabel.font constrainedToSize:summaryMaxSize lineBreakMode: UILineBreakModeTailTruncation];
-    if (signitureSize.height > 20) {
+    CGSize signatureSize = [text sizeWithFont:descLabel.font constrainedToSize:summaryMaxSize lineBreakMode: UILineBreakModeTailTruncation];
+    if (signatureSize.height > 20) {
         _labelHeight = 6.0;
     }else {
         _labelHeight = 14.0;
     }
     descLabel.text = text;
-    descLabel.frame = CGRectMake(descLabel.frame.origin.x, _labelHeight, signitureSize.width , signitureSize.height );
+    descLabel.frame = CGRectMake(descLabel.frame.origin.x, _labelHeight, signatureSize.width , signatureSize.height );
     
     
     if( indexPath.row == [self.infoArray count] -1 ){
-        descLabel.frame = CGRectMake(20, _labelHeight + 25 , SUMMARY_WIDTH + 50 , signitureSize.height );
+        descLabel.frame = CGRectMake(20, _labelHeight + 25 , SUMMARY_WIDTH + 50 , signatureSize.height );
     }
     
     

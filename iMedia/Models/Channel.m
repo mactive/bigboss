@@ -2,7 +2,7 @@
 //  Channel.m
 //  iMedia
 //
-//  Created by Xiaosi Li on 10/29/12.
+//  Created by Xiaosi Li on 11/1/12.
 //  Copyright (c) 2012 Li Xiaosi. All rights reserved.
 //
 
@@ -16,6 +16,7 @@
 @dynamic node;
 @dynamic subID;
 @dynamic subrequestID;
+@dynamic selfIntroduction;
 @dynamic conversation;
 
 @end

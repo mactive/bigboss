@@ -12,6 +12,7 @@
 #import "ChannelViewController.h"
 #import "User.h"
 #import "Channel.h"
+#import "Me.h"
 #import "ConversationsController.h"
 #import "AddFriendController.h"
 #import "UINavigationBar+Background.h"
@@ -19,6 +20,7 @@
 #import "pinyin.h"
 #import "POAPinyin.h"
 #import "AppNetworkAPIClient.h"
+#import "UIImageView+AFNetworking.h"
 
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
@@ -341,7 +343,7 @@ NSInteger SortIndex(id char1, id char2, void* context)
     NSString* _section = [[[self.contacts_list_fix allKeys] sortedArrayUsingFunction:SortIndex context:NULL] objectAtIndex:indexPath.section];
     NSArray* _contacts = [contacts_list_fix objectForKey:_section];
         
-    id obj = [_contacts objectAtIndex:indexPath.row];
+    Identity* identity = [_contacts objectAtIndex:indexPath.row];
     
     // set max size
     CGSize nameMaxSize = CGSizeMake(MIDDLE_COLUMN_WIDTH, LABEL_HEIGHT*2);
@@ -355,7 +357,7 @@ NSInteger SortIndex(id char1, id char2, void* context)
     
     //set avatar
     imageView = (UIImageView *)[cell viewWithTag:AVATAR_TAG];
-    imageView.image = [UIImage imageNamed:@"face_3.png"];
+    [imageView setImageWithURL:[NSURL URLWithString:identity.thumbnailURL] placeholderImage:nil];
     
     //set sns icon
     NSMutableArray *snsArray = [[NSMutableArray alloc] initWithObjects:@"weibo",@"douban", nil];    
@@ -379,13 +381,20 @@ NSInteger SortIndex(id char1, id char2, void* context)
 
     // set the name text
     UILabel *nameLabel = (UILabel *)[cell viewWithTag:NAME_TAG];
-    if ([obj isKindOfClass:[User class]]) {
-        User *user = obj;
+    NSString *signature = @"";
+    if ([identity isKindOfClass:[User class]]) {
+        User *user = (User *)identity;
         _nameString = user.displayName;
+        signature = user.signature;
         
-    } else if ([obj isKindOfClass:[Channel class]]) {
-        Channel *channel = obj;
+    } else if ([identity isKindOfClass:[Channel class]]) {
+        Channel *channel = (Channel *)identity;
         _nameString = channel.node;
+        signature = channel.selfIntroduction;
+    } else if ([identity isKindOfClass:[Me class]]) {
+        Me *me = (Me *)identity;
+        _nameString = me.displayName;
+        signature = me.signature;
     }
     
     CGSize labelSize = [_nameString sizeWithFont:nameLabel.font constrainedToSize:nameMaxSize lineBreakMode: UILineBreakModeTailTruncation];
@@ -397,18 +406,17 @@ NSInteger SortIndex(id char1, id char2, void* context)
     nameLabel.frame = CGRectMake(nameLabel.frame.origin.x, _labelHeight, labelSize.width, labelSize.height);
     nameLabel.text = _nameString;
         
-    // set the user signiture
-    UILabel *signitureLabel = (UILabel *)[cell viewWithTag:SUMMARY_TAG];
-    NSString *signiture = @"和实生物, 你好世界";
+    // set the user signature
+    UILabel *signatureLabel = (UILabel *)[cell viewWithTag:SUMMARY_TAG];
     
-    CGSize signitureSize = [signiture sizeWithFont:signitureLabel.font constrainedToSize:summaryMaxSize lineBreakMode: UILineBreakModeTailTruncation];
-    if (signitureSize.height > LABEL_HEIGHT) {
+    CGSize signatureSize = [signature sizeWithFont:signatureLabel.font constrainedToSize:summaryMaxSize lineBreakMode: UILineBreakModeTailTruncation];
+    if (signatureSize.height > LABEL_HEIGHT) {
         _labelHeight = 10.0;
     }else {
         _labelHeight = 20.0;
     }
-    signitureLabel.text = signiture;
-    signitureLabel.frame = CGRectMake(signitureLabel.frame.origin.x, _labelHeight, signitureSize.width + SUMMARY_PADDING, signitureSize.height+SUMMARY_PADDING);
+    signatureLabel.text = signature;
+    signatureLabel.frame = CGRectMake(signatureLabel.frame.origin.x, _labelHeight, signatureSize.width + SUMMARY_PADDING, signatureSize.height+SUMMARY_PADDING);
 
 }
 

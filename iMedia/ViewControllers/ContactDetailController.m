@@ -327,23 +327,23 @@
 	descLabel.textAlignment = UITextAlignmentLeft;
     descLabel.textColor = RGBCOLOR(125, 125, 125);
     descLabel.backgroundColor = [UIColor clearColor];
-    NSString *signiture = [self.infoDescArray objectAtIndex:indexPath.row];
+    NSString *signature = [self.infoDescArray objectAtIndex:indexPath.row];
     
     CGSize summaryMaxSize = CGSizeMake(SUMMARY_WIDTH, LABEL_HEIGHT*4);
     CGFloat _labelHeight;
 
-    CGSize signitureSize = [signiture sizeWithFont:descLabel.font constrainedToSize:summaryMaxSize lineBreakMode: UILineBreakModeTailTruncation];
-    if (signitureSize.height > 20) {
+    CGSize signatureSize = [signature sizeWithFont:descLabel.font constrainedToSize:summaryMaxSize lineBreakMode: UILineBreakModeTailTruncation];
+    if (signatureSize.height > 20) {
         _labelHeight = 6.0;
     }else {
         _labelHeight = 14.0;
     }
-    descLabel.text = signiture;
-    descLabel.frame = CGRectMake(descLabel.frame.origin.x, _labelHeight, signitureSize.width , signitureSize.height );
+    descLabel.text = signature;
+    descLabel.frame = CGRectMake(descLabel.frame.origin.x, _labelHeight, signatureSize.width , signatureSize.height );
 
     
     if( indexPath.row == [self.infoArray count] -1 ){
-        descLabel.frame = CGRectMake(20, _labelHeight + 25 , SUMMARY_WIDTH + 50 , signitureSize.height );
+        descLabel.frame = CGRectMake(20, _labelHeight + 25 , SUMMARY_WIDTH + 50 , signatureSize.height );
     }
     
     
