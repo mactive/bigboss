@@ -370,6 +370,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	CGRect imageRect = CGRectMake(LEFT_COLUMN_OFFSET, (ROW_HEIGHT - IMAGE_SIDE) / 2.0, IMAGE_SIDE, IMAGE_SIDE);
 
     UIImageView *avatarImage = [[UIImageView alloc] initWithFrame:imageRect];
+    avatarImage.tag = IMAGE_TAG;
     CALayer *avatarLayer = [avatarImage layer];
     [avatarLayer setMasksToBounds:YES];
     [avatarLayer setCornerRadius:5.0];
