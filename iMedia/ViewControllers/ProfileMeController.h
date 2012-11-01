@@ -44,7 +44,6 @@
 @property (strong, nonatomic) UIButton *addAlbumButton;
 @property (readwrite, nonatomic) NSUInteger albumCount;
 
-- (void) setValue:(NSString *) value;
 @end
 
 

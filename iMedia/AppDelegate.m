@@ -167,11 +167,13 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [self.tabController.tabBar setSelectedImageTintColor:[UIColor whiteColor]];
     [self.tabController.tabBar setSelectionIndicatorImage:[UIImage imageNamed:@"tabbar_overlay.png"]];
     
-    NSArray* items = [self.tabController.tabBar items];
-    [[items objectAtIndex:0] initWithTitle:NSLocalizedString(@"Message", nil)   image:[UIImage imageNamed:@"tabbar_item_0.png"] tag:1000];
-    [[items objectAtIndex:1] initWithTitle:NSLocalizedString(@"Contacts", nil)  image:[UIImage imageNamed:@"tabbar_item_1.png"] tag:1001];
-    [[items objectAtIndex:2] initWithTitle:NSLocalizedString(@"Shake", nil)     image:[UIImage imageNamed:@"tabbar_item_2.png"] tag:1002];
-    [[items objectAtIndex:3] initWithTitle:NSLocalizedString(@"Setting", nil)   image:[UIImage imageNamed:@"tabbar_item_3.png"] tag:1003];
+    NSArray* items = [[NSArray alloc] initWithObjects:
+                        [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Message", nil) image:[UIImage imageNamed:@"tabbar_item_0.png"] tag:1000],
+                        [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Contacts", nil)  image:[UIImage imageNamed:@"tabbar_item_1.png"] tag:1001],
+                        [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Shake", nil)     image:[UIImage imageNamed:@"tabbar_item_2.png"] tag:1002],
+                        [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Setting", nil)   image:[UIImage imageNamed:@"tabbar_item_3.png"] tag:1003],
+                      nil];
+    [self.tabController.tabBar setItems:items];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];
@@ -203,6 +205,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         self.me.state = [NSNumber numberWithInt:IdentityStateActive];
         
         [LocationManager sharedInstance].me = self.me;
+        
+        [[AppNetworkAPIClient sharedClient] updateIdentity:self.me withBlock:nil];
         
         MOCSave(_managedObjectContext);
     }

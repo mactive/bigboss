@@ -60,10 +60,13 @@
     self.title = T(@"Request");
     self.view.backgroundColor = BGCOLOR;
     NSLog(@"%@",self.jsonData);
-    // fake data
-    NSDate * date = [jsonData valueForKey:@"add_friend_request_date"];
-    NSURL * avatarUrl = [[NSURL alloc] initWithString:[ServerDataTransformer getAvatarFromServerJSON:jsonData]]; 
 
+    NSDate * date = [jsonData valueForKey:@"add_friend_request_date"];
+    
+    NSString* title = [ServerDataTransformer getNicknameFromServerJSON:jsonData];
+    if (title == nil || [title isEqualToString:@""]) {
+        title = [ServerDataTransformer getGUIDFromServerJSON:jsonData];
+    }
 	// Do any additional setup after loading the view.
     
     self.requestView = [[UIView alloc] initWithFrame:CGRectMake(10, 20, 300,300)];
@@ -76,7 +79,7 @@
 	self.titleLabel.textAlignment = UITextAlignmentLeft;
     self.titleLabel.textColor = RGBCOLOR(107, 107, 107);
     self.titleLabel.backgroundColor = [UIColor clearColor];
-    self.titleLabel.text = [[NSString alloc] initWithFormat:@" %@  %@",[self.jsonData objectForKey:@"guid"], T(@"请求加你为好友") ];
+    self.titleLabel.text = [[NSString alloc] initWithFormat:@" %@  %@",title, T(@"请求加你为好友") ];
     
     self.timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 40, 250, 20)];
 	self.timeLabel.font = [UIFont boldSystemFontOfSize:14.0];
@@ -131,7 +134,7 @@
     [avatarLayer setBorderWidth:1.0];
     [avatarLayer setBorderColor:[[UIColor whiteColor] CGColor]];
 //    avatarImage setImage:
-    [avatarImage setImageWithURL:[NSURL URLWithString:[ServerDataTransformer getAvatarFromServerJSON:jsonData]]];
+    [avatarImage setImageWithURL:[NSURL URLWithString:[ServerDataTransformer getThumbnailFromServerJSON:jsonData]]];
     [self.contentView addSubview:avatarImage];
 
     

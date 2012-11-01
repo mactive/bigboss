@@ -22,9 +22,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 @interface ModelHelper ()
 
-+ (BOOL)populateUser:(User *)user withJSONData:(NSString *)json;
-+ (BOOL)populateMe:(Me *)user withJSONData:(NSString *)json;
-+ (BOOL)populateChannel:(Channel *)channel withServerJSONData:(NSString *)json;
++ (void)populateUser:(User *)user withJSONData:(NSString *)json;
++ (void)populateMe:(Me *)user withJSONData:(NSString *)json;
++ (void)populateChannel:(Channel *)channel withServerJSONData:(NSString *)json;
 
 @end
 
@@ -126,7 +126,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     }
 }
 
-+ (BOOL)populateMe:(Me *)user withJSONData:(id)json
++ (void )populateMe:(Me *)user withJSONData:(id)json
 {
     user.ePostalID = [ServerDataTransformer getEPostalIDFromServerJSON:json];
     user.gender = [ServerDataTransformer getGenderFromServerJSON:json];
@@ -165,12 +165,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             imageRemote.sequence = 0;
         }
     }
-
-        
-    return YES;
 }
 
-+ (BOOL)populateUser:(User *)user withJSONData:(id)json
++ (void)populateUser:(User *)user withJSONData:(id)json
 {
     user.ePostalID = [ServerDataTransformer getEPostalIDFromServerJSON:json];
     user.gender = [ServerDataTransformer getGenderFromServerJSON:json];
@@ -208,12 +205,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             imageRemote.sequence = 0;
         }
     }
-
-    return YES;
 }
 
 
-+ (BOOL)populateChannel:(Channel *)channel withServerJSONData:(NSString *)json
++ (void)populateChannel:(Channel *)channel withServerJSONData:(NSString *)json
 {
     channel.guid = [ServerDataTransformer getGUIDFromServerJSON:json];
     channel.node = [ServerDataTransformer getNodeFromServerJSON:json];
@@ -225,8 +220,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     channel.selfIntroduction = [ServerDataTransformer getSelfIntroductionFromServerJSON:json];
 
     channel.type = [NSNumber numberWithInt:IdentityTypeChannel];
-    
-    return YES;
 }
 
 + (User *)newUserInContext:(NSManagedObjectContext *)context
