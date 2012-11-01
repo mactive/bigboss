@@ -209,6 +209,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
                               me.displayName, @"nickname",
                               me.gender, @"gender",
                               me.selfIntroduction, @"self_introduction",
+                              me.career, @"career",
                               [ServerDataTransformer dateStrfromNSDate:me.birthdate], @"birthdate",
                               [ServerDataTransformer datetimeStrfromNSDate:me.lastGPSUpdated], @"last_gps_updated",
                               me.lastGPSLocation, @"last_gps_loc",
