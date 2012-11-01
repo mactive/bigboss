@@ -139,15 +139,18 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:self.conversationController];
     self.conversationController.managedObjectContext = _managedObjectContext;
     self.conversationController.title = T(@"Messages");
+    self.conversationController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Message", nil) image:[UIImage imageNamed:@"tabbar_item_0.png"] tag:1000];
     
     self.contactListController = [[ContactListViewController alloc] initWithStyle:UITableViewStylePlain andManagementContext:_managedObjectContext];
     UINavigationController *navController2 = [[UINavigationController alloc] initWithRootViewController:self.contactListController];
 //    self.contactListController.managedObjectContext = _managedObjectContext;
     self.contactListController.title = T(@"Contacts");
+    self.contactListController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Contacts", nil)  image:[UIImage imageNamed:@"tabbar_item_1.png"] tag:1001];
     
     self.functionListController = [[FunctionListViewController alloc] init];
     UINavigationController *navController3 = [[UINavigationController alloc] initWithRootViewController:self.functionListController];
     self.functionListController.title = T(@"Functions");
+    self.functionListController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Shake", nil)     image:[UIImage imageNamed:@"tabbar_item_2.png"] tag:1002];
     
     NSLog(@"---- %@",NSStringFromCGRect(navController3.view.frame));
 
@@ -155,6 +158,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     self.settingController.managedObjectContext = _managedObjectContext;
     UINavigationController *navController4 = [[UINavigationController alloc] initWithRootViewController:self.settingController];
     self.settingController.title = T(@"Setting");
+    self.settingController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Setting", nil)   image:[UIImage imageNamed:@"tabbar_item_3.png"] tag:1003];
     
     NSArray* controllers = [NSArray arrayWithObjects:navController, navController2, navController3, navController4, nil];
     self.tabController.viewControllers = controllers;
@@ -166,14 +170,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [self.tabController.tabBar setTintColor:[UIColor grayColor]];
     [self.tabController.tabBar setSelectedImageTintColor:[UIColor whiteColor]];
     [self.tabController.tabBar setSelectionIndicatorImage:[UIImage imageNamed:@"tabbar_overlay.png"]];
-    
-    NSArray* items = [[NSArray alloc] initWithObjects:
-                        [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Message", nil) image:[UIImage imageNamed:@"tabbar_item_0.png"] tag:1000],
-                        [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Contacts", nil)  image:[UIImage imageNamed:@"tabbar_item_1.png"] tag:1001],
-                        [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Shake", nil)     image:[UIImage imageNamed:@"tabbar_item_2.png"] tag:1002],
-                        [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Setting", nil)   image:[UIImage imageNamed:@"tabbar_item_3.png"] tag:1003],
-                      nil];
-    [self.tabController.tabBar setItems:items];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];

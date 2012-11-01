@@ -756,7 +756,7 @@
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "No"
+         shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/NetMessageConverter.m"
@@ -908,8 +908,8 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "290"
          endingLineNumber = "290"
-         landmarkName = "@implementation ProfileMeController"
-         landmarkType = "3">
+         landmarkName = "-initAlbumView"
+         landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -921,7 +921,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "116"
          endingLineNumber = "116"
-         landmarkName = "-setEditModel"
+         landmarkName = "-saveEditModel:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -934,7 +934,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "59"
          endingLineNumber = "59"
-         landmarkName = "contentView"
+         landmarkName = "addAlbumButton"
          landmarkType = "19">
       </FileBreakpoint>
       <FileBreakpoint
@@ -984,8 +984,8 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "72"
          endingLineNumber = "72"
-         landmarkName = "@implementation ProfileMeController"
-         landmarkType = "3">
+         landmarkName = "-initWithNibName:bundle:"
+         landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -1179,8 +1179,8 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "174"
          endingLineNumber = "174"
-         landmarkName = "-cancelRequest"
-         landmarkType = "5">
+         landmarkName = "@implementation RequestViewController"
+         landmarkType = "3">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
@@ -1192,8 +1192,8 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "166"
          endingLineNumber = "166"
-         landmarkName = "-confirmRequest"
-         landmarkType = "5">
+         landmarkName = "@implementation RequestViewController"
+         landmarkType = "3">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "Yes"
@@ -1218,7 +1218,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "651"
          endingLineNumber = "651"
-         landmarkName = "-initSNSView"
+         landmarkName = "-tableViewCellWithReuseIdentifier:forIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -1226,11 +1226,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/AppDelegate.m"
-         timestampString = "373451260.061755"
+         timestampString = "373452593.279732"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "204"
-         endingLineNumber = "204"
+         startingLineNumber = "200"
+         endingLineNumber = "200"
          landmarkName = "-createMeWithUsername:password:jid:jidPasswd:andGUID:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1361,7 +1361,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "451"
          endingLineNumber = "451"
-         landmarkName = "-addAlbum:"
+         landmarkName = "-imagePickerController:didFinishPickingMediaWithInfo:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -1374,7 +1374,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "454"
          endingLineNumber = "454"
-         landmarkName = "-addAlbum:"
+         landmarkName = "-imagePickerController:didFinishPickingMediaWithInfo:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -1505,6 +1505,84 @@
          startingLineNumber = "214"
          endingLineNumber = "214"
          landmarkName = "-uploadMe:withBlock:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "iMedia/ViewControllers/ProfileMeController.m"
+         timestampString = "373382624.183177"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "699"
+         endingLineNumber = "699"
+         landmarkName = "-initInfoView"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "iMedia/Network/AppNetworkAPIClient.m"
+         timestampString = "373382624.183177"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "224"
+         endingLineNumber = "224"
+         landmarkName = "-uploadMe:withBlock:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "iMedia/Location/LocationManager.m"
+         timestampString = "373381286.22117"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "71"
+         endingLineNumber = "71"
+         landmarkName = "-locationManager:didUpdateToLocation:fromLocation:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "iMedia/Location/LocationManager.m"
+         timestampString = "373381289.72977"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "40"
+         endingLineNumber = "40"
+         landmarkName = "-setMe:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "iMedia/ViewControllers/ProfileMeController.m"
+         timestampString = "373383112.720629"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "138"
+         endingLineNumber = "138"
+         landmarkName = "-tableView:didSelectRowAtIndexPath:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "iMedia/AppDelegate.m"
+         timestampString = "373452593.279732"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "173"
+         endingLineNumber = "173"
+         landmarkName = "-startMainSession"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>
