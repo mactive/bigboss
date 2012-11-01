@@ -117,6 +117,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             
         } else {
             DDLogError(@"NSError received during login: %@", error);
+            [HUD hide:YES];
         }
         
     }];
