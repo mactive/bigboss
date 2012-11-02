@@ -9,10 +9,22 @@
 #import "SettingViewController.h"
 #import "ProfileMeController.h"
 #import "RequestViewController.h"
+#import <QuartzCore/QuartzCore.h>
+#import "Me.h" 
+#import "AppDelegate.h"
 
 @interface SettingViewController () 
 
+@property(nonatomic, strong) UITableView *settingTableView;
+@property(nonatomic, strong) UIButton *loginButton;
+
+@property(nonatomic, strong) NSArray *settingTitleArray;
+@property(nonatomic, strong) UIButton *logoutButton;
+@property (strong, nonatomic) Me *me;
+
 @end
+
+
 
 @implementation SettingViewController
 
@@ -20,14 +32,24 @@
 @synthesize loginButton;
 @synthesize settingTitleArray;
 @synthesize managedObjectContext;
+@synthesize logoutButton;
+@synthesize me;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        self.me = [self appDelegate].me ;
+        
     }
     return self;
+}
+
+- (AppDelegate *)appDelegate
+{
+	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
 - (void)loadView{
@@ -42,7 +64,8 @@
     [super viewDidLoad];
     
     self.settingTitleArray = [[NSArray alloc] initWithObjects:
-                              [[NSArray alloc] initWithObjects:@"个人设置", @"App精品推荐", nil],
+                              [[NSArray alloc] initWithObjects:@"个人设置",nil],
+                              [[NSArray alloc] initWithObjects:@"App精品推荐", nil],
                               [[NSArray alloc] initWithObjects:@"去给翼石打个分吧",@"帮助与反馈",@"关于翼石", nil],
                               nil ];
     //,@"我的相册",@"新浪微博",@"微信朋友圈"
@@ -61,7 +84,11 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 44.0;
+    if (indexPath.section == 0) {
+        return 60;
+    }else{
+        return 44.0;
+    }
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -111,6 +138,19 @@
     titleLabel.textColor = RGBCOLOR(77, 77, 77);
     titleLabel.backgroundColor = [UIColor clearColor];
     [cell addSubview:titleLabel];
+    
+    // Create an image view for the quarter image.
+	CGRect imageRect = CGRectMake(200, 0,  50, 50);
+	CGRect snsRect;
+    
+    UIImageView *meAvatar = [[UIImageView alloc] initWithFrame:imageRect];
+    CALayer *avatarLayer = [meAvatar layer];
+    [avatarLayer setMasksToBounds:YES];
+    [avatarLayer setCornerRadius:5.0];
+    [avatarLayer setBorderWidth:1.0];
+    [avatarLayer setBorderColor:[[UIColor whiteColor] CGColor]];
+//    meAvatar setImage:
+    [cell.contentView addSubview:meAvatar];
     
     return cell;
 }
