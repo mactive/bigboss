@@ -84,7 +84,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == 0) {
+    if (indexPath.section == 0 && indexPath.row == 0) {
         return 60;
     }else{
         return 44.0;
@@ -131,26 +131,37 @@
 	UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     
     cell.backgroundView.backgroundColor = RGBCOLOR(86, 184, 225);
+    [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
     
-    UILabel* titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 12, 140, 20)];
+    NSUInteger labelY = 12;
+    
+    if (indexPath.section == 0 && indexPath.row == 0) {
+        // Create an image view for the quarter image.
+        CGRect imageRect = CGRectMake(220, 5,  50, 50);
+        UIImageView *meAvatar = [[UIImageView alloc] initWithFrame:imageRect];
+        CALayer *avatarLayer = [meAvatar layer];
+        [avatarLayer setMasksToBounds:YES];
+        [avatarLayer setCornerRadius:5.0];
+        [avatarLayer setBorderColor:[[UIColor whiteColor] CGColor]];
+        [meAvatar setImage:self.me.thumbnailImage];
+        [cell.contentView addSubview:meAvatar];
+        labelY = 20;
+    }
+
+    
+    
+    
+    
+    
+    UILabel* titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, labelY, 140, 20)];
     titleLabel.text = [[self.settingTitleArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
     titleLabel.font = [UIFont boldSystemFontOfSize:16.0];
     titleLabel.textColor = RGBCOLOR(77, 77, 77);
     titleLabel.backgroundColor = [UIColor clearColor];
     [cell addSubview:titleLabel];
     
-    // Create an image view for the quarter image.
-	CGRect imageRect = CGRectMake(200, 0,  50, 50);
-	CGRect snsRect;
+
     
-    UIImageView *meAvatar = [[UIImageView alloc] initWithFrame:imageRect];
-    CALayer *avatarLayer = [meAvatar layer];
-    [avatarLayer setMasksToBounds:YES];
-    [avatarLayer setCornerRadius:5.0];
-    [avatarLayer setBorderWidth:1.0];
-    [avatarLayer setBorderColor:[[UIColor whiteColor] CGColor]];
-//    meAvatar setImage:
-    [cell.contentView addSubview:meAvatar];
     
     return cell;
 }
