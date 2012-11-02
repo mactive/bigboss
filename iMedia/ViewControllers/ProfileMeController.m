@@ -499,7 +499,7 @@
                                   delegate:self
                                   cancelButtonTitle:T(@"取消")
                                   destructiveButtonTitle:nil
-                                  otherButtonTitles:T(@"用户相册"), T(@"摄像头"),nil];
+                                  otherButtonTitles:T(@"本地相册"), T(@"照相"),nil];
     self.photoActionsheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
     [self.photoActionsheet showFromTabBar:[[self tabBarController] tabBar]];
 }

@@ -424,12 +424,12 @@
     // Now set content. Either user or jsonData must have value
     self.title = [self getNickname];
     if (self.user == nil) {
-        [self.sendMsgButton setTitle:T(@"Add friend") forState:UIControlStateNormal];
+        [self.sendMsgButton setTitle:T(@"Add") forState:UIControlStateNormal];
         [self.sendMsgButton setBackgroundImage:[UIImage imageNamed:@"profile_tabbar_btn2.png"] forState:UIControlStateNormal];
         [self.sendMsgButton addTarget:self action:@selector(addFriendButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
         
     } else {
-        [self.sendMsgButton setTitle:T(@"Send Msg") forState:UIControlStateNormal];
+        [self.sendMsgButton setTitle:T(@"Send") forState:UIControlStateNormal];
         [self.sendMsgButton setBackgroundImage:[UIImage imageNamed:@"profile_tabbar_btn1.png"] forState:UIControlStateNormal];
         [self.sendMsgButton addTarget:self action:@selector(sendMsgButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
         

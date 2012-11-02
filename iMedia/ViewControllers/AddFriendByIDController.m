@@ -153,6 +153,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     }else {
         [self getDict];
     }
+    [field resignFirstResponder];
 }
 
 
