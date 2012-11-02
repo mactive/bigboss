@@ -210,7 +210,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 - (void)configureCell:(UITableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath {
     
     FriendRequest *request = [self.friendRequestArray objectAtIndex:indexPath.row];
-    NSDictionary* jsonData = [request.userJSONData JSONValue];
     
     // set max size
     CGSize nameMaxSize = CGSizeMake(MIDDLE_COLUMN_WIDTH, LABEL_HEIGHT*1);

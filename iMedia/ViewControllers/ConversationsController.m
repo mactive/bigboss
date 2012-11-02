@@ -465,9 +465,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	UIImageView *imageView = (UIImageView *)[cell viewWithTag:IMAGE_TAG];
     if (conv.channel == nil) {
         User *user = [conv.users anyObject];
-        [imageView setImageWithURL:[NSURL URLWithString:user.thumbnailURL] placeholderImage:nil];
+        [imageView setImage:user.thumbnailImage];
     } else {
-        [imageView setImageWithURL:[NSURL URLWithString:conv.channel.thumbnailURL] placeholderImage:nil];
+        [imageView setImage:conv.channel.thumbnailImage];
     }
 }
 

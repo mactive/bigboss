@@ -8,6 +8,7 @@
 
 #import "AppNetworkAPIClient.h"
 #import "AFJSONRequestOperation.h"
+#import "AFImageRequestOperation.h"
 #import "AFNetworking.h"
 #import "AFHTTPRequestOperation.h"
 #import "NSData+Godzippa.h"
@@ -177,7 +178,36 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
                 block(nil, nil);
             }
         } else if ([type isEqualToString:@"user"] || [type isEqualToString:@"channel"]) {
+            // compare the incoming new user data with old user data. if thumbnailURL is the same
+            // then don't load the image
+            NSString *thumbnailURL = [ServerDataTransformer getThumbnailFromServerJSON:responseObject];
+            if (thumbnailURL == nil || [thumbnailURL isEqualToString:@""]) {
+                identity.thumbnailImage = nil;
+#warning TODO: set to the global placeholder
+            } else if (thumbnailURL != identity.thumbnailURL) {
+                NSURL *url = [NSURL URLWithString:thumbnailURL];
+
+                // Try twice to load the image
+                AFImageRequestOperation *imageOper = [AFImageRequestOperation imageRequestOperationWithRequest:[NSURLRequest requestWithURL:url] imageProcessingBlock:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                    identity.thumbnailImage = image;
+                } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+                    DDLogError(@"Failed to get thumbnail at first time url: %@, response :%@, tryting again", thumbnailURL, responseObject);
+                    AFImageRequestOperation  *imageOperAgain = [AFImageRequestOperation imageRequestOperationWithRequest:[NSURLRequest requestWithURL:url] imageProcessingBlock:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                        identity.thumbnailImage = image;
+                        
+                    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+                        DDLogError(@"ERROR: Failed again to get thumbnail at first time url: %@, response :%@", thumbnailURL, responseObject);
+                    }];
+                    
+                    [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:imageOperAgain];
+                }];
+                
+                [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:imageOper];
+            }
+
+            
             [ModelHelper populateIdentity:identity withJSONData:responseObject];
+                        
             if (identity.state.intValue == IdentityStatePendingServerDataUpdate) {
                 identity.state = [NSNumber numberWithInt:IdentityStateActive];
                 [[self appDelegate].contactListController contentChanged];

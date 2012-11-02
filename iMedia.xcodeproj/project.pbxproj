@@ -267,8 +267,9 @@
 		56B4CD461627E55400E046CC /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CD451627E55400E046CC /* Message.m */; };
 		56B4CD531628101500E046CC /* AddFriendController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CD521628101500E046CC /* AddFriendController.m */; };
 		56B4CD541628101500E046CC /* AddFriendController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CD521628101500E046CC /* AddFriendController.m */; };
+		56B834FA1643B49D00941C1C /* Identity.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B834F91643B49D00941C1C /* Identity.m */; };
+		56B834FD1643B50B00941C1C /* DataTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B834FC1643B50A00941C1C /* DataTransformer.m */; };
 		56D0C61B163D1F8A007FD7B2 /* Avatar.m in Sources */ = {isa = PBXBuildFile; fileRef = 56D0C61A163D1F8A007FD7B2 /* Avatar.m */; };
-		56D0C622163D406E007FD7B2 /* Identity.m in Sources */ = {isa = PBXBuildFile; fileRef = 56D0C621163D406E007FD7B2 /* Identity.m */; };
 		56D0C625163D43E1007FD7B2 /* Me.m in Sources */ = {isa = PBXBuildFile; fileRef = 56D0C624163D43E1007FD7B2 /* Me.m */; };
 		56DF5E6516257F5600E75105 /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 56DF5E5016257F5600E75105 /* SBJsonParser.m */; };
 		56DF5E6616257F5600E75105 /* SBJsonStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 56DF5E5216257F5600E75105 /* SBJsonStreamParser.m */; };
@@ -731,10 +732,12 @@
 		56B4CD451627E55400E046CC /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Message.m; path = Models/Message.m; sourceTree = "<group>"; };
 		56B4CD511628101400E046CC /* AddFriendController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AddFriendController.h; path = ViewControllers/AddFriendController.h; sourceTree = "<group>"; };
 		56B4CD521628101500E046CC /* AddFriendController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AddFriendController.m; path = ViewControllers/AddFriendController.m; sourceTree = "<group>"; };
+		56B834F81643B49D00941C1C /* Identity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Identity.h; path = Models/Identity.h; sourceTree = "<group>"; };
+		56B834F91643B49D00941C1C /* Identity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Identity.m; path = Models/Identity.m; sourceTree = "<group>"; };
+		56B834FB1643B50A00941C1C /* DataTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DataTransformer.h; path = Models/DataTransformer.h; sourceTree = "<group>"; };
+		56B834FC1643B50A00941C1C /* DataTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DataTransformer.m; path = Models/DataTransformer.m; sourceTree = "<group>"; };
 		56D0C619163D1F8A007FD7B2 /* Avatar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Avatar.h; path = Models/Avatar.h; sourceTree = "<group>"; };
 		56D0C61A163D1F8A007FD7B2 /* Avatar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Avatar.m; path = Models/Avatar.m; sourceTree = "<group>"; };
-		56D0C620163D406E007FD7B2 /* Identity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Identity.h; path = Models/Identity.h; sourceTree = "<group>"; };
-		56D0C621163D406E007FD7B2 /* Identity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Identity.m; path = Models/Identity.m; sourceTree = "<group>"; };
 		56D0C623163D43E1007FD7B2 /* Me.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Me.h; path = Models/Me.h; sourceTree = "<group>"; };
 		56D0C624163D43E1007FD7B2 /* Me.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Me.m; path = Models/Me.m; sourceTree = "<group>"; };
 		56DF5E4E16257F5600E75105 /* SBJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBJson.h; path = SBJson/SBJson.h; sourceTree = "<group>"; };
@@ -1650,6 +1653,8 @@
 			isa = PBXGroup;
 			children = (
 				566E80B51609A24C00A333EA /* iMedia.xcdatamodeld */,
+				56B834F81643B49D00941C1C /* Identity.h */,
+				56B834F91643B49D00941C1C /* Identity.m */,
 				56A75E8D164394FA001FEB83 /* FriendRequest.h */,
 				56A75E8E164394FA001FEB83 /* FriendRequest.m */,
 				566743D8164248CD0043A29C /* Channel.h */,
@@ -1658,8 +1663,6 @@
 				5661562B163FCA6900199DB4 /* User.m */,
 				56D0C623163D43E1007FD7B2 /* Me.h */,
 				56D0C624163D43E1007FD7B2 /* Me.m */,
-				56D0C620163D406E007FD7B2 /* Identity.h */,
-				56D0C621163D406E007FD7B2 /* Identity.m */,
 				56D0C619163D1F8A007FD7B2 /* Avatar.h */,
 				56D0C61A163D1F8A007FD7B2 /* Avatar.m */,
 				5681B64F163D1BFC0056AFAD /* ImageRemote.h */,
@@ -1668,6 +1671,8 @@
 				56B4CD451627E55400E046CC /* Message.m */,
 				56B4CD1F1627AAFB00E046CC /* Conversation.h */,
 				56B4CD201627AAFB00E046CC /* Conversation.m */,
+				56B834FB1643B50A00941C1C /* DataTransformer.h */,
+				56B834FC1643B50A00941C1C /* DataTransformer.m */,
 				56B4CD171626C9E100E046CC /* ModelHelper.h */,
 				56B4CD181626C9E100E046CC /* ModelHelper.m */,
 			);
@@ -2178,7 +2183,6 @@
 				5681B651163D1BFC0056AFAD /* ImageRemote.m in Sources */,
 				26F759E7163D14F1005E9FB4 /* UIImage+Resize.m in Sources */,
 				56D0C61B163D1F8A007FD7B2 /* Avatar.m in Sources */,
-				56D0C622163D406E007FD7B2 /* Identity.m in Sources */,
 				56D0C625163D43E1007FD7B2 /* Me.m in Sources */,
 				264AA538163E534A00607861 /* RequestViewController.m in Sources */,
 				5661561E163E90ED00199DB4 /* FunctionListViewController.m in Sources */,
@@ -2193,6 +2197,8 @@
 				26F3BF23164294AC00E2899C /* LoginViewController.m in Sources */,
 				2640031F1642B45E00A1B779 /* WelcomeViewController.m in Sources */,
 				56A75E8F164394FA001FEB83 /* FriendRequest.m in Sources */,
+				56B834FA1643B49D00941C1C /* Identity.m in Sources */,
+				56B834FD1643B50B00941C1C /* DataTransformer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
