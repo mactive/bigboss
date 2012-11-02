@@ -22,6 +22,7 @@
 #import "AppNetworkAPIClient.h"
 #import "EditViewController.h"
 #import "ServerDataTransformer.h"
+#import "MBProgressHUD.h"
 
 #define SUMMARY_WIDTH 200
 #define LABEL_HEIGHT 20
@@ -38,8 +39,10 @@
 #define SELF_INTRO_ITEM_INDEX 7
 #define JPEG_QUALITY 0.6
 
-@interface ProfileMeController ()
-
+@interface ProfileMeController ()<MBProgressHUDDelegate>
+{
+    MBProgressHUD *HUD;
+}
 @property(strong, nonatomic) NSMutableArray * albumButtonArray;
 @property(strong, nonatomic) UIActionSheet *photoActionsheet;
 @property(strong, nonatomic) UIActionSheet *editActionsheet;
@@ -270,8 +273,34 @@
 
 - (void)saveEditModel:(id)sender
 {
+    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    HUD.delegate = self;
+    HUD.labelText = T(@"更新中");
     // save and upload
-    [[AppNetworkAPIClient sharedClient] uploadMe:self.me withBlock:nil];
+    [[AppNetworkAPIClient sharedClient] uploadMe:self.me withBlock:^(id responseObject, NSError *error) {
+        if (error == nil) {
+            // HUD hide
+            [HUD hide:YES];
+            
+            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            HUD.delegate = self;
+            HUD.mode = MBProgressHUDModeText;
+            HUD.labelText = T(@"更新成功");
+            [HUD hide:YES afterDelay:1];
+            
+        }else {
+            NSLog (@"NSError received during login: %@", error);
+            
+            // HUD hide
+            [HUD hide:YES];
+            // HUD show error
+            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            HUD.mode = MBProgressHUDModeText;
+            HUD.delegate = self;
+            HUD.labelText = T(@"更新失败");
+            [HUD hide:YES afterDelay:1];
+        }
+    }];
 
     self.navigationItem.rightBarButtonItem = self.editProfileButton;
     
@@ -578,6 +607,12 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
         [self.me addAvatarsObject:avatar];
         
     }
+    
+    // HUD show
+    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    HUD.delegate = self;
+    HUD.labelText = T(@"上传中");
+    
     //网路传输
     [[AppNetworkAPIClient sharedClient] storeAvatar:avatar forMe:self.me andOrder:avatar.sequence.intValue withBlock:^(id responseObject, NSError *error) {
         if (error == nil) {
@@ -595,13 +630,30 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
                 self.me.avatarURL = imageRemote.imageURL;
                 self.me.thumbnailURL = imageRemote.imageThumbnailURL;
             }
+            // HUD hide
+            [HUD hide:YES];
+            // HUD show success
+            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            HUD.mode = MBProgressHUDModeText;
+            HUD.delegate = self;
+            HUD.labelText = T(@"上传成功");
+            [HUD hide:YES afterDelay:1];
         } else {
             NSLog (@"NSError received during login: %@", error);
+            
+            // HUD hide
+            [HUD hide:YES];
+            // HUD show error
+            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            HUD.mode = MBProgressHUDModeText;
+            HUD.delegate = self;
+            HUD.labelText = T(@"上传失败");
+            [HUD hide:YES afterDelay:1];
         }
         
     }];
 
-    
+    MOCSave(self.managedObjectContext);
     
     [self refreshAlbumView];
     [picker dismissModalViewControllerAnimated:YES];
