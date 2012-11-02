@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FriendRequest.h"
 
 @interface RequestViewController : UIViewController
 
 
-@property (nonatomic, strong) id  jsonData;
+@property (nonatomic, strong) FriendRequest *request;
 
 @end

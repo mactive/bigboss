@@ -38,7 +38,7 @@
 @synthesize contentView;
 @synthesize confirmButton;
 @synthesize cancelButton;
-@synthesize jsonData;
+@synthesize request;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -59,13 +59,13 @@
     [super viewDidLoad];
     self.title = T(@"Request");
     self.view.backgroundColor = BGCOLOR;
-    NSLog(@"%@",self.jsonData);
+    NSLog(@"%@",self.request);
 
-    NSDate * date = [jsonData valueForKey:@"add_friend_request_date"];
+    NSDate * date = self.request.requestDate;
     
-    NSString* title = [ServerDataTransformer getNicknameFromServerJSON:jsonData];
+    NSString* title = [ServerDataTransformer getNicknameFromServerJSON:self.request.userJSONData];
     if (title == nil || [title isEqualToString:@""]) {
-        title = [ServerDataTransformer getGUIDFromServerJSON:jsonData];
+        title = [ServerDataTransformer getGUIDFromServerJSON:self.request.userJSONData];
     }
 	// Do any additional setup after loading the view.
     
@@ -134,7 +134,7 @@
     [avatarLayer setBorderWidth:1.0];
     [avatarLayer setBorderColor:[[UIColor whiteColor] CGColor]];
 //    avatarImage setImage:
-    [avatarImage setImageWithURL:[NSURL URLWithString:[ServerDataTransformer getThumbnailFromServerJSON:jsonData]]];
+    [avatarImage setImageWithURL:[NSURL URLWithString:[ServerDataTransformer getThumbnailFromServerJSON:self.request.userJSONData]]];
     [self.contentView addSubview:avatarImage];
 
     
@@ -144,7 +144,7 @@
 	label.textAlignment = UITextAlignmentLeft;
     label.textColor = RGBCOLOR(127, 127, 127);
     label.backgroundColor = [UIColor clearColor];
-    label.text = [ServerDataTransformer getNicknameFromServerJSON:jsonData];
+    label.text = [ServerDataTransformer getNicknameFromServerJSON:self.request.userJSONData];
     [self.contentView addSubview:label];
 
     label = [[UILabel alloc] initWithFrame:CGRectMake(100, 30, 170, 60)];
@@ -153,7 +153,7 @@
     label.textColor = RGBCOLOR(158, 158, 158);
     label.numberOfLines = 0;
     label.backgroundColor = [UIColor clearColor];
-    label.text = [ServerDataTransformer getSignatureFromServerJSON:jsonData];
+    label.text = [ServerDataTransformer getSignatureFromServerJSON:self.request.userJSONData];
     [self.contentView addSubview:label];   
 
     [self.requestView addSubview:self.contentView];
@@ -165,22 +165,21 @@
 
 - (void)confirmRequest
 {
-    NSString *jidStr = [ServerDataTransformer getEPostalIDFromServerJSON:self.jsonData];
-
-    [[XMPPNetworkCenter sharedClient] acceptPresenceSubscriptionRequestFrom:jidStr andAddToRoster:YES];
-    
-    [[self appDelegate].functionListController.friendRequestDict removeObjectForKey:jidStr];
+    [[XMPPNetworkCenter sharedClient] acceptPresenceSubscriptionRequestFrom:self.request.requesterEPostalID andAddToRoster:YES];
 }
 
 - (void)cancelRequest
 {
-    NSString *jidStr = [ServerDataTransformer getEPostalIDFromServerJSON:self.jsonData];
-    [[XMPPNetworkCenter sharedClient] rejectPresenceSubscriptionRequestFrom:jidStr];
-    
-    [[self appDelegate].functionListController.friendRequestDict removeObjectForKey:jidStr];
+    [[XMPPNetworkCenter sharedClient] rejectPresenceSubscriptionRequestFrom:self.request.requesterEPostalID];
 }
 
-
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    [self appDelegate].functionListController.newFriendRequestCount = 0;
+    [self appDelegate].functionListController.tabBarItem.badgeValue = @"" ;
+}
 
 - (void)viewDidUnload
 {

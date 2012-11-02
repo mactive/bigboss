@@ -12,6 +12,8 @@
 #import "Channel.h"
 #import "ImageRemote.h"
 #import "ServerDataTransformer.h"
+#import "FriendRequest.h"
+#import "NSObject+SBJson.h"
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -185,32 +187,34 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     user.thumbnailURL = [ServerDataTransformer getThumbnailFromServerJSON:json];
     user.lastGPSUpdated = [ServerDataTransformer getLastGPSUpdatedFromServerJSON:json];
 
-    NSMutableArray *imageURLArray = [[NSMutableArray alloc] init];
+    NSMutableDictionary *imageURLDict = [[NSMutableDictionary alloc] initWithCapacity:8];
     for (int i = 1; i <=8; i++) {
         NSString *key = [NSString stringWithFormat:@"avatar%d", i];
         NSString *url = [ServerDataTransformer getStringObjFromServerJSON:json byName:key];
         if (url != nil && ![url isEqualToString:@""]) {
-            [imageURLArray addObject:url];
+            [imageURLDict setValue:url forKey:[NSString stringWithFormat:@"%d", i]];
         }
     }
-    NSMutableArray *imageThumbnailURLArray = [[NSMutableArray alloc] init];
+    NSMutableDictionary *imageThumbnailURLDict = [[NSMutableDictionary alloc] initWithCapacity:8];
     for (int i = 1; i <=8; i++) {
         NSString *key = [NSString stringWithFormat:@"thumbnail%d", i];
         NSString *url = [ServerDataTransformer getStringObjFromServerJSON:json byName:key];
         if (url != nil && ![url isEqualToString:@""]) {
-            [imageThumbnailURLArray addObject:url];
+            [imageThumbnailURLDict setValue:url forKey:[NSString stringWithFormat:@"%d", i]];
         }
     }
     // Update avatar with incoming data
     NSArray *imageArray = [user getOrderedImages];
-    for (int i = 0; i < [imageArray count]; i++) {
-        ImageRemote *imageRemote = [imageArray objectAtIndex:i];
-        if (i < [imageURLArray count]) {
-            imageRemote.imageURL = [imageURLArray objectAtIndex:i];
-            imageRemote.imageThumbnailURL = [imageThumbnailURLArray objectAtIndex:i];
-            imageRemote.sequence = [NSNumber numberWithInt:(i+1)];
+    for (int i = 1; i <= 8 ; i++) {
+        ImageRemote *imageRemote = [imageArray objectAtIndex:(i-1)];
+        NSString *key = [NSString stringWithFormat:@"%d", i];
+        if ([imageURLDict objectForKey:key] != nil && [imageThumbnailURLDict objectForKey:key] != nil) {
+            imageRemote.imageURL = [imageURLDict objectForKey:key];
+            imageRemote.imageThumbnailURL = [imageThumbnailURLDict objectForKey:key];
+            imageRemote.sequence = [NSNumber numberWithInt:i];
         } else {
-            imageRemote.imageURL = nil;
+            imageRemote.imageURL = @"";
+            imageRemote.imageThumbnailURL = @"";
             imageRemote.sequence = 0;
         }
     }
@@ -242,6 +246,17 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     }
     
     return newUser;
+}
+
++ (FriendRequest *)newFriendRequestWithEPostalID:(NSString *)jid json:(id)jsonData andInContext:(NSManagedObjectContext *)context
+{
+    FriendRequest *newFriendRequest = [NSEntityDescription insertNewObjectForEntityForName:@"FriendRequest" inManagedObjectContext:context];
+    newFriendRequest.requesterEPostalID = jid;
+    newFriendRequest.requestDate = [NSDate date];
+    newFriendRequest.userJSONData = jsonData;
+    newFriendRequest.state = [NSNumber numberWithInt:FriendRequestUnprocessed];
+    
+    return newFriendRequest;
 }
 
 @end
