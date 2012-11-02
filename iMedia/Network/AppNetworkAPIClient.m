@@ -185,13 +185,14 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
                 identity.thumbnailImage = nil;
 #warning TODO: set to the global placeholder
             } else if (thumbnailURL != identity.thumbnailURL) {
-                
+                NSURL *url = [NSURL URLWithString:thumbnailURL];
+
                 // Try twice to load the image
-                AFImageRequestOperation *imageOper = [AFImageRequestOperation imageRequestOperationWithRequest:[NSURL URLWithString:thumbnailURL] imageProcessingBlock:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                AFImageRequestOperation *imageOper = [AFImageRequestOperation imageRequestOperationWithRequest:[NSURLRequest requestWithURL:url] imageProcessingBlock:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                     identity.thumbnailImage = image;
                 } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
                     DDLogError(@"Failed to get thumbnail at first time url: %@, response :%@, tryting again", thumbnailURL, responseObject);
-                    AFImageRequestOperation  *imageOperAgain = [AFImageRequestOperation imageRequestOperationWithRequest:[NSURL URLWithString:thumbnailURL] imageProcessingBlock:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                    AFImageRequestOperation  *imageOperAgain = [AFImageRequestOperation imageRequestOperationWithRequest:[NSURLRequest requestWithURL:url] imageProcessingBlock:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                         identity.thumbnailImage = image;
                         
                     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {

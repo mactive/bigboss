@@ -921,7 +921,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "59"
          endingLineNumber = "59"
-         landmarkName = "me"
+         landmarkName = "deleteUserButton"
          landmarkType = "19">
       </FileBreakpoint>
       <FileBreakpoint
@@ -971,7 +971,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "72"
          endingLineNumber = "72"
-         landmarkName = "addAlbumButton"
+         landmarkName = "infoDescArray"
          landmarkType = "19">
       </FileBreakpoint>
       <FileBreakpoint
@@ -992,11 +992,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Models/ModelHelper.m"
-         timestampString = "373533140.408537"
+         timestampString = "373538448.366949"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "235"
-         endingLineNumber = "235"
+         startingLineNumber = "245"
+         endingLineNumber = "245"
          landmarkName = "+populateChannel:withServerJSONData:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1192,7 +1192,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "652"
          endingLineNumber = "652"
-         landmarkName = "-initStatusView"
+         landmarkName = "-imagePickerController:didFinishPickingMediaWithInfo:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -1218,7 +1218,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "160"
          endingLineNumber = "160"
-         landmarkName = "-updateIdentity:withBlock:"
+         landmarkName = "-storeAvatar:forMe:andOrder:withBlock:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -1309,7 +1309,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "124"
          endingLineNumber = "124"
-         landmarkName = "-storeAvatar:forMe:andOrder:withBlock:"
+         landmarkName = "-loginWithUsername:andPassword:withBlock:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -1317,12 +1317,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/AppNetworkAPIClient.m"
-         timestampString = "373537724.18586"
+         timestampString = "373539326.654973"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "228"
-         endingLineNumber = "228"
-         landmarkName = "-uploadMe:withBlock:"
+         startingLineNumber = "229"
+         endingLineNumber = "229"
+         landmarkName = "-updateIdentity:withBlock:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -1335,7 +1335,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "451"
          endingLineNumber = "451"
-         landmarkName = "-albumClick:"
+         landmarkName = "-refreshAlbumView"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -1348,7 +1348,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "455"
          endingLineNumber = "455"
-         landmarkName = "-albumClick:"
+         landmarkName = "-refreshAlbumView"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -1356,11 +1356,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/AppNetworkAPIClient.m"
-         timestampString = "373537724.18586"
+         timestampString = "373539326.654973"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "289"
-         endingLineNumber = "289"
+         startingLineNumber = "290"
+         endingLineNumber = "290"
          landmarkName = "-uploadMe:withBlock:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1447,11 +1447,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/AppNetworkAPIClient.m"
-         timestampString = "373537724.18586"
+         timestampString = "373539326.654973"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "253"
-         endingLineNumber = "253"
+         startingLineNumber = "254"
+         endingLineNumber = "254"
          landmarkName = "-uploadMe:withBlock:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1473,11 +1473,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/AppNetworkAPIClient.m"
-         timestampString = "373537724.18586"
+         timestampString = "373539326.654973"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "259"
-         endingLineNumber = "259"
+         startingLineNumber = "260"
+         endingLineNumber = "260"
          landmarkName = "-uploadMe:withBlock:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1491,7 +1491,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "700"
          endingLineNumber = "700"
-         landmarkName = "-initSNSView"
+         landmarkName = "-initStatusView"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -1499,11 +1499,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/AppNetworkAPIClient.m"
-         timestampString = "373537724.18586"
+         timestampString = "373539326.654973"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "269"
-         endingLineNumber = "269"
+         startingLineNumber = "270"
+         endingLineNumber = "270"
          landmarkName = "-uploadMe:withBlock:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1543,8 +1543,8 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "138"
          endingLineNumber = "138"
-         landmarkName = "@implementation ProfileMeController"
-         landmarkType = "3">
+         landmarkName = "-infoTableEditing"
+         landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -1668,11 +1668,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Models/ModelHelper.m"
-         timestampString = "373533140.408537"
+         timestampString = "373538448.366949"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "175"
-         endingLineNumber = "175"
+         startingLineNumber = "185"
+         endingLineNumber = "185"
          landmarkName = "+populateUser:withJSONData:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1733,11 +1733,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/AppNetworkAPIClient.m"
-         timestampString = "373537724.18586"
+         timestampString = "373539326.654973"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "207"
-         endingLineNumber = "207"
+         startingLineNumber = "208"
+         endingLineNumber = "208"
          landmarkName = "-updateIdentity:withBlock:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1759,11 +1759,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Models/ModelHelper.m"
-         timestampString = "373534856.26139"
+         timestampString = "373538448.366949"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "208"
-         endingLineNumber = "208"
+         startingLineNumber = "218"
+         endingLineNumber = "218"
          landmarkName = "+populateUser:withJSONData:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1794,7 +1794,7 @@
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "Yes"
+         shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/AppNetworkAPIClient.m"
@@ -1811,11 +1811,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/AppNetworkAPIClient.m"
-         timestampString = "373537797.37436"
+         timestampString = "373539326.654973"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "193"
-         endingLineNumber = "193"
+         startingLineNumber = "194"
+         endingLineNumber = "194"
          landmarkName = "-updateIdentity:withBlock:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1824,7 +1824,7 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/AppNetworkAPIClient.m"
-         timestampString = "373537799.166716"
+         timestampString = "373539326.654973"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "188"

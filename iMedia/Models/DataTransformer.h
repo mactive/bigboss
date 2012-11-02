@@ -10,4 +10,14 @@
 
 @interface ImageToDataTransformer : NSValueTransformer {
 }
+
++ (BOOL)allowsReverseTransformation;
+
++ (Class)transformedValueClass;
+
+
+- (id)transformedValue:(id)value;
+
+
+- (id)reverseTransformedValue:(id)value;
 @end
