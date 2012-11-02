@@ -275,7 +275,7 @@
 {
     HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     HUD.delegate = self;
-    HUD.labelText = T(@"上传中");
+    HUD.labelText = T(@"更新中");
     // save and upload
     [[AppNetworkAPIClient sharedClient] uploadMe:self.me withBlock:^(id responseObject, NSError *error) {
         if (error == nil) {
@@ -285,7 +285,7 @@
             HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             HUD.delegate = self;
             HUD.mode = MBProgressHUDModeText;
-            HUD.labelText = T(@"上传成功");
+            HUD.labelText = T(@"更新成功");
             [HUD hide:YES afterDelay:1];
             
         }else {
@@ -297,7 +297,7 @@
             HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             HUD.mode = MBProgressHUDModeText;
             HUD.delegate = self;
-            HUD.labelText = T(@"上传失败");
+            HUD.labelText = T(@"更新失败");
             [HUD hide:YES afterDelay:1];
         }
     }];

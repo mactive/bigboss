@@ -341,6 +341,7 @@ NSInteger SortIndex(id char1, id char2, void* context)
     
     //set avatar
     imageView = (UIImageView *)[cell viewWithTag:AVATAR_TAG];
+//    [imageView setImage:identity.thumbnailImage];
     [imageView setImageWithURL:[NSURL URLWithString:identity.thumbnailURL] placeholderImage:nil];
     
     //set sns icon
