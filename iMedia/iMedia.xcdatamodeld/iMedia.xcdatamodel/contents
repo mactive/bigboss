@@ -38,9 +38,9 @@
         <relationship name="images" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ImageRemote" inverseName="owner" inverseEntity="ImageRemote" syncable="YES"/>
     </entity>
     <entity name="ImageLocal" representedClassName="Avatar" syncable="YES">
-        <attribute name="image" attributeType="Transformable" valueTransformerName="ImageToDataTransformer" syncable="YES"/>
+        <attribute name="image" optional="YES" attributeType="Transformable" valueTransformerName="ImageToDataTransformer" syncable="YES"/>
         <attribute name="sequence" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="thumbnail" attributeType="Transformable" valueTransformerName="ImageToDataTransformer" syncable="YES"/>
+        <attribute name="thumbnail" optional="YES" attributeType="Transformable" valueTransformerName="ImageToDataTransformer" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="me" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Me" inverseName="avatars" inverseEntity="Me" syncable="YES"/>
     </entity>
@@ -53,11 +53,11 @@
     </entity>
     <entity name="Me" representedClassName="Me" parentEntity="Identity" syncable="YES">
         <attribute name="birthdate" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="career" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="career" optional="YES" attributeType="String" defaultValueString="@&quot;&quot;" syncable="YES"/>
         <attribute name="cell" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ePostalPassword" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="gender" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="hometown" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="gender" optional="YES" attributeType="String" defaultValueString="@&quot;m&quot;" syncable="YES"/>
+        <attribute name="hometown" optional="YES" attributeType="String" defaultValueString="@&quot;&quot;" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="password" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="selfIntroduction" optional="YES" attributeType="String" syncable="YES"/>
@@ -67,6 +67,7 @@
     </entity>
     <entity name="Message" representedClassName="Message" syncable="YES">
         <attribute name="sentDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="summary" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <relationship name="conversation" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Conversation" inverseName="messages" inverseEntity="Conversation" syncable="YES"/>
@@ -90,7 +91,7 @@
         <element name="ImageLocal" positionX="160" positionY="192" width="128" height="120"/>
         <element name="ImageRemote" positionX="160" positionY="192" width="128" height="120"/>
         <element name="Me" positionX="0" positionY="0" width="128" height="225"/>
-        <element name="Message" positionX="0" positionY="0" width="128" height="120"/>
+        <element name="Message" positionX="0" positionY="0" width="128" height="135"/>
         <element name="User" positionX="-234" positionY="141" width="128" height="165"/>
     </elements>
 </model>

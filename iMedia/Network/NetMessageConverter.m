@@ -15,8 +15,22 @@
 #import "AppNetworkAPIClient.h"
 #import "XMPPNetworkCenter.h"
 
+@interface NetMessageConverter ()
+
+@end
+
+
 @implementation NetMessageConverter
 
++ (NSMutableDictionary *)threadToReceiverJidMap {
+    static NSMutableDictionary  *_threadToReceiverJidMap = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _threadToReceiverJidMap = [[NSMutableDictionary alloc] initWithCapacity:5];
+    });
+    
+    return _threadToReceiverJidMap;
+}
 //
 // msg comes from two sources: 1. User; 2. A CS rep of a business (i.e., invisible user). All 1-1 no pubsub
 //
@@ -62,6 +76,7 @@
         Channel *channel = [ModelHelper findChannelWithNode:node inContext:context];
         message.from = channel;
         conv = channel.conversation;
+        [[self threadToReceiverJidMap] setValue:jid forKey:node];
     }
             
         

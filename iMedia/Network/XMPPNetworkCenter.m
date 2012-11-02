@@ -496,8 +496,8 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     }
     
  
-    if (thisUser.state.intValue != IdentityStateActive && thisUser.state.intValue != IdentityStatePendingAddFriend) {
-        thisUser.name = user.nickname;
+    if (thisUser.state.intValue != IdentityStateActive && thisUser.state.intValue != IdentityStatePendingAddFriend)
+    {
         thisUser.ePostalID = [user.jid bare];
         thisUser.displayName = [thisUser.ePostalID substringToIndex:[thisUser.ePostalID rangeOfString: @"@"].location];
         thisUser.type = [NSNumber numberWithInt:IdentityTypeUser];
@@ -527,6 +527,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
         DDLogError(@"user have to exist! ERROR NEED CHECK: %@", user);
     } else if (thisUser.state.intValue == IdentityStateActive || thisUser.state.intValue == IdentityStatePendingRemoveFriend) {
         thisUser.state = [NSNumber numberWithInt:IdentityStateInactive];
+        MOCSave(_managedObjectContext);
         [[self appDelegate].contactListController contentChanged];
     }
 }
@@ -609,7 +610,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
          postingStyle:NSPostWhenIdle
          coalesceMask:NSNotificationNoCoalescing
          forModes:nil];
-    } else if (thisUser.state.intValue == IdentityStatePendingAddFriend) {
+    } else if (thisUser.state.intValue == IdentityStatePendingAddFriend || thisUser.state.intValue == IdentityStatePendingServerDataUpdate) {
         thisUser.state = [NSNumber numberWithInt:IdentityStatePendingServerDataUpdate];
         [[AppNetworkAPIClient sharedClient] updateIdentity:thisUser withBlock:nil];
         MOCSave(_managedObjectContext);

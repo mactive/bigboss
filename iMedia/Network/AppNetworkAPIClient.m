@@ -30,6 +30,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 #import "ImageRemote.h"
 #import "AppDelegate.h" 
 #import "ContactListViewController.h"
+#import "UIImage+Resize.h"
 
 //static NSString * const kAppNetworkAPIBaseURLString = @"http://192.168.1.104:8000/";
 static NSString * const kAppNetworkAPIBaseURLString = @"http://media.wingedstone.com:8000/";
@@ -207,7 +208,28 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 
             
             [ModelHelper populateIdentity:identity withJSONData:responseObject];
+            
+            // if identity is Me, we need to check local avatar against the server. If local doesn't have the image
+            // we need to download and save.
+            if ([identity isKindOfClass:[Me class]]) {
+                Me *me = identity;
+                NSArray *imageArray = [me getOrderedNonNilImages];
+                NSArray *avatarArray = [me getOrderedAvatars];
+                for (int i = 0; i < [imageArray count] ; i++) {
+                    ImageRemote *imageRemote = [imageArray objectAtIndex:i];
+                    if (i < [avatarArray count]) {
+                        Avatar *avatar = [avatarArray objectAtIndex:i];
                         
+                        AFImageRequestOperation *oper = [AFImageRequestOperation imageRequestOperationWithRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:imageRemote.imageURL]] success:^(UIImage *image) {
+                            avatar.image = image;
+                            UIImage *thumbnail = [image resizedImageToSize:CGSizeMake(75, 75)];
+                            avatar.thumbnail = thumbnail;
+                        }];
+                        [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:oper];
+                    }
+                }
+                
+            }
             if (identity.state.intValue == IdentityStatePendingServerDataUpdate) {
                 identity.state = [NSNumber numberWithInt:IdentityStateActive];
                 [[self appDelegate].contactListController contentChanged];

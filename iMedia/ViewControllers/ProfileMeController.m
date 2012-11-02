@@ -450,14 +450,9 @@
 
     for (int j = 0; j < 8; j++) {
         UIButton *albumButton = [self.albumButtonArray objectAtIndex:j];
-        if (j < albumCount) {
-            Avatar *avatar = [self.albumArray objectAtIndex:j];
-            [albumButton setImage:avatar.thumbnail forState:UIControlStateNormal]; 
-            [albumButton setHidden:NO];
-        } else {
-            [albumButton setImage:nil forState:UIControlStateNormal];
-            [albumButton setHidden:YES];
-        }
+        Avatar *avatar = [self.albumArray objectAtIndex:j];
+        [albumButton setImage:avatar.thumbnail forState:UIControlStateNormal];
+        [albumButton setHidden:NO];
     }
 
     if (self.albumCount == 0 ) {
@@ -528,7 +523,10 @@
 - (void)removeAlbum
 {    
     Avatar *removeAvatar = [self.albumArray objectAtIndex:self.editingAlbumIndex];
-    [self.me removeAvatarsObject:removeAvatar];
+ //   [self.me removeAvatarsObject:removeAvatar];
+    removeAvatar.image = nil;
+    removeAvatar.thumbnail  = nil;
+    removeAvatar.sequence   =0;
     
     // network
 //    [[AppNetworkAPIClient sharedClient] storeAvatar:removeAvatar forMe:self.me andOrder:sequence withBlock:nil];
@@ -598,14 +596,14 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
         self.editingAlbumIndex = NSNotFound;
 
     }else {
-        avatar = [NSEntityDescription insertNewObjectForEntityForName:@"ImageLocal" inManagedObjectContext:self.managedObjectContext ];
+ /*       avatar = [NSEntityDescription insertNewObjectForEntityForName:@"ImageLocal" inManagedObjectContext:self.managedObjectContext ];
         avatar.thumbnail = thumbnail;
         avatar.image = image;
         NSInteger sequence = [self.albumArray count] + 1;
         
         avatar.sequence = [NSNumber numberWithInt:sequence];
         [self.me addAvatarsObject:avatar];
-        
+ */
     }
     
     // HUD show

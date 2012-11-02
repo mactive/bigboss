@@ -14,6 +14,7 @@
 #import "User.h"
 #import "ImageRemote.h"
 #import "Me.h"
+#import "Avatar.h"
 #import "Conversation.h"
 #import "AppDefs.h"
 #import <CocoaPlant/NSManagedObject+CocoaPlant.h>
@@ -192,6 +193,14 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             image.title = @"";
             [self.me addImagesObject:image];
         }
+        for (int i = 0; i < 8; i++) {
+            Avatar *image = [NSEntityDescription insertNewObjectForEntityForName:@"ImageLocal" inManagedObjectContext:_managedObjectContext];
+            image.sequence = [NSNumber numberWithInt:0];
+            image.image = nil;
+            image.thumbnail = nil;
+            image.title = @"";
+            [self.me addAvatarsObject:image];
+        }
         self.me.ePostalID = jidStr;
         self.me.ePostalPassword = jidPass;
         self.me.type = [NSNumber numberWithInt:IdentityTypeMe];
@@ -201,6 +210,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         self.me.guid = guid;
         self.me.state = [NSNumber numberWithInt:IdentityStatePendingServerDataUpdate];
         self.me.birthdate = [NSDate dateWithTimeIntervalSince1970:0];
+        self.me.selfIntroduction = @"";
+        self.me.signature = @"";
+        self.me.career = @"";
         
         [LocationManager sharedInstance].me = self.me;
         
