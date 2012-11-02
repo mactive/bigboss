@@ -591,11 +591,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/ViewControllers/ConversationsController.m"
-         timestampString = "372151938.852383"
+         timestampString = "373474577.386033"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "411"
-         endingLineNumber = "411"
+         startingLineNumber = "412"
+         endingLineNumber = "412"
          landmarkName = "-tableViewCellWithReuseIdentifier:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -604,11 +604,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/ViewControllers/ConversationsController.m"
-         timestampString = "372151938.852383"
+         timestampString = "373474577.386033"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "409"
-         endingLineNumber = "409"
+         startingLineNumber = "410"
+         endingLineNumber = "410"
          landmarkName = "-tableViewCellWithReuseIdentifier:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -617,11 +617,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/XMPPNetworkCenter.m"
-         timestampString = "373467667.951821"
+         timestampString = "373481951.985711"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "721"
-         endingLineNumber = "721"
+         startingLineNumber = "723"
+         endingLineNumber = "723"
          landmarkName = "@implementation XMPPNetworkCenter"
          landmarkType = "3">
       </FileBreakpoint>
@@ -630,16 +630,16 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/XMPPNetworkCenter.m"
-         timestampString = "373465498.737092"
+         timestampString = "373481951.985711"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "549"
-         endingLineNumber = "549"
+         startingLineNumber = "550"
+         endingLineNumber = "550"
          landmarkName = "-xmppRosterDidPopulate:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "No"
+         shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/XMPPNetworkCenter.m"
@@ -656,11 +656,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/XMPPNetworkCenter.m"
-         timestampString = "373465498.737092"
+         timestampString = "373481951.985711"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "554"
-         endingLineNumber = "554"
+         startingLineNumber = "555"
+         endingLineNumber = "555"
          landmarkName = "-xmppRosterDidPopulate:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -708,11 +708,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/XMPPNetworkCenter.m"
-         timestampString = "373465498.737092"
+         timestampString = "373481951.985711"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "574"
-         endingLineNumber = "574"
+         startingLineNumber = "575"
+         endingLineNumber = "575"
          landmarkName = "-xmppRosterDidPopulate:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -721,11 +721,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/XMPPNetworkCenter.m"
-         timestampString = "373467667.951821"
+         timestampString = "373481951.985711"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "639"
-         endingLineNumber = "639"
+         startingLineNumber = "640"
+         endingLineNumber = "640"
          landmarkName = "-xmppPubSub:didReceiveMessage:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -743,7 +743,7 @@
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "Yes"
+         shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/NetMessageConverter.m"
@@ -795,15 +795,15 @@
          landmarkType = "3">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "No"
+         shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/XMPPNetworkCenter.m"
-         timestampString = "373465498.737092"
+         timestampString = "373481951.985711"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "594"
-         endingLineNumber = "594"
+         startingLineNumber = "595"
+         endingLineNumber = "595"
          landmarkName = "-xmppRoster:didReceivePresenceSubscriptionRequest:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -812,16 +812,16 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Models/ModelHelper.m"
-         timestampString = "373293820.717518"
+         timestampString = "373533140.408537"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "52"
-         endingLineNumber = "52"
+         startingLineNumber = "54"
+         endingLineNumber = "54"
          landmarkName = "+findUserWithEPostalID:inContext:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "No"
+         shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/XMPPNetworkCenter.m"
@@ -838,11 +838,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/XMPPNetworkCenter.m"
-         timestampString = "373467667.951821"
+         timestampString = "373481951.985711"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "677"
-         endingLineNumber = "677"
+         startingLineNumber = "678"
+         endingLineNumber = "678"
          landmarkName = "-xmppPubSub:didSubscribe:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -851,11 +851,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/XMPPNetworkCenter.m"
-         timestampString = "373467667.951821"
+         timestampString = "373481951.985711"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "711"
-         endingLineNumber = "711"
+         startingLineNumber = "713"
+         endingLineNumber = "713"
          landmarkName = "-xmppPubSub:didSubscribe:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -864,11 +864,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/XMPPNetworkCenter.m"
-         timestampString = "373467667.951821"
+         timestampString = "373481951.985711"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "715"
-         endingLineNumber = "715"
+         startingLineNumber = "717"
+         endingLineNumber = "717"
          landmarkName = "-xmppPubSub:didSubscribe:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -992,11 +992,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Models/ModelHelper.m"
-         timestampString = "373472228.38096"
+         timestampString = "373533140.408537"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "231"
-         endingLineNumber = "231"
+         startingLineNumber = "235"
+         endingLineNumber = "235"
          landmarkName = "+populateChannel:withServerJSONData:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1005,11 +1005,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/XMPPNetworkCenter.m"
-         timestampString = "373467667.951821"
+         timestampString = "373481951.985711"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "708"
-         endingLineNumber = "708"
+         startingLineNumber = "710"
+         endingLineNumber = "710"
          landmarkName = "-xmppPubSub:didSubscribe:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1018,11 +1018,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/XMPPNetworkCenter.m"
-         timestampString = "373467667.951821"
+         timestampString = "373481951.985711"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "693"
-         endingLineNumber = "693"
+         startingLineNumber = "694"
+         endingLineNumber = "694"
          landmarkName = "-xmppPubSub:didSubscribe:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1057,11 +1057,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/XMPPNetworkCenter.m"
-         timestampString = "373465498.737092"
+         timestampString = "373481951.985711"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "552"
-         endingLineNumber = "552"
+         startingLineNumber = "553"
+         endingLineNumber = "553"
          landmarkName = "-xmppRosterDidPopulate:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1070,11 +1070,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/ViewControllers/FunctionListViewController.m"
-         timestampString = "373203717.401698"
+         timestampString = "373530844.602835"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "166"
-         endingLineNumber = "166"
+         startingLineNumber = "188"
+         endingLineNumber = "188"
          landmarkName = "@implementation FunctionListViewController"
          landmarkType = "3">
       </FileBreakpoint>
@@ -1083,11 +1083,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/ViewControllers/FunctionListViewController.m"
-         timestampString = "373294215.508672"
+         timestampString = "373530844.602835"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "187"
-         endingLineNumber = "187"
+         startingLineNumber = "210"
+         endingLineNumber = "210"
          landmarkName = "-friendRequestReceived:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1096,11 +1096,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/ViewControllers/FunctionListViewController.m"
-         timestampString = "373203717.401698"
+         timestampString = "373530844.602835"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "173"
-         endingLineNumber = "173"
+         startingLineNumber = "195"
+         endingLineNumber = "195"
          landmarkName = "-friendRequestReceived:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1109,24 +1109,24 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/ViewControllers/FunctionListViewController.m"
-         timestampString = "373203717.401698"
+         timestampString = "373530844.602835"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "171"
-         endingLineNumber = "171"
+         startingLineNumber = "193"
+         endingLineNumber = "193"
          landmarkName = "-friendRequestReceived:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "Yes"
+         shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/ViewControllers/FunctionListViewController.m"
-         timestampString = "373203717.401698"
+         timestampString = "373530844.602835"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "146"
-         endingLineNumber = "146"
+         startingLineNumber = "168"
+         endingLineNumber = "168"
          landmarkName = "-tableView:didSelectRowAtIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1135,24 +1135,24 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/ViewControllers/FunctionListViewController.m"
-         timestampString = "373203835.266142"
+         timestampString = "373530844.602835"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "175"
-         endingLineNumber = "175"
+         startingLineNumber = "197"
+         endingLineNumber = "197"
          landmarkName = "-friendRequestReceived:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "Yes"
+         shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/ViewControllers/RequestViewController.m"
-         timestampString = "373468011.774158"
+         timestampString = "373534163.76095"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "175"
-         endingLineNumber = "175"
+         startingLineNumber = "171"
+         endingLineNumber = "171"
          landmarkName = "-cancelRequest"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1170,7 +1170,7 @@
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "Yes"
+         shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/ViewControllers/ContactDetailController.m"
@@ -1187,11 +1187,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/ViewControllers/ProfileMeController.m"
-         timestampString = "373382624.183177"
+         timestampString = "373481336.886828"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "651"
-         endingLineNumber = "651"
+         startingLineNumber = "652"
+         endingLineNumber = "652"
          landmarkName = "-initStatusView"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1200,11 +1200,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/AppDelegate.m"
-         timestampString = "373452593.279732"
+         timestampString = "373530844.602835"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "200"
-         endingLineNumber = "200"
+         startingLineNumber = "201"
+         endingLineNumber = "201"
          landmarkName = "-createMeWithUsername:password:jid:jidPasswd:andGUID:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1239,11 +1239,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Models/ModelHelper.m"
-         timestampString = "373461008.913082"
+         timestampString = "373533140.408537"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "121"
-         endingLineNumber = "121"
+         startingLineNumber = "123"
+         endingLineNumber = "123"
          landmarkName = "+populateIdentity:withJSONData:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1343,11 +1343,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/ViewControllers/ProfileMeController.m"
-         timestampString = "373382624.183177"
+         timestampString = "373481336.886828"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "454"
-         endingLineNumber = "454"
+         startingLineNumber = "455"
+         endingLineNumber = "455"
          landmarkName = "-albumClick:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1356,16 +1356,16 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/AppNetworkAPIClient.m"
-         timestampString = "373466728.296914"
+         timestampString = "373480791.743534"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "259"
-         endingLineNumber = "259"
+         startingLineNumber = "260"
+         endingLineNumber = "260"
          landmarkName = "-uploadMe:withBlock:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "Yes"
+         shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/AppNetworkAPIClient.m"
@@ -1378,7 +1378,7 @@
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "Yes"
+         shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/AppNetworkAPIClient.m"
@@ -1447,11 +1447,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/AppNetworkAPIClient.m"
-         timestampString = "373466728.296914"
+         timestampString = "373480791.743534"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "223"
-         endingLineNumber = "223"
+         startingLineNumber = "224"
+         endingLineNumber = "224"
          landmarkName = "-uploadMe:withBlock:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1469,15 +1469,15 @@
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "Yes"
+         shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/AppNetworkAPIClient.m"
-         timestampString = "373466728.296914"
+         timestampString = "373480791.743534"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "229"
-         endingLineNumber = "229"
+         startingLineNumber = "230"
+         endingLineNumber = "230"
          landmarkName = "-uploadMe:withBlock:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1486,11 +1486,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/ViewControllers/ProfileMeController.m"
-         timestampString = "373382624.183177"
+         timestampString = "373481336.886828"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "699"
-         endingLineNumber = "699"
+         startingLineNumber = "700"
+         endingLineNumber = "700"
          landmarkName = "-initSNSView"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1499,11 +1499,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/AppNetworkAPIClient.m"
-         timestampString = "373466728.296914"
+         timestampString = "373480791.743534"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "239"
-         endingLineNumber = "239"
+         startingLineNumber = "240"
+         endingLineNumber = "240"
          landmarkName = "-uploadMe:withBlock:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1551,11 +1551,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/AppDelegate.m"
-         timestampString = "373452593.279732"
+         timestampString = "373530844.602835"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "173"
-         endingLineNumber = "173"
+         startingLineNumber = "174"
+         endingLineNumber = "174"
          landmarkName = "-startMainSession"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1570,32 +1570,6 @@
          startingLineNumber = "90"
          endingLineNumber = "90"
          landmarkName = "-loadView"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "iMedia/ViewControllers/RequestViewController.m"
-         timestampString = "373468011.774158"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "172"
-         endingLineNumber = "172"
-         landmarkName = "-confirmRequest"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "Yes"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "iMedia/ViewControllers/RequestViewController.m"
-         timestampString = "373468011.774158"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "180"
-         endingLineNumber = "180"
-         landmarkName = "-cancelRequest"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -1694,11 +1668,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Models/ModelHelper.m"
-         timestampString = "373467667.951821"
+         timestampString = "373533140.408537"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "173"
-         endingLineNumber = "173"
+         startingLineNumber = "175"
+         endingLineNumber = "175"
          landmarkName = "+populateUser:withJSONData:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1707,16 +1681,16 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Models/ModelHelper.m"
-         timestampString = "373465181.223855"
+         timestampString = "373533140.408537"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "119"
-         endingLineNumber = "119"
+         startingLineNumber = "121"
+         endingLineNumber = "121"
          landmarkName = "+populateIdentity:withJSONData:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "No"
+         shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/XMPPNetworkCenter.m"
@@ -1733,11 +1707,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/XMPPNetworkCenter.m"
-         timestampString = "373465498.737092"
+         timestampString = "373481951.985711"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "577"
-         endingLineNumber = "577"
+         startingLineNumber = "578"
+         endingLineNumber = "578"
          landmarkName = "-xmppRosterDidPopulate:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1746,16 +1720,16 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/XMPPNetworkCenter.m"
-         timestampString = "373465828.155356"
+         timestampString = "373481951.985711"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "586"
-         endingLineNumber = "586"
+         startingLineNumber = "587"
+         endingLineNumber = "587"
          landmarkName = "-xmppRosterDidPopulate:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "Yes"
+         shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Network/AppNetworkAPIClient.m"
@@ -1768,94 +1742,29 @@
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "iMedia/ViewControllers/ContactDetailController.m"
-         timestampString = "373472048.658301"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "537"
-         endingLineNumber = "537"
-         landmarkName = "-getLastGPSUpdatedTimeStr"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "iMedia/ViewControllers/ContactDetailController.m"
-         timestampString = "373472048.658301"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "115"
-         endingLineNumber = "115"
-         landmarkName = "-initAlbumView"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "iMedia/Models/Identity.m"
-         timestampString = "373469578.393876"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "37"
-         endingLineNumber = "37"
-         landmarkName = "-getOrderedNonNilImages"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "iMedia/ViewControllers/ContactListViewController.m"
-         timestampString = "373469817.971641"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "344"
-         endingLineNumber = "344"
-         landmarkName = "-configureCell:forIndexPath:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "iMedia/ViewControllers/ContactListViewController.m"
-         timestampString = "373470484.73079"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "347"
-         endingLineNumber = "347"
-         landmarkName = "-configureCell:forIndexPath:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "iMedia/ViewControllers/ContactDetailController.m"
-         timestampString = "373472030.108501"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "121"
-         endingLineNumber = "121"
-         landmarkName = "-initAlbumView"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
          shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
-         filePath = "iMedia/ViewControllers/AlbumViewController.m"
-         timestampString = "373472699.094638"
+         filePath = "iMedia/ViewControllers/FriendRequestListViewController.m"
+         timestampString = "373533133.501739"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "60"
-         endingLineNumber = "60"
-         landmarkName = "-createViewAtIndex:"
+         startingLineNumber = "216"
+         endingLineNumber = "216"
+         landmarkName = "-configureCell:forIndexPath:"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "iMedia/Models/ModelHelper.m"
+         timestampString = "373534856.26139"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "208"
+         endingLineNumber = "208"
+         landmarkName = "+populateUser:withJSONData:"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

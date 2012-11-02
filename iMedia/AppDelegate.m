@@ -149,6 +149,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
     self.functionListController = [[FunctionListViewController alloc] init];
     UINavigationController *navController3 = [[UINavigationController alloc] initWithRootViewController:self.functionListController];
+    self.functionListController.managedObjectContext = _managedObjectContext;
     self.functionListController.title = T(@"Functions");
     self.functionListController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Shake", nil)     image:[UIImage imageNamed:@"tabbar_item_2.png"] tag:1002];
     

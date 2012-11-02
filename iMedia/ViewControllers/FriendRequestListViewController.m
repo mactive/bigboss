@@ -13,6 +13,8 @@
 #import "RequestViewController.h"
 #import "UIImageView+AFNetworking.h"
 #import "NSDate+timesince.h"
+#import "FriendRequest.h"
+#import "NSObject+SBJson.h"
 
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
@@ -29,7 +31,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 @implementation FriendRequestListViewController
 
-@synthesize friendRequestJSONArray;
+@synthesize friendRequestArray;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -66,7 +68,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [self.friendRequestJSONArray count];
+    return [self.friendRequestArray count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -207,7 +209,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 - (void)configureCell:(UITableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath {
     
-    id obj = [self.friendRequestJSONArray objectAtIndex:indexPath.row];
+    FriendRequest *request = [self.friendRequestArray objectAtIndex:indexPath.row];
+    NSDictionary* jsonData = [request.userJSONData JSONValue];
     
     // set max size
     CGSize nameMaxSize = CGSizeMake(MIDDLE_COLUMN_WIDTH, LABEL_HEIGHT*1);
@@ -220,7 +223,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
     //set avatar
     imageView = (UIImageView *)[cell viewWithTag:AVATAR_TAG];
-    NSString *imageUrl = [ServerDataTransformer getAvatarFromServerJSON:obj];
+    NSString *imageUrl = [ServerDataTransformer getAvatarFromServerJSON:request.userJSONData];
     [imageView setImageWithURL:[NSURL URLWithString:imageUrl]];
     
     //set sns icon
@@ -245,11 +248,11 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
     // set the time text
     UILabel *timeLabel = (UILabel *)[cell viewWithTag:TIME_TAG];
-    timeLabel.text =  [[obj valueForKey:@"add_friend_request_date"] timesince];
+    timeLabel.text =  [request.requestDate timesince];
     
     // set the name text
     UILabel *nameLabel = (UILabel *)[cell viewWithTag:NAME_TAG];
-    NSString *_nameString = [ServerDataTransformer getNicknameFromServerJSON:obj];
+    NSString *_nameString = [ServerDataTransformer getNicknameFromServerJSON:request.userJSONData];
 
     CGSize labelSize = [_nameString sizeWithFont:nameLabel.font constrainedToSize:nameMaxSize lineBreakMode: UILineBreakModeTailTruncation];
     if (labelSize.height > LABEL_HEIGHT) {
@@ -262,7 +265,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
     // set the user signature
     UILabel *signatureLabel = (UILabel *)[cell viewWithTag:SUMMARY_TAG];
-    NSString *signature =[ServerDataTransformer getSignatureFromServerJSON:obj];
+    NSString *signature =[ServerDataTransformer getSignatureFromServerJSON:request.userJSONData];
     
     CGSize signatureSize = [signature sizeWithFont:signatureLabel.font constrainedToSize:summaryMaxSize lineBreakMode: UILineBreakModeTailTruncation];
     if (signatureSize.height > LABEL_HEIGHT) {
@@ -325,8 +328,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 {
     // Navigation logic may go here. Create and push another view controller.
     RequestViewController *requestViewController = [[RequestViewController alloc]initWithNibName:nil bundle:nil];    
-    requestViewController.jsonData = [self.friendRequestJSONArray objectAtIndex:indexPath.row];
-    NSLog(@"%@",[self.friendRequestJSONArray objectAtIndex:indexPath.row]);
+    requestViewController.request = [self.friendRequestArray objectAtIndex:indexPath.row];
+    NSLog(@"%@",[self.friendRequestArray objectAtIndex:indexPath.row]);
     [self.navigationController pushViewController:requestViewController animated:YES];
 
 }

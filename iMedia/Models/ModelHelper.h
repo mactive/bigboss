@@ -7,11 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SBJson.h"
 
 @class User;
 @class Channel;
 @class Identity;
+@class FriendRequest;
 
 @interface ModelHelper : NSObject
 
@@ -23,5 +23,6 @@
 
 
 + (User *)newUserInContext:(NSManagedObjectContext *)context;
++ (FriendRequest *)newFriendRequestWithEPostalID:(NSString *)jid json:(id)jsonData andInContext:(NSManagedObjectContext *)context;
 
 @end

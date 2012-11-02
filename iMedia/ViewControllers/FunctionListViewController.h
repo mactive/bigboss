@@ -11,5 +11,7 @@
 @interface FunctionListViewController : UIViewController
 
 @property (nonatomic, strong) NSMutableDictionary* friendRequestDict;
+@property (nonatomic, strong) NSManagedObjectContext* managedObjectContext;
+@property (nonatomic) NSInteger* newFriendRequestCount;
 
 @end

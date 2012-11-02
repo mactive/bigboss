@@ -234,6 +234,7 @@
 		566E82681609AF2700A333EA /* ContactDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 566E82671609AF2700A333EA /* ContactDetailController.m */; };
 		566E826D1609B79900A333EA /* AppDefs.h in Sources */ = {isa = PBXBuildFile; fileRef = 566E826C1609B58100A333EA /* AppDefs.h */; };
 		5681B651163D1BFC0056AFAD /* ImageRemote.m in Sources */ = {isa = PBXBuildFile; fileRef = 5681B650163D1BFC0056AFAD /* ImageRemote.m */; };
+		56A75E8F164394FA001FEB83 /* FriendRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 56A75E8E164394FA001FEB83 /* FriendRequest.m */; };
 		56B4CCDB1625818D00E046CC /* XMPPNetworkCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CCDA1625818D00E046CC /* XMPPNetworkCenter.m */; };
 		56B4CCF01626732500E046CC /* AFHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CCDE1626732500E046CC /* AFHTTPClient.m */; };
 		56B4CCF11626732500E046CC /* AFHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CCDE1626732500E046CC /* AFHTTPClient.m */; };
@@ -691,6 +692,8 @@
 		566E826C1609B58100A333EA /* AppDefs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDefs.h; sourceTree = "<group>"; };
 		5681B64F163D1BFC0056AFAD /* ImageRemote.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageRemote.h; path = Models/ImageRemote.h; sourceTree = "<group>"; };
 		5681B650163D1BFC0056AFAD /* ImageRemote.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ImageRemote.m; path = Models/ImageRemote.m; sourceTree = "<group>"; };
+		56A75E8D164394FA001FEB83 /* FriendRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FriendRequest.h; path = Models/FriendRequest.h; sourceTree = "<group>"; };
+		56A75E8E164394FA001FEB83 /* FriendRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FriendRequest.m; path = Models/FriendRequest.m; sourceTree = "<group>"; };
 		56B4CCD91625818D00E046CC /* XMPPNetworkCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XMPPNetworkCenter.h; path = Network/XMPPNetworkCenter.h; sourceTree = "<group>"; };
 		56B4CCDA1625818D00E046CC /* XMPPNetworkCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XMPPNetworkCenter.m; path = Network/XMPPNetworkCenter.m; sourceTree = "<group>"; };
 		56B4CCDD1626732500E046CC /* AFHTTPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPClient.h; sourceTree = "<group>"; };
@@ -1641,6 +1644,8 @@
 			isa = PBXGroup;
 			children = (
 				566E80B51609A24C00A333EA /* iMedia.xcdatamodeld */,
+				56A75E8D164394FA001FEB83 /* FriendRequest.h */,
+				56A75E8E164394FA001FEB83 /* FriendRequest.m */,
 				566743D8164248CD0043A29C /* Channel.h */,
 				566743D9164248CE0043A29C /* Channel.m */,
 				5661562A163FCA6900199DB4 /* User.h */,
@@ -2179,6 +2184,7 @@
 				26F3BF1916428DDB00E2899C /* MBProgressHUD.m in Sources */,
 				26F3BF23164294AC00E2899C /* LoginViewController.m in Sources */,
 				2640031F1642B45E00A1B779 /* WelcomeViewController.m in Sources */,
+				56A75E8F164394FA001FEB83 /* FriendRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

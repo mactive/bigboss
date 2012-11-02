@@ -13,6 +13,8 @@
 #import "AppDelegate.h" 
 #import "RequestViewController.h"
 #import "FriendRequestListViewController.h"
+#import "FriendRequest.h"
+#import "ModelHelper.h"
 
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
@@ -38,6 +40,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 @synthesize settingDescArray;
 @synthesize settingTitleArray;
 @synthesize friendRequestDict;
+@synthesize managedObjectContext;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -70,6 +73,25 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     //    [self.settingTableView setBackgroundColor:[UIColor clearColor]];
     [self.view addSubview:self.settingTableView];
     
+    
+#warning TODO: paged fetch - don't fetch all at the same time
+    NSManagedObjectContext *moc = self.managedObjectContext;
+    NSEntityDescription *entityDescription = [NSEntityDescription
+                                              entityForName:@"FriendRequest" inManagedObjectContext:moc];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDescription];
+    
+    
+    
+    NSError *error = nil;
+    NSArray *array = [moc executeFetchRequest:request error:&error];
+    
+    for (int i = 0; i < [array count]; i++) {
+        FriendRequest *request = [array objectAtIndex:i];
+        [self.friendRequestDict setValue:request forKey:request.requesterEPostalID];
+    }
+    
+    self.newFriendRequestCount  = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -144,7 +166,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
         if ([self.friendRequestDict count] == 1) { 
             RequestViewController *controller = [[RequestViewController alloc] initWithNibName:nil bundle:nil];
-            controller.jsonData = [[self.friendRequestDict allValues] objectAtIndex:0];
+            controller.request = [[self.friendRequestDict allValues] objectAtIndex:0];
             [self.navigationController pushViewController:controller animated:YES];
             
 //            FriendRequestListViewController *controller = [[FriendRequestListViewController alloc] initWithNibName:nil bundle:nil];
@@ -153,7 +175,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             
         } else if ([self.friendRequestDict count] > 1) {
             FriendRequestListViewController *controller = [[FriendRequestListViewController alloc] initWithNibName:nil bundle:nil];
-            controller.friendRequestJSONArray = [NSMutableArray arrayWithArray:[self.friendRequestDict allValues]];
+            controller.friendRequestArray = [NSMutableArray arrayWithArray:[self.friendRequestDict allValues]];
             [self.navigationController pushViewController:controller animated:YES];
         }
     }
@@ -171,18 +193,19 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: fromJid, @"jid", @"2", @"op", nil];
     
     [[AppNetworkAPIClient sharedClient] getPath:GET_DATA_PATH parameters:getDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        DDLogVerbose(@"friend request - get user %s data received: %@", fromJid, responseObject);
+        DDLogVerbose(@"friend request - get user %@ data received: %@", fromJid, responseObject);
         
         NSString* type = [responseObject valueForKey:@"type"];
         if ([type isEqualToString:@"user"] && [self.friendRequestDict valueForKey:fromJid] == nil) {
             
-            NSMutableDictionary *result = [NSMutableDictionary dictionaryWithDictionary:responseObject];
-            [result setValue:[NSDate date] forKey:@"add_friend_request_date"];
+            FriendRequest *newFriendRequest = [ModelHelper newFriendRequestWithEPostalID:fromJid json:responseObject andInContext:self.managedObjectContext];
+
+            [self.friendRequestDict setValue:newFriendRequest forKey:fromJid];
+            self.newFriendRequestCount++;
             
-            [self.friendRequestDict setValue:result forKey:fromJid];
             
 #warning TODO - add flag mark new friend request
-            [self appDelegate].tabController.tabBarItem.badgeValue =  [NSString stringWithFormat:@"%d", [self.friendRequestDict count]];
+            [self appDelegate].functionListController.tabBarItem.badgeValue =  [NSString stringWithFormat:@"%d", self.newFriendRequestCount];
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
