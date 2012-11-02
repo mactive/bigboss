@@ -25,7 +25,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 @interface LoginViewController ()
 
-
 @property(strong, nonatomic)UILabel *usernameLabel;
 @property(strong, nonatomic)UILabel *passwordLabel;
 @property(strong, nonatomic)UIButton *loginButton;
@@ -63,6 +62,15 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     self.passwordField.text = [[NSUserDefaults standardUserDefaults] stringForKey:kXMPPmyPassword];
 }
 
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    if ([passwordField isEqual:textField]) {
+        [self loginAction:nil];
+        return [textField resignFirstResponder];
+        
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Private
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -93,7 +101,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	
     HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 	HUD.delegate = self;
-
 	HUD.labelText = T(@"登录中");
     
     [[AppNetworkAPIClient sharedClient] loginWithUsername:self.usernameField.text andPassword:passwordField.text withBlock:^(id responseObject, NSError *error) {
@@ -118,6 +125,12 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         } else {
             DDLogError(@"NSError received during login: %@", error);
             [HUD hide:YES];
+            
+            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            HUD.delegate = self;
+            HUD.mode = MBProgressHUDModeText;
+            HUD.labelText = [responseObject valueForKey:@"status"];
+            [HUD hide:YES afterDelay:2];
         }
         
     }];
@@ -158,12 +171,14 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [self.usernameField setBorderStyle:UITextBorderStyleRoundedRect];
     self.usernameField.textColor = [UIColor grayColor];
     self.usernameField.backgroundColor = [UIColor whiteColor];
+    self.usernameField.delegate = self;
     
     self.passwordField = [[UITextField alloc]initWithFrame:CGRectMake(TEXTFIELD_OFFSET , LABEL_HEIGHT*2+LOGO_HEIGHT, TEXTFIELD_WIDTH, 30)];
     self.passwordField.font = [UIFont systemFontOfSize:20.0];
     [self.passwordField setBorderStyle:UITextBorderStyleRoundedRect];
     self.passwordField.textColor = [UIColor grayColor];
     self.passwordField.backgroundColor = [UIColor whiteColor];
+    self.passwordField.delegate = self;
     
     self.loginButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [self.loginButton setFrame:CGRectMake(80 , LABEL_HEIGHT*3+20, TEXTFIELD_WIDTH, 30)];

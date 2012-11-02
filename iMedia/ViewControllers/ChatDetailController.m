@@ -365,9 +365,9 @@
         
         UIImageView *_tmpImageView = [[UIImageView alloc]init];
         [_tmpImageView setImageWithURL:[NSURL URLWithString:msg.from.thumbnailURL]];
-        itemBubble.avatar = _tmpImageView.image ;
-        
-        [bubbleData addObject:itemBubble];        
+        itemBubble.avatar = _tmpImageView.image;
+        [bubbleData addObject:itemBubble];
+        bubbleTable.showAvatars = YES;
     } else if (msg.type == [NSNumber numberWithInt:MessageTypePublish]) {
         [bubbleData addObject:[NSBubbleData dataWithText:msg.text date:msg.sentDate type:BubbleTypeWebview]];
         bubbleTable.showAvatars = NO;

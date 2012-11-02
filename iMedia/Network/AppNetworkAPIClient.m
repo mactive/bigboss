@@ -97,6 +97,11 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
                 if (block ) {
                     block(responseObject, nil);
                 }
+            } else {
+                NSError *error = [[NSError alloc] initWithDomain:@"wingedstone.com" code:403 userInfo:nil];
+                if (block) {
+                    block(responseObject, error);
+                }
             }
             
             

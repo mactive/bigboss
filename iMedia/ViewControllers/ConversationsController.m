@@ -397,7 +397,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	label.font = [UIFont systemFontOfSize:SUMMARY_FONT_SIZE];
 	label.textAlignment = UITextAlignmentCenter;
     label.textColor = RGBCOLOR(157, 157, 157);
-    label.backgroundColor = RGBCOLOR(248, 248, 248);
+    label.backgroundColor = RGBCOLOR(234, 234, 234);
 
     [label.layer setMasksToBounds:YES];
     [label.layer setCornerRadius:3.0];
@@ -454,7 +454,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     label = (UILabel *)[cell viewWithTag:SUMMARY_TAG];
     label.text = conv.lastMessageText;
     [label sizeToFit];
-    [label setFrame:CGRectMake(label.frame.origin.x, label.frame.origin.y, label.frame.size.width + SUMMARY_WIDTH_OFFEST, label.frame.size.height)];
+    NSUInteger displayWidth = MIN(MIDDLE_COLUMN_WIDTH, label.frame.size.width);
+    [label setFrame:CGRectMake(label.frame.origin.x, label.frame.origin.y, displayWidth + SUMMARY_WIDTH_OFFEST, label.frame.size.height)];
 	
 	// Set the date
 	label = (UILabel *)[cell viewWithTag:TIME_TAG];
