@@ -2,7 +2,7 @@
 //  Identity.m
 //  iMedia
 //
-//  Created by Xiaosi Li on 10/28/12.
+//  Created by Xiaosi Li on 11/2/12.
 //  Copyright (c) 2012 Li Xiaosi. All rights reserved.
 //
 
@@ -12,17 +12,17 @@
 
 @implementation Identity
 
+@dynamic avatarURL;
 @dynamic displayName;
 @dynamic ePostalID;
 @dynamic guid;
-@dynamic avatarURL;
-@dynamic thumbnailURL;
-@dynamic state;
-@dynamic type;
 @dynamic lastGPSLocation;
 @dynamic lastGPSUpdated;
+@dynamic state;
+@dynamic thumbnailURL;
+@dynamic type;
+@dynamic thumbnailImage;
 @dynamic images;
-
 
 -(NSArray *)getOrderedImages
 {

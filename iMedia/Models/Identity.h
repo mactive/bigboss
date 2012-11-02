@@ -2,30 +2,33 @@
 //  Identity.h
 //  iMedia
 //
-//  Created by Xiaosi Li on 10/28/12.
+//  Created by Xiaosi Li on 11/2/12.
 //  Copyright (c) 2012 Li Xiaosi. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
+#import "DataTransformer.h"
 
 @class ImageRemote;
 
 @interface Identity : NSManagedObject
 
+@property (nonatomic, retain) NSString * avatarURL;
 @property (nonatomic, retain) NSString * displayName;
 @property (nonatomic, retain) NSString * ePostalID;
 @property (nonatomic, retain) NSString * guid;
-@property (nonatomic, retain) NSString * avatarURL;
-@property (nonatomic, retain) NSString * thumbnailURL;
-@property (nonatomic, retain) NSNumber * state;
-@property (nonatomic, retain) NSNumber * type;
 @property (nonatomic, retain) NSString * lastGPSLocation;
 @property (nonatomic, retain) NSDate * lastGPSUpdated;
+@property (nonatomic, retain) NSNumber * state;
+@property (nonatomic, retain) NSString * thumbnailURL;
+@property (nonatomic, retain) NSNumber * type;
+@property (nonatomic, retain) UIImage  * thumbnailImage;
 @property (nonatomic, retain) NSSet *images;
 
 -(NSArray *)getOrderedImages;
 -(NSArray *)getOrderedNonNilImages;
+
 @end
 
 @interface Identity (CoreDataGeneratedAccessors)

@@ -8,12 +8,10 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
+#import "DataTransformer.h"
 
 @class Me;
 
-@interface ImageToDataTransformer : NSValueTransformer {
-}
-@end
 
 @interface Avatar : NSManagedObject
 
