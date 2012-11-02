@@ -272,6 +272,10 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 {
     DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
     [xmppRoster removeUser:[XMPPJID jidWithString:jidStr]];
+    
+    if (block) {
+        block(nil);
+    }
 }
 
 // It's easy to create XML elments to send and to read received XML elements.

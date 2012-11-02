@@ -9,6 +9,7 @@
 #import "AddFriendByIDController.h"
 #import "AppNetworkAPIClient.h"
 #import "DDLog.h"
+#import "MBProgressHUD.h"
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
@@ -23,7 +24,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 #import "AppDelegate.h"
 #import <QuartzCore/QuartzCore.h>
 
-@interface AddFriendByIDController () <UITextFieldDelegate>
+@interface AddFriendByIDController () <UITextFieldDelegate,MBProgressHUDDelegate>
+{
+    MBProgressHUD * HUD;
+}
 
 @property (strong, nonatomic) UILabel *desc;
 @property (strong, nonatomic) UITextField *field;
@@ -103,11 +107,18 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 {
     NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: field.text, @"guid", @"1", @"op", nil];
     
+    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    HUD.delegate = self;
+    HUD.labelText = T(@"正在搜索");
+    
     [[AppNetworkAPIClient sharedClient] getPath:GET_DATA_PATH parameters:getDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
         DDLogVerbose(@"get config JSON received: %@", responseObject);
         
         NSString* type = [responseObject valueForKey:@"type"];
         if ([type isEqualToString:@"user"]) {
+            sleep(1);
+            [HUD hide:YES];
+            
             ContactDetailController *controller = [[ContactDetailController alloc] initWithNibName:nil bundle:nil];
             controller.jsonData = responseObject;
             controller.managedObjectContext = [self appDelegate].context;
@@ -118,9 +129,13 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             [self.navigationController pushViewController:controller animated:YES];
             
         } else if ([type isEqualToString:@"channel"]) {
+            sleep(1);
+            [HUD hide:YES];
+
             ChannelViewController *controller = [[ChannelViewController alloc] initWithNibName:nil bundle:nil];
             controller.jsonData = responseObject;
             controller.managedObjectContext = [self appDelegate].context;
+            
             [self.navigationController pushViewController:controller animated:YES];
         }
         
@@ -138,6 +153,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     }else {
         [self getDict];
     }
+    [field resignFirstResponder];
 }
 
 
@@ -148,11 +164,14 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     }
     
     [self getDict];
-
-    [field resignFirstResponder];
+    
+    if ([self.field isEqual:textField]) {
+        return [field resignFirstResponder];
+    }
     
     return YES;
 }
+
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
     //
