@@ -18,8 +18,12 @@
 #import "ServerDataTransformer.h"
 #import "UIImageView+AFNetworking.h"
 #import "ImageRemote.h"
+#import "MBProgressHUD.h"
 
-@interface ContactDetailController ()
+@interface ContactDetailController ()<MBProgressHUDDelegate>
+{
+    MBProgressHUD *HUD;
+}
 
 - (NSString *)getGender;
 - (NSString *)getAgeStr;
@@ -399,7 +403,7 @@
     [self.actionView addSubview:actionViewBg];
     
     
-    self.sendMsgButton = [[UIButton alloc] initWithFrame:CGRectMake(SMALL_GAP, 6, 93.5f, 29.0f)];
+    self.sendMsgButton = [[UIButton alloc] initWithFrame:CGRectMake(SMALL_GAP, 6, 94.0f, 29.0f)];
     [self.sendMsgButton setTag:0];
     [self.sendMsgButton.titleLabel setFont:[UIFont systemFontOfSize:TINY_FONT_HEIGHT]];
     [self.sendMsgButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -407,7 +411,7 @@
     [self.sendMsgButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 18, 0, 0)];
     [self.actionView addSubview:self.sendMsgButton];
     
-    self.reportUserButton = [[UIButton alloc] initWithFrame:CGRectMake(SMALL_GAP + 210.0f, 6, 93.5f, 29.0f)];
+    self.reportUserButton = [[UIButton alloc] initWithFrame:CGRectMake(SMALL_GAP + 210.0f, 6, 94.0f, 29.0f)];
     [self.reportUserButton setTag:3];
     [self.reportUserButton.titleLabel setFont:[UIFont systemFontOfSize:TINY_FONT_HEIGHT]];
     [self.reportUserButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -420,23 +424,23 @@
     // Now set content. Either user or jsonData must have value
     self.title = [self getNickname];
     if (self.user == nil) {
-        [self.sendMsgButton setTitle:NSLocalizedString(@"Add friend", nil) forState:UIControlStateNormal];
+        [self.sendMsgButton setTitle:T(@"Add friend") forState:UIControlStateNormal];
         [self.sendMsgButton setBackgroundImage:[UIImage imageNamed:@"profile_tabbar_btn2.png"] forState:UIControlStateNormal];
         [self.sendMsgButton addTarget:self action:@selector(addFriendButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
         
     } else {
-        [self.sendMsgButton setTitle:NSLocalizedString(@"Send Msg", nil) forState:UIControlStateNormal];
+        [self.sendMsgButton setTitle:T(@"Send Msg") forState:UIControlStateNormal];
         [self.sendMsgButton setBackgroundImage:[UIImage imageNamed:@"profile_tabbar_btn1.png"] forState:UIControlStateNormal];
         [self.sendMsgButton addTarget:self action:@selector(sendMsgButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
         
-        self.deleteUserButton = [[UIButton alloc] initWithFrame:CGRectMake(SMALL_GAP+105.0f, 6, 93.5f, 29.0f )];
+        self.deleteUserButton = [[UIButton alloc] initWithFrame:CGRectMake(SMALL_GAP+105.0f, 6, 94.0f, 29.0f )];
         [self.deleteUserButton setTag:2];
         [self.deleteUserButton.titleLabel setFont:[UIFont systemFontOfSize:TINY_FONT_HEIGHT]];
         [self.deleteUserButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [self.deleteUserButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
         [self.deleteUserButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 18, 0, 0)];
         [self.deleteUserButton setBackgroundImage:[UIImage imageNamed:@"profile_tabbar_btn4.png"] forState:UIControlStateNormal];
-        [self.deleteUserButton setTitle:NSLocalizedString(@"BlockUser", nil) forState:UIControlStateNormal];
+        [self.deleteUserButton setTitle:T(@"Delete") forState:UIControlStateNormal];
         [self.deleteUserButton addTarget:self action:@selector(deleteUserButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
         [self.actionView addSubview:self.deleteUserButton];
     }
@@ -501,7 +505,35 @@
 -(void)deleteUserButtonPushed:(id)sender
 {
     self.user.state = [NSNumber numberWithInt:IdentityStatePendingRemoveFriend];
-    [[XMPPNetworkCenter sharedClient] removeBuddy:self.user.ePostalID withCallbackBlock:nil];
+    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    HUD.delegate = self;
+    HUD.labelText = T(@"正在发送");
+    
+    [HUD hide:YES afterDelay:2];
+
+    
+    
+    [[XMPPNetworkCenter sharedClient] removeBuddy:self.user.ePostalID withCallbackBlock:^(NSError *error) {
+
+        if (error == nil) {
+            [HUD hide:YES];
+            
+            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            HUD.delegate = self;
+            HUD.mode = MBProgressHUDModeText;
+            HUD.labelText = T(@"删除成功");
+            [HUD hide:YES afterDelay:2];
+            
+        }else{
+            [HUD hide:YES];
+            
+            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            HUD.delegate = self;
+            HUD.mode = MBProgressHUDModeText;
+            HUD.labelText = T(@"未删除成功");
+            [HUD hide:YES afterDelay:2];
+        }
+    }];
 }
 
 ///////////////////////////////////////////////////////////////////////////////
