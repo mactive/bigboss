@@ -425,9 +425,6 @@
     
     self.albumButtonArray = [[NSMutableArray alloc] init];
     UIButton *albumButton;
-//    self.albumArray = [[NSMutableArray alloc] initWithObjects:
-//                       @"profile_face_1.png",@"profile_face_2.png",@"profile_face_1.png",@"profile_face_2.png", nil ];
-    
 
     for (int i = 0; i< MAX_ALBUN_COUNT; i++) {
         albumButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -448,11 +445,13 @@
     self.albumArray = [[NSMutableArray alloc] initWithArray: [self.me getOrderedAvatars]];
     self.albumCount = [self.albumArray count];
 
-    for (int j = 0; j < 8; j++) {
+    for (int j = 0; j < MAX_ALBUN_COUNT; j++) {
         UIButton *albumButton = [self.albumButtonArray objectAtIndex:j];
         Avatar *avatar = [self.albumArray objectAtIndex:j];
-        [albumButton setImage:avatar.thumbnail forState:UIControlStateNormal];
-        [albumButton setHidden:NO];
+        if (avatar.thumbnail != nil) {
+            [albumButton setImage:avatar.thumbnail forState:UIControlStateNormal];
+            [albumButton setHidden:NO];
+        }
     }
 
     if (self.albumCount == 0 ) {

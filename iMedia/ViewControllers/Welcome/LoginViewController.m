@@ -190,6 +190,17 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 //    [self.loginButton setBackgroundImage:[UIImage imageNamed:@"button_bg.png"] forState:UIControlStateNormal];
     [self.loginButton addTarget:self action:@selector(loginAction:) forControlEvents:UIControlEventTouchUpInside];
     
+    // set thekeyboard type and color and first letter
+    
+    self.usernameField.keyboardType = UIKeyboardTypeURL;
+    self.usernameField.returnKeyType = UIReturnKeyNext;
+    self.usernameField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    
+    self.passwordField.keyboardType = UIKeyboardTypeDefault;
+    self.passwordField.returnKeyType = UIReturnKeyGo;
+    self.passwordField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    
+    
     [self.view addSubview:self.usernameLabel];
     [self.view addSubview:self.usernameField];
     [self.view addSubview:self.passwordLabel];
