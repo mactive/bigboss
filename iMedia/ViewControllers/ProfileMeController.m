@@ -614,20 +614,6 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     //网路传输
     [[AppNetworkAPIClient sharedClient] storeAvatar:avatar forMe:self.me andOrder:avatar.sequence.intValue withBlock:^(id responseObject, NSError *error) {
         if (error == nil) {
-            
-            NSString* url = [responseObject valueForKey:@"image"];
-            NSString *thumbnailURL = [responseObject valueForKey:@"thumbnail"];
-            
-            NSArray *imagesURLArray = [self.me getOrderedImages];
-            ImageRemote *imageRemote = [imagesURLArray objectAtIndex:(avatar.sequence.intValue-1)];
-            imageRemote.sequence = avatar.sequence;
-            imageRemote.imageThumbnailURL = thumbnailURL;
-            imageRemote.imageURL = url;
-            
-            if (avatar.sequence.intValue == 1) {
-                self.me.avatarURL = imageRemote.imageURL;
-                self.me.thumbnailURL = imageRemote.imageThumbnailURL;
-            }
             // HUD hide
             [HUD hide:YES];
             // HUD show success
