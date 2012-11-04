@@ -586,6 +586,11 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
             userNS.state = [NSNumber numberWithInt:IdentityStatePendingServerDataUpdate];
             
             [[AppNetworkAPIClient sharedClient] updateIdentity:userNS withBlock:nil];
+        } else if ([array count] == 1) {
+            User *user = [array objectAtIndex:0];
+            if (user.state.intValue == IdentityStatePendingServerDataUpdate) {
+                [[AppNetworkAPIClient sharedClient] updateIdentity:user withBlock:nil];
+            }
         }
     }
     

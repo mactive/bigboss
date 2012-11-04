@@ -27,6 +27,8 @@ extern NSString *const kXMPPmyUsername;
 
 @interface AppNetworkAPIClient : AFHTTPClient
 
+@property (nonatomic, strong) NSMutableDictionary *imageUploadOperationsInProgress;
+
 + (AppNetworkAPIClient *)sharedClient;
 
 //- (void)updateChannelInfo:(Channel *)channel withBlock:(void (^)(NSError *error))block;

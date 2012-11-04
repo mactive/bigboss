@@ -42,6 +42,8 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 
 @implementation AppNetworkAPIClient
 
+@synthesize imageUploadOperationsInProgress;
+
 + (AppNetworkAPIClient *)sharedClient {
     static AppNetworkAPIClient *_sharedClient = nil;
     static dispatch_once_t onceToken;
@@ -62,6 +64,8 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     if (!self) {
         return nil;
     }
+    
+    self.imageUploadOperationsInProgress = [[NSMutableDictionary alloc] initWithCapacity:4];
     
     [self registerHTTPOperationClass:[AFJSONRequestOperation class]];
     
@@ -144,11 +148,29 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         DDLogInfo(@"upload image received response: %@", responseObject);
+        NSString* url = [responseObject valueForKey:@"image"];
+        NSString *thumbnailURL = [responseObject valueForKey:@"thumbnail"];
+        
+        [self.imageUploadOperationsInProgress removeObjectForKey:avatar.sequence];
+        
+        NSArray *imagesURLArray = [me getOrderedImages];
+        ImageRemote *imageRemote = [imagesURLArray objectAtIndex:(avatar.sequence.intValue-1)];
+        imageRemote.sequence = avatar.sequence;
+        imageRemote.imageThumbnailURL = thumbnailURL;
+        imageRemote.imageURL = url;
+        
+        if (avatar.sequence.intValue == 1) {
+            me.avatarURL = imageRemote.imageURL;
+            me.thumbnailURL = imageRemote.imageThumbnailURL;
+            me.thumbnailImage = avatar.thumbnail;
+        }
+
         if (block) {
             block(responseObject, nil);
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         DDLogError(@"upload image failed: %@", error);
+        [self.imageUploadOperationsInProgress removeObjectForKey:avatar.sequence];
         if (block) {
             block(nil, error);
         }
@@ -156,6 +178,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     
     DDLogInfo(@"http request: %@", operation);
     
+    [self.imageUploadOperationsInProgress setObject:operation forKey:avatar.sequence];
     [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:operation];
     
 }
@@ -312,6 +335,11 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     }];
     
     DDLogInfo(@"http request: %@", operation);
+    
+    NSArray *imageUploadingOpers = [self.imageUploadOperationsInProgress allValues];
+    for (int i = 0; i < [imageUploadOperationsInProgress count]; i++) {
+        [operation addDependency:[imageUploadingOpers objectAtIndex:i]];
+    }
     
     [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:operation];
     
