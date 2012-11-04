@@ -443,15 +443,16 @@
 - (void)refreshAlbumView
 {
     self.albumArray = [[NSMutableArray alloc] initWithArray: [self.me getOrderedAvatars]];
-    self.albumCount = [self.albumArray count];
-
+    self.albumCount = 0;
     for (int j = 0; j < MAX_ALBUN_COUNT; j++) {
         UIButton *albumButton = [self.albumButtonArray objectAtIndex:j];
         Avatar *avatar = [self.albumArray objectAtIndex:j];
         if (avatar.thumbnail != nil) {
             [albumButton setImage:avatar.thumbnail forState:UIControlStateNormal];
             [albumButton setHidden:NO];
+            self.albumCount += 1;
         }
+
     }
 
     if (self.albumCount == 0 ) {
