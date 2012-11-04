@@ -197,10 +197,12 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     self.usernameField.keyboardType = UIKeyboardTypeURL;
     self.usernameField.returnKeyType = UIReturnKeyNext;
     self.usernameField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    self.usernameField.autocorrectionType = UITextAutocorrectionTypeNo;
     
     self.passwordField.keyboardType = UIKeyboardTypeDefault;
     self.passwordField.returnKeyType = UIReturnKeyGo;
     self.passwordField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    self.passwordField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.passwordField.secureTextEntry = YES;
     
     
