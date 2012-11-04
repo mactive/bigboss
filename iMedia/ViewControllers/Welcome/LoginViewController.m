@@ -118,7 +118,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             }            
             [[self appDelegate] createMeWithUsername:usernameField.text password:passwordField.text jid:jid jidPasswd:jPassword andGUID:guid];
             
-            
             WelcomeViewController *welcomeController = [[WelcomeViewController alloc]initWithNibName:nil bundle:nil];
             [self.navigationController pushViewController:welcomeController animated:YES];
             
