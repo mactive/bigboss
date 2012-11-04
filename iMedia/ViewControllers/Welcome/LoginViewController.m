@@ -25,6 +25,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 @interface LoginViewController ()
 
+@property(strong,nonatomic) UITextField *usernameField;
+@property(strong,nonatomic) UITextField *passwordField;
 @property(strong, nonatomic)UILabel *usernameLabel;
 @property(strong, nonatomic)UILabel *passwordLabel;
 @property(strong, nonatomic)UIButton *loginButton;
@@ -199,6 +201,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     self.passwordField.keyboardType = UIKeyboardTypeDefault;
     self.passwordField.returnKeyType = UIReturnKeyGo;
     self.passwordField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    self.passwordField.secureTextEntry = YES;
     
     
     [self.view addSubview:self.usernameLabel];

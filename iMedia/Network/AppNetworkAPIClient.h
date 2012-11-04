@@ -27,7 +27,7 @@ extern NSString *const kXMPPmyUsername;
 
 @interface AppNetworkAPIClient : AFHTTPClient
 
-@property (nonatomic, strong) NSMutableDictionary *imageUploadOperationsInProgress;
+@property (nonatomic) NSNumber * kNetworkStatus;
 
 + (AppNetworkAPIClient *)sharedClient;
 
@@ -40,5 +40,7 @@ extern NSString *const kXMPPmyUsername;
 - (void)updateIdentity:(Identity *)identity withBlock:(void (^)(id responseObject, NSError *error))block;
 
 - (void)uploadMe:(Me *)me withBlock:(void (^)(id responseObject, NSError *error))block;
+
+- (BOOL)isConnectable;
 
 @end

@@ -40,8 +40,17 @@ NSString *const kXMPPmyJIDPassword = @"kXMPPmyJIDPassword";
 NSString *const kXMPPmyPassword = @"kXMPPmyPassword";
 NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 
+@interface AppNetworkAPIClient ()
+
+@property (nonatomic, strong) NSMutableDictionary *imageUploadOperationsInProgress;
+
+- (void)networkChangeReceived:(NSNotification *)notification;
+
+@end
+
 @implementation AppNetworkAPIClient
 
+@synthesize kNetworkStatus;
 @synthesize imageUploadOperationsInProgress;
 
 + (AppNetworkAPIClient *)sharedClient {
@@ -67,8 +76,11 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     
     self.imageUploadOperationsInProgress = [[NSMutableDictionary alloc] initWithCapacity:4];
     
-    [self registerHTTPOperationClass:[AFJSONRequestOperation class]];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(networkChangeReceived:)
+                                                 name:AFNetworkingReachabilityDidChangeNotification object:nil];
     
+    [self registerHTTPOperationClass:[AFJSONRequestOperation class]];
     // Accept HTTP Header; see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.1
 	[self setDefaultHeader:@"Accept" value:@"application/json"];
     
@@ -185,6 +197,14 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 
 - (void)updateIdentity:(Identity *)identity withBlock:(void (^)(id, NSError *))block
 {
+    // define a minimum time period to throttle call to server
+    const NSTimeInterval min_time_gap = -10;
+    NSDate *now = [NSDate dateWithTimeIntervalSinceNow:min_time_gap];
+    if ([now compare:identity.last_serverupdate_on] == NSOrderedAscending) {
+        return;
+    }
+    
+    // proceed to make server updates
     NSDictionary *getDict ;
     if (identity.guid != nil && ![identity.guid isEqualToString:@""]) {
         getDict = [NSDictionary dictionaryWithObjectsAndKeys: identity.guid, @"guid", @"1", @"op", nil];
@@ -257,6 +277,9 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
                 identity.state = [NSNumber numberWithInt:IdentityStateActive];
                 [[self appDelegate].contactListController contentChanged];
             }
+            
+            identity.last_serverupdate_on = [NSDate date];
+            
             if (block) {
                 block (responseObject, nil);
             }
@@ -345,4 +368,17 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     
 }
 
+- (BOOL)isConnectable
+{
+    if (self.kNetworkStatus.intValue == AFNetworkReachabilityStatusReachableViaWiFi || self.kNetworkStatus.intValue == AFNetworkReachabilityStatusReachableViaWWAN) {
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
+- (void)networkChangeReceived:(NSNotification *)notification
+{
+    self.kNetworkStatus = (NSNumber *)[notification.userInfo valueForKey:AFNetworkingReachabilityNotificationStatusItem];
+}
 @end

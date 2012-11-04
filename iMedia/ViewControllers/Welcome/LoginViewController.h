@@ -14,8 +14,7 @@
     MBProgressHUD *HUD;
 }
 
-@property(strong,nonatomic) UITextField *usernameField;
-@property(strong,nonatomic) UITextField *passwordField;
+
 
 
 @end
