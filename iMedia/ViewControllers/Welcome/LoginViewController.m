@@ -177,6 +177,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [self.passwordField setBorderStyle:UITextBorderStyleRoundedRect];
     self.passwordField.textColor = [UIColor grayColor];
     self.passwordField.backgroundColor = [UIColor whiteColor];
+    [self.passwordField setSecureTextEntry:YES];
     self.passwordField.delegate = self;
     
     self.loginButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];

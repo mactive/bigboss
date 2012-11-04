@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface LoginSettingViewController : UIViewController<UITextViewDelegate,UIPickerViewDataSource,UIPickerViewDelegate>
+@interface LoginSettingViewController : UIViewController
 
 @end
