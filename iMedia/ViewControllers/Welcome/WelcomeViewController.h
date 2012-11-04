@@ -11,5 +11,4 @@
 @interface WelcomeViewController : UIViewController
 
 - (void)welcomeAction:(id)sender;
-
 @end

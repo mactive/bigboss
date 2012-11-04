@@ -12,6 +12,7 @@
 		040127971632FB3A00845F3C /* UIBubbleTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0401278F1632FB3A00845F3C /* UIBubbleTableView.m */; };
 		040127981632FB3A00845F3C /* UIBubbleTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 040127911632FB3A00845F3C /* UIBubbleTableViewCell.m */; };
 		040127991632FB3A00845F3C /* UIBubbleTypingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 040127941632FB3A00845F3C /* UIBubbleTypingTableViewCell.m */; };
+		0450A5ED164649080002BA54 /* LoginSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0450A5EC164649080002BA54 /* LoginSettingViewController.m */; };
 		0489A3E816339FA400D122DF /* MessageBubbleSectionHeader@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0489A3E716339FA400D122DF /* MessageBubbleSectionHeader@2x.png */; };
 		2605CC40162EA9F700234442 /* navigationBar_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2605CC39162EA9F700234442 /* navigationBar_bg@2x.png */; };
 		2605CC41162EA9F700234442 /* tabbar_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2605CC3A162EA9F700234442 /* tabbar_bg@2x.png */; };
@@ -335,6 +336,8 @@
 		040127921632FB3A00845F3C /* UIBubbleTableViewDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIBubbleTableViewDataSource.h; path = iMedia/NSBubbleData/UIBubbleTableViewDataSource.h; sourceTree = SOURCE_ROOT; };
 		040127931632FB3A00845F3C /* UIBubbleTypingTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIBubbleTypingTableViewCell.h; path = iMedia/NSBubbleData/UIBubbleTypingTableViewCell.h; sourceTree = SOURCE_ROOT; };
 		040127941632FB3A00845F3C /* UIBubbleTypingTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIBubbleTypingTableViewCell.m; path = iMedia/NSBubbleData/UIBubbleTypingTableViewCell.m; sourceTree = SOURCE_ROOT; };
+		0450A5EB164649080002BA54 /* LoginSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginSettingViewController.h; path = ViewControllers/Welcome/LoginSettingViewController.h; sourceTree = "<group>"; };
+		0450A5EC164649080002BA54 /* LoginSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginSettingViewController.m; path = ViewControllers/Welcome/LoginSettingViewController.m; sourceTree = "<group>"; };
 		0489A3E716339FA400D122DF /* MessageBubbleSectionHeader@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "MessageBubbleSectionHeader@2x.png"; path = "Resources/MessageBubbleSectionHeader@2x.png"; sourceTree = "<group>"; };
 		2605CC39162EA9F700234442 /* navigationBar_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "navigationBar_bg@2x.png"; path = "Resources/navigationBar_bg@2x.png"; sourceTree = "<group>"; };
 		2605CC3A162EA9F700234442 /* tabbar_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tabbar_bg@2x.png"; path = "Resources/tabbar_bg@2x.png"; sourceTree = "<group>"; };
@@ -1758,6 +1761,8 @@
 		56B4CD551628126A00E046CC /* WelcomeScreenPart */ = {
 			isa = PBXGroup;
 			children = (
+				0450A5EB164649080002BA54 /* LoginSettingViewController.h */,
+				0450A5EC164649080002BA54 /* LoginSettingViewController.m */,
 				2640031D1642B45E00A1B779 /* WelcomeViewController.h */,
 				2640031E1642B45E00A1B779 /* WelcomeViewController.m */,
 				26F3BF21164294AC00E2899C /* LoginViewController.h */,
@@ -2199,6 +2204,7 @@
 				56A75E8F164394FA001FEB83 /* FriendRequest.m in Sources */,
 				56B834FA1643B49D00941C1C /* Identity.m in Sources */,
 				56B834FD1643B50B00941C1C /* DataTransformer.m in Sources */,
+				0450A5ED164649080002BA54 /* LoginSettingViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

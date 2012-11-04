@@ -120,7 +120,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             }            
             [[self appDelegate] createMeWithUsername:usernameField.text password:passwordField.text jid:jid jidPasswd:jPassword andGUID:guid];
             
-            
             WelcomeViewController *welcomeController = [[WelcomeViewController alloc]initWithNibName:nil bundle:nil];
             [self.navigationController pushViewController:welcomeController animated:YES];
             
@@ -180,6 +179,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [self.passwordField setBorderStyle:UITextBorderStyleRoundedRect];
     self.passwordField.textColor = [UIColor grayColor];
     self.passwordField.backgroundColor = [UIColor whiteColor];
+    [self.passwordField setSecureTextEntry:YES];
     self.passwordField.delegate = self;
     
     self.loginButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
