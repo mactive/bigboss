@@ -149,9 +149,8 @@
 
 - (void)welcomeAction
 {
-    [self.navigationController dismissViewControllerAnimated:YES completion:^{
-        [[self appDelegate] startMainSession];
-    }];
+    [self.navigationController dismissModalViewControllerAnimated:YES];
+    [[self appDelegate] startMainSession];
 }
 
 - (void)initWithGender
@@ -265,10 +264,15 @@
         }else{
             [self.welcomeButton setHidden:YES];
         }
-
-        return [textField resignFirstResponder];
     }
+    return [textField resignFirstResponder];
+
     
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    [self.displayNameField resignFirstResponder];
 }
 
 -(BOOL)textFieldShouldEndEditing:(UITextField *)textField
@@ -276,6 +280,7 @@
     if ([self.displayNameField isEqual:textField]) {
         self.me.displayName = self.displayNameField.text;
     }
+    return [textField resignFirstResponder];
 }
 
 
