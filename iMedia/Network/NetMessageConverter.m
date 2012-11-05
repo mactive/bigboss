@@ -31,6 +31,16 @@
     
     return _threadToReceiverJidMap;
 }
++ (NSMutableDictionary *)threadToLastConversationDateMap {
+    static NSMutableDictionary  *_threadToLastConversationdMap = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _threadToLastConversationdMap = [[NSMutableDictionary alloc] initWithCapacity:5];
+    });
+    
+    return _threadToLastConversationdMap;
+}
+
 //
 // msg comes from two sources: 1. User; 2. A CS rep of a business (i.e., invisible user). All 1-1 no pubsub
 //
@@ -76,7 +86,9 @@
         Channel *channel = [[ModelHelper sharedInstance] findChannelWithNode:node];
         message.from = channel;
         conv = channel.conversation;
+        
         [[self threadToReceiverJidMap] setValue:jid forKey:node];
+        [[self threadToLastConversationDateMap] setValue:[NSDate date] forKey:node];
     }
             
         
@@ -141,8 +153,24 @@
 +(XMPPMessage *)newXMPPMessageFromMessage:(Message *)message
 {
     NSString* toJid = @"";
+    const int kOneHourInSeconds = - 3600;
+    //
+    // Here we simulate a cs session with the assumption that if we have received a chat for this node from a cs person,
+    // we store the cs jid which can be used in subsequence chat. and we will remove this jid reference once the cs
+    // tell us the conversation is over by receving the rating request
+    //
+    // however, in case the rating request is LOST, we need a way to recover. The best simulation so far is to use a
+    // session auto expire with time. Say, if within an hour there has been no exchange between user and cs, we stop this session
+    // and start a new session
     if (message.conversation.channel != nil) {
-        toJid = message.conversation.channel.csContactPostalID;
+        NSString* csJID = [[self threadToReceiverJidMap] valueForKey:message.conversation.channel.node];
+        NSDate *last_talk_date = [[self threadToLastConversationDateMap] valueForKey:message.conversation.channel.node];
+        NSTimeInterval diff = [last_talk_date timeIntervalSinceNow];
+        if (csJID != nil && ![csJID isEqualToString:@""] && (abs(diff) > kOneHourInSeconds)) {
+            toJid = csJID;
+        } else {
+            toJid = message.conversation.channel.csContactPostalID;
+        }
     } else {
         User *to = [message.conversation.users anyObject]; // here we suppose a conversation only between two parties
         toJid = to.ePostalID;

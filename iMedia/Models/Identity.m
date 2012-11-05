@@ -23,6 +23,7 @@
 @dynamic type;
 @dynamic thumbnailImage;
 @dynamic images;
+@dynamic last_serverupdate_on;
 
 -(NSArray *)getOrderedImages
 {

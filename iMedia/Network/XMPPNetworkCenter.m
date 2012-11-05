@@ -506,7 +506,6 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
         thisUser.displayName = [thisUser.ePostalID substringToIndex:[thisUser.ePostalID rangeOfString: @"@"].location];
         thisUser.type = [NSNumber numberWithInt:IdentityTypeUser];
         thisUser.state = [NSNumber numberWithInt:IdentityStatePendingServerDataUpdate];
-        MOCSave(_managedObjectContext);
         
         [[AppNetworkAPIClient sharedClient] updateIdentity:thisUser withBlock:nil];
     }

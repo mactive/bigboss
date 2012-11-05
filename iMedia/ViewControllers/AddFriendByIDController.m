@@ -77,6 +77,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     self.field.textColor = [UIColor grayColor];
     self.field.backgroundColor = [UIColor whiteColor];
     self.field.delegate = self;
+    self.field.autocorrectionType = UITextAutocorrectionTypeNo;
+    self.field.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    self.field.returnKeyType = UIReturnKeyGo;
     
     
     self.doneButton  = [[UIButton alloc] initWithFrame:CGRectMake(22.5, 115, 275, 40)];

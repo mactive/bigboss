@@ -25,6 +25,7 @@
 @property (nonatomic, retain) NSNumber * type;
 @property (nonatomic, retain) UIImage  * thumbnailImage;
 @property (nonatomic, retain) NSSet *images;
+@property (nonatomic, retain) NSDate * last_serverupdate_on;
 
 -(NSArray *)getOrderedImages;
 -(NSArray *)getOrderedNonNilImages;
