@@ -15,6 +15,7 @@
 #import "FriendRequestListViewController.h"
 #import "FriendRequest.h"
 #import "ModelHelper.h"
+#import "MetroButton.h"
 
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
@@ -24,11 +25,9 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 static const int ddLogLevel = LOG_LEVEL_INFO;
 #endif
 
+@interface FunctionListViewController ()
 
-@interface FunctionListViewController () <UITableViewDataSource, UITableViewDelegate>
-
-@property(nonatomic, strong) UITableView *settingTableView;
-
+@property(nonatomic, strong) UIView *settingView;
 @property(nonatomic, strong) NSArray *settingTitleArray;
 @property(nonatomic, strong) NSArray *settingDescArray;
 
@@ -36,7 +35,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 @implementation FunctionListViewController
 
-@synthesize settingTableView;
+@synthesize settingView;
 @synthesize settingDescArray;
 @synthesize settingTitleArray;
 @synthesize friendRequestDict;
@@ -56,23 +55,41 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     return self;
 }
 
+#define VIEW_ALBUM_OFFSET 10
+#define VIEW_ALBUM_WIDTH 145
+#define COUNT_PER_LINE 2
+
+- (CGRect)calcRect:(NSInteger)index
+{
+    CGFloat x = VIEW_ALBUM_OFFSET * (index % COUNT_PER_LINE * 1 + 1) + VIEW_ALBUM_WIDTH * (index % COUNT_PER_LINE) ;
+    CGFloat y = VIEW_ALBUM_OFFSET * (floor(index / COUNT_PER_LINE) * 1 + 1) + VIEW_ALBUM_WIDTH * floor(index / COUNT_PER_LINE);
+    return  CGRectMake( x, y, VIEW_ALBUM_WIDTH, VIEW_ALBUM_WIDTH);
+}
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    self.settingTitleArray = [[NSArray alloc] initWithObjects:
-                              [[NSArray alloc] initWithObjects:@"附近的人", nil],
-                              [[NSArray alloc] initWithObjects:@"打招呼的人", nil],
-                              [[NSArray alloc] initWithObjects:@"摇一摇", nil],
-                              nil ];
+    self.settingTitleArray = [[NSArray alloc] initWithObjects:@"附近的人", @"打招呼的人", @"摇一摇",@"百宝箱", nil];
     
+    [self.view addSubview:self.settingView];
     
-    
-    self.settingTableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
-    self.settingTableView.dataSource = self;
-    self.settingTableView.delegate = self;
-    //    [self.settingTableView setBackgroundColor:[UIColor clearColor]];
-    [self.view addSubview:self.settingTableView];
+    for (int index = 0; index <[self.settingTitleArray count]; index++) {
+        MetroButton *button = [[MetroButton alloc]initWithFrame:[self calcRect:index]];
+        NSString *title = [self.settingTitleArray objectAtIndex:index];
+        NSString *image = [NSString stringWithFormat:@"metro_icon_%d.png",(index+1)];
+        [button initMetroButton:[UIImage imageNamed:image] andText:title andIndex:index];
+        
+        if (index == 1) {
+            [button addTarget:self action:@selector(sayhiAction) forControlEvents:UIControlEventTouchUpInside];
+        }
+        if (index == 2) {
+            [button addTarget:self action:@selector(shakeAction) forControlEvents:UIControlEventTouchUpInside];
+        }
+        [self.view addSubview:button];
+    }
+
     
     
 #warning TODO: paged fetch - don't fetch all at the same time
@@ -93,97 +110,36 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark - tableview
-////////////////////////////////////////////////////////////////////////////////
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - actions
+////////////////////////////////////////////////////////////////////////////////////////
+- (void)sayhiAction
 {
-    return 44.0;
-}
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    return [self.settingTitleArray count];
-}
-
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return [[self.settingTitleArray objectAtIndex:section] count];
-}
-
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    static NSString *CellIdentifier = @"SettingCell";
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [self tableViewCellWithReuseIdentifier:CellIdentifier forIndexPath:indexPath];
-    }
-    return cell;
-}
-
-////////////////////////////////////////////////////////////////////////////////
-#pragma mark - tableViewCellWithReuseIdentifier
-////////////////////////////////////////////////////////////////////////////////
-
-#define SUMMARY_WIDTH 200
-#define LABEL_HEIGHT 20
-
-- (UITableViewCell *)tableViewCellWithReuseIdentifier:(NSString *)identifier forIndexPath:(NSIndexPath *)indexPath {
-	
-	/*
-	 Create an instance of UITableViewCell and add tagged subviews for the name, message, and quarter image of the time zone.
-	 */
-    
-	UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
-    
-    [cell setSelectionStyle:UITableViewCellSelectionStyleBlue];
-    cell.backgroundView.backgroundColor = RGBCOLOR(248, 248, 248);
-    
-    cell.selectedBackgroundView.backgroundColor =  RGBCOLOR(228, 228, 228);
-    
-    UILabel* titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 12, 140, 20)];
-    titleLabel.text = [[self.settingTitleArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-    titleLabel.font = [UIFont boldSystemFontOfSize:16.0];
-    titleLabel.textColor = RGBCOLOR(77, 77, 77);
-    titleLabel.backgroundColor = [UIColor clearColor];
-    [cell addSubview:titleLabel];
-    //    cell.textLabel.text = [self.infoArray objectAtIndex:indexPath.row];
-    //    cell.textLabel.textColor = RGBCOLOR(155, 161, 172);
-    
-    return cell;
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-
-    if (indexPath.row == 0 && indexPath.section == 1 ) {
-
-        if ([self.friendRequestDict count] == 1) { 
-            RequestViewController *controller = [[RequestViewController alloc] initWithNibName:nil bundle:nil];
-            controller.request = [[self.friendRequestDict allValues] objectAtIndex:0];
-            [self.navigationController pushViewController:controller animated:YES];
-            
-//            FriendRequestListViewController *controller = [[FriendRequestListViewController alloc] initWithNibName:nil bundle:nil];
-//            controller.friendRequestArray = [NSMutableArray arrayWithArray:[self.friendRequestDict allValues]];
-//            [self.navigationController pushViewController:controller animated:YES];
-            
-        } else if ([self.friendRequestDict count] > 1) {
-            FriendRequestListViewController *controller = [[FriendRequestListViewController alloc] initWithNibName:nil bundle:nil];
-            controller.friendRequestArray = [NSMutableArray arrayWithArray:[self.friendRequestDict allValues]];
-            [self.navigationController pushViewController:controller animated:YES];
-        }
-    }
-    
-    if (indexPath.row == 0 && indexPath.section == 2 ) {
-        ShakeViewController *shakeViewController = [[ShakeViewController alloc] initWithNibName:nil bundle:nil];
-        [self.navigationController pushViewController:shakeViewController animated:YES];
+    if ([self.friendRequestDict count] == 1) {
+        RequestViewController *controller = [[RequestViewController alloc] initWithNibName:nil bundle:nil];
+        controller.request = [[self.friendRequestDict allValues] objectAtIndex:0];
+        [self.navigationController pushViewController:controller animated:YES];
+        
+        //            FriendRequestListViewController *controller = [[FriendRequestListViewController alloc] initWithNibName:nil bundle:nil];
+        //            controller.friendRequestArray = [NSMutableArray arrayWithArray:[self.friendRequestDict allValues]];
+        //            [self.navigationController pushViewController:controller animated:YES];
+        
+    } else if ([self.friendRequestDict count] > 1) {
+        FriendRequestListViewController *controller = [[FriendRequestListViewController alloc] initWithNibName:nil bundle:nil];
+        controller.friendRequestArray = [NSMutableArray arrayWithArray:[self.friendRequestDict allValues]];
+        [self.navigationController pushViewController:controller animated:YES];
     }
 }
+
+- (void)shakeAction
+{
+    ShakeViewController *shakeViewController = [[ShakeViewController alloc] initWithNibName:nil bundle:nil];
+    [self.navigationController pushViewController:shakeViewController animated:YES];
+}
+
+
+
+
 
 - (void)friendRequestReceived:(NSNotification *)notification
 {

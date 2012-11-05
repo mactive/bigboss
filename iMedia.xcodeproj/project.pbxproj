@@ -48,6 +48,11 @@
 		266958361647F82900A7106C /* welcome_title@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 266958331647F82900A7106C /* welcome_title@2x.png */; };
 		266958371647F82900A7106C /* welcome_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 266958341647F82900A7106C /* welcome_bg@2x.png */; };
 		266958381647F82900A7106C /* welcome_btn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 266958351647F82900A7106C /* welcome_btn@2x.png */; };
+		2669583B164803AC00A7106C /* MetroButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 2669583A164803AB00A7106C /* MetroButton.m */; };
+		266958401648071100A7106C /* metro_icon_4@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2669583C1648071100A7106C /* metro_icon_4@2x.png */; };
+		266958411648071100A7106C /* metro_icon_3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2669583D1648071100A7106C /* metro_icon_3@2x.png */; };
+		266958421648071100A7106C /* metro_icon_1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2669583E1648071100A7106C /* metro_icon_1@2x.png */; };
+		266958431648071100A7106C /* metro_icon_2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2669583F1648071100A7106C /* metro_icon_2@2x.png */; };
 		266A1A6F162E5AF3008EF1D5 /* ShakeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 266A1A6E162E5AF2008EF1D5 /* ShakeViewController.m */; };
 		266A1A72162E5B10008EF1D5 /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 266A1A71162E5B0F008EF1D5 /* SettingViewController.m */; };
 		2673F5A0163003B3004DAACB /* cell_bg_highlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2673F59D163003B3004DAACB /* cell_bg_highlighted@2x.png */; };
@@ -384,6 +389,12 @@
 		266958331647F82900A7106C /* welcome_title@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "welcome_title@2x.png"; path = "Resources/welcome_title@2x.png"; sourceTree = "<group>"; };
 		266958341647F82900A7106C /* welcome_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "welcome_bg@2x.png"; path = "Resources/welcome_bg@2x.png"; sourceTree = "<group>"; };
 		266958351647F82900A7106C /* welcome_btn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "welcome_btn@2x.png"; path = "Resources/welcome_btn@2x.png"; sourceTree = "<group>"; };
+		26695839164803AB00A7106C /* MetroButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MetroButton.h; path = contrib/MetroButton.h; sourceTree = "<group>"; };
+		2669583A164803AB00A7106C /* MetroButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MetroButton.m; path = contrib/MetroButton.m; sourceTree = "<group>"; };
+		2669583C1648071100A7106C /* metro_icon_4@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "metro_icon_4@2x.png"; path = "Resources/metro_icon_4@2x.png"; sourceTree = "<group>"; };
+		2669583D1648071100A7106C /* metro_icon_3@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "metro_icon_3@2x.png"; path = "Resources/metro_icon_3@2x.png"; sourceTree = "<group>"; };
+		2669583E1648071100A7106C /* metro_icon_1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "metro_icon_1@2x.png"; path = "Resources/metro_icon_1@2x.png"; sourceTree = "<group>"; };
+		2669583F1648071100A7106C /* metro_icon_2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "metro_icon_2@2x.png"; path = "Resources/metro_icon_2@2x.png"; sourceTree = "<group>"; };
 		266A1A6D162E5AF2008EF1D5 /* ShakeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShakeViewController.h; path = ViewControllers/ShakeViewController.h; sourceTree = "<group>"; };
 		266A1A6E162E5AF2008EF1D5 /* ShakeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShakeViewController.m; path = ViewControllers/ShakeViewController.m; sourceTree = "<group>"; };
 		266A1A70162E5B0F008EF1D5 /* SettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SettingViewController.h; path = ViewControllers/SettingViewController.h; sourceTree = "<group>"; };
@@ -829,6 +840,8 @@
 			children = (
 				26F3BF1716428DDB00E2899C /* MBProgressHUD.h */,
 				26F3BF1816428DDB00E2899C /* MBProgressHUD.m */,
+				26695839164803AB00A7106C /* MetroButton.h */,
+				2669583A164803AB00A7106C /* MetroButton.m */,
 				268E9BF5163FBD8000CD0C22 /* ServerDataTransformer.h */,
 				268E9BF6163FBD8000CD0C22 /* ServerDataTransformer.m */,
 				2631C52816313033004DE7FB /* NSDate+timesince.h */,
@@ -891,6 +904,10 @@
 			isa = PBXGroup;
 			children = (
 				266958311647DEA300A7106C /* login_intro_oyeah@2x.png */,
+				2669583C1648071100A7106C /* metro_icon_4@2x.png */,
+				2669583D1648071100A7106C /* metro_icon_3@2x.png */,
+				2669583E1648071100A7106C /* metro_icon_1@2x.png */,
+				2669583F1648071100A7106C /* metro_icon_2@2x.png */,
 				266958331647F82900A7106C /* welcome_title@2x.png */,
 				266958341647F82900A7106C /* welcome_bg@2x.png */,
 				266958351647F82900A7106C /* welcome_btn@2x.png */,
@@ -2042,6 +2059,10 @@
 				266958361647F82900A7106C /* welcome_title@2x.png in Resources */,
 				266958371647F82900A7106C /* welcome_bg@2x.png in Resources */,
 				266958381647F82900A7106C /* welcome_btn@2x.png in Resources */,
+				266958401648071100A7106C /* metro_icon_4@2x.png in Resources */,
+				266958411648071100A7106C /* metro_icon_3@2x.png in Resources */,
+				266958421648071100A7106C /* metro_icon_1@2x.png in Resources */,
+				266958431648071100A7106C /* metro_icon_2@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2237,6 +2258,7 @@
 				56B834FA1643B49D00941C1C /* Identity.m in Sources */,
 				56B834FD1643B50B00941C1C /* DataTransformer.m in Sources */,
 				0450A5ED164649080002BA54 /* LoginSettingViewController.m in Sources */,
+				2669583B164803AC00A7106C /* MetroButton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
