@@ -114,23 +114,61 @@
     
     UIButton *albumButton;
     
-    self.albumArray = [self.user getOrderedNonNilImages];
-    
-    for (int i = 0; i< [albumArray count]; i++) {
-        albumButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-        ImageRemote* remote = [albumArray objectAtIndex:i];
-        UIImageView *view = [[UIImageView alloc] init];
-        [view setImageWithURL:[NSURL URLWithString:remote.imageThumbnailURL] placeholderImage:nil];
-        [albumButton setImage:view.image forState:UIControlStateNormal];
-        [albumButton setFrame:CGRectMake(VIEW_ALBUM_OFFSET * (i%4*2 + 1) + VIEW_ALBUM_WIDTH * (i%4), VIEW_ALBUM_OFFSET * (floor(i/4)*2+1) + VIEW_ALBUM_WIDTH * floor(i/4), VIEW_ALBUM_WIDTH, VIEW_ALBUM_WIDTH)];
-        [albumButton.layer setMasksToBounds:YES];
-        [albumButton.layer setCornerRadius:3.0];
-        albumButton.tag = i;
-
-        [albumButton addTarget:self action:@selector(albumClick:) forControlEvents:UIControlEventTouchUpInside];
-
-        [self.albumView addSubview:albumButton];
+    if (self.user != nil) {
+        self.albumArray = [self.user getOrderedNonNilImages];
+        
+        for (int i = 0; i< [albumArray count]; i++) {
+            albumButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+            ImageRemote* remote = [albumArray objectAtIndex:i];
+            UIImageView *view = [[UIImageView alloc] init];
+            [view setImageWithURL:[NSURL URLWithString:remote.imageThumbnailURL] placeholderImage:nil];
+            [albumButton setImage:view.image forState:UIControlStateNormal];
+            [albumButton setFrame:CGRectMake(VIEW_ALBUM_OFFSET * (i%4*2 + 1) + VIEW_ALBUM_WIDTH * (i%4), VIEW_ALBUM_OFFSET * (floor(i/4)*2+1) + VIEW_ALBUM_WIDTH * floor(i/4), VIEW_ALBUM_WIDTH, VIEW_ALBUM_WIDTH)];
+            [albumButton.layer setMasksToBounds:YES];
+            [albumButton.layer setCornerRadius:3.0];
+            albumButton.tag = i;
+            
+            [albumButton addTarget:self action:@selector(albumClick:) forControlEvents:UIControlEventTouchUpInside];
+            
+            [self.albumView addSubview:albumButton];
+        }
+    } else {
+        NSMutableDictionary *imageURLDict = [[NSMutableDictionary alloc] initWithCapacity:8];
+        for (int i = 1; i <=8; i++) {
+            NSString *key = [NSString stringWithFormat:@"avatar%d", i];
+            NSString *url = [ServerDataTransformer getStringObjFromServerJSON:self.jsonData byName:key];
+            if (url != nil && ![url isEqualToString:@""]) {
+                [imageURLDict setValue:url forKey:[NSString stringWithFormat:@"%d", i]];
+            }
+        }
+        NSMutableDictionary *imageThumbnailURLDict = [[NSMutableDictionary alloc] initWithCapacity:8];
+        for (int i = 1; i <=8; i++) {
+            NSString *key = [NSString stringWithFormat:@"thumbnail%d", i];
+            NSString *url = [ServerDataTransformer getStringObjFromServerJSON:self.jsonData byName:key];
+            if (url != nil && ![url isEqualToString:@""]) {
+                [imageThumbnailURLDict setValue:url forKey:[NSString stringWithFormat:@"%d", i]];
+            }
+        }
+        for (int i = 1; i <= 8 ; i++) {
+            NSString *key = [NSString stringWithFormat:@"%d", i];
+            if ([imageURLDict objectForKey:key] != nil && [imageThumbnailURLDict objectForKey:key] != nil) {
+                NSString* imageThumbnailURL = [imageThumbnailURLDict objectForKey:key];
+                albumButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+                UIImageView *view = [[UIImageView alloc] init];
+                [view setImageWithURL:[NSURL URLWithString:imageThumbnailURL] placeholderImage:nil];
+                [albumButton setImage:view.image forState:UIControlStateNormal];
+                [albumButton setFrame:CGRectMake(VIEW_ALBUM_OFFSET * (i%4*2 + 1) + VIEW_ALBUM_WIDTH * (i%4), VIEW_ALBUM_OFFSET * (floor(i/4)*2+1) + VIEW_ALBUM_WIDTH * floor(i/4), VIEW_ALBUM_WIDTH, VIEW_ALBUM_WIDTH)];
+                [albumButton.layer setMasksToBounds:YES];
+                [albumButton.layer setCornerRadius:3.0];
+                albumButton.tag = i;
+#warning TODO: add ability to view other's full image. Need to rewrite self.albumArray
+               // [albumButton addTarget:self action:@selector(albumClick:) forControlEvents:UIControlEventTouchUpInside];
+                
+                [self.albumView addSubview:albumButton];
+            }
+        }
     }
+    
     
     [self.contentView addSubview:self.albumView];
     

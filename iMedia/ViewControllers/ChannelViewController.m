@@ -15,6 +15,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "UIImageView+AFNetworking.h"
 #import "MBProgressHUD.h"
+#import "ServerDataTransformer.h"
 
 @interface ChannelViewController ()<MBProgressHUDDelegate>
 {
@@ -81,7 +82,7 @@
     
     // Now set content. Either user or jsonData must have value
     if (self.channel == nil) {
-        self.title = [jsonData valueForKey:@"receive_jid"];
+        self.title = [ServerDataTransformer getNicknameFromServerJSON:jsonData];
         [self.confirmButton setTitle:T(@"订阅此频道") forState:UIControlStateNormal];
         [self.confirmButton addTarget:self action:@selector(subscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
     } else {
@@ -158,22 +159,20 @@
         newChannel.state = [NSNumber numberWithInt:IdentityStatePendingAddSubscription];
     }
     
-    newChannel.subrequestID = [[XMPPNetworkCenter sharedClient] subscribeToChannel:nodeStr withCallbackBlock:nil];
-    
-    if (newChannel.subrequestID) {
+    newChannel.subrequestID = [[XMPPNetworkCenter sharedClient] subscribeToChannel:nodeStr withCallbackBlock:^(NSError *error) {
+        
         HUD = [[MBProgressHUD alloc] initWithView:self.view];
         [self.view addSubview:HUD];
-        HUD.labelText = T(@"订阅成功");
+        HUD.labelText = T(@"订阅请求成功发送");
         
         [HUD showAnimated:YES whileExecutingBlock:^{
             sleep(2);
             [HUD hide:YES];
         } completionBlock:^{
-            [self.confirmButton setTitle:T(@"退订此频道") forState:UIControlStateNormal];
-            [self.confirmButton removeTarget:self action:@selector(subscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
-            [self.confirmButton addTarget:self action:@selector(unSubscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
+            
         }];
-    }
+
+    }];
 }
 
 -(void)unSubscribeButtonPushed:(id)sender

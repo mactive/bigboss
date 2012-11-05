@@ -60,6 +60,9 @@
 @property (strong, nonatomic) UIView *snsView;
 @property (strong, nonatomic) UIView *infoView;
 
+@property (strong, nonatomic) UIImageView *sexView;
+@property (strong, nonatomic) UILabel *sexLabel;
+
 @property (strong, nonatomic) UIButton *sendMsgButton;
 @property (strong, nonatomic) UIButton *deleteUserButton;
 @property (strong, nonatomic) UIButton *reportUserButton;
@@ -96,6 +99,8 @@
 @synthesize infoView;
 @synthesize infoTableView;
 @synthesize addAlbumButton;
+@synthesize sexLabel;
+@synthesize sexView;
 
 @synthesize editProfileButton;
 @synthesize albumCount;
@@ -308,6 +313,7 @@
     [self.infoDescArray replaceObjectAtIndex:index withObject:valueStr];
     
     self.me.birthdate = value;
+    [self refreshStatusView];
 }
 
 - (void)infoTableCommitEdit{
@@ -580,7 +586,7 @@
 - (void)takePhotoFromLibaray
 {
     UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-    picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    picker.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
     picker.delegate = self;
 	picker.allowsEditing = YES;
     [self presentModalViewController:picker animated:YES];
@@ -589,7 +595,7 @@
 - (void)takePhotoFromCamera
 {
     if (![UIImagePickerController isSourceTypeAvailable:kCameraSource]) {
-        UIAlertView *cameraAlert = [[UIAlertView alloc] initWithTitle:T(@"cameraAlert") message:T(@"Camera is not available.") delegate:self cancelButtonTitle:nil otherButtonTitles:nil, nil];
+        UIAlertView *cameraAlert = [[UIAlertView alloc] initWithTitle:T(@"cameraAlert") message:T(@"Camera is not available.") delegate:self cancelButtonTitle:T(@"Cancel") otherButtonTitles:nil, nil];
         [cameraAlert show];
 		return;
 	}
@@ -682,6 +688,16 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
 #pragma mark - status view
 ////////////////////////////////////////////////////////////////////////////////
 
+- (void)refreshStatusView
+{
+    NSDate *now = [NSDate date];
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    //unsigned int unitFlags = NSMonthCalendarUnit | NSDayCalendarUnit;
+    NSDateComponents *comps = [gregorian components:NSYearCalendarUnit fromDate:self.me.birthdate  toDate:now  options:0];
+    NSString* ageStr = [NSString stringWithFormat:@"%d", comps.year];
+    
+    sexLabel.text  = ageStr;
+}
 
 - (void)initStatusView
 {
@@ -689,7 +705,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     
     // Create a label icon for the sex.
     NSString* bgImgStr ;
-        if ([me.gender isEqualToString:@"m"]) {
+    if ([me.gender isEqualToString:@"m"]) {
         bgImgStr = @"sex_male_bg.png";
     } else if ([me.gender isEqualToString:@"f"]) {
         bgImgStr = @"sex_female_bg.png";
@@ -697,22 +713,15 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
         bgImgStr = @"sex_unknown_bg.png";
     }
     
-    UIImageView* sexView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:bgImgStr]];
-    [sexView setFrame:CGRectMake(0, 0, 40, 15)];
+    self.sexView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:bgImgStr]];
+    [self.sexView setFrame:CGRectMake(0, 0, 40, 15)];
     
     
-    NSDate *now = [NSDate date];
-    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
-    //unsigned int unitFlags = NSMonthCalendarUnit | NSDayCalendarUnit;
-    NSDateComponents *comps = [gregorian components:NSYearCalendarUnit fromDate:self.me.birthdate  toDate:now  options:0];
-    NSString* ageStr = [NSString stringWithFormat:@"%d", comps.year];
-    
-    UILabel* sexLabel = [[UILabel alloc]initWithFrame:CGRectMake(18, 0, 15, 15)];
-    [sexLabel setBackgroundColor:[UIColor clearColor]];
-    sexLabel.text  = ageStr;
-    [sexLabel setFont:[UIFont systemFontOfSize:12.0]];
-    [sexLabel setTextColor:[UIColor whiteColor]];
-    [sexView addSubview:sexLabel];
+    self.sexLabel = [[UILabel alloc]initWithFrame:CGRectMake(18, 0, 15, 15)];
+    [self.sexLabel setBackgroundColor:[UIColor clearColor]];
+    [self.sexLabel setFont:[UIFont systemFontOfSize:12.0]];
+    [self.sexLabel setTextColor:[UIColor whiteColor]];
+    [self.sexView addSubview:self.sexLabel];
 
     
     UILabel* guidLabel = [[UILabel alloc]initWithFrame:CGRectMake(210, 0, 100, 20)];
@@ -726,8 +735,10 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     
     
     // add to the statusView
-    [self.statusView addSubview:sexView];    
+    [self.statusView addSubview:self.sexView];
     [self.contentView addSubview: self.statusView];
+    
+    [self refreshStatusView];
     
 }
 
