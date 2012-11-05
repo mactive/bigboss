@@ -123,7 +123,6 @@ const UIEdgeInsets imageInsetsSomeone = {11, 18, 16, 14};
 
 - (id)initWithWeb:(NSString *)urlString date:(NSDate *)date type:(NSBubbleType)type
 {
-    
     self.webView = [[UIWebView alloc] initWithFrame:CGRectMake(12.5, 12.5, 275, 200)];
     
     NSURL *url=[NSURL URLWithString:urlString];
@@ -136,7 +135,7 @@ const UIEdgeInsets imageInsetsSomeone = {11, 18, 16, 14};
     
     UIEdgeInsets insets = (type == BubbleTypeMine ? imageInsetsMine : imageInsetsSomeone);
     return [self initWithView:self.webView date:date content:urlString type:type insets:insets];
-
+    
 }
 
 #pragma mark - Custom view bubble
@@ -171,16 +170,16 @@ const UIEdgeInsets imageInsetsSomeone = {11, 18, 16, 14};
     return self;
 }
 
-//#pragma mark - UIWebView delegate
-//
-//- (void)webViewDidFinishLoad:(UIWebView *)webView
-//{
-//    if ([self.webView isEqual:webView]) {        
-//        CGSize actualSize = [self.webView sizeThatFits:CGSizeZero];
-//        CGRect newFrame = self.webView.frame;
-//        newFrame.size.height = actualSize.height;
-//        self.webView.frame = newFrame;
-//    }
-//}
+#pragma mark - UIWebView delegate
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView
+{
+    if ([self.webView isEqual:webView]) {        
+        CGSize actualSize = [self.webView sizeThatFits:CGSizeZero];
+        CGRect newFrame = self.webView.frame;
+        newFrame.size.height = actualSize.height;
+        self.webView.frame = newFrame;
+    }
+}
 
 @end

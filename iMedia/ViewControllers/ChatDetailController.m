@@ -184,6 +184,7 @@
     
     // setup self.title
     NSEnumerator *enumerator = [conversation.users objectEnumerator];
+    
     User *anUser = [enumerator nextObject];
     self.title = anUser.displayName;
 }
