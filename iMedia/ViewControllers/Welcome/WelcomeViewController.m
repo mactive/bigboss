@@ -62,17 +62,20 @@
     [self.welcomeLabel setFont:[UIFont systemFontOfSize:16.0]];
     self.welcomeLabel.textColor = [UIColor grayColor];
 
-    if ([self.me.career length] ==0 ) {
+//    if ([self.me.career length] ==0 ) {
 
-//    if ([self.me.gender isEqualToString:@""] || [self.me.displayName isEqualToString:@""] || [self.me.gender length] == 0 || [self.me.displayName length] == 0) {
-        [self.welcomeButton setTitle:T(@"设置") forState:UIControlStateNormal];
-        [self.welcomeButton addTarget:self action:@selector(settingAction:) forControlEvents:UIControlEventTouchUpInside];
-        self.welcomeLabel.text = T(@"系统检测到你您还没有设置昵称和性别.");
+    if ([self.me.gender isEqualToString:@""] || [self.me.displayName isEqualToString:@""] || [self.me.gender length] == 0 || [self.me.displayName length] == 0) {
+        LoginSettingViewController *settingViewController = [[LoginSettingViewController alloc]initWithNibName:nil bundle:nil];
+        [self.navigationController presentModalViewController:settingViewController animated:YES];
+        
+//        [self.welcomeButton setTitle:T(@"设置") forState:UIControlStateNormal];
+//        [self.welcomeButton addTarget:self action:@selector(settingAction:) forControlEvents:UIControlEventTouchUpInside];
+//        self.welcomeLabel.text = T(@"系统检测到你您还没有设置昵称和性别.");
 
     }else{
-        [self.welcomeButton setTitle:T(@"欢迎来到大掌柜") forState:UIControlStateNormal];
+        [self.welcomeButton setTitle:T(@"欢迎来到春水堂") forState:UIControlStateNormal];
         [self.welcomeButton addTarget:self action:@selector(welcomeAction:) forControlEvents:UIControlEventTouchUpInside];
-        self.welcomeLabel.text = T(@"生意有困扰,大掌柜帮你搞.");
+        self.welcomeLabel.text = T(@"中国情趣文化的倡导者");
 
     }
 
