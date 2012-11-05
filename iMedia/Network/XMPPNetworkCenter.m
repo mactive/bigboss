@@ -259,7 +259,16 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 -(NSString *)subscribeToChannel:(NSString *)nodeName withCallbackBlock:(void (^)(NSError *))block
 {
     DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-    return[xmppPubsub subscribeToNode:nodeName withOptions:nil];
+    NSString *subID = [xmppPubsub subscribeToNode:nodeName withOptions:nil];
+    if (subID && block) {
+        block(nil);
+    } else {
+        NSError *error = [[NSError alloc] initWithDomain:@"wingedstone.com" code:403 userInfo:nil];
+        if (block) {
+            block(error);
+        }
+    }
+    return subID;
 }
 
 -(void)addBuddy:(NSString *)jidStr withCallbackBlock:(void (^)(NSError *))block

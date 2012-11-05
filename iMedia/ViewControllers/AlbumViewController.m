@@ -54,6 +54,8 @@
         
         [self.scrollView addContentSubview:[self createViewForObj:obj]];
     }
+    
+    [self.scrollView setPage:self.albumIndex];
 }
 
 #pragma mark -

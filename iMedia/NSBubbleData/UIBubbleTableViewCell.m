@@ -32,7 +32,7 @@
 @synthesize bubbleImage = _bubbleImage;
 @synthesize showAvatar = _showAvatar;
 @synthesize avatarImage;
-@synthesize webView;
+@synthesize webView =_webView;
 @synthesize webViewOverlayButton;
 @synthesize backWebView;
 
