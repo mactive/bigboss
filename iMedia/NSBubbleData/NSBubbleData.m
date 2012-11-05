@@ -23,6 +23,8 @@
 @synthesize content = _content;
 @synthesize webView = _webView;
 @synthesize showAvatar = _showAvatar;
+@synthesize isDone = _isDone;
+@synthesize cellHeight = _cellHeight;
 
 #pragma mark - Lifecycle
 
@@ -166,20 +168,10 @@ const UIEdgeInsets imageInsetsSomeone = {11, 18, 16, 14};
         _insets = insets;
     
         self.showAvatar = type != BubbleTypeWebview ? YES : NO ;
+        self.isDone = NO;
+        self.cellHeight = 0.0f;
     }
     return self;
-}
-
-#pragma mark - UIWebView delegate
-
-- (void)webViewDidFinishLoad:(UIWebView *)webView
-{
-    if ([self.webView isEqual:webView]) {        
-        CGSize actualSize = [self.webView sizeThatFits:CGSizeZero];
-        CGRect newFrame = self.webView.frame;
-        newFrame.size.height = actualSize.height;
-        self.webView.frame = newFrame;
-    }
 }
 
 @end

@@ -136,10 +136,12 @@
         [self.webViewOverlayButton setAlpha:0.3];
         [self.webViewOverlayButton setBackgroundColor:[UIColor whiteColor]];
         
-        NSURL *url=[NSURL URLWithString:self.data.content];
-        NSURLRequest *resquestobj=[NSURLRequest requestWithURL:url];
-        [self.webView loadRequest:resquestobj];
-        NSLog(@"%@",resquestobj);
+        if (self.data.isDone == NO) {
+            NSURL *url=[NSURL URLWithString:self.data.content];
+            NSURLRequest *resquestobj=[NSURLRequest requestWithURL:url];
+            [self.webView loadRequest:resquestobj];
+            NSLog(@"%@",resquestobj);
+        }
         
         self.webView.scalesPageToFit = YES;
 //        self.webView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
@@ -172,7 +174,9 @@
         self.backWebView.frame = backFrame;
         NSLog(@"%@", NSStringFromCGRect(self.backWebView.frame));
         
-        self.data.view.frame = backFrame;
+//        self.data.view.frame = backFrame;
+        self.data.isDone = YES;
+        self.data.cellHeight = backFrame.size.height;
     }
 }
 

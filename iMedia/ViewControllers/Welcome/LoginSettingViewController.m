@@ -156,7 +156,7 @@
 - (void)initWithGender
 {
     if (![self.me.gender isEqualToString:@""] && [self.me.gender length] !=0) {
-        [self.genderButton setTitle:[[ServerDataTransformer sexDict] objectForKey:self.me.gender] forState:UIControlStateNormal] ;
+        [self.genderButton setTitle:[[ServerDataTransformer sexDict] objectForKey:self.me.gender] forState:UIControlStateNormal];
     }else{
         [self.genderButton setTitle:T(@"设置") forState:UIControlStateNormal] ;
         [self.genderButton addTarget:self action:@selector(settingGender) forControlEvents:UIControlEventTouchUpInside];
