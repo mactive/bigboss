@@ -12,6 +12,7 @@
 #import "User.h"
 #import "Me.h"
 #import "Message.h"
+#import "Channel.h"
 #import "Conversation.h"
 #import "AppDefs.h"
 #import "AppDelegate.h"
@@ -185,7 +186,11 @@
     // setup self.title
     NSEnumerator *enumerator = [conversation.users objectEnumerator];
     User *anUser = [enumerator nextObject];
-    self.title = anUser.displayName;
+    if (anUser == nil) {
+        self.title = conversation.channel.node;
+    } else {
+        self.title = anUser.displayName;
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated

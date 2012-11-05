@@ -11,6 +11,7 @@
 #import "Me.h"
 #import <QuartzCore/QuartzCore.h>
 #import "ServerDataTransformer.h"
+#import "AppNetworkAPIClient.h"
 
 @interface LoginSettingViewController ()<UITextFieldDelegate,UIPickerViewDataSource,UIPickerViewDelegate>
 
@@ -149,6 +150,8 @@
 
 - (void)welcomeAction
 {
+    [[AppNetworkAPIClient sharedClient] uploadMe:self.me withBlock:nil];
+    
     [self.navigationController dismissModalViewControllerAnimated:YES];
     [[self appDelegate] startMainSession];
 }
