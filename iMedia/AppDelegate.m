@@ -197,7 +197,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         }
         for (int i = 0; i < 8; i++) {
             Avatar *image = [NSEntityDescription insertNewObjectForEntityForName:@"ImageLocal" inManagedObjectContext:_managedObjectContext];
-            image.sequence = [NSNumber numberWithInt:0];
+            image.sequence = [NSNumber numberWithInt:(i+1)];
             image.image = nil;
             image.thumbnail = nil;
             image.title = @"";

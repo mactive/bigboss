@@ -1004,8 +1004,6 @@
 		566E80921609A24C00A333EA = {
 			isa = PBXGroup;
 			children = (
-				2625096C16428282009ED7D8 /* AssetsLibrary.framework */,
-				566743DB164254A70043A29C /* MobileCoreServices.framework */,
 				566E80A91609A24C00A333EA /* iMedia */,
 				566E80C51609A24C00A333EA /* iMediaTests */,
 				5646FB00160F235400175B78 /* Libraries */,
@@ -1026,6 +1024,8 @@
 		566E80A01609A24C00A333EA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2625096C16428282009ED7D8 /* AssetsLibrary.framework */,
+				566743DB164254A70043A29C /* MobileCoreServices.framework */,
 				566743BC164123EC0043A29C /* libz.dylib */,
 				562DE77616118E9700F782D2 /* AudioToolbox.framework */,
 				5646FAFE160F1EBF00175B78 /* libicucore.dylib */,

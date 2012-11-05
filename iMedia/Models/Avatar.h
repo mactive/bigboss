@@ -19,6 +19,8 @@
 @property (nonatomic, retain) NSNumber * sequence;
 @property (nonatomic, retain) UIImage *thumbnail;
 @property (nonatomic, retain) NSString * title;
+@property (nonatomic, retain) NSString * imageRemoteThumbnailURL;
+@property (nonatomic, retain) NSString * imageRemoteURL;
 @property (nonatomic, retain) Me *me;
 
 @end

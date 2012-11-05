@@ -28,7 +28,6 @@
 @property (nonatomic, retain) NSSet *avatars;
 
 -(NSArray *)getOrderedAvatars;
--(NSArray *)getOrderedNonNilAvatars;
 
 @end
 

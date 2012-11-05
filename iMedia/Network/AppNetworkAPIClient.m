@@ -170,6 +170,8 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
         imageRemote.sequence = avatar.sequence;
         imageRemote.imageThumbnailURL = thumbnailURL;
         imageRemote.imageURL = url;
+        avatar.imageRemoteThumbnailURL = thumbnailURL;
+        avatar.imageRemoteURL = url;
         
         if (avatar.sequence.intValue == 1) {
             me.avatarURL = imageRemote.imageURL;
@@ -251,7 +253,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
             // if identity is Me, we need to check local avatar against the server. If local doesn't have the image
             // we need to download and save.
             if ([identity isKindOfClass:[Me class]]) {
-                Me *me = identity;
+                Me *me = (Me *)identity;
                 NSArray *imageArray = [me getOrderedNonNilImages];
                 NSArray *avatarArray = [me getOrderedAvatars];
                 for (int i = 0; i < [imageArray count] ; i++) {
@@ -259,12 +261,17 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
                     if (i < [avatarArray count]) {
                         Avatar *avatar = [avatarArray objectAtIndex:i];
                         
-                        AFImageRequestOperation *oper = [AFImageRequestOperation imageRequestOperationWithRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:imageRemote.imageURL]] success:^(UIImage *image) {
-                            avatar.image = image;
-                            UIImage *thumbnail = [image resizedImageToSize:CGSizeMake(75, 75)];
-                            avatar.thumbnail = thumbnail;
-                        }];
-                        [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:oper];
+                        // only update image if not equal
+                        if (![imageRemote.imageThumbnailURL isEqualToString:avatar.imageRemoteThumbnailURL] || !![imageRemote.imageURL isEqualToString:avatar.imageRemoteURL] ) {
+                            
+                            AFImageRequestOperation *oper = [AFImageRequestOperation imageRequestOperationWithRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:imageRemote.imageURL]] success:^(UIImage *image) {
+                                DDLogInfo(@"load me thumbnail image received response: %@", responseObject);
+                                avatar.image = image;
+                                UIImage *thumbnail = [image resizedImageToSize:CGSizeMake(75, 75)];
+                                avatar.thumbnail = thumbnail;
+                            }];
+                            [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:oper];
+                        }
                     }
                 }
                 
