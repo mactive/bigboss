@@ -90,7 +90,7 @@
     CGFloat y = 5;
     
     // Adjusting the x coordinate for avatar
-    if (self.showAvatar)
+    if (self.data.showAvatar)
     {
         [self.avatarImage removeFromSuperview];
         self.avatarImage = [[UIImageView alloc] initWithImage:(self.data.avatar ? self.data.avatar : [UIImage imageNamed:@"missingAvatar.png"])];

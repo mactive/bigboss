@@ -22,6 +22,7 @@
 @synthesize avatar = _avatar;
 @synthesize content = _content;
 @synthesize webView = _webView;
+@synthesize showAvatar = _showAvatar;
 
 #pragma mark - Lifecycle
 
@@ -164,6 +165,8 @@ const UIEdgeInsets imageInsetsSomeone = {11, 18, 16, 14};
         _type = type;
         _content = content;
         _insets = insets;
+    
+        self.showAvatar = type != BubbleTypeWebview ? YES : NO ;
     }
     return self;
 }

@@ -340,8 +340,6 @@
     [self addMessage:message toBubbleData:bubbleData];
     [bubbleTable reloadData];
 
-    
-    
     self.textView.text = nil;
     [self textViewDidChange:_textView];
     [self.textView resignFirstResponder];

@@ -21,6 +21,7 @@ typedef enum _NSBubbleType
 
 @property (readonly, nonatomic, strong) NSDate *date;
 @property (readonly, nonatomic) NSBubbleType type;
+@property (readwrite, nonatomic) BOOL showAvatar;
 @property (readonly, nonatomic) NSString *content;
 @property (readonly, nonatomic, strong) UIView *view;
 @property (readonly, nonatomic) UIEdgeInsets insets;
