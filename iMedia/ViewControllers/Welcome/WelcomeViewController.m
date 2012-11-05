@@ -48,7 +48,7 @@
     [super viewDidLoad];
     self.title = T(@"欢迎");
     self.welcomeButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [self.welcomeButton setFrame:CGRectMake(10, 160 , 300, 40)];
+    [self.welcomeButton setFrame:CGRectMake(60, 160 , 200, 40)];
     [self.welcomeButton.titleLabel setFont:[UIFont boldSystemFontOfSize:18]];
     [self.welcomeButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
     [self.welcomeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
@@ -67,18 +67,16 @@
     if ([self.me.gender isEqualToString:@""] || [self.me.displayName isEqualToString:@""] || self.me.gender == nil || self.me.displayName == nil ) {
         LoginSettingViewController *settingViewController = [[LoginSettingViewController alloc]initWithNibName:nil bundle:nil];
         [self.navigationController presentModalViewController:settingViewController animated:YES];
-        
-//        [self.welcomeButton setTitle:T(@"设置") forState:UIControlStateNormal];
-//        [self.welcomeButton addTarget:self action:@selector(settingAction:) forControlEvents:UIControlEventTouchUpInside];
-//        self.welcomeLabel.text = T(@"系统检测到你您还没有设置昵称和性别.");
-
-    }else{
-        [self.welcomeButton setTitle:T(@"欢迎来到春水堂") forState:UIControlStateNormal];
-        [self.welcomeButton addTarget:self action:@selector(welcomeAction:) forControlEvents:UIControlEventTouchUpInside];
-        self.welcomeLabel.text = T(@"中国情趣文化的倡导者");
-
     }
-
+    
+    [self.welcomeButton setTitle:T(@"进入春水堂") forState:UIControlStateNormal];
+    [self.welcomeButton addTarget:self action:@selector(welcomeAction:) forControlEvents:UIControlEventTouchUpInside];
+    self.welcomeLabel.text = T(@"中国情趣文化的倡导者");
+    
+    
+    UIImageView * backgroundView = [[UIImageView alloc]initWithFrame:self.view.bounds];
+    [backgroundView setImage:[UIImage imageNamed:@"welcome_bg.png"]];
+    
     [self.view addSubview:self.welcomeButton];
     [self.view addSubview:self.welcomeLabel];
 	// Do any additional setup after loading the view.

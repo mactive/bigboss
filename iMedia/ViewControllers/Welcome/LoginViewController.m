@@ -175,7 +175,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [self.view addSubview:backgroundView];
     
     self.logoImage = [[UIImageView alloc]initWithFrame:CGRectMake(87.5, 250,145, 75)];
-    [self.logoImage setImage:[UIImage imageNamed:@"login_intro.png"]];
+    [self.logoImage setImage:[UIImage imageNamed:@"login_intro_oyeah.png"]];
 
 
     self.usernameField = [[UITextField alloc]initWithFrame:CGRectMake(TEXTFIELD_OFFSET , TEXTFIELD_OFFSET, TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT)];

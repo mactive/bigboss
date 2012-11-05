@@ -149,8 +149,9 @@
 
 - (void)welcomeAction
 {
-    [self.navigationController dismissModalViewControllerAnimated:YES];
-    [[self appDelegate] startMainSession];
+//    [self.navigationController popViewControllerAnimated:YES];
+    [self dismissModalViewControllerAnimated:YES];
+//    [[self appDelegate] startMainSession];
 }
 
 - (void)initWithGender
@@ -176,9 +177,15 @@
     [self.genderPicker setFrame:CGRectMake(0, 280, 320, 200)];
     self.genderPicker.showsSelectionIndicator = YES;
     
-    NSInteger index =  [self.genderTitleKey indexOfObject:self.me.gender];
-    [self.genderPicker selectRow:index inComponent:0 animated:YES];
+    if (![self.me.gender isEqualToString:@""] && self.me.gender != nil) {
+        NSInteger index =  [self.genderTitleKey indexOfObject:self.me.gender];
+        [self.genderPicker selectRow:index inComponent:0 animated:YES];
+    }else{
+        [self.genderPicker selectRow:0 inComponent:0 animated:YES];
+    }
+    
     [self.view addSubview:self.genderPicker];
+    
     
 }
 
@@ -221,7 +228,7 @@
         
         if ([self.me.gender length] != 0 && [self.me.displayName length] != 0 )
         {
-            [self.genderPicker removeFromSuperview];
+//            [self.genderPicker removeFromSuperview];
 
                 [self.welcomeButton setHidden:NO];
                 [self.welcomeButton setAlpha:0.3];
@@ -252,7 +259,7 @@
 
         if ([self.me.gender length] != 0 && [self.me.displayName length] != 0 )
         {
-            [self.genderPicker removeFromSuperview];
+//            [self.genderPicker removeFromSuperview];
             
                 [self.welcomeButton setHidden:NO];
                 [self.welcomeButton setAlpha:0.3];
