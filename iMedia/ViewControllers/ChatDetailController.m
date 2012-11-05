@@ -366,7 +366,7 @@
         [bubbleData addObject:itemBubble];
         bubbleTable.showAvatars = YES;
     } else if (msg.type == [NSNumber numberWithInt:MessageTypePublish]) {
-        [bubbleData addObject:[NSBubbleData dataWithText:msg.text date:msg.sentDate type:BubbleTypeWebview]];
+        [bubbleData addObject:[NSBubbleData dataWithWeb:msg.text date:msg.sentDate type:BubbleTypeWebview]];
         bubbleTable.showAvatars = NO;
     }
 }

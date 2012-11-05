@@ -21,6 +21,7 @@
 @synthesize insets = _insets;
 @synthesize avatar = _avatar;
 @synthesize content = _content;
+@synthesize webView = _webView;
 
 #pragma mark - Lifecycle
 
@@ -109,6 +110,34 @@ const UIEdgeInsets imageInsetsSomeone = {11, 18, 16, 14};
     return [self initWithView:imageView date:date type:type insets:insets];       
 }
 
+#pragma mark - web bubble
++ (id)dataWithWeb:(NSString *)urlString date:(NSDate *)date type:(NSBubbleType)type
+{
+#if !__has_feature(objc_arc)
+    return [[[NSBubbleData alloc] initWithWeb:urlString date:date type:type] autorelease];
+#else
+    return [[NSBubbleData alloc] initWithWeb:urlString date:date type:type];
+#endif
+}
+
+- (id)initWithWeb:(NSString *)urlString date:(NSDate *)date type:(NSBubbleType)type
+{
+    
+    self.webView = [[UIWebView alloc] initWithFrame:CGRectMake(12.5, 12.5, 275, 200)];
+    
+    NSURL *url=[NSURL URLWithString:urlString];
+    NSURLRequest *resquestobj=[NSURLRequest requestWithURL:url];
+    [self.webView loadRequest:resquestobj];
+    
+#if !__has_feature(objc_arc)
+    [self.webView autorelease];
+#endif
+    
+    UIEdgeInsets insets = (type == BubbleTypeMine ? imageInsetsMine : imageInsetsSomeone);
+    return [self initWithView:self.webView date:date content:urlString type:type insets:insets];
+
+}
+
 #pragma mark - Custom view bubble
 
 + (id)dataWithView:(UIView *)view date:(NSDate *)date type:(NSBubbleType)type insets:(UIEdgeInsets)insets
@@ -138,5 +167,17 @@ const UIEdgeInsets imageInsetsSomeone = {11, 18, 16, 14};
     }
     return self;
 }
+
+//#pragma mark - UIWebView delegate
+//
+//- (void)webViewDidFinishLoad:(UIWebView *)webView
+//{
+//    if ([self.webView isEqual:webView]) {        
+//        CGSize actualSize = [self.webView sizeThatFits:CGSizeZero];
+//        CGRect newFrame = self.webView.frame;
+//        newFrame.size.height = actualSize.height;
+//        self.webView.frame = newFrame;
+//    }
+//}
 
 @end
