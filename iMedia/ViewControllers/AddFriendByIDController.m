@@ -70,7 +70,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     self.desc.shadowOffset = CGSizeMake(0, 1);
 
     self.field = [[UITextField alloc]initWithFrame:CGRectMake(22.5 , 60, 275, 40)];
-    self.field.font = [UIFont systemFontOfSize:26.0];
+    self.field.font = [UIFont systemFontOfSize:20.0];
     [self.field setBorderStyle:UITextBorderStyleRoundedRect];
 //    [self.field.layer setMasksToBounds:YES];
 //    [self.field.layer setCornerRadius:5.0];
@@ -80,7 +80,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     self.field.autocorrectionType = UITextAutocorrectionTypeNo;
     self.field.autocapitalizationType = UITextAutocapitalizationTypeNone;
     self.field.returnKeyType = UIReturnKeyGo;
-    
+    self.field.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     
     self.doneButton  = [[UIButton alloc] initWithFrame:CGRectMake(22.5, 115, 275, 40)];
     [self.doneButton.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];

@@ -20,14 +20,15 @@
 #import "ContactListViewController.h"
 #import "MBProgressHUD.h"
 
-@interface RequestViewController ()
+@interface RequestViewController ()<MBProgressHUDDelegate>
+{
+    MBProgressHUD *HUD;
+}
 
 @property(nonatomic, strong) UIView * requestView;
 @property(nonatomic, strong) UILabel * titleLabel;
 @property(nonatomic, strong) UILabel * timeLabel;
-
 @property(nonatomic, strong) UIView * contentView;
-
 @property(nonatomic, strong) UIButton * confirmButton;
 @property(nonatomic, strong) UIButton * cancelButton;
 
@@ -172,12 +173,22 @@
     [[ModelHelper sharedInstance] createActiveUserWithFullServerJSONData:self.request.userJSONData];
     [[XMPPNetworkCenter sharedClient] acceptPresenceSubscriptionRequestFrom:self.request.requesterEPostalID andAddToRoster:YES];
     [[self appDelegate].contactListController contentChanged];
+    
+    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    HUD.delegate = self;
+    HUD.labelText = T(@"确认成功");
+    [HUD hide:YES afterDelay:2];
 }
 
 - (void)cancelRequest
 {
     self.request.state = [NSNumber numberWithInt:FriendRequestDeclined];
     [[XMPPNetworkCenter sharedClient] rejectPresenceSubscriptionRequestFrom:self.request.requesterEPostalID];
+
+    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    HUD.delegate = self;
+    HUD.labelText = T(@"取消成功");
+    [HUD hide:YES afterDelay:2];
 }
 
 - (void)viewDidAppear:(BOOL)animated
