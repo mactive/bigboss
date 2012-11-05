@@ -16,6 +16,7 @@
 @interface UIBubbleTableView ()
 
 @property (nonatomic, retain) NSMutableArray *bubbleSection;
+@property (nonatomic, retain) NSMutableDictionary *webviewCellCache;
 
 @end
 
@@ -39,6 +40,7 @@
     
     self.delegate = self;
     self.dataSource = self;
+    self.webviewCellCache = [[NSMutableDictionary alloc] initWithCapacity:5];
     
     // UIBubbleTableView default properties
     
@@ -184,9 +186,16 @@
     }
     
     NSBubbleData *data = [[self.bubbleSection objectAtIndex:indexPath.section] objectAtIndex:indexPath.row - 1];
+    UIBubbleTableViewCell *cell = [self.webviewCellCache objectForKey:indexPath];
     
-    
-    return MAX(data.insets.top + data.view.frame.size.height + data.insets.bottom, self.showAvatars ? 55 : 0);
+#warning TODO: consider potential bug of url content change, then reuse old cell height with forcing reloading data is a bad idea
+    if (data.cellHeight != 0.0f) {
+        return data.cellHeight;
+    } else if (cell != nil && cell.data.cellHeight != 0.0f) {
+        return cell.data.cellHeight;
+    }else{
+        return MAX(data.insets.top + data.view.frame.size.height + data.insets.bottom, self.showAvatars ? 55 : 0);
+    }
 
 //    if (data.type == BubbleTypeWebview) {
 //        return data.view.frame.size.height;
@@ -230,9 +239,17 @@
     UIBubbleTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellId];
     NSBubbleData *data = [[self.bubbleSection objectAtIndex:indexPath.section] objectAtIndex:indexPath.row - 1];
     
-    if (cell == nil) cell = [[UIBubbleTableViewCell alloc] init];
+    if (data.type == BubbleTypeWebview) {
+        cell = [self.webviewCellCache objectForKey:indexPath];
+        cell.data = data;
+    }
     
-    cell.data = data;
+    if (cell == nil)  {
+        cell = [[UIBubbleTableViewCell alloc] init];
+        cell.data = data;
+        [self.webviewCellCache setObject:cell forKey:indexPath];
+    }
+    
 //    cell.showAvatar = self.showAvatars;
     
     return cell;

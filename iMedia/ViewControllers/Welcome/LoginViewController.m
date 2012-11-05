@@ -14,6 +14,7 @@
 #import "SBJson.h"
 #import "DDLog.h"
 #import <unistd.h>
+#import <QuartzCore/QuartzCore.h>
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -27,10 +28,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 @property(strong,nonatomic) UITextField *usernameField;
 @property(strong,nonatomic) UITextField *passwordField;
-@property(strong, nonatomic)UILabel *usernameLabel;
-@property(strong, nonatomic)UILabel *passwordLabel;
 @property(strong, nonatomic)UIButton *loginButton;
 @property(strong, nonatomic)UIImageView *logoImage;
+@property(strong, nonatomic)UIView *loginView;
 
 @end
 
@@ -38,10 +38,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 @synthesize usernameField;
 @synthesize passwordField;
-@synthesize usernameLabel;
-@synthesize passwordLabel;
 @synthesize loginButton;
 @synthesize logoImage;
+@synthesize loginView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -154,11 +153,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 
 #define LOGO_HEIGHT 30
-#define LEFT_OFFSET 20
-#define LABEL_WIDTH 120
-#define LABEL_HEIGHT 50
-#define TEXTFIELD_OFFSET 120
-#define TEXTFIELD_WIDTH 180
+#define TEXTFIELD_OFFSET 15
+#define TEXTFIELD_WIDTH 270
+#define TEXTFIELD_HEIGHT 40
 
 
 - (void)viewDidLoad
@@ -167,45 +164,62 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
     self.title = T(@"登录");
     
-    self.logoImage = [[UIImageView alloc]initWithFrame:CGRectMake(50, 10,220, 50)];
-    [self.logoImage setImage:[UIImage imageNamed:@"logo.png"]];
+    self.loginView = [[UIView alloc] initWithFrame:CGRectMake(10, 10, 300,125)];
+    [self.loginView setBackgroundColor:[UIColor whiteColor]];
+    [self.loginView.layer setMasksToBounds:YES];
+    [self.loginView.layer setCornerRadius:10.0];
     
-    self.usernameLabel = [[UILabel alloc] initWithFrame:CGRectMake(LEFT_OFFSET, LABEL_HEIGHT+LOGO_HEIGHT, LABEL_WIDTH, 30)];
-    self.usernameLabel.text = T(@"用户名");
-    self.usernameLabel.backgroundColor = [UIColor clearColor];
-
-    self.passwordLabel = [[UILabel alloc] initWithFrame:CGRectMake(LEFT_OFFSET, LABEL_HEIGHT*2+LOGO_HEIGHT, LABEL_WIDTH, 30)];
-    self.passwordLabel.text = T(@"密码");
-    self.passwordLabel.backgroundColor = [UIColor clearColor];
-
     
-    self.usernameField = [[UITextField alloc]initWithFrame:CGRectMake(TEXTFIELD_OFFSET , LABEL_HEIGHT+LOGO_HEIGHT, TEXTFIELD_WIDTH, 30)];
-    self.usernameField.font = [UIFont systemFontOfSize:20.0];
-    [self.usernameField setBorderStyle:UITextBorderStyleRoundedRect];
+    UIImageView *backgroundView = [[UIImageView alloc]initWithFrame:self.view.bounds];
+    [backgroundView setImage:[UIImage imageNamed:@"login_bg.png"]];
+    [self.view addSubview:backgroundView];
+    
+    self.logoImage = [[UIImageView alloc]initWithFrame:CGRectMake(87.5, 250,145, 75)];
+    [self.logoImage setImage:[UIImage imageNamed:@"login_intro.png"]];
+
+
+    self.usernameField = [[UITextField alloc]initWithFrame:CGRectMake(TEXTFIELD_OFFSET , TEXTFIELD_OFFSET, TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT)];
+    self.usernameField.font = [UIFont systemFontOfSize:18.0];
     self.usernameField.textColor = [UIColor grayColor];
-    self.usernameField.backgroundColor = [UIColor whiteColor];
     self.usernameField.delegate = self;
+    self.usernameField.placeholder = T(@"用户名");
+    self.usernameField.backgroundColor = RGBCOLOR(240, 240, 240);
+    self.usernameField.layer.borderColor = [RGBCOLOR(147, 150, 157) CGColor];
+    self.usernameField.layer.borderWidth  = 1.0f;
+    self.usernameField.layer.cornerRadius = 5.0f;
+    self.usernameField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    self.usernameField.textAlignment = UITextAlignmentCenter;
     
-    self.passwordField = [[UITextField alloc]initWithFrame:CGRectMake(TEXTFIELD_OFFSET , LABEL_HEIGHT*2+LOGO_HEIGHT, TEXTFIELD_WIDTH, 30)];
-    self.passwordField.font = [UIFont systemFontOfSize:20.0];
-    [self.passwordField setBorderStyle:UITextBorderStyleRoundedRect];
+    
+    self.passwordField = [[UITextField alloc]initWithFrame:CGRectMake(TEXTFIELD_OFFSET , TEXTFIELD_OFFSET*2 + TEXTFIELD_HEIGHT, TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT)];
+    self.passwordField.font = [UIFont systemFontOfSize:18.0];
     self.passwordField.textColor = [UIColor grayColor];
-    self.passwordField.backgroundColor = [UIColor whiteColor];
-    [self.passwordField setSecureTextEntry:YES];
     self.passwordField.delegate = self;
+    self.passwordField.placeholder = T(@"密码");
+    self.passwordField.backgroundColor = RGBCOLOR(240, 240, 240);
+    self.passwordField.layer.borderColor = [RGBCOLOR(147, 150, 157) CGColor];
+    self.passwordField.layer.borderWidth  = 1.0f;
+    self.passwordField.layer.cornerRadius = 5.0f;
+    self.passwordField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    self.passwordField.textAlignment = UITextAlignmentCenter;
+    
+
+
+    
     
     self.loginButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [self.loginButton setFrame:CGRectMake(80 , LABEL_HEIGHT*3+20, TEXTFIELD_WIDTH, 30)];
-    [self.loginButton.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
-    [self.loginButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+    [self.loginButton setFrame:CGRectMake(TEXTFIELD_OFFSET +10 ,TEXTFEILD_HEIGHT*3+TEXTFIELD_HEIGHT-10, TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT)];
+    [self.loginButton.titleLabel setFont:[UIFont boldSystemFontOfSize:18.0]];
+    [self.loginButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [self.loginButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+//    [self.loginButton.titleLabel.layer setShadowColor:[[UIColor whiteColor] CGColor]];
+//    [self.loginButton.titleLabel.layer setShadowOffset:CGSizeMake(0, 1)];
     [self.loginButton.titleLabel setTextAlignment:UITextAlignmentCenter];
     [self.loginButton setTitle:T(@"登录") forState:UIControlStateNormal];
-//    [self.loginButton setBackgroundImage:[UIImage imageNamed:@"button_bg.png"] forState:UIControlStateNormal];
+    [self.loginButton setBackgroundImage:[UIImage imageNamed:@"button_cancel_bg.png"] forState:UIControlStateNormal];
     [self.loginButton addTarget:self action:@selector(loginAction:) forControlEvents:UIControlEventTouchUpInside];
     
     // set thekeyboard type and color and first letter
-    
     self.usernameField.keyboardType = UIKeyboardTypeURL;
     self.usernameField.returnKeyType = UIReturnKeyNext;
     self.usernameField.autocapitalizationType = UITextAutocapitalizationTypeNone;
@@ -217,11 +231,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     self.passwordField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.passwordField.secureTextEntry = YES;
     
-    
-    [self.view addSubview:self.usernameLabel];
-    [self.view addSubview:self.usernameField];
-    [self.view addSubview:self.passwordLabel];
-    [self.view addSubview:self.passwordField];
+    [self.loginView addSubview:self.usernameField];
+    [self.loginView addSubview:self.passwordField];
+    [self.view addSubview:self.loginView];
     [self.view addSubview:self.loginButton];
     [self.view addSubview:self.logoImage];
     

@@ -64,7 +64,7 @@
 
 //    if ([self.me.career length] ==0 ) {
 
-    if ([self.me.gender isEqualToString:@""] || [self.me.displayName isEqualToString:@""] || [self.me.gender length] == 0 || [self.me.displayName length] == 0) {
+    if ([self.me.gender isEqualToString:@""] || [self.me.displayName isEqualToString:@""] || self.me.gender == nil || self.me.displayName == nil ) {
         LoginSettingViewController *settingViewController = [[LoginSettingViewController alloc]initWithNibName:nil bundle:nil];
         [self.navigationController presentModalViewController:settingViewController animated:YES];
         

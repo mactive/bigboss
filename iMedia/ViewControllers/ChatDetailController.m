@@ -185,6 +185,7 @@
     
     // setup self.title
     NSEnumerator *enumerator = [conversation.users objectEnumerator];
+    
     User *anUser = [enumerator nextObject];
     if (anUser == nil) {
         self.title = conversation.channel.node;

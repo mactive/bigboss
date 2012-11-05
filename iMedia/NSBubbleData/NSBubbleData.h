@@ -17,7 +17,7 @@ typedef enum _NSBubbleType
     BubbleTypeWebview = 2
 } NSBubbleType;
 
-@interface NSBubbleData : NSObject<UIWebViewDelegate>
+@interface NSBubbleData : NSObject
 
 @property (readonly, nonatomic, strong) NSDate *date;
 @property (readonly, nonatomic) NSBubbleType type;
@@ -27,6 +27,8 @@ typedef enum _NSBubbleType
 @property (readonly, nonatomic) UIEdgeInsets insets;
 @property (nonatomic, strong) UIImage *avatar;
 @property (nonatomic, strong) UIWebView *webView;
+@property (nonatomic, readwrite) BOOL isDone;
+@property (nonatomic, readwrite) CGFloat cellHeight;
 
 - (id)initWithText:(NSString *)text date:(NSDate *)date type:(NSBubbleType)type;
 + (id)dataWithText:(NSString *)text date:(NSDate *)date type:(NSBubbleType)type;
