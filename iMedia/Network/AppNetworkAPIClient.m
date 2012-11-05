@@ -357,6 +357,9 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
                 block(responseObject, nil);
             }
         }
+     if (block) {
+         block (nil, nil);
+     }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         DDLogError(@"upload me failed: %@", error);
         if (block) {

@@ -450,6 +450,24 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 - (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence
 {
 	DDLogVerbose(@"%@: %@ - %@", THIS_FILE, THIS_METHOD, [presence fromStr]);
+    
+    // where received subscribe success, add user to roster
+    NSString* ePostalID = [[presence from] bare];
+    NSString* subscriptionResult = [presence attributeStringValueForName:@"type"];
+    if (subscriptionResult != nil && [subscriptionResult isEqualToString:@"subscribed"]) {
+        
+        User* thisUser = [[ModelHelper sharedInstance] findUserWithEPostalID:ePostalID];
+        
+        if (thisUser != nil &&  thisUser.state.intValue == IdentityStatePendingAddFriend)
+        {
+            thisUser.ePostalID = ePostalID;
+            thisUser.displayName = [thisUser.ePostalID substringToIndex:[thisUser.ePostalID rangeOfString: @"@"].location];
+            thisUser.type = [NSNumber numberWithInt:IdentityTypeUser];
+            thisUser.state = [NSNumber numberWithInt:IdentityStatePendingServerDataUpdate];
+            
+            [[AppNetworkAPIClient sharedClient] updateIdentity:thisUser withBlock:nil];
+        }
+    }
 }
 
 - (void)xmppStream:(XMPPStream *)sender didReceiveError:(id)error

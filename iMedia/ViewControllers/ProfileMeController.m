@@ -142,7 +142,7 @@
     HUD.labelText = T(@"更新中");
     // save and upload
     [[AppNetworkAPIClient sharedClient] uploadMe:self.me withBlock:^(id responseObject, NSError *error) {
-        if (error == nil) {
+        if ((responseObject != nil) && (error == nil)) {
             // HUD hide
             [HUD hide:YES];
             

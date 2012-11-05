@@ -110,7 +110,7 @@ const UIEdgeInsets imageInsetsSomeone = {11, 18, 16, 14};
 #endif
     
     UIEdgeInsets insets = (type == BubbleTypeMine ? imageInsetsMine : imageInsetsSomeone);
-    return [self initWithView:imageView date:date type:type insets:insets];       
+    return [self initWithView:imageView date:date content:nil type:type insets:insets];
 }
 
 #pragma mark - web bubble
@@ -147,7 +147,7 @@ const UIEdgeInsets imageInsetsSomeone = {11, 18, 16, 14};
 #if !__has_feature(objc_arc)
     return [[[NSBubbleData alloc] initWithView:view date:date type:type insets:insets] autorelease];
 #else
-    return [[NSBubbleData alloc] initWithView:view date:date type:type insets:insets];
+    return [[NSBubbleData alloc] initWithView:view date:date content:nil type:type insets:insets];
 #endif    
 }
 
