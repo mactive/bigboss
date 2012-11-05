@@ -188,14 +188,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     if(self.me == nil) {
         self.me = [NSEntityDescription insertNewObjectForEntityForName:@"Me" inManagedObjectContext:_managedObjectContext];
         for (int i = 0; i < 8; i++) {
-            ImageRemote *image = [NSEntityDescription insertNewObjectForEntityForName:@"ImageRemote" inManagedObjectContext:_managedObjectContext];
-            image.sequence = 0;
-            image.imageThumbnailURL = @"";
-            image.imageURL=@"";
-            image.title = @"";
-            [self.me addImagesObject:image];
-        }
-        for (int i = 0; i < 8; i++) {
             Avatar *image = [NSEntityDescription insertNewObjectForEntityForName:@"ImageLocal" inManagedObjectContext:_managedObjectContext];
             image.sequence = [NSNumber numberWithInt:(i+1)];
             image.image = nil;
