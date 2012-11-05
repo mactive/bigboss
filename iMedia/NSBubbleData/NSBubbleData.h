@@ -36,7 +36,7 @@ typedef enum _NSBubbleType
 + (id)dataWithWeb:(NSString *)urlString date:(NSDate *)date type:(NSBubbleType)type;
 - (id)initWithImage:(UIImage *)image date:(NSDate *)date type:(NSBubbleType)type;
 + (id)dataWithImage:(UIImage *)image date:(NSDate *)date type:(NSBubbleType)type;
-- (id)initWithView:(UIView *)view date:(NSDate *)date type:(NSBubbleType)type insets:(UIEdgeInsets)insets;
+- (id)initWithView:(UIView *)view date:(NSDate *)date content:(NSString *)content type:(NSBubbleType)type insets:(UIEdgeInsets)insets;
 + (id)dataWithView:(UIView *)view date:(NSDate *)date type:(NSBubbleType)type insets:(UIEdgeInsets)insets;
 
 @end
