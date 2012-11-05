@@ -169,7 +169,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             [self.navigationController pushViewController:controller animated:YES];
             
 //            FriendRequestListViewController *controller = [[FriendRequestListViewController alloc] initWithNibName:nil bundle:nil];
-//            controller.friendRequestJSONArray = [NSMutableArray arrayWithArray:[self.friendRequestDict allValues]];
+//            controller.friendRequestArray = [NSMutableArray arrayWithArray:[self.friendRequestDict allValues]];
 //            [self.navigationController pushViewController:controller animated:YES];
             
         } else if ([self.friendRequestDict count] > 1) {

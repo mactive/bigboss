@@ -14,8 +14,12 @@
 #import "ModelHelper.h"
 #import <QuartzCore/QuartzCore.h>
 #import "UIImageView+AFNetworking.h"
+#import "MBProgressHUD.h"
 
-@interface ChannelViewController ()
+@interface ChannelViewController ()<MBProgressHUDDelegate>
+{
+    MBProgressHUD *HUD;
+}
 
 @property (strong, nonatomic) UIView *contentView;
 @property (strong, nonatomic) UIButton *confirmButton;
@@ -155,5 +159,37 @@
     }
     
     newChannel.subrequestID = [[XMPPNetworkCenter sharedClient] subscribeToChannel:nodeStr withCallbackBlock:nil];
+    
+    if (newChannel.subrequestID) {
+        HUD = [[MBProgressHUD alloc] initWithView:self.view];
+        [self.view addSubview:HUD];
+        HUD.labelText = T(@"订阅成功");
+        
+        [HUD showAnimated:YES whileExecutingBlock:^{
+            sleep(2);
+            [HUD hide:YES];
+        } completionBlock:^{
+            [self.confirmButton setTitle:T(@"退订此频道") forState:UIControlStateNormal];
+            [self.confirmButton removeTarget:self action:@selector(subscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
+            [self.confirmButton addTarget:self action:@selector(unSubscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
+        }];
+    }
+}
+
+-(void)unSubscribeButtonPushed:(id)sender
+{
+    HUD = [[MBProgressHUD alloc] initWithView:self.view];
+	[self.view addSubview:HUD];
+    HUD.labelText = T(@"退定成功");
+
+	[HUD showAnimated:YES whileExecutingBlock:^{
+        sleep(2);
+        [HUD hide:YES];
+	} completionBlock:^{
+		[self.confirmButton setTitle:T(@"订阅此频道") forState:UIControlStateNormal];
+        [self.confirmButton removeTarget:self action:@selector(unSubscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
+        [self.confirmButton addTarget:self action:@selector(subscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
+	}];
+    
 }
 @end
