@@ -15,6 +15,6 @@
 @property (nonatomic, strong) NSArray *albumArray;
 @property (nonatomic, readwrite) NSUInteger albumIndex;
 
-- (UIView*) createViewAtIndex:(NSUInteger) index;
+
 
 @end

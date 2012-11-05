@@ -40,6 +40,8 @@
     </entity>
     <entity name="ImageLocal" representedClassName="Avatar" syncable="YES">
         <attribute name="image" optional="YES" attributeType="Transformable" valueTransformerName="ImageToDataTransformer" syncable="YES"/>
+        <attribute name="imageRemoteThumbnailURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="imageRemoteURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sequence" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="thumbnail" optional="YES" attributeType="Transformable" valueTransformerName="ImageToDataTransformer" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
@@ -89,7 +91,7 @@
         <element name="Conversation" positionX="0" positionY="0" width="128" height="165"/>
         <element name="FriendRequest" positionX="160" positionY="192" width="128" height="105"/>
         <element name="Identity" positionX="160" positionY="192" width="128" height="225"/>
-        <element name="ImageLocal" positionX="160" positionY="192" width="128" height="120"/>
+        <element name="ImageLocal" positionX="160" positionY="192" width="128" height="150"/>
         <element name="ImageRemote" positionX="160" positionY="192" width="128" height="120"/>
         <element name="Me" positionX="0" positionY="0" width="128" height="225"/>
         <element name="Message" positionX="0" positionY="0" width="128" height="135"/>

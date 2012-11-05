@@ -16,6 +16,8 @@
 @dynamic sequence;
 @dynamic thumbnail;
 @dynamic title;
+@dynamic imageRemoteThumbnailURL;
+@dynamic imageRemoteURL;
 @dynamic me;
 
 @end

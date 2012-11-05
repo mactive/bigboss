@@ -47,9 +47,32 @@
 @property(strong, nonatomic) UIActionSheet *photoActionsheet;
 @property(strong, nonatomic) UIActionSheet *editActionsheet;
 @property(readwrite, nonatomic) NSUInteger editingAlbumIndex;
-@property(readwrite, nonatomic) BOOL SETEDITING;
+@property(readwrite, nonatomic) BOOL isEditing;
 
 @property(strong, nonatomic) NSMutableArray *infoCellArray;
+
+@property (strong, nonatomic) UIScrollView *contentView;
+@property (strong, nonatomic) UITableView *infoTableView;
+
+@property (strong, nonatomic) UIView *albumView;
+@property (strong, nonatomic) UIView *statusView;
+@property (strong, nonatomic) UIView *snsView;
+@property (strong, nonatomic) UIView *infoView;
+
+@property (strong, nonatomic) UIButton *sendMsgButton;
+@property (strong, nonatomic) UIButton *deleteUserButton;
+@property (strong, nonatomic) UIButton *reportUserButton;
+@property (strong, nonatomic) UILabel  *nameLabel;
+
+
+@property (strong, nonatomic) UIBarButtonItem *editProfileButton;
+
+@property (strong, nonatomic) NSMutableArray *albumArray;
+@property (strong, nonatomic) NSArray *infoArray;
+@property (strong, nonatomic) NSMutableArray *infoDescArray;
+
+@property (strong, nonatomic) UIButton *addAlbumButton;
+@property (readwrite, nonatomic) NSUInteger albumCount;
 
 @end
 
@@ -64,7 +87,6 @@
 
 @synthesize albumView;
 @synthesize albumArray;
-@synthesize albumViewController;
 
 @synthesize statusView;
 @synthesize snsView;
@@ -81,7 +103,7 @@
 @synthesize editActionsheet;
 @synthesize editingAlbumIndex;
 @synthesize infoCellArray;
-@synthesize SETEDITING;
+@synthesize isEditing;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -89,49 +111,70 @@
     if (self) {
         self.me = [self appDelegate].me ;
         [self.infoTableView setAllowsSelection:NO];
-
+        self.isEditing = NO;
     }
     return self;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark - edit model
+#pragma mark - edit mode
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)setEditModel
+- (void)setEditMode
 {
     UIBarButtonItem *ttButton = [[UIBarButtonItem alloc] initWithTitle:T(@"保存") 
                                                               style:UIBarButtonItemStyleDone 
                                                              target:self
-                                                                action:@selector(saveEditModel:)];
+                                                                action:@selector(saveEditMode:)];
     [ttButton setTintColor:RGBCOLOR(80, 192, 77)];
     self.navigationItem.rightBarButtonItem = ttButton;
-    self.SETEDITING = YES;
+    self.isEditing = YES;
     
-    //setEditing
-//    [self.infoTableView setEditing:YES];
+
     [self infoTableEditing];
-    
-    //album can do image
-    [self.addAlbumButton setHidden:NO];
-    CGRect rect = [self calcRect:self.albumCount];
-    [self.addAlbumButton setFrame:rect];
+    [self refreshAlbumView];
     
     // table into setting
-    for (int j = 0; j < MAX_ALBUN_COUNT; j++) {
-        UIButton *albumButton = [self.albumButtonArray objectAtIndex:j];
-        
-        [albumButton.layer setBorderColor:[UIColor whiteColor].CGColor];
-        [albumButton.layer setBorderWidth:3.0f];
-        
-        Avatar *avatar = [self.albumArray objectAtIndex:j];
-        if (avatar.thumbnail != nil) {
-//        if (j < self.albumCount) {
-            [albumButton removeTarget:self action:@selector(albumClick:) forControlEvents:UIControlEventTouchUpInside];
-            [albumButton addTarget:self action:@selector(removeOrReplace:) forControlEvents:UIControlEventTouchUpInside];
-        } else {
-            [albumButton setHidden:YES];
-        }
-    }
 }
+
+- (void)saveEditMode:(id)sender
+{
+    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    HUD.delegate = self;
+    HUD.labelText = T(@"更新中");
+    // save and upload
+    [[AppNetworkAPIClient sharedClient] uploadMe:self.me withBlock:^(id responseObject, NSError *error) {
+        if (error == nil) {
+            // HUD hide
+            [HUD hide:YES];
+            
+            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            HUD.delegate = self;
+            HUD.mode = MBProgressHUDModeText;
+            HUD.labelText = T(@"更新成功");
+            [HUD hide:YES afterDelay:1];
+            
+        }else {
+            NSLog (@"NSError received during login: %@", error);
+            
+            // HUD hide
+            [HUD hide:YES];
+            // HUD show error
+            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            HUD.mode = MBProgressHUDModeText;
+            HUD.delegate = self;
+            HUD.labelText = T(@"更新失败");
+            [HUD hide:YES afterDelay:1];
+        }
+    }];
+    
+    self.navigationItem.rightBarButtonItem = self.editProfileButton;
+    
+    self.isEditing = NO;
+    
+    [self infoTableCommitEdit];
+    [self refreshAlbumView];
+}
+
+
 
 - (void)infoTableEditing{
     for (int index =0; index < [self.infoCellArray count]; index++) {
@@ -146,7 +189,7 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 //    UITableViewCell *cell = [self.infoCellArray objectAtIndex:indexPath.row];
     
-    if (self.SETEDITING) {
+    if (self.isEditing) {
         NSLog(@"click the %d",indexPath.row);
         
         EditViewController *controller = [[EditViewController alloc] initWithNibName:nil bundle:nil];
@@ -273,60 +316,6 @@
     }
 }
 
-- (void)saveEditModel:(id)sender
-{
-    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    HUD.delegate = self;
-    HUD.labelText = T(@"更新中");
-    // save and upload
-    [[AppNetworkAPIClient sharedClient] uploadMe:self.me withBlock:^(id responseObject, NSError *error) {
-        if (error == nil) {
-            // HUD hide
-            [HUD hide:YES];
-            
-            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            HUD.delegate = self;
-            HUD.mode = MBProgressHUDModeText;
-            HUD.labelText = T(@"更新成功");
-            [HUD hide:YES afterDelay:1];
-            
-        }else {
-            NSLog (@"NSError received during login: %@", error);
-            
-            // HUD hide
-            [HUD hide:YES];
-            // HUD show error
-            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            HUD.mode = MBProgressHUDModeText;
-            HUD.delegate = self;
-            HUD.labelText = T(@"更新失败");
-            [HUD hide:YES afterDelay:1];
-        }
-    }];
-
-    self.navigationItem.rightBarButtonItem = self.editProfileButton;
-    
-    if (self.albumCount == 0) {
-        [self.addAlbumButton setHidden:NO];
-    }else{
-        [self.addAlbumButton setHidden:YES];
-    }
-    self.SETEDITING = NO;
-    //setEditing
-//    [self.infoTableView setEditing:NO];
-    [self infoTableCommitEdit];
-
-    // table into setting
-    for (int j = 0; j < 8; j++) {
-        UIButton *albumButton = [self.albumButtonArray objectAtIndex:j];
-        [albumButton.layer setBorderColor:[UIColor clearColor].CGColor];
-        [albumButton.layer setBorderWidth:0.0f];
-        [albumButton removeTarget:self action:@selector(removeOrReplace:) forControlEvents:UIControlEventTouchUpInside];
-        [albumButton addTarget:self action:@selector(albumClick:) forControlEvents:UIControlEventTouchUpInside];
-    }
-}
-
-
 //////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - actionsheet when add album
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -382,8 +371,8 @@
     self.editProfileButton = [[UIBarButtonItem alloc] initWithTitle:T(@"编辑") 
                                                           style:UIBarButtonItemStyleDone 
                                                          target:self 
-                                                         action:@selector(setEditModel)];
-    self.SETEDITING = NO;
+                                                         action:@selector(setEditMode)];
+
     self.navigationItem.rightBarButtonItem = self.editProfileButton;
 }
 
@@ -426,7 +415,7 @@
     [self.addAlbumButton setFrame:[self calcRect:0]];
     [self.albumView addSubview:self.addAlbumButton];
 
-    self.albumArray = [[NSMutableArray alloc] init];
+    self.albumArray = [[NSMutableArray alloc] initWithArray:[self.me getOrderedAvatars]];
     self.albumButtonArray = [[NSMutableArray alloc] init];
     UIButton *albumButton;
 
@@ -436,60 +425,84 @@
         [albumButton.layer setMasksToBounds:YES];
         [albumButton.layer setCornerRadius:3.0];
         albumButton.tag = i ;
-        [albumButton addTarget:self action:@selector(albumClick:) forControlEvents:UIControlEventTouchUpInside];
-        
+       
         [self.albumView addSubview:albumButton];
-        [albumButton setHidden:YES];
         [self.albumButtonArray addObject:albumButton];
     }
 }
 
 - (void)refreshAlbumView
 {
-    self.albumArray  = [[NSMutableArray alloc] initWithArray: [self.me getOrderedAvatars]];
+    NSArray *avatars = [self.me getOrderedAvatars];
 
+    // every time refresh album - make sure self.albumArray only contains good avatar with images, and
+    // set albumButton to display all avatar images continuously even if avatar images are not continuous.
     self.albumCount = 0;
-    for (int j = 0; j < MAX_ALBUN_COUNT; j++) {
-        UIButton *albumButton = [self.albumButtonArray objectAtIndex:j];
-        Avatar *avatar = [self.albumArray objectAtIndex:j];
+    for (int i = 0; i < [avatars count]; i++) {
+        Avatar *avatar = [avatars objectAtIndex:i];
+        
         if (avatar.thumbnail != nil) {
-//            [albumButton setImage:avatar.thumbnail forState:UIControlStateNormal];
+            UIButton *albumButton = [self.albumButtonArray objectAtIndex:self.albumCount];
             [albumButton setBackgroundImage:avatar.thumbnail forState:UIControlStateNormal];
-            [albumButton setTitle:[NSString stringWithFormat:@"# %d",j] forState:UIControlStateNormal];
+            [albumButton setTitle:[NSString stringWithFormat:@"# %d",self.albumCount] forState:UIControlStateNormal];
             [albumButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
             [albumButton setHidden:NO];
+            
+            if (self.isEditing) {
+                [albumButton.layer setBorderColor:[UIColor whiteColor].CGColor];
+                [albumButton.layer setBorderWidth:3.0f];
+                [albumButton removeTarget:self action:@selector(albumClick:) forControlEvents:UIControlEventTouchUpInside];
+                [albumButton addTarget:self action:@selector(removeOrReplace:) forControlEvents:UIControlEventTouchUpInside];
+            } else {
+                [albumButton.layer setBorderColor:[UIColor clearColor].CGColor];
+                [albumButton.layer setBorderWidth:0.0f];
+                [albumButton removeTarget:self action:@selector(removeOrReplace:) forControlEvents:UIControlEventTouchUpInside];
+                [albumButton addTarget:self action:@selector(albumClick:) forControlEvents:UIControlEventTouchUpInside];
+            }
+            
+            [self.albumArray setObject:avatar atIndexedSubscript:self.albumCount];
             self.albumCount += 1;
+        } else {
+            // store avatar to the albumArray from the back
+            int index = [avatars count] - (i - self.albumCount) - 1;
+            [self.albumArray setObject:avatar atIndexedSubscript:index];
         }
-
     }
     
-
+    for (int i = self.albumCount; i < [self.albumButtonArray count]; i++) {
+        UIButton *albumButton = [self.albumButtonArray objectAtIndex:i];
+        [albumButton setHidden:YES];
+    }
+    
+    // Calcuate where to display add album button. If display, also set editingAlbumIndex to start with Add
     if (self.albumCount == 0) {
         CGRect rect = [self calcRect:self.albumCount];
         [self.addAlbumButton setFrame:rect];
         [self.addAlbumButton setHidden:NO];
+        self.editingAlbumIndex = self.albumCount;
     }else if (self.albumCount == MAX_ALBUN_COUNT){
         [self.addAlbumButton setHidden:YES];
+    } else if (self.isEditing) {
+        CGRect rect = [self calcRect:self.albumCount];
+        [self.addAlbumButton setFrame:rect];
+        [self.addAlbumButton setHidden:NO];
+        self.editingAlbumIndex = self.albumCount;
+    }else{
+        [self.addAlbumButton setHidden:YES];
+        
     }
-    else {
-        if (self.SETEDITING) {
-            CGRect rect = [self calcRect:self.albumCount];
-            [self.addAlbumButton setFrame:rect];
-            [self.addAlbumButton setHidden:NO];
-        }else{
-            [self.addAlbumButton setHidden:YES];
-        }
-    }
+    
+    
 }
 
 - (void)albumClick:(UIButton *)sender
 {
-    self.albumViewController = [[AlbumViewController alloc] init];
-    self.albumViewController.albumArray = self.albumArray;
-    self.albumViewController.albumIndex = sender.tag;
-    [self.albumViewController setHidesBottomBarWhenPushed:YES];
+    AlbumViewController *albumViewController = [[AlbumViewController alloc] init];
+    albumViewController.albumArray = self.albumArray;
+    albumViewController.albumIndex = sender.tag;
+    [albumViewController setHidesBottomBarWhenPushed:YES];
     // Pass the selected object to the new view controller.
-    [self.navigationController pushViewController:self.albumViewController animated:YES];
+    [self.navigationController pushViewController:albumViewController animated:YES];
     NSLog(@"%d",sender.tag);
 }
 
@@ -514,11 +527,13 @@
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (actionSheet == self.photoActionsheet) {
-        if (buttonIndex == 0) {  
+        if (buttonIndex == 0) {
+            self.isEditing = YES;
             [self takePhotoFromLibaray];  
-        }else if (buttonIndex == 1) {  
+        }else if (buttonIndex == 1) {
+            self.isEditing = YES;
             [self takePhotoFromCamera];  
-        } 
+        }
     }
     
     if (actionSheet == self.editActionsheet) {
@@ -529,26 +544,16 @@
         }
     }
     
-    
 }
 
 - (void)removeAlbum
 {
-    NSArray *tempAvatarArray = [self.me getOrderedAvatars];
     NSLog(@"editingAlbumIndex %d",self.editingAlbumIndex);
-    Avatar *removeAvatar = [tempAvatarArray objectAtIndex:self.editingAlbumIndex];
-//    [self.me removeAvatarsObject:removeAvatar];
+    Avatar *removeAvatar = [self.albumArray objectAtIndex:self.editingAlbumIndex];
     removeAvatar.image = nil;
     removeAvatar.thumbnail  = nil;
-    removeAvatar.sequence   =0;
     
-    // network
-//    [[AppNetworkAPIClient sharedClient] storeAvatar:removeAvatar forMe:self.me andOrder:sequence withBlock:nil];
-
-    // display
-    UIButton *albumButton = [self.albumButtonArray objectAtIndex:self.editingAlbumIndex];
-    [albumButton removeTarget:self action:@selector(removeOrReplace:) forControlEvents:UIControlEventTouchUpInside];
-    [albumButton setHidden:YES];
+    [self refreshAlbumView];
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -608,50 +613,40 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
         avatar.thumbnail = thumbnail;
         
         self.editingAlbumIndex = NSNotFound;
-
-    }else {
- /*       avatar = [NSEntityDescription insertNewObjectForEntityForName:@"ImageLocal" inManagedObjectContext:self.managedObjectContext ];
-        avatar.thumbnail = thumbnail;
-        avatar.image = image;
-        NSInteger sequence = [self.albumArray count] + 1;
+    
+        // HUD show
+        HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        HUD.delegate = self;
+        HUD.labelText = T(@"上传中");
         
-        avatar.sequence = [NSNumber numberWithInt:sequence];
-        [self.me addAvatarsObject:avatar];
- */
-    }
-    
-    // HUD show
-    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    HUD.delegate = self;
-    HUD.labelText = T(@"上传中");
-    
-    //网路传输
-    [[AppNetworkAPIClient sharedClient] storeAvatar:avatar forMe:self.me andOrder:avatar.sequence.intValue withBlock:^(id responseObject, NSError *error) {
-        if (error == nil) {
-            // HUD hide
-            [HUD hide:YES];
-            // HUD show success
-            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            HUD.mode = MBProgressHUDModeText;
-            HUD.delegate = self;
-            HUD.labelText = T(@"上传成功");
-            [HUD hide:YES afterDelay:1];
-        } else {
-            NSLog (@"NSError received during login: %@", error);
+        //网路传输
+        [[AppNetworkAPIClient sharedClient] storeAvatar:avatar forMe:self.me andOrder:avatar.sequence.intValue withBlock:^(id responseObject, NSError *error) {
+            if (error == nil) {
+                // HUD hide
+                [HUD hide:YES];
+                // HUD show success
+                HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                HUD.mode = MBProgressHUDModeText;
+                HUD.delegate = self;
+                HUD.labelText = T(@"上传成功");
+                [HUD hide:YES afterDelay:1];
+            } else {
+                NSLog (@"NSError received during login: %@", error);
+                
+                // HUD hide
+                [HUD hide:YES];
+                // HUD show error
+                HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                HUD.mode = MBProgressHUDModeText;
+                HUD.delegate = self;
+                HUD.labelText = T(@"上传失败");
+                [HUD hide:YES afterDelay:1];
+            }
             
-            // HUD hide
-            [HUD hide:YES];
-            // HUD show error
-            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            HUD.mode = MBProgressHUDModeText;
-            HUD.delegate = self;
-            HUD.labelText = T(@"上传失败");
-            [HUD hide:YES afterDelay:1];
-        }
-        
-    }];
+        }];
 
-    MOCSave(self.managedObjectContext);
+        MOCSave(self.managedObjectContext);
+    }
     
     [self refreshAlbumView];
     [picker dismissModalViewControllerAnimated:YES];

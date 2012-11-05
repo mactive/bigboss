@@ -32,16 +32,6 @@
     
     return result;
 }
--(NSArray *)getOrderedNonNilAvatars
-{
-    NSSortDescriptor *sortDesc = [NSSortDescriptor sortDescriptorWithKey:@"sequence" ascending:YES];
-    
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"sequence > 0"];
-    NSSet *filteredSet =[self.avatars filteredSetUsingPredicate:predicate];
-    NSArray *result = [filteredSet sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDesc]];
-    
-    return result;
-}
 
 
 @end
