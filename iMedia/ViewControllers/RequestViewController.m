@@ -17,6 +17,7 @@
 #import "AppDelegate.h"
 #import "FunctionListViewController.h"
 #import "ModelHelper.h"
+#import "ContactListViewController.h"
 
 @interface RequestViewController ()
 
@@ -168,6 +169,7 @@
 {
     [[ModelHelper sharedInstance] createActiveUserWithFullServerJSONData:self.request.userJSONData];
     [[XMPPNetworkCenter sharedClient] acceptPresenceSubscriptionRequestFrom:self.request.requesterEPostalID andAddToRoster:YES];
+    [[self appDelegate].contactListController contentChanged];
 }
 
 - (void)cancelRequest
