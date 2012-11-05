@@ -9,6 +9,7 @@
 #import "ModelHelper.h"
 #import "User.h"
 #import "Me.h"
+#import "Avatar.h"
 #import "Channel.h"
 #import "ImageRemote.h"
 #import "ServerDataTransformer.h"
@@ -174,18 +175,33 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         }
     }
     // Update avatar with incoming data
-    NSArray *imageArray = [user getOrderedImages];
+    NSArray *imageArray = [user getOrderedAvatars];
+    int count = 1;
     for (int i = 1; i <= 8 ; i++) {
-        ImageRemote *imageRemote = [imageArray objectAtIndex:(i-1)];
+        Avatar *avatar = [imageArray objectAtIndex:(i-1)];
         NSString *key = [NSString stringWithFormat:@"%d", i];
-        if ([imageURLDict objectForKey:key] != nil && [imageThumbnailURLDict objectForKey:key] != nil) {
-            imageRemote.imageURL = [imageURLDict objectForKey:key];
-            imageRemote.imageThumbnailURL = [imageThumbnailURLDict objectForKey:key];
-            imageRemote.sequence = [NSNumber numberWithInt:i];
+        NSString* imageURL = [imageURLDict objectForKey:key];
+        NSString* thumbnailURL = [imageThumbnailURLDict objectForKey:key];
+        
+        if (imageURL != nil && thumbnailURL != nil) {
+            // only update when it is not the same
+            if (avatar.image == nil || ![imageURL isEqualToString:avatar.imageRemoteURL]) {
+                avatar.imageRemoteURL = [imageURLDict objectForKey:key];
+                avatar.imageRemoteThumbnailURL = [imageThumbnailURLDict objectForKey:key];
+                if (avatar.image != nil) {
+                    // reset image if server url is different
+                    avatar.image = nil;
+                    avatar.thumbnail = nil;
+                }
+                avatar.sequence = [NSNumber numberWithInt:count];
+                count = count + 1;
+            }
         } else {
-            imageRemote.imageURL = @"";
-            imageRemote.imageThumbnailURL = @"";
-            imageRemote.sequence = 0;
+            avatar.imageRemoteURL = @"";
+            avatar.imageRemoteThumbnailURL = @"";
+            avatar.sequence = [NSNumber numberWithInt:100];
+            avatar.image = nil;
+            avatar.thumbnail = nil;
         }
     }
 }

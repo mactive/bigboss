@@ -165,17 +165,12 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
         
         [self.imageUploadOperationsInProgress removeObjectForKey:avatar.sequence];
         
-        NSArray *imagesURLArray = [me getOrderedImages];
-        ImageRemote *imageRemote = [imagesURLArray objectAtIndex:(avatar.sequence.intValue-1)];
-        imageRemote.sequence = avatar.sequence;
-        imageRemote.imageThumbnailURL = thumbnailURL;
-        imageRemote.imageURL = url;
         avatar.imageRemoteThumbnailURL = thumbnailURL;
         avatar.imageRemoteURL = url;
         
         if (avatar.sequence.intValue == 1) {
-            me.avatarURL = imageRemote.imageURL;
-            me.thumbnailURL = imageRemote.imageThumbnailURL;
+            me.avatarURL = url;
+            me.thumbnailURL = thumbnailURL;
             me.thumbnailImage = avatar.thumbnail;
         }
 
@@ -185,6 +180,8 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         DDLogError(@"upload image failed: %@", error);
         [self.imageUploadOperationsInProgress removeObjectForKey:avatar.sequence];
+        avatar.image = nil;
+        avatar.thumbnail = nil;
         if (block) {
             block(nil, error);
         }
@@ -250,28 +247,23 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
             
             [[ModelHelper sharedInstance] populateIdentity:identity withJSONData:responseObject];
             
+            // Fix some inconsistent issues if it exists
+            
             // if identity is Me, we need to check local avatar against the server. If local doesn't have the image
             // we need to download and save.
             if ([identity isKindOfClass:[Me class]]) {
                 Me *me = (Me *)identity;
-                NSArray *imageArray = [me getOrderedNonNilImages];
                 NSArray *avatarArray = [me getOrderedAvatars];
-                for (int i = 0; i < [imageArray count] ; i++) {
-                    ImageRemote *imageRemote = [imageArray objectAtIndex:i];
-                    if (i < [avatarArray count]) {
-                        Avatar *avatar = [avatarArray objectAtIndex:i];
-                        
-                        // only update image if not equal
-                        if (![imageRemote.imageThumbnailURL isEqualToString:avatar.imageRemoteThumbnailURL] || !![imageRemote.imageURL isEqualToString:avatar.imageRemoteURL] ) {
-                            
-                            AFImageRequestOperation *oper = [AFImageRequestOperation imageRequestOperationWithRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:imageRemote.imageURL]] success:^(UIImage *image) {
-                                DDLogInfo(@"load me thumbnail image received response: %@", responseObject);
-                                avatar.image = image;
-                                UIImage *thumbnail = [image resizedImageToSize:CGSizeMake(75, 75)];
-                                avatar.thumbnail = thumbnail;
-                            }];
-                            [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:oper];
-                        }
+                for (int i = 0; i < [avatarArray count] ; i++) {
+                    Avatar *avatar = [avatarArray objectAtIndex:i];
+                    // only update image if not exist
+                    if (avatar.image == nil && avatar.imageRemoteURL != nil && ![avatar.imageRemoteURL isEqualToString:@""] ) {
+                        AFImageRequestOperation *oper = [AFImageRequestOperation imageRequestOperationWithRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:avatar.imageRemoteURL]] success:^(UIImage *image) {
+                            DDLogInfo(@"load me thumbnail image received response: %@", responseObject);
+                            avatar.image = image;
+                            avatar.thumbnail= [image resizedImageToSize:CGSizeMake(75, 75)];
+                        }];
+                        [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:oper];
                     }
                 }
                 
@@ -324,17 +316,13 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
                               [ServerDataTransformer datetimeStrfromNSDate:me.lastGPSUpdated], @"last_gps_updated",
                               me.lastGPSLocation, @"last_gps_loc",
                               nil];
-    NSArray *imagesURLArray = [me getOrderedNonNilImages];
+    NSArray *imagesURLArray = [me getOrderedAvatars];
     for (int i = 0; i < [imagesURLArray count]; i++) {
-        ImageRemote* remoteImage = [imagesURLArray objectAtIndex:i];
-        if (remoteImage.sequence == 0) {
-            //empty, skip
-            continue;
-        }
+        Avatar* avatar = [imagesURLArray objectAtIndex:i];
         NSString *key1 = [NSString stringWithFormat:@"avatar%d", (i+1)];
         NSString *key2 = [NSString stringWithFormat:@"thumbnail%d", (i+1)];
-        [postDict setObject:remoteImage.imageURL forKey:key1];
-        [postDict setObject:remoteImage.imageThumbnailURL forKey:key2];
+        [postDict setObject:avatar.imageRemoteURL forKey:key1];
+        [postDict setObject:avatar.imageRemoteThumbnailURL forKey:key2];
     }
     
     NSMutableURLRequest *postRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"POST" path:POST_DATA_PATH parameters:postDict];
@@ -357,9 +345,11 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
                 block(responseObject, nil);
             }
         }
-     if (block) {
-         block (nil, nil);
-     }
+        else {
+            if (block) {
+                block (nil, nil);
+            }
+        }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         DDLogError(@"upload me failed: %@", error);
         if (block) {

@@ -10,6 +10,7 @@
 #import "Avatar.h"
 #import "ImageRemote.h"
 #import "UIImageView+AFNetworking.h"
+#import "UIImage+Resize.h"
 
 @interface AlbumViewController ()
 - (UIView*) createViewForObj:(id)obj;
@@ -39,7 +40,7 @@
         id obj = [self.albumArray objectAtIndex:index];
         if ([obj isKindOfClass:[Avatar class]]) {
             Avatar * singleAvatar = obj;
-            if (singleAvatar.image == nil) {
+            if (singleAvatar.image == nil && (singleAvatar.imageRemoteURL == nil || [singleAvatar.imageRemoteURL isEqualToString:@""]) ) {
                 continue;
             }
         } else if ([obj isKindOfClass:[ImageRemote class]]) {
@@ -72,7 +73,19 @@
     UIImageView* imageView = [[UIImageView alloc]initWithFrame:view.bounds];
     if ([obj isKindOfClass:[Avatar class]]) {
         Avatar * singleAvatar = obj;
-        [imageView setImage:singleAvatar.image];
+        if (singleAvatar.image != nil) {
+            [imageView setImage:singleAvatar.image];
+        } else {
+            [imageView setImageWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:singleAvatar.imageRemoteURL]] placeholderImage:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                singleAvatar.image = image;
+                if (singleAvatar.thumbnail == nil) {
+                    singleAvatar.thumbnail = [image resizedImageToSize:CGSizeMake(75, 75)];
+                }
+            } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+                
+            }];
+        }
+    
     } else if ([obj isKindOfClass:[ImageRemote class]]) {
         ImageRemote *imageRemote = obj;
         [imageView setImageWithURL:[NSURL URLWithString:imageRemote.imageThumbnailURL] placeholderImage:nil];

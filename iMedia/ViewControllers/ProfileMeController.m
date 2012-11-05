@@ -20,6 +20,7 @@
 #import "UIImage+Resize.h"
 #import "AppDelegate.h"
 #import "AppNetworkAPIClient.h"
+#import "AFImageRequestOperation.h"
 #import "EditViewController.h"
 #import "ServerDataTransformer.h"
 #import "MBProgressHUD.h"
@@ -153,7 +154,7 @@
             [HUD hide:YES afterDelay:1];
             
         }else {
-            NSLog (@"NSError received during login: %@", error);
+            NSLog (@"NSError received during upload me: %@", error);
             
             // HUD hide
             [HUD hide:YES];
@@ -441,10 +442,20 @@
     for (int i = 0; i < [avatars count]; i++) {
         Avatar *avatar = [avatars objectAtIndex:i];
         
-        if (avatar.thumbnail != nil) {
+        if (avatar.thumbnail != nil || (avatar.imageRemoteThumbnailURL != nil && ![avatar.imageRemoteThumbnailURL isEqualToString:@""])) {
             UIButton *albumButton = [self.albumButtonArray objectAtIndex:self.albumCount];
-            [albumButton setBackgroundImage:avatar.thumbnail forState:UIControlStateNormal];
-            [albumButton setTitle:[NSString stringWithFormat:@"# %d",self.albumCount] forState:UIControlStateNormal];
+            if (avatar.thumbnail != nil) {
+                [albumButton setBackgroundImage:avatar.thumbnail forState:UIControlStateNormal];
+            } else {
+                AFImageRequestOperation *operation = [AFImageRequestOperation imageRequestOperationWithRequest:[[NSURLRequest alloc] initWithURL:[NSURL URLWithString:avatar.imageRemoteThumbnailURL]] imageProcessingBlock:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                    avatar.thumbnail = image;
+                    [albumButton setBackgroundImage:avatar.thumbnail forState:UIControlStateNormal];
+                } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+                    [albumButton setTitle:@"下载失败" forState:UIControlStateNormal];
+                }];
+                
+                [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:operation];
+            }
             [albumButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
             [albumButton setHidden:NO];
             
@@ -462,10 +473,12 @@
             
             [self.albumArray setObject:avatar atIndexedSubscript:self.albumCount];
             self.albumCount += 1;
+            avatar.sequence = [NSNumber numberWithInt:self.albumCount];
         } else {
             // store avatar to the albumArray from the back
             int index = [avatars count] - (i - self.albumCount) - 1;
             [self.albumArray setObject:avatar atIndexedSubscript:index];
+            avatar.sequence = [NSNumber numberWithInt:(index+1)];
         }
     }
     
@@ -552,6 +565,9 @@
     Avatar *removeAvatar = [self.albumArray objectAtIndex:self.editingAlbumIndex];
     removeAvatar.image = nil;
     removeAvatar.thumbnail  = nil;
+    removeAvatar.imageRemoteThumbnailURL = @"";
+    removeAvatar.imageRemoteURL = @"";
+    removeAvatar.title = @"";
     
     [self refreshAlbumView];
 }
@@ -611,6 +627,8 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
         avatar = [self.albumArray objectAtIndex:self.editingAlbumIndex];
         avatar.image = image;
         avatar.thumbnail = thumbnail;
+        avatar.imageRemoteURL = @"";
+        avatar.imageRemoteThumbnailURL = @"";
         
         self.editingAlbumIndex = NSNotFound;
     
@@ -631,7 +649,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
                 HUD.labelText = T(@"上传成功");
                 [HUD hide:YES afterDelay:1];
             } else {
-                NSLog (@"NSError received during login: %@", error);
+                NSLog (@"NSError received during store avatar: %@", error);
                 
                 // HUD hide
                 [HUD hide:YES];
@@ -643,13 +661,14 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
                 [HUD hide:YES afterDelay:1];
             }
             
+            MOCSave(self.managedObjectContext);
+            [self refreshAlbumView];
+            [picker dismissModalViewControllerAnimated:YES];
+            
         }];
-
-        MOCSave(self.managedObjectContext);
     }
     
-    [self refreshAlbumView];
-    [picker dismissModalViewControllerAnimated:YES];
+
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
