@@ -165,7 +165,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 {
     [super viewDidLoad];
     
-        
+    self.title = T(@"登录");
+    
     self.logoImage = [[UIImageView alloc]initWithFrame:CGRectMake(50, 10,220, 50)];
     [self.logoImage setImage:[UIImage imageNamed:@"logo.png"]];
     

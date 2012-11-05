@@ -12,12 +12,14 @@
 #import "UIBubbleTableViewCell.h"
 #import "NSBubbleData.h"
 
-@interface UIBubbleTableViewCell ()
+@interface UIBubbleTableViewCell ()<UIWebViewDelegate>
 
-@property (nonatomic, retain) UIView *customView;
-@property (nonatomic, retain) UIImageView *bubbleImage;
-@property (nonatomic, retain) UIImageView *avatarImage;
-@property (nonatomic, retain) UIWebView *webView;
+@property (nonatomic, strong) UIView *customView;
+@property (nonatomic, strong) UIImageView *bubbleImage;
+@property (nonatomic, strong) UIImageView *avatarImage;
+@property (nonatomic, strong) UIWebView *webView;
+@property (nonatomic, strong) UIView *backWebView;
+@property (nonatomic, strong) UIButton *webViewOverlayButton;
 
 - (void) setupInternalData;
 
@@ -31,12 +33,25 @@
 @synthesize showAvatar = _showAvatar;
 @synthesize avatarImage;
 @synthesize webView;
+@synthesize webViewOverlayButton;
+@synthesize backWebView;
 
 - (void)setFrame:(CGRect)frame
 {
     [super setFrame:frame];
     [self setupInternalData];
     
+}
+
+- (id)init
+{
+    id obj = [super init];
+    
+    self.webViewOverlayButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.backWebView = [[UIView alloc] initWithFrame:CGRectMake(10, 0, 300,1)];
+    self.webView = [[UIWebView alloc]initWithFrame:CGRectMake(12.5, 12.5, 275, 1)];
+    
+    return obj;
 }
 
 #if !__has_feature(objc_arc)
@@ -49,23 +64,24 @@
 }
 #endif
 
-- (void)setDataInternal:(NSBubbleData *)value
-{
-	self.data = value;
-	[self setupInternalData];
-}
+//- (void)setDataInternal:(NSBubbleData *)value
+//{
+//	self.data = value;
+//	[self setupInternalData];
+//}
 
 - (void) setupInternalData
 {
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     
+    NSBubbleType type = self.data.type;
+
     if (!self.bubbleImage)
     {
         self.bubbleImage = [[UIImageView alloc] init];
         [self addSubview:self.bubbleImage];
     }
     
-    NSBubbleType type = self.data.type;
     
     CGFloat width = self.data.view.frame.size.width;
     CGFloat height = self.data.view.frame.size.height;
@@ -74,7 +90,7 @@
     CGFloat y = 5;
     
     // Adjusting the x coordinate for avatar
-    if (self.showAvatar)
+    if (self.data.showAvatar)
     {
         [self.avatarImage removeFromSuperview];
         self.avatarImage = [[UIImageView alloc] initWithImage:(self.data.avatar ? self.data.avatar : [UIImage imageNamed:@"missingAvatar.png"])];
@@ -99,6 +115,7 @@
     [self.customView removeFromSuperview];
     self.customView = self.data.view;
     self.customView.frame = CGRectMake(x + self.data.insets.left, y + self.data.insets.top, width, height);
+    
     [self.contentView addSubview:self.customView];
 
     if (type == BubbleTypeSomeoneElse)
@@ -111,27 +128,52 @@
     }
     else if (type == BubbleTypeWebview){
         
-        UIView *backWebView = [[UIView alloc] initWithFrame:CGRectMake(10, 0, 300,335)];
-        [backWebView setBackgroundColor:[UIColor whiteColor]];
-        [backWebView.layer setMasksToBounds:YES];
-        [backWebView.layer setCornerRadius:10.0];
+        [self.backWebView setBackgroundColor:[UIColor whiteColor]];
+        [self.backWebView.layer setMasksToBounds:YES];
+        [self.backWebView.layer setCornerRadius:10.0];
         
-        self.webView = [[UIWebView alloc]initWithFrame:CGRectMake(12.5, 12.5, 275, 320)];
+        [self.webViewOverlayButton setFrame:self.webView.bounds];
+        [self.webViewOverlayButton setAlpha:0.3];
+        [self.webViewOverlayButton setBackgroundColor:[UIColor whiteColor]];
         
         NSURL *url=[NSURL URLWithString:self.data.content];
         NSURLRequest *resquestobj=[NSURLRequest requestWithURL:url];
         [self.webView loadRequest:resquestobj];
-//        [self.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:self.data.text]]];
+        NSLog(@"%@",resquestobj);
         
         self.webView.scalesPageToFit = YES;
-        self.webView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
-        
+//        self.webView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+        self.webView.delegate = self;
+        [self.webView setBackgroundColor:[UIColor clearColor]];
         [self.customView removeFromSuperview];
         [self.avatarImage removeFromSuperview];
-        [backWebView addSubview:self.webView];
-        [self.contentView addSubview:backWebView];
+        [self.bubbleImage removeFromSuperview];
+        
+        [self.backWebView addSubview:self.webView];
+        [self.backWebView addSubview:self.webViewOverlayButton];
+        [self.contentView addSubview:self.backWebView];
     }
     self.bubbleImage.frame = CGRectMake(x, y, width + self.data.insets.left + self.data.insets.right, height + self.data.insets.top + self.data.insets.bottom);
+}
+#pragma mark - UIWebView delegate
+
+- (void)webViewDidFinishLoad:(UIWebView *)webView
+{
+    if ([self.webView isEqual:webView]) {
+        
+        CGSize actualSize = [self.webView sizeThatFits:CGSizeZero];
+        CGRect newFrame = self.webView.frame;
+        newFrame.size.height = actualSize.height;
+        self.webView.frame = newFrame;
+        self.webViewOverlayButton.frame = newFrame;
+        
+        CGRect backFrame = self.backWebView.frame;
+        backFrame.size.height = actualSize.height+25;
+        self.backWebView.frame = backFrame;
+        NSLog(@"%@", NSStringFromCGRect(self.backWebView.frame));
+        
+        self.data.view.frame = backFrame;
+    }
 }
 
 @end

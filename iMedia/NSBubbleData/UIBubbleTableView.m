@@ -185,11 +185,14 @@
     
     NSBubbleData *data = [[self.bubbleSection objectAtIndex:indexPath.section] objectAtIndex:indexPath.row - 1];
     
-    if (data.type == BubbleTypeWebview) {
-        return 335+5;
-    }else{
-        return MAX(data.insets.top + data.view.frame.size.height + data.insets.bottom, self.showAvatars ? 55 : 0);
-    }
+    
+    return MAX(data.insets.top + data.view.frame.size.height + data.insets.bottom, self.showAvatars ? 55 : 0);
+
+//    if (data.type == BubbleTypeWebview) {
+//        return data.view.frame.size.height;
+//    }else{
+//        return MAX(data.insets.top + data.view.frame.size.height + data.insets.bottom, self.showAvatars ? 55 : 0);
+//    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -203,7 +206,7 @@
         if (cell == nil) cell = [[UIBubbleTypingTableViewCell alloc] init];
 
         cell.type = self.typingBubble;
-        cell.showAvatar = self.showAvatars;
+//        cell.showAvatar = self.showAvatars;
         
         return cell;
     }
@@ -230,7 +233,7 @@
     if (cell == nil) cell = [[UIBubbleTableViewCell alloc] init];
     
     cell.data = data;
-    cell.showAvatar = self.showAvatars;
+//    cell.showAvatar = self.showAvatars;
     
     return cell;
 }

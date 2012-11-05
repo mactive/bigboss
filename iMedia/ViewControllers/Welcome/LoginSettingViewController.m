@@ -21,6 +21,7 @@
 @property(strong, nonatomic)UIButton *genderButton;
 @property(strong, nonatomic)UIPickerView *genderPicker;
 @property(strong, nonatomic)UIButton *welcomeButton;
+@property(strong, nonatomic)UILabel *welcomeLabel;
 
 
 @property(strong, nonatomic) NSDictionary *genderTitleDict;
@@ -38,6 +39,7 @@
 @synthesize genderPicker;
 @synthesize welcomeButton;
 @synthesize me;
+@synthesize welcomeLabel;
 
 @synthesize genderTitleDict;
 @synthesize genderTitleKey;
@@ -58,7 +60,7 @@
 	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
-#define LOGO_HEIGHT 0
+#define LOGO_HEIGHT 10
 #define LEFT_OFFSET 20
 #define LABEL_WIDTH 120
 #define LABEL_HEIGHT 50
@@ -71,6 +73,16 @@
     self.view.backgroundColor = BGCOLOR;
 	// Do any additional setup after loading the view.
     self.title = T(@"设置初始信息");
+    
+    self.welcomeLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0 , 320, 44)];
+    [self.welcomeLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.welcomeLabel setBackgroundColor:RGBCOLOR(62, 67, 76)];
+    [self.welcomeLabel setFont:[UIFont systemFontOfSize:16.0]];
+    self.welcomeLabel.textColor = [UIColor whiteColor];
+    self.welcomeLabel.shadowColor = [UIColor blackColor];
+    self.welcomeLabel.shadowOffset = CGSizeMake(0, 1);
+    self.welcomeLabel.text = T(@"请设置昵称和性别");
+    [self.view addSubview:self.welcomeLabel];
     
     self.displayNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(LEFT_OFFSET, LABEL_HEIGHT+LOGO_HEIGHT, LABEL_WIDTH, 30)];
     [self.displayNameLabel setBackgroundColor:[UIColor clearColor]];
@@ -125,11 +137,9 @@
     [self.welcomeButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
     [self.welcomeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     [self.welcomeButton.titleLabel setTextAlignment:UITextAlignmentCenter];
-    
-    [self.welcomeButton setTitle:T(@"欢迎来到大掌柜") forState:UIControlStateNormal];
-    [self.welcomeButton addTarget:self action:@selector(welcomeAction) forControlEvents:UIControlEventTouchUpInside];
+    [self.welcomeButton setAlpha:0.3];
+    [self.welcomeButton setTitle:T(@"欢迎来到春水堂") forState:UIControlStateNormal];
     [self.view addSubview:self.welcomeButton];
-    [self.welcomeButton setHidden:YES];
     
     
     self.displayNameField.text = self.me.displayName;
@@ -139,6 +149,7 @@
 
 - (void)welcomeAction
 {
+    [self.navigationController dismissModalViewControllerAnimated:YES];
     [[self appDelegate] startMainSession];
 }
 
@@ -159,7 +170,6 @@
 
 - (void)settingGender
 {
-    //[self.genderButton resignFirstResponder];
     [self.displayNameField resignFirstResponder];
     self.genderPicker = [[UIPickerView alloc]init ];
     self.genderPicker.delegate = self;
@@ -206,22 +216,21 @@
     if ([pickerView isEqual:self.genderPicker]) {
         self.genderButton.titleLabel.text = [self.genderTitleValue objectAtIndex:row];
         self.me.gender = [self.genderTitleKey objectAtIndex:row];
-        
+        self.me.displayName = self.displayNameField.text;
+
         
         if ([self.me.gender length] != 0 && [self.me.displayName length] != 0 )
         {
             [self.genderPicker removeFromSuperview];
 
-            if (self.welcomeButton.hidden == YES) {
                 [self.welcomeButton setHidden:NO];
-                [self.welcomeButton setAlpha:0];
+                [self.welcomeButton setAlpha:0.3];
                 [UIView beginAnimations:nil context:NULL];
-                [UIView setAnimationDuration:1];
+                [UIView setAnimationDuration:0.5];
                 [self.welcomeButton setAlpha:1];
+                [self.welcomeButton addTarget:self action:@selector(welcomeAction) forControlEvents:UIControlEventTouchUpInside];
                 [UIView commitAnimations];
-                
-            }
-            
+                            
         }else{
             [self.welcomeButton setHidden:YES];
         }
@@ -244,29 +253,35 @@
         if ([self.me.gender length] != 0 && [self.me.displayName length] != 0 )
         {
             [self.genderPicker removeFromSuperview];
-            if (self.welcomeButton.hidden == YES) {
+            
                 [self.welcomeButton setHidden:NO];
-                [self.welcomeButton setAlpha:0];
+                [self.welcomeButton setAlpha:0.3];
                 [UIView beginAnimations:nil context:NULL];
-                [UIView setAnimationDuration:1];
+                [UIView setAnimationDuration:0.5];
                 [self.welcomeButton setAlpha:1];
+                [self.welcomeButton addTarget:self action:@selector(welcomeAction) forControlEvents:UIControlEventTouchUpInside];
                 [UIView commitAnimations];
-            }
         }else{
             [self.welcomeButton setHidden:YES];
         }
-
-        return [textField resignFirstResponder];
     }
+    return [textField resignFirstResponder];
+
     
 }
 
-//-(BOOL)textFieldShouldEndEditing:(UITextField *)textField
-//{
-//    if ([self.displayNameField isEqual:textField]) {
-//        self.me.displayName = self.displayNameField.text;
-//    }
-//}
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    [self.displayNameField resignFirstResponder];
+}
+
+-(BOOL)textFieldShouldEndEditing:(UITextField *)textField
+{
+    if ([self.displayNameField isEqual:textField]) {
+        self.me.displayName = self.displayNameField.text;
+    }
+    return [textField resignFirstResponder];
+}
 
 
 
