@@ -171,6 +171,8 @@
         backFrame.size.height = actualSize.height+25;
         self.backWebView.frame = backFrame;
         NSLog(@"%@", NSStringFromCGRect(self.backWebView.frame));
+        
+        self.data.view.frame = backFrame;
     }
 }
 

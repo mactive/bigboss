@@ -185,6 +185,7 @@
     
     NSBubbleData *data = [[self.bubbleSection objectAtIndex:indexPath.section] objectAtIndex:indexPath.row - 1];
     
+    
     return MAX(data.insets.top + data.view.frame.size.height + data.insets.bottom, self.showAvatars ? 55 : 0);
 
 //    if (data.type == BubbleTypeWebview) {
