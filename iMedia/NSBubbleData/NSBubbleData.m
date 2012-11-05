@@ -125,7 +125,7 @@ const UIEdgeInsets imageInsetsSomeone = {11, 18, 16, 14};
 
 - (id)initWithWeb:(NSString *)urlString date:(NSDate *)date type:(NSBubbleType)type
 {
-    self.webView = [[UIWebView alloc] initWithFrame:CGRectMake(12.5, 12.5, 275, 200)];
+    self.webView = [[UIWebView alloc] initWithFrame:CGRectMake(12.5, 12.5, 275, 1)];
     
     NSURL *url=[NSURL URLWithString:urlString];
     NSURLRequest *resquestobj=[NSURLRequest requestWithURL:url];

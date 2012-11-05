@@ -131,7 +131,6 @@
 	UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     
     cell.backgroundView.backgroundColor = RGBCOLOR(86, 184, 225);
-    [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
     
     NSUInteger labelY = 12;
     
@@ -146,6 +145,10 @@
         [meAvatar setImage:self.me.thumbnailImage];
         [cell.contentView addSubview:meAvatar];
         labelY = 20;
+    }
+    
+    if (indexPath.section !=1 || (indexPath.section ==2 && indexPath.row == 0) ) {
+        [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
     }
 
     

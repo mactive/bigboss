@@ -18,6 +18,7 @@
 #import "FunctionListViewController.h"
 #import "ModelHelper.h"
 #import "ContactListViewController.h"
+#import "MBProgressHUD.h"
 
 @interface RequestViewController ()
 
@@ -167,6 +168,7 @@
 
 - (void)confirmRequest
 {
+    self.request.state = [NSNumber numberWithInt:FriendRequestApproved];
     [[ModelHelper sharedInstance] createActiveUserWithFullServerJSONData:self.request.userJSONData];
     [[XMPPNetworkCenter sharedClient] acceptPresenceSubscriptionRequestFrom:self.request.requesterEPostalID andAddToRoster:YES];
     [[self appDelegate].contactListController contentChanged];
@@ -174,6 +176,7 @@
 
 - (void)cancelRequest
 {
+    self.request.state = [NSNumber numberWithInt:FriendRequestDeclined];
     [[XMPPNetworkCenter sharedClient] rejectPresenceSubscriptionRequestFrom:self.request.requesterEPostalID];
 }
 

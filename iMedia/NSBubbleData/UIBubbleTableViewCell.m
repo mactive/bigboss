@@ -141,19 +141,19 @@
             NSURLRequest *resquestobj=[NSURLRequest requestWithURL:url];
             [self.webView loadRequest:resquestobj];
             NSLog(@"%@",resquestobj);
+            self.webView.scalesPageToFit = YES;
+            //        self.webView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+            self.webView.delegate = self;
+            [self.webView setBackgroundColor:[UIColor clearColor]];
+            
+            [self.backWebView addSubview:self.webView];
+            [self.backWebView addSubview:self.webViewOverlayButton];
+            [self.contentView addSubview:self.backWebView];
         }
-        
-        self.webView.scalesPageToFit = YES;
-//        self.webView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
-        self.webView.delegate = self;
-        [self.webView setBackgroundColor:[UIColor clearColor]];
         [self.customView removeFromSuperview];
         [self.avatarImage removeFromSuperview];
         [self.bubbleImage removeFromSuperview];
         
-        [self.backWebView addSubview:self.webView];
-        [self.backWebView addSubview:self.webViewOverlayButton];
-        [self.contentView addSubview:self.backWebView];
     }
     self.bubbleImage.frame = CGRectMake(x, y, width + self.data.insets.left + self.data.insets.right, height + self.data.insets.top + self.data.insets.bottom);
 }
