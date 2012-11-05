@@ -181,7 +181,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [self.window makeKeyAndVisible];
 }
 
--(void)createMeWithUsername:(NSString *)username password:(NSString *)passwd jid:(NSString *)jidStr jidPasswd:(NSString *)jidPass andGUID:(NSString *)guid
+-(void)createMeWithUsername:(NSString *)username password:(NSString *)passwd jid:(NSString *)jidStr jidPasswd:(NSString *)jidPass andGUID:(NSString *)guid withBlock:(void (^)(id responseObject, NSError *error))block
 {
     if(self.me == nil) {
         self.me = [NSEntityDescription insertNewObjectForEntityForName:@"Me" inManagedObjectContext:_managedObjectContext];
@@ -216,7 +216,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         
         [LocationManager sharedInstance].me = self.me;
         
-        [[AppNetworkAPIClient sharedClient] updateIdentity:self.me withBlock:nil];
+        [[AppNetworkAPIClient sharedClient] updateIdentity:self.me withBlock:block];
         
         MOCSave(_managedObjectContext);
     }

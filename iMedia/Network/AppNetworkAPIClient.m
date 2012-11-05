@@ -174,11 +174,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
         
         NSString* type = [responseObject valueForKey:@"type"];
         
-        if ([type isEqualToString:@"error"]) {
-            if (block) {
-                block(nil, nil);
-            }
-        } else if ([type isEqualToString:@"user"] || [type isEqualToString:@"channel"]) {
+        if ([type isEqualToString:@"user"] || [type isEqualToString:@"channel"]) {
             // compare the incoming new user data with old user data. if thumbnailURL is the same
             // then don't load the image
             NSString *thumbnailURL = [ServerDataTransformer getThumbnailFromServerJSON:responseObject];
@@ -238,6 +234,10 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
                 block (responseObject, nil);
             }
 
+        } else {
+            if (block) {
+                block(nil, nil);
+            }
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         //

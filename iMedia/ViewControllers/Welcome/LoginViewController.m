@@ -116,11 +116,22 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             {
                 DDLogVerbose(@"%@: %@ cannot connect to XMPP server", THIS_FILE, THIS_METHOD);
             }            
-            [[self appDelegate] createMeWithUsername:usernameField.text password:passwordField.text jid:jid jidPasswd:jPassword andGUID:guid];
-            
-            
-            WelcomeViewController *welcomeController = [[WelcomeViewController alloc]initWithNibName:nil bundle:nil];
-            [self.navigationController pushViewController:welcomeController animated:YES];
+            [[self appDelegate] createMeWithUsername:usernameField.text password:passwordField.text jid:jid jidPasswd:jPassword andGUID:guid withBlock:^(id responseObject, NSError *error) {
+                
+                [HUD hide:YES];
+                
+                if (responseObject != nil) {
+                    WelcomeViewController *welcomeController = [[WelcomeViewController alloc]initWithNibName:nil bundle:nil];
+                    [self.navigationController pushViewController:welcomeController animated:YES];
+                } else {
+                    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                    HUD.delegate = self;
+                    HUD.mode = MBProgressHUDModeText;
+                    HUD.labelText = [responseObject valueForKey:@"status"];
+                    [HUD hide:YES afterDelay:2];
+                }
+            }];
+
             
         } else {
             DDLogError(@"NSError received during login: %@", error);
