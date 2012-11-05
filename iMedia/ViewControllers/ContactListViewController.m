@@ -292,7 +292,7 @@ NSInteger SortIndex(id char1, id char2, void* context)
     [cell.contentView addSubview:label];
     
     // set avatar
-    NSMutableArray *snsArray = [[NSMutableArray alloc] initWithObjects:@"weibo", nil];
+    NSMutableArray *snsArray = [[NSMutableArray alloc] init];
     UIImageView *snsImage;
     
     for(int i=0;i<[snsArray count];i++)  
@@ -345,7 +345,7 @@ NSInteger SortIndex(id char1, id char2, void* context)
     [imageView setImageWithURL:[NSURL URLWithString:identity.thumbnailURL] placeholderImage:nil];
     
     //set sns icon
-    NSMutableArray *snsArray = [[NSMutableArray alloc] initWithObjects:@"weibo",@"douban", nil];    
+    NSMutableArray *snsArray = [[NSMutableArray alloc] init];
     for (int i =0; i< [snsArray count]; i++) {
         imageView = (UIImageView *)[cell viewWithTag:SNS_TAG + i];
     

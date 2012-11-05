@@ -141,28 +141,28 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     self.conversationController = [[ConversationsController alloc] init];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:self.conversationController];
     self.conversationController.managedObjectContext = _managedObjectContext;
-    self.conversationController.title = T(@"Messages");
-    self.conversationController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Message", nil) image:[UIImage imageNamed:@"tabbar_item_0.png"] tag:1000];
+    self.conversationController.title = T(@"消息");
+    self.conversationController.tabBarItem = [[UITabBarItem alloc] initWithTitle:T(@"消息") image:[UIImage imageNamed:@"tabbar_item_0.png"] tag:1000];
     
     self.contactListController = [[ContactListViewController alloc] initWithStyle:UITableViewStylePlain andManagementContext:_managedObjectContext];
     UINavigationController *navController2 = [[UINavigationController alloc] initWithRootViewController:self.contactListController];
 //    self.contactListController.managedObjectContext = _managedObjectContext;
-    self.contactListController.title = T(@"Contacts");
-    self.contactListController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Contacts", nil)  image:[UIImage imageNamed:@"tabbar_item_1.png"] tag:1001];
+    self.contactListController.title = T(@"联系人");
+    self.contactListController.tabBarItem = [[UITabBarItem alloc] initWithTitle:T(@"联系人")  image:[UIImage imageNamed:@"tabbar_item_1.png"] tag:1001];
     
     self.functionListController = [[FunctionListViewController alloc] init];
     UINavigationController *navController3 = [[UINavigationController alloc] initWithRootViewController:self.functionListController];
     self.functionListController.managedObjectContext = _managedObjectContext;
-    self.functionListController.title = T(@"Functions");
-    self.functionListController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Shake", nil)     image:[UIImage imageNamed:@"tabbar_item_2.png"] tag:1002];
+    self.functionListController.title = T(@"朋友们");
+    self.functionListController.tabBarItem = [[UITabBarItem alloc] initWithTitle:T(@"朋友们") image:[UIImage imageNamed:@"tabbar_item_2.png"] tag:1002];
     
     NSLog(@"---- %@",NSStringFromCGRect(navController3.view.frame));
 
     self.settingController = [[SettingViewController alloc] init];
     self.settingController.managedObjectContext = _managedObjectContext;
     UINavigationController *navController4 = [[UINavigationController alloc] initWithRootViewController:self.settingController];
-    self.settingController.title = T(@"Setting");
-    self.settingController.tabBarItem = [[UITabBarItem alloc] initWithTitle:NSLocalizedString(@"Setting", nil)   image:[UIImage imageNamed:@"tabbar_item_3.png"] tag:1003];
+    self.settingController.title = T(@"设置");
+    self.settingController.tabBarItem = [[UITabBarItem alloc] initWithTitle:T(@"设置") image:[UIImage imageNamed:@"tabbar_item_3.png"] tag:1003];
     
     NSArray* controllers = [NSArray arrayWithObjects:navController, navController2, navController3, navController4, nil];
     self.tabController.viewControllers = controllers;

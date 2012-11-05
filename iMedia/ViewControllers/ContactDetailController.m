@@ -204,7 +204,7 @@
     locationLabel.backgroundColor = [UIColor clearColor];
     locationLabel.text  = @"200M";
     [locationLabel sizeToFit];
-    */
+    */ 
     
     // add to the statusView
     [self.statusView addSubview:sexView];

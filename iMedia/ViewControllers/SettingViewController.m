@@ -66,7 +66,7 @@
     self.settingTitleArray = [[NSArray alloc] initWithObjects:
                               [[NSArray alloc] initWithObjects:@"个人设置",nil],
                               [[NSArray alloc] initWithObjects:@"App精品推荐", nil],
-                              [[NSArray alloc] initWithObjects:@"去给翼石打个分吧",@"帮助与反馈",@"关于翼石", nil],
+                              [[NSArray alloc] initWithObjects:@"去春水堂打个分吧",@"帮助与反馈",@"关于春水堂", nil],
                               nil ];
     //,@"我的相册",@"新浪微博",@"微信朋友圈"
     
@@ -147,14 +147,12 @@
         labelY = 20;
     }
     
-    if (indexPath.section !=1 || (indexPath.section ==2 && indexPath.row == 0) ) {
+    if (indexPath.section == 1 || (indexPath.section ==2 && indexPath.row == 0) ) {
+        [cell setAccessoryType:UITableViewCellAccessoryNone];
+    }else{
         [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
     }
 
-    
-    
-    
-    
     
     UILabel* titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, labelY, 140, 20)];
     titleLabel.text = [[self.settingTitleArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
@@ -162,9 +160,6 @@
     titleLabel.textColor = RGBCOLOR(77, 77, 77);
     titleLabel.backgroundColor = [UIColor clearColor];
     [cell addSubview:titleLabel];
-    
-
-    
     
     return cell;
 }

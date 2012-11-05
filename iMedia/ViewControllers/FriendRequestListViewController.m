@@ -177,7 +177,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [cell.contentView addSubview:label];
     
     // set avatar
-    NSMutableArray *snsArray = [[NSMutableArray alloc] initWithObjects:@"weibo",@"douban", nil];
+    NSMutableArray *snsArray = [[NSMutableArray alloc] init];
     UIImageView *snsImage;
     
     for(int i=0;i<[snsArray count];i++)  
@@ -226,7 +226,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [imageView setImageWithURL:[NSURL URLWithString:imageUrl]];
     
     //set sns icon
-    NSMutableArray *snsArray = [[NSMutableArray alloc] initWithObjects:@"weibo",@"douban", nil];    
+    NSMutableArray *snsArray = [[NSMutableArray alloc] initWithObjects:nil];
     for (int i =0; i< [snsArray count]; i++) {
         imageView = (UIImageView *)[cell viewWithTag:SNS_TAG + i];
         

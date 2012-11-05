@@ -15,14 +15,14 @@
 @interface WelcomeViewController ()
 
 @property(strong, nonatomic)UIButton *welcomeButton;
-@property(strong, nonatomic)UILabel *welcomeLabel;
+@property(strong, nonatomic)UIImageView *welcomeTitleView;
 @property(strong, nonatomic)Me *me;
 
 @end
 
 @implementation WelcomeViewController
 @synthesize welcomeButton;
-@synthesize welcomeLabel;
+@synthesize welcomeTitleView;
 @synthesize me;
 
 
@@ -47,38 +47,35 @@
 {
     [super viewDidLoad];
     self.title = T(@"欢迎");
-    self.welcomeButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [self.welcomeButton setFrame:CGRectMake(60, 160 , 200, 40)];
-    [self.welcomeButton.titleLabel setFont:[UIFont boldSystemFontOfSize:18]];
-    [self.welcomeButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
-    [self.welcomeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+    
+    UIImageView *backgroundView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320 417)];
+    [backgroundView setImage:[UIImage imageNamed:@"welcome_bg.png"]];
+    [self.view addSubview:backgroundView];
+    
+    self.welcomeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.welcomeButton setFrame:CGRectMake(80, 115, 160, 41)];
+    [self.welcomeButton.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
+    [self.welcomeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.welcomeButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
     [self.welcomeButton.titleLabel setTextAlignment:UITextAlignmentCenter];
     //    [self.loginButton setBackgroundImage:[UIImage imageNamed:@"button_bg.png"] forState:UIControlStateNormal];
     
-    self.welcomeLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 80 , 300, 40)];
-    [self.welcomeLabel setTextAlignment:NSTextAlignmentCenter];
-    [self.welcomeLabel setBackgroundColor:RGBCOLOR(234, 234, 234)];
-    [self.welcomeLabel setNumberOfLines:0];
-    [self.welcomeLabel setFont:[UIFont systemFontOfSize:16.0]];
-    self.welcomeLabel.textColor = [UIColor grayColor];
-
-//    if ([self.me.career length] ==0 ) {
+    self.welcomeTitleView = [[UIImageView alloc]initWithFrame:CGRectMake(21, 32 , 278, 86)];
+    [self.welcomeTitleView setImage:[UIImage imageNamed:@"welcome_title.png"]];
 
     if ([self.me.gender isEqualToString:@""] || [self.me.displayName isEqualToString:@""] || self.me.gender == nil || self.me.displayName == nil ) {
         LoginSettingViewController *settingViewController = [[LoginSettingViewController alloc]initWithNibName:nil bundle:nil];
         [self.navigationController presentModalViewController:settingViewController animated:YES];
     }
     
-    [self.welcomeButton setTitle:T(@"进入春水堂") forState:UIControlStateNormal];
+    [self.welcomeButton setTitle:T(@"春水堂") forState:UIControlStateNormal];
+    [self.welcomeButton setBackgroundImage:[UIImage imageNamed:@"welcome_btn.png"] forState:UIControlStateNormal];
     [self.welcomeButton addTarget:self action:@selector(welcomeAction:) forControlEvents:UIControlEventTouchUpInside];
-    self.welcomeLabel.text = T(@"中国情趣文化的倡导者");
     
-    
-    UIImageView * backgroundView = [[UIImageView alloc]initWithFrame:self.view.bounds];
-    [backgroundView setImage:[UIImage imageNamed:@"welcome_bg.png"]];
+
     
     [self.view addSubview:self.welcomeButton];
-    [self.view addSubview:self.welcomeLabel];
+    [self.view addSubview:self.welcomeTitleView];
 	// Do any additional setup after loading the view.
 }
 
