@@ -25,6 +25,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 @interface LoginViewController ()
 
+@property(strong,nonatomic) UITextField *usernameField;
+@property(strong,nonatomic) UITextField *passwordField;
 @property(strong, nonatomic)UILabel *usernameLabel;
 @property(strong, nonatomic)UILabel *passwordLabel;
 @property(strong, nonatomic)UIButton *loginButton;
@@ -131,7 +133,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
                     [HUD hide:YES afterDelay:2];
                 }
             }];
-
             
         } else {
             DDLogError(@"NSError received during login: %@", error);
@@ -189,6 +190,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [self.passwordField setBorderStyle:UITextBorderStyleRoundedRect];
     self.passwordField.textColor = [UIColor grayColor];
     self.passwordField.backgroundColor = [UIColor whiteColor];
+    [self.passwordField setSecureTextEntry:YES];
     self.passwordField.delegate = self;
     
     self.loginButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -200,6 +202,20 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [self.loginButton setTitle:T(@"登录") forState:UIControlStateNormal];
 //    [self.loginButton setBackgroundImage:[UIImage imageNamed:@"button_bg.png"] forState:UIControlStateNormal];
     [self.loginButton addTarget:self action:@selector(loginAction:) forControlEvents:UIControlEventTouchUpInside];
+    
+    // set thekeyboard type and color and first letter
+    
+    self.usernameField.keyboardType = UIKeyboardTypeURL;
+    self.usernameField.returnKeyType = UIReturnKeyNext;
+    self.usernameField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    self.usernameField.autocorrectionType = UITextAutocorrectionTypeNo;
+    
+    self.passwordField.keyboardType = UIKeyboardTypeDefault;
+    self.passwordField.returnKeyType = UIReturnKeyGo;
+    self.passwordField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    self.passwordField.autocorrectionType = UITextAutocorrectionTypeNo;
+    self.passwordField.secureTextEntry = YES;
+    
     
     [self.view addSubview:self.usernameLabel];
     [self.view addSubview:self.usernameField];

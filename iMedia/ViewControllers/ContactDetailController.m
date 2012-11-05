@@ -485,16 +485,16 @@
     
     NSString *userJid = [jsonData valueForKey:@"jid"];
 
-    User *newUser = [ModelHelper findUserWithEPostalID:userJid inContext:self.managedObjectContext];
+    User *newUser = [[ModelHelper sharedInstance] findUserWithEPostalID:userJid];
     
     if (newUser == nil) {
-        newUser = [ModelHelper newUserInContext:self.managedObjectContext];
+        newUser = [[ModelHelper sharedInstance] createNewUser];
     }
     
     NSLog(@"NewUSer %@",newUser);
     
     if (newUser.state.intValue != IdentityStateActive) {
-        [ModelHelper populateIdentity:newUser withJSONData:jsonData];
+        [[ModelHelper sharedInstance] populateIdentity:newUser withJSONData:jsonData];
         newUser.state = [NSNumber numberWithInt:IdentityStatePendingAddFriend];
         NSLog(@"userJid %@",userJid);
 

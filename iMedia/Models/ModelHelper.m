@@ -15,6 +15,8 @@
 #import "FriendRequest.h"
 #import "NSObject+SBJson.h"
 #import "DDLog.h"
+#import "AFImageRequestOperation.h"
+#import "AppNetworkAPIClient.h"
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
@@ -24,18 +26,29 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 @interface ModelHelper ()
 
-+ (void)populateUser:(User *)user withJSONData:(NSString *)json;
-+ (void)populateMe:(Me *)user withJSONData:(NSString *)json;
-+ (void)populateChannel:(Channel *)channel withServerJSONData:(NSString *)json;
+- (void)populateUser:(User *)user withJSONData:(NSString *)json;
+- (void)populateMe:(Me *)user withJSONData:(NSString *)json;
+- (void)populateChannel:(Channel *)channel withServerJSONData:(NSString *)json;
 
 @end
 
 @implementation ModelHelper
 
+@synthesize managedObjectContext;
 
-+ (User *)findUserWithEPostalID:(NSString *)ePostalID inContext:(NSManagedObjectContext *)context
++ (ModelHelper *)sharedInstance {
+    static ModelHelper *_sharedClient = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _sharedClient = [[ModelHelper alloc] init];
+    });
+    
+    return _sharedClient;
+}
+
+- (User *)findUserWithEPostalID:(NSString *)ePostalID
 {
-    NSManagedObjectContext *moc = context;
+    NSManagedObjectContext *moc = self.managedObjectContext;
     NSEntityDescription *entityDescription = [NSEntityDescription
                                               entityForName:@"User" inManagedObjectContext:moc];
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
@@ -61,9 +74,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     }
 }
 
-+ (Channel *)findChannelWithNode:(NSString *)node inContext:(NSManagedObjectContext *)context
+- (Channel *)findChannelWithNode:(NSString *)node
 {
-    NSManagedObjectContext *moc = context;
+    NSManagedObjectContext *moc = self.managedObjectContext;
     NSEntityDescription *entityDescription = [NSEntityDescription
                                               entityForName:@"Channel" inManagedObjectContext:moc];
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
@@ -89,9 +102,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     }
 }
 
-+ (Channel *)findChannelWithSubrequestID:(NSString *)subID inContext:(NSManagedObjectContext *)context
+- (Channel *)findChannelWithSubrequestID:(NSString *)subID
 {
-    NSManagedObjectContext *moc = context;
+    NSManagedObjectContext *moc = self.managedObjectContext;
     NSEntityDescription *entityDescription = [NSEntityDescription
                                               entityForName:@"Channel" inManagedObjectContext:moc];
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
@@ -117,7 +130,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     }
 }
 
-+ (void)populateIdentity:(Identity *)identity withJSONData:(NSString *)json
+- (void)populateIdentity:(Identity *)identity withJSONData:(NSString *)json
 {
     
     if ([identity isKindOfClass:[User class]]) {
@@ -129,7 +142,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     }
 }
 
-+ (void )populateMe:(Me *)user withJSONData:(id)json
+- (void )populateMe:(Me *)user withJSONData:(id)json
 {
     user.ePostalID = [ServerDataTransformer getEPostalIDFromServerJSON:json];
     user.gender = [ServerDataTransformer getGenderFromServerJSON:json];
@@ -177,7 +190,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     }
 }
 
-+ (void)populateUser:(User *)user withJSONData:(id)json
+- (void)populateUser:(User *)user withJSONData:(id)json
 {
     if (user.ePostalID == nil) {
         user.ePostalID = [ServerDataTransformer getEPostalIDFromServerJSON:json];
@@ -231,7 +244,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 }
 
 
-+ (void)populateChannel:(Channel *)channel withServerJSONData:(NSString *)json
+- (void)populateChannel:(Channel *)channel withServerJSONData:(NSString *)json
 {
     channel.guid = [ServerDataTransformer getGUIDFromServerJSON:json];
     channel.node = [ServerDataTransformer getNodeFromServerJSON:json];
@@ -246,11 +259,11 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     channel.type = [NSNumber numberWithInt:IdentityTypeChannel];
 }
 
-+ (User *)newUserInContext:(NSManagedObjectContext *)context
+- (User *)createNewUser
 {
-    User *newUser = [NSEntityDescription insertNewObjectForEntityForName:@"User" inManagedObjectContext:context];
+    User *newUser = [NSEntityDescription insertNewObjectForEntityForName:@"User" inManagedObjectContext:self.managedObjectContext];
     for (int i = 0; i < 8; i++) {
-        ImageRemote *image = [NSEntityDescription insertNewObjectForEntityForName:@"ImageRemote" inManagedObjectContext:context];
+        ImageRemote *image = [NSEntityDescription insertNewObjectForEntityForName:@"ImageRemote" inManagedObjectContext:self.managedObjectContext];
         image.sequence = 0;
         [newUser addImagesObject:image];
     }
@@ -258,15 +271,62 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     return newUser;
 }
 
-+ (FriendRequest *)newFriendRequestWithEPostalID:(NSString *)jid json:(id)jsonData andInContext:(NSManagedObjectContext *)context
+- (FriendRequest *)newFriendRequestWithEPostalID:(NSString *)jid andJson:(id)jsonData
 {
-    FriendRequest *newFriendRequest = [NSEntityDescription insertNewObjectForEntityForName:@"FriendRequest" inManagedObjectContext:context];
+    FriendRequest *newFriendRequest = [NSEntityDescription insertNewObjectForEntityForName:@"FriendRequest" inManagedObjectContext:self.managedObjectContext];
     newFriendRequest.requesterEPostalID = jid;
     newFriendRequest.requestDate = [NSDate date];
     newFriendRequest.userJSONData = jsonData;
     newFriendRequest.state = [NSNumber numberWithInt:FriendRequestUnprocessed];
     
     return newFriendRequest;
+}
+
+- (User *)createActiveUserWithFullServerJSONData:(id)jsonData
+{
+    NSString* jid = [ServerDataTransformer getEPostalIDFromServerJSON:jsonData];
+    
+    User *newUser = [self findUserWithEPostalID:jid];
+    
+    if (newUser == nil) {
+        newUser = [self createNewUser];
+    }
+    
+    NSLog(@"NewUSer created or found %@",newUser);
+    
+    if (newUser.state.intValue != IdentityStateActive) {
+        [self populateIdentity:newUser withJSONData:jsonData];
+        newUser.state = [NSNumber numberWithInt:IdentityStateActive];
+        
+        NSString *thumbnailURL = [ServerDataTransformer getThumbnailFromServerJSON:jsonData];
+        if (thumbnailURL == nil || [thumbnailURL isEqualToString:@""]) {
+            newUser.thumbnailImage = nil;
+#warning TODO: set to the global placeholder
+        } else if (thumbnailURL != newUser.thumbnailURL) {
+            NSURL *url = [NSURL URLWithString:thumbnailURL];
+            
+            // Try twice to load the image
+            AFImageRequestOperation *imageOper = [AFImageRequestOperation imageRequestOperationWithRequest:[NSURLRequest requestWithURL:url] imageProcessingBlock:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                newUser.thumbnailImage = image;
+            } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+                NSLog(@"Failed to get thumbnail at first time url: %@, response :%@, trying again", thumbnailURL, jsonData);
+                AFImageRequestOperation  *imageOperAgain = [AFImageRequestOperation imageRequestOperationWithRequest:[NSURLRequest requestWithURL:url] imageProcessingBlock:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                    newUser.thumbnailImage = image;
+                    
+                } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+                    NSLog(@"ERROR: Failed again to get thumbnail at first time url: %@, response :%@", thumbnailURL, jsonData);
+                }];
+                
+                [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:imageOperAgain];
+            }];
+            
+            [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:imageOper];
+        }
+
+    }
+    
+    return newUser;
+
 }
 
 @end

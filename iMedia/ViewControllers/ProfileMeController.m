@@ -116,13 +116,15 @@
     [self.addAlbumButton setFrame:rect];
     
     // table into setting
-    for (int j = 0; j < 8; j++) {
+    for (int j = 0; j < MAX_ALBUN_COUNT; j++) {
         UIButton *albumButton = [self.albumButtonArray objectAtIndex:j];
         
         [albumButton.layer setBorderColor:[UIColor whiteColor].CGColor];
         [albumButton.layer setBorderWidth:3.0f];
         
-        if (j < self.albumCount) {
+        Avatar *avatar = [self.albumArray objectAtIndex:j];
+        if (avatar.thumbnail != nil) {
+//        if (j < self.albumCount) {
             [albumButton removeTarget:self action:@selector(albumClick:) forControlEvents:UIControlEventTouchUpInside];
             [albumButton addTarget:self action:@selector(removeOrReplace:) forControlEvents:UIControlEventTouchUpInside];
         } else {
@@ -332,7 +334,7 @@
 - (void)removeOrReplace:(UIButton *)sender
 {   
     self.editActionsheet = [[UIActionSheet alloc]  
-                                  initWithTitle:nil  
+                                  initWithTitle:nil
                                   delegate:self  
                                   cancelButtonTitle:T(@"取消")  
                                   destructiveButtonTitle:nil 
@@ -340,6 +342,8 @@
     self.editActionsheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
     [self.editActionsheet showFromTabBar:[[self tabBarController] tabBar]];
     self.editingAlbumIndex = sender.tag;
+    
+    NSLog(@"editingAlbumIndex %d",self.editingAlbumIndex);
 }
 
 #define VIEW_ALBUM_WIDTH 75
@@ -422,12 +426,9 @@
     [self.addAlbumButton setFrame:[self calcRect:0]];
     [self.albumView addSubview:self.addAlbumButton];
 
-    
+    self.albumArray = [[NSMutableArray alloc] init];
     self.albumButtonArray = [[NSMutableArray alloc] init];
     UIButton *albumButton;
-//    self.albumArray = [[NSMutableArray alloc] initWithObjects:
-//                       @"profile_face_1.png",@"profile_face_2.png",@"profile_face_1.png",@"profile_face_2.png", nil ];
-    
 
     for (int i = 0; i< MAX_ALBUN_COUNT; i++) {
         albumButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -445,21 +446,32 @@
 
 - (void)refreshAlbumView
 {
-    self.albumArray = [[NSMutableArray alloc] initWithArray: [self.me getOrderedAvatars]];
-    self.albumCount = [self.albumArray count];
+    self.albumArray  = [[NSMutableArray alloc] initWithArray: [self.me getOrderedAvatars]];
 
-    for (int j = 0; j < 8; j++) {
+    self.albumCount = 0;
+    for (int j = 0; j < MAX_ALBUN_COUNT; j++) {
         UIButton *albumButton = [self.albumButtonArray objectAtIndex:j];
         Avatar *avatar = [self.albumArray objectAtIndex:j];
-        [albumButton setImage:avatar.thumbnail forState:UIControlStateNormal];
-        [albumButton setHidden:NO];
-    }
+        if (avatar.thumbnail != nil) {
+//            [albumButton setImage:avatar.thumbnail forState:UIControlStateNormal];
+            [albumButton setBackgroundImage:avatar.thumbnail forState:UIControlStateNormal];
+            [albumButton setTitle:[NSString stringWithFormat:@"# %d",j] forState:UIControlStateNormal];
+            [albumButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+            [albumButton setHidden:NO];
+            self.albumCount += 1;
+        }
 
-    if (self.albumCount == 0 ) {
+    }
+    
+
+    if (self.albumCount == 0) {
         CGRect rect = [self calcRect:self.albumCount];
         [self.addAlbumButton setFrame:rect];
         [self.addAlbumButton setHidden:NO];
-    } else {
+    }else if (self.albumCount == MAX_ALBUN_COUNT){
+        [self.addAlbumButton setHidden:YES];
+    }
+    else {
         if (self.SETEDITING) {
             CGRect rect = [self calcRect:self.albumCount];
             [self.addAlbumButton setFrame:rect];
@@ -521,9 +533,11 @@
 }
 
 - (void)removeAlbum
-{    
-    Avatar *removeAvatar = [self.albumArray objectAtIndex:self.editingAlbumIndex];
- //   [self.me removeAvatarsObject:removeAvatar];
+{
+    NSArray *tempAvatarArray = [self.me getOrderedAvatars];
+    NSLog(@"editingAlbumIndex %d",self.editingAlbumIndex);
+    Avatar *removeAvatar = [tempAvatarArray objectAtIndex:self.editingAlbumIndex];
+//    [self.me removeAvatarsObject:removeAvatar];
     removeAvatar.image = nil;
     removeAvatar.thumbnail  = nil;
     removeAvatar.sequence   =0;
@@ -614,20 +628,6 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     //网路传输
     [[AppNetworkAPIClient sharedClient] storeAvatar:avatar forMe:self.me andOrder:avatar.sequence.intValue withBlock:^(id responseObject, NSError *error) {
         if (error == nil) {
-            
-            NSString* url = [responseObject valueForKey:@"image"];
-            NSString *thumbnailURL = [responseObject valueForKey:@"thumbnail"];
-            
-            NSArray *imagesURLArray = [self.me getOrderedImages];
-            ImageRemote *imageRemote = [imagesURLArray objectAtIndex:(avatar.sequence.intValue-1)];
-            imageRemote.sequence = avatar.sequence;
-            imageRemote.imageThumbnailURL = thumbnailURL;
-            imageRemote.imageURL = url;
-            
-            if (avatar.sequence.intValue == 1) {
-                self.me.avatarURL = imageRemote.imageURL;
-                self.me.thumbnailURL = imageRemote.imageThumbnailURL;
-            }
             // HUD hide
             [HUD hide:YES];
             // HUD show success

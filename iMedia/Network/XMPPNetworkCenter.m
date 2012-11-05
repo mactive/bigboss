@@ -492,11 +492,11 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
         return;
     }
     
-    User* thisUser = [ModelHelper findUserWithEPostalID:ePostalID inContext:_managedObjectContext];
+    User* thisUser = [[ModelHelper sharedInstance] findUserWithEPostalID:ePostalID];
     
     // insert user if it doesn't exist
     if (thisUser == nil) {
-        thisUser = [ModelHelper newUserInContext:_managedObjectContext];
+        thisUser = [[ModelHelper sharedInstance] createNewUser];
     }
     
  
@@ -506,7 +506,6 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
         thisUser.displayName = [thisUser.ePostalID substringToIndex:[thisUser.ePostalID rangeOfString: @"@"].location];
         thisUser.type = [NSNumber numberWithInt:IdentityTypeUser];
         thisUser.state = [NSNumber numberWithInt:IdentityStatePendingServerDataUpdate];
-        MOCSave(_managedObjectContext);
         
         [[AppNetworkAPIClient sharedClient] updateIdentity:thisUser withBlock:nil];
     }
@@ -523,7 +522,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
         return;
     }
     
-    User* thisUser = [ModelHelper findUserWithEPostalID:ePostalID inContext:_managedObjectContext];
+    User* thisUser = [[ModelHelper sharedInstance] findUserWithEPostalID:ePostalID];
     
     // insert user if it doesn't exist
     if (thisUser == nil) {
@@ -578,7 +577,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
         
         // insert user if it doesn't exist
         if ([array count] == 0) {
-            User *userNS = [ModelHelper newUserInContext:moc];
+            User *userNS = [[ModelHelper sharedInstance] createNewUser];
             userNS.name = obj.nickname;
             userNS.ePostalID = [obj.jid bare];
             userNS.displayName = [userNS.ePostalID substringToIndex:[userNS.ePostalID rangeOfString: @"@"].location];
@@ -586,6 +585,11 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
             userNS.state = [NSNumber numberWithInt:IdentityStatePendingServerDataUpdate];
             
             [[AppNetworkAPIClient sharedClient] updateIdentity:userNS withBlock:nil];
+        } else if ([array count] == 1) {
+            User *user = [array objectAtIndex:0];
+            if (user.state.intValue == IdentityStatePendingServerDataUpdate) {
+                [[AppNetworkAPIClient sharedClient] updateIdentity:user withBlock:nil];
+            }
         }
     }
     
@@ -601,7 +605,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     
     NSString* ePostalID = [[presence from] bare];
         
-    User* thisUser = [ModelHelper findUserWithEPostalID:ePostalID inContext:_managedObjectContext];
+    User* thisUser = [[ModelHelper sharedInstance] findUserWithEPostalID:ePostalID];
     
     // if user doesn't exist - it is a new subscription request - send notificatio and wait for process
     // if not, it is a reply for a previous add friend request. allow it to proceed
@@ -698,9 +702,9 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     //add the Channel to the addressbook
     Channel *channel;
     if (nodeStr == nil)
-        channel = [ModelHelper findChannelWithSubrequestID:subrequestID inContext:_managedObjectContext];
+        channel = [[ModelHelper sharedInstance] findChannelWithSubrequestID:subrequestID];
     else
-        channel = [ModelHelper findChannelWithNode:nodeStr inContext:_managedObjectContext];
+        channel = [[ModelHelper sharedInstance] findChannelWithNode:nodeStr];
     
     if (channel && channel.state.intValue == IdentityStatePendingAddSubscription) {
         channel.state = [NSNumber numberWithInt:IdentityStateActive];

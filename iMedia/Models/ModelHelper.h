@@ -15,14 +15,20 @@
 
 @interface ModelHelper : NSObject
 
-+ (User *)findUserWithEPostalID:(NSString *)ePostalID inContext:(NSManagedObjectContext*)context;
-+ (Channel *)findChannelWithNode:(NSString *)node inContext:(NSManagedObjectContext *)context;
-+ (Channel *)findChannelWithSubrequestID:(NSString *)subID inContext:(NSManagedObjectContext *)context;
+@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 
-+ (void)populateIdentity:(Identity *)identity withJSONData:(NSString *)json;
++ (ModelHelper *)sharedInstance;
+
+- (User *)findUserWithEPostalID:(NSString *)ePostalID;
+- (Channel *)findChannelWithNode:(NSString *)node;
+- (Channel *)findChannelWithSubrequestID:(NSString *)subID;
+
+- (void)populateIdentity:(Identity *)identity withJSONData:(NSString *)json;
 
 
-+ (User *)newUserInContext:(NSManagedObjectContext *)context;
-+ (FriendRequest *)newFriendRequestWithEPostalID:(NSString *)jid json:(id)jsonData andInContext:(NSManagedObjectContext *)context;
+- (User *)createNewUser;
+- (FriendRequest *)newFriendRequestWithEPostalID:(NSString *)jid andJson:(id)jsonData;
+
+- (User *)createActiveUserWithFullServerJSONData:(id)jsonData;
 
 @end

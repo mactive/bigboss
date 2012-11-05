@@ -40,7 +40,18 @@ NSString *const kXMPPmyJIDPassword = @"kXMPPmyJIDPassword";
 NSString *const kXMPPmyPassword = @"kXMPPmyPassword";
 NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 
+@interface AppNetworkAPIClient ()
+
+@property (nonatomic, strong) NSMutableDictionary *imageUploadOperationsInProgress;
+
+- (void)networkChangeReceived:(NSNotification *)notification;
+
+@end
+
 @implementation AppNetworkAPIClient
+
+@synthesize kNetworkStatus;
+@synthesize imageUploadOperationsInProgress;
 
 + (AppNetworkAPIClient *)sharedClient {
     static AppNetworkAPIClient *_sharedClient = nil;
@@ -63,8 +74,13 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
         return nil;
     }
     
-    [self registerHTTPOperationClass:[AFJSONRequestOperation class]];
+    self.imageUploadOperationsInProgress = [[NSMutableDictionary alloc] initWithCapacity:4];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(networkChangeReceived:)
+                                                 name:AFNetworkingReachabilityDidChangeNotification object:nil];
+    
+    [self registerHTTPOperationClass:[AFJSONRequestOperation class]];
     // Accept HTTP Header; see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.1
 	[self setDefaultHeader:@"Accept" value:@"application/json"];
     
@@ -144,11 +160,29 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         DDLogInfo(@"upload image received response: %@", responseObject);
+        NSString* url = [responseObject valueForKey:@"image"];
+        NSString *thumbnailURL = [responseObject valueForKey:@"thumbnail"];
+        
+        [self.imageUploadOperationsInProgress removeObjectForKey:avatar.sequence];
+        
+        NSArray *imagesURLArray = [me getOrderedImages];
+        ImageRemote *imageRemote = [imagesURLArray objectAtIndex:(avatar.sequence.intValue-1)];
+        imageRemote.sequence = avatar.sequence;
+        imageRemote.imageThumbnailURL = thumbnailURL;
+        imageRemote.imageURL = url;
+        
+        if (avatar.sequence.intValue == 1) {
+            me.avatarURL = imageRemote.imageURL;
+            me.thumbnailURL = imageRemote.imageThumbnailURL;
+            me.thumbnailImage = avatar.thumbnail;
+        }
+
         if (block) {
             block(responseObject, nil);
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         DDLogError(@"upload image failed: %@", error);
+        [self.imageUploadOperationsInProgress removeObjectForKey:avatar.sequence];
         if (block) {
             block(nil, error);
         }
@@ -156,12 +190,21 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     
     DDLogInfo(@"http request: %@", operation);
     
+    [self.imageUploadOperationsInProgress setObject:operation forKey:avatar.sequence];
     [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:operation];
     
 }
 
 - (void)updateIdentity:(Identity *)identity withBlock:(void (^)(id, NSError *))block
 {
+    // define a minimum time period to throttle call to server
+    const NSTimeInterval min_time_gap = -10;
+    NSDate *now = [NSDate dateWithTimeIntervalSinceNow:min_time_gap];
+    if ([now compare:identity.last_serverupdate_on] == NSOrderedAscending) {
+        return;
+    }
+    
+    // proceed to make server updates
     NSDictionary *getDict ;
     if (identity.guid != nil && ![identity.guid isEqualToString:@""]) {
         getDict = [NSDictionary dictionaryWithObjectsAndKeys: identity.guid, @"guid", @"1", @"op", nil];
@@ -203,7 +246,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
             }
 
             
-            [ModelHelper populateIdentity:identity withJSONData:responseObject];
+            [[ModelHelper sharedInstance] populateIdentity:identity withJSONData:responseObject];
             
             // if identity is Me, we need to check local avatar against the server. If local doesn't have the image
             // we need to download and save.
@@ -230,6 +273,9 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
                 identity.state = [NSNumber numberWithInt:IdentityStateActive];
                 [[self appDelegate].contactListController contentChanged];
             }
+            
+            identity.last_serverupdate_on = [NSDate date];
+            
             if (block) {
                 block (responseObject, nil);
             }
@@ -313,8 +359,26 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     
     DDLogInfo(@"http request: %@", operation);
     
+    NSArray *imageUploadingOpers = [self.imageUploadOperationsInProgress allValues];
+    for (int i = 0; i < [imageUploadOperationsInProgress count]; i++) {
+        [operation addDependency:[imageUploadingOpers objectAtIndex:i]];
+    }
+    
     [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:operation];
     
 }
 
+- (BOOL)isConnectable
+{
+    if (self.kNetworkStatus.intValue == AFNetworkReachabilityStatusReachableViaWiFi || self.kNetworkStatus.intValue == AFNetworkReachabilityStatusReachableViaWWAN) {
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
+- (void)networkChangeReceived:(NSNotification *)notification
+{
+    self.kNetworkStatus = (NSNumber *)[notification.userInfo valueForKey:AFNetworkingReachabilityNotificationStatusItem];
+}
 @end

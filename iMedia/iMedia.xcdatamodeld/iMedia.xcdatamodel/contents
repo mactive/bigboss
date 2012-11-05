@@ -29,6 +29,7 @@
         <attribute name="displayName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ePostalID" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="last_serverupdate_on" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="lastGPSLocation" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="lastGPSUpdated" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="state" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
@@ -56,7 +57,7 @@
         <attribute name="career" optional="YES" attributeType="String" defaultValueString="@&quot;&quot;" syncable="YES"/>
         <attribute name="cell" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ePostalPassword" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="gender" optional="YES" attributeType="String" defaultValueString="@&quot;m&quot;" syncable="YES"/>
+        <attribute name="gender" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="hometown" optional="YES" attributeType="String" defaultValueString="@&quot;&quot;" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="password" optional="YES" attributeType="String" syncable="YES"/>
@@ -87,7 +88,7 @@
         <element name="Channel" positionX="160" positionY="192" width="128" height="135"/>
         <element name="Conversation" positionX="0" positionY="0" width="128" height="165"/>
         <element name="FriendRequest" positionX="160" positionY="192" width="128" height="105"/>
-        <element name="Identity" positionX="160" positionY="192" width="128" height="210"/>
+        <element name="Identity" positionX="160" positionY="192" width="128" height="225"/>
         <element name="ImageLocal" positionX="160" positionY="192" width="128" height="120"/>
         <element name="ImageRemote" positionX="160" positionY="192" width="128" height="120"/>
         <element name="Me" positionX="0" positionY="0" width="128" height="225"/>

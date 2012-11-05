@@ -29,11 +29,35 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 #define ROW_HEIGHT 60
 
+#define NAME_TAG 1
+#define TIME_TAG 2
+#define IMAGE_TAG 3
+#define SUMMARY_TAG 4
+#define TIME_ICON_TAG 5
+
+#define LEFT_COLUMN_OFFSET 10.0
+#define LEFT_COLUMN_WIDTH 36.0
+
+#define MIDDLE_COLUMN_OFFSET 70.0
+#define MIDDLE_COLUMN_WIDTH 150.0
+
+#define RIGHT_COLUMN_OFFSET 230.0
+#define RIGHT_COLUMN_WIDTH  60
+
+#define MAIN_FONT_SIZE 16.0
+#define SUMMARY_FONT_SIZE 14.0
+#define LABEL_HEIGHT 25.0
+#define MESSAGE_LABEL_HEIGHT 15.0
+
+#define IMAGE_SIDE 50.0
+#define SUMMARY_WIDTH_OFFEST 16.0
+
 @interface ConversationsController ()
 {
     ChatDetailController *_detailController;
 }
 
+@property(strong,nonatomic)NSIndexPath *editingIndexPath;
 // Notication to receive new message
 - (void)newMessageReceived:(NSNotification *)notification;
 
@@ -43,7 +67,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 @synthesize fetchedResultsController = _fetchedResultsController;
 @synthesize managedObjectContext = _managedObjectContext;
-
+@synthesize editingIndexPath;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -243,9 +267,30 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     }
 }
 
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated
+{    
+    [super setEditing:editing animated:animated];
+    
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:self.editingIndexPath];
+    UILabel *label = [cell viewWithTag:TIME_TAG];
+    UIImageView *imageView = [cell viewWithTag:TIME_ICON_TAG];
+    
+    if (editing) {
+        NSLog(@"editing");
+        [label setHidden:YES];
+        [imageView setHidden:YES];
+        
+    } else {
+        NSLog(@"end editing");
+        [label setHidden:NO];
+        [imageView setHidden:NO];
+    }
+}
+
 -(UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath 
 { 
     NSLog(@"you slided");
+    self.editingIndexPath = indexPath;
     return UITableViewCellEditingStyleDelete;
 }
 
@@ -324,27 +369,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 #pragma mark -
 #pragma mark Configuring table view cells
 
-#define NAME_TAG 1
-#define TIME_TAG 2
-#define IMAGE_TAG 3
-#define SUMMARY_TAG 4
 
-#define LEFT_COLUMN_OFFSET 10.0
-#define LEFT_COLUMN_WIDTH 36.0
-
-#define MIDDLE_COLUMN_OFFSET 70.0
-#define MIDDLE_COLUMN_WIDTH 150.0
-
-#define RIGHT_COLUMN_OFFSET 230.0
-#define RIGHT_COLUMN_WIDTH  60
-
-#define MAIN_FONT_SIZE 16.0
-#define SUMMARY_FONT_SIZE 14.0
-#define LABEL_HEIGHT 25.0
-#define MESSAGE_LABEL_HEIGHT 15.0
-
-#define IMAGE_SIDE 50.0
-#define SUMMARY_WIDTH_OFFEST 16.0
 
 - (UITableViewCell *)tableViewCellWithReuseIdentifier:(NSString *)identifier {
 	
@@ -406,6 +431,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     rect = CGRectMake(RIGHT_COLUMN_OFFSET, (ROW_HEIGHT - IMAGE_SIDE) / 2.0 + 5 , 15, 15);
     UIImageView *timeIconView = [[UIImageView alloc] initWithFrame:rect];
     timeIconView.image = [UIImage imageNamed:@"time_icon.png"];
+    timeIconView.tag = TIME_ICON_TAG;
     [cell.contentView addSubview:timeIconView];
 
     
@@ -415,9 +441,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	label.tag = TIME_TAG;
 	label.font = [UIFont systemFontOfSize:12.0];
 	label.textAlignment = UITextAlignmentLeft;
-	[cell.contentView addSubview:label];
 	label.textColor = RGBCOLOR(140, 140, 140);
     label.backgroundColor = [UIColor clearColor];
+    
+    [cell.contentView addSubview:label];
     
 	return cell;
 }

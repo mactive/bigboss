@@ -28,6 +28,7 @@
 
 #import "AppNetworkAPIClient.h"
 #import "LocationManager.h"
+#import "ModelHelper.h"
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -74,6 +75,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     NSAssert([persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:[[[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject] URLByAppendingPathComponent:@"iMedia.sqlite"] options:nil error:&error], @"Add-Persistent-Store Error: %@", error);
     _managedObjectContext = [[NSManagedObjectContext alloc] init];
     [_managedObjectContext setPersistentStoreCoordinator:persistentStoreCoordinator];
+    [ModelHelper sharedInstance].managedObjectContext = _managedObjectContext;
     
     // Setup the network
     [[XMPPNetworkCenter sharedClient] setupWithHostname:nil andPort:0];
