@@ -40,7 +40,7 @@
 {
     NSString* jid = [[msg from] bare];
     Message *message;
-    User *from = [ModelHelper findUserWithEPostalID:jid inContext:context];
+    User *from = [[ModelHelper sharedInstance] findUserWithEPostalID:jid];
     NSString *node = [[msg elementForName:@"thread"] stringValue];
     
     if (from == nil && (node == nil || [node isEqualToString:@""])) {
@@ -73,7 +73,7 @@
         }
 
     } else {
-        Channel *channel = [ModelHelper findChannelWithNode:node inContext:context];
+        Channel *channel = [[ModelHelper sharedInstance] findChannelWithNode:node];
         message.from = channel;
         conv = channel.conversation;
         [[self threadToReceiverJidMap] setValue:jid forKey:node];
@@ -105,7 +105,7 @@
         return nil;
     }
 
-    Channel *channel = [ModelHelper findChannelWithNode:nodeStr inContext:context];
+    Channel *channel = [[ModelHelper sharedInstance] findChannelWithNode:nodeStr];
     
     if (channel == nil) {
         //Channel hasn't been setup

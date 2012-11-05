@@ -51,6 +51,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(friendRequestReceived:)
                                                      name:NEW_FRIEND_NOTIFICATION object:nil];
+        self.newFriendRequestCount  = 0;
     }
     return self;
 }
@@ -90,8 +91,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         FriendRequest *request = [array objectAtIndex:i];
         [self.friendRequestDict setValue:request forKey:request.requesterEPostalID];
     }
-    
-    self.newFriendRequestCount  = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -198,10 +197,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         NSString* type = [responseObject valueForKey:@"type"];
         if ([type isEqualToString:@"user"] && [self.friendRequestDict valueForKey:fromJid] == nil) {
             
-            FriendRequest *newFriendRequest = [ModelHelper newFriendRequestWithEPostalID:fromJid json:responseObject andInContext:self.managedObjectContext];
+            FriendRequest *newFriendRequest = [[ModelHelper sharedInstance] newFriendRequestWithEPostalID:fromJid andJson:responseObject];
 
             [self.friendRequestDict setValue:newFriendRequest forKey:fromJid];
-            self.newFriendRequestCount++;
+            self.newFriendRequestCount = self.newFriendRequestCount + 1;
             
             
 #warning TODO - add flag mark new friend request

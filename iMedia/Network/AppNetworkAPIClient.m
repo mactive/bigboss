@@ -230,7 +230,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
             }
 
             
-            [ModelHelper populateIdentity:identity withJSONData:responseObject];
+            [[ModelHelper sharedInstance] populateIdentity:identity withJSONData:responseObject];
             
             // if identity is Me, we need to check local avatar against the server. If local doesn't have the image
             // we need to download and save.

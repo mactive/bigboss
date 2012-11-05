@@ -112,11 +112,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/AppDelegate.m"
-         timestampString = "373544119.969504"
+         timestampString = "373770562.190362"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "41"
-         endingLineNumber = "41">
+         startingLineNumber = "42"
+         endingLineNumber = "42">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -292,11 +292,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/ViewControllers/ChatDetailController.m"
-         timestampString = "373451260.061755"
+         timestampString = "373770562.190362"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "265"
-         endingLineNumber = "265"
+         startingLineNumber = "262"
+         endingLineNumber = "262"
          landmarkName = "-scrollToBottomAnimated:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -500,11 +500,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/ViewControllers/ChatDetailController.m"
-         timestampString = "373451260.061755"
+         timestampString = "373770562.190362"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "367"
-         endingLineNumber = "367"
+         startingLineNumber = "364"
+         endingLineNumber = "364"
          landmarkName = "-addMessage:toBubbleData:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -552,11 +552,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/ViewControllers/ChatDetailController.m"
-         timestampString = "373451260.061755"
+         timestampString = "373770562.190362"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "357"
-         endingLineNumber = "357"
+         startingLineNumber = "354"
+         endingLineNumber = "354"
          landmarkName = "-addMessage:toBubbleData:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -812,12 +812,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Models/ModelHelper.m"
-         timestampString = "373533140.408537"
+         timestampString = "373770562.190362"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "54"
-         endingLineNumber = "54"
-         landmarkName = "+findUserWithEPostalID:inContext:"
+         startingLineNumber = "65"
+         endingLineNumber = "65"
+         landmarkName = "-findUserWithEPostalID:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -946,7 +946,9 @@
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "627"
-         endingLineNumber = "627">
+         endingLineNumber = "627"
+         landmarkName = "-getSelfIntroduction"
+         landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -992,12 +994,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Models/ModelHelper.m"
-         timestampString = "373538448.366949"
+         timestampString = "373770562.190362"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "245"
-         endingLineNumber = "245"
-         landmarkName = "+populateChannel:withServerJSONData:"
+         startingLineNumber = "256"
+         endingLineNumber = "256"
+         landmarkName = "-populateChannel:withServerJSONData:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -1070,11 +1072,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/ViewControllers/FunctionListViewController.m"
-         timestampString = "373530844.602835"
+         timestampString = "373771454.745783"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "188"
-         endingLineNumber = "188"
+         startingLineNumber = "187"
+         endingLineNumber = "187"
          landmarkName = "@implementation FunctionListViewController"
          landmarkType = "3">
       </FileBreakpoint>
@@ -1083,11 +1085,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/ViewControllers/FunctionListViewController.m"
-         timestampString = "373530844.602835"
+         timestampString = "373771454.745783"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "210"
-         endingLineNumber = "210"
+         startingLineNumber = "209"
+         endingLineNumber = "209"
          landmarkName = "-friendRequestReceived:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1096,11 +1098,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/ViewControllers/FunctionListViewController.m"
-         timestampString = "373530844.602835"
+         timestampString = "373771454.745783"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "195"
-         endingLineNumber = "195"
+         startingLineNumber = "194"
+         endingLineNumber = "194"
          landmarkName = "-friendRequestReceived:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1109,11 +1111,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/ViewControllers/FunctionListViewController.m"
-         timestampString = "373530844.602835"
+         timestampString = "373771454.745783"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "193"
-         endingLineNumber = "193"
+         startingLineNumber = "192"
+         endingLineNumber = "192"
          landmarkName = "-friendRequestReceived:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1122,11 +1124,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/ViewControllers/FunctionListViewController.m"
-         timestampString = "373530844.602835"
+         timestampString = "373771454.745783"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "168"
-         endingLineNumber = "168"
+         startingLineNumber = "167"
+         endingLineNumber = "167"
          landmarkName = "-tableView:didSelectRowAtIndexPath:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1135,11 +1137,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/ViewControllers/FunctionListViewController.m"
-         timestampString = "373530844.602835"
+         timestampString = "373771454.745783"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "197"
-         endingLineNumber = "197"
+         startingLineNumber = "196"
+         endingLineNumber = "196"
          landmarkName = "-friendRequestReceived:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1153,7 +1155,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "171"
          endingLineNumber = "171"
-         landmarkName = "-cancelRequest"
+         landmarkName = "-confirmRequest"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -1166,8 +1168,8 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "166"
          endingLineNumber = "166"
-         landmarkName = "-confirmRequest"
-         landmarkType = "5">
+         landmarkName = "@implementation RequestViewController"
+         landmarkType = "3">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -1200,11 +1202,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/AppDelegate.m"
-         timestampString = "373544119.969504"
+         timestampString = "373770562.190362"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "210"
-         endingLineNumber = "210"
+         startingLineNumber = "212"
+         endingLineNumber = "212"
          landmarkName = "-createMeWithUsername:password:jid:jidPasswd:andGUID:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1239,12 +1241,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Models/ModelHelper.m"
-         timestampString = "373533140.408537"
+         timestampString = "373770562.190362"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "123"
-         endingLineNumber = "123"
-         landmarkName = "+populateIdentity:withJSONData:"
+         startingLineNumber = "134"
+         endingLineNumber = "134"
+         landmarkName = "-populateIdentity:withJSONData:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -1252,11 +1254,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/AppDelegate.m"
-         timestampString = "373544119.969504"
+         timestampString = "373770562.190362"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "137"
-         endingLineNumber = "137"
+         startingLineNumber = "139"
+         endingLineNumber = "139"
          landmarkName = "-startMainSession"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1551,11 +1553,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/AppDelegate.m"
-         timestampString = "373544119.969504"
+         timestampString = "373770562.190362"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "175"
-         endingLineNumber = "175"
+         startingLineNumber = "177"
+         endingLineNumber = "177"
          landmarkName = "-startMainSession"
          landmarkType = "5">
       </FileBreakpoint>
@@ -1668,12 +1670,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Models/ModelHelper.m"
-         timestampString = "373538448.366949"
+         timestampString = "373770562.190362"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "185"
-         endingLineNumber = "185"
-         landmarkName = "+populateUser:withJSONData:"
+         startingLineNumber = "196"
+         endingLineNumber = "196"
+         landmarkName = "-populateUser:withJSONData:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -1681,13 +1683,13 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Models/ModelHelper.m"
-         timestampString = "373533140.408537"
+         timestampString = "373770562.190362"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "121"
-         endingLineNumber = "121"
-         landmarkName = "+populateIdentity:withJSONData:"
-         landmarkType = "5">
+         startingLineNumber = "132"
+         endingLineNumber = "132"
+         landmarkName = "@implementation ModelHelper"
+         landmarkType = "3">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -1759,12 +1761,12 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "iMedia/Models/ModelHelper.m"
-         timestampString = "373538448.366949"
+         timestampString = "373770562.190362"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "218"
-         endingLineNumber = "218"
-         landmarkName = "+populateUser:withJSONData:"
+         startingLineNumber = "229"
+         endingLineNumber = "229"
+         landmarkName = "-populateUser:withJSONData:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint

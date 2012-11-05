@@ -147,10 +147,10 @@
 -(void)subscribeButtonPushed:(id)sender
 {
     NSString *nodeStr = [jsonData valueForKey:@"node_address"];
-    Channel *newChannel = [ModelHelper findChannelWithNode:nodeStr inContext:self.managedObjectContext];
+    Channel *newChannel = [[ModelHelper sharedInstance] findChannelWithNode:nodeStr];
     if (newChannel == nil) {
         newChannel = [NSEntityDescription insertNewObjectForEntityForName:@"Channel" inManagedObjectContext:self.managedObjectContext];
-        [ModelHelper populateIdentity:newChannel withJSONData:jsonData];
+        [[ModelHelper sharedInstance] populateIdentity:newChannel withJSONData:jsonData];
         newChannel.state = [NSNumber numberWithInt:IdentityStatePendingAddSubscription];
     }
     

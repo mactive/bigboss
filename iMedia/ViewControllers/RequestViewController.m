@@ -16,6 +16,7 @@
 #import "ServerDataTransformer.h"
 #import "AppDelegate.h"
 #import "FunctionListViewController.h"
+#import "ModelHelper.h"
 
 @interface RequestViewController ()
 
@@ -165,6 +166,7 @@
 
 - (void)confirmRequest
 {
+    [[ModelHelper sharedInstance] createActiveUserWithFullServerJSONData:self.request.userJSONData];
     [[XMPPNetworkCenter sharedClient] acceptPresenceSubscriptionRequestFrom:self.request.requesterEPostalID andAddToRoster:YES];
 }
 
