@@ -20,6 +20,7 @@
 @property (nonatomic, strong) UIWebView *webView;
 @property (nonatomic, strong) UIView *backWebView;
 @property (nonatomic, strong) UIButton *webViewOverlayButton;
+@property (nonatomic, strong) UIButton *rateButton;
 
 - (void) setupInternalData;
 
@@ -35,6 +36,7 @@
 @synthesize webView =_webView;
 @synthesize webViewOverlayButton;
 @synthesize backWebView;
+@synthesize rateButton;
 
 - (void)setFrame:(CGRect)frame
 {
@@ -48,6 +50,8 @@
     id obj = [super init];
     
     self.webViewOverlayButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.rateButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.rateButton setFrame:CGRectMake(80, 0, 160, 41)];
     self.backWebView = [[UIView alloc] initWithFrame:CGRectMake(10, 0, 300,1)];
     self.webView = [[UIWebView alloc]initWithFrame:CGRectMake(12.5, 12.5, 275, 1)];
     
@@ -154,9 +158,22 @@
         [self.avatarImage removeFromSuperview];
         [self.bubbleImage removeFromSuperview];
         
+    }else if(type == BubbleTypeRateview){
+        [self.rateButton setImage:[UIImage imageNamed:@"welcome_btn.png"] forState:UIControlStateNormal];
+        [self.rateButton setTitle:T(@"评价客服") forState:UIControlStateNormal];
+        [self.rateButton.titleLabel setTextAlignment:NSTextAlignmentCenter];
+        [self.rateButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [self.rateButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
+        [self.contentView addSubview:self.rateButton];
+        
+        [self.customView removeFromSuperview];
+        [self.avatarImage removeFromSuperview];
+        [self.bubbleImage removeFromSuperview];
     }
     self.bubbleImage.frame = CGRectMake(x, y, width + self.data.insets.left + self.data.insets.right, height + self.data.insets.top + self.data.insets.bottom);
 }
+
+
 #pragma mark - UIWebView delegate
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
@@ -179,5 +196,7 @@
         self.data.cellHeight = backFrame.size.height;
     }
 }
+
+
 
 @end

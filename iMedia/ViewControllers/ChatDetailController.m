@@ -398,4 +398,9 @@
 {
     [self refreshBubbleData];
 }
+
+- (void)rateAction:(id)sender
+{
+    
+}
 @end

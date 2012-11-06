@@ -94,6 +94,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 #define SNS_TAG 20
 #define AVATAR_TAG 3
 #define SUMMARY_TAG 4
+#define STATE_TAG 5
 
 #define LEFT_COLUMN_OFFSET 30.0
 #define LEFT_COLUMN_WIDTH 36.0
@@ -168,6 +169,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     // Create a label for the add btn.
 	rect = CGRectMake(240, 113,  60 , LABEL_HEIGHT);
 	label = [[UILabel alloc] initWithFrame:rect];
+    label.tag = STATE_TAG;
     label.numberOfLines = 1;
 	label.font = [UIFont boldSystemFontOfSize:MAIN_FONT_SIZE];
 	label.textAlignment = UITextAlignmentLeft;
@@ -252,6 +254,17 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     // set the name text
     UILabel *nameLabel = (UILabel *)[cell viewWithTag:NAME_TAG];
     NSString *_nameString = [ServerDataTransformer getNicknameFromServerJSON:request.userJSONData];
+    
+    // set the state text
+    UILabel *stateLabel = (UILabel *)[cell viewWithTag:STATE_TAG];
+    if (request.state == FriendRequestDeclined) {
+        stateLabel.text = T(@"已拒绝");
+    } else if (request.state == FriendRequestApproved) {
+        stateLabel.text = T(@"已添加");
+    } else {
+        stateLabel.text = T(@"添加");
+    }
+
 
     CGSize labelSize = [_nameString sizeWithFont:nameLabel.font constrainedToSize:nameMaxSize lineBreakMode: UILineBreakModeTailTruncation];
     if (labelSize.height > LABEL_HEIGHT) {

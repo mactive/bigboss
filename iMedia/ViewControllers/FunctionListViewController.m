@@ -89,17 +89,17 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         }
         [self.view addSubview:button];
     }
+}
 
-    
-    
-#warning TODO: paged fetch - don't fetch all at the same time
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+
     NSManagedObjectContext *moc = self.managedObjectContext;
     NSEntityDescription *entityDescription = [NSEntityDescription
                                               entityForName:@"FriendRequest" inManagedObjectContext:moc];
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:entityDescription];
-    
-    
     
     NSError *error = nil;
     NSArray *array = [moc executeFetchRequest:request error:&error];
@@ -138,9 +138,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 }
 
 
-
-
-
 - (void)friendRequestReceived:(NSNotification *)notification
 {
     NSString* fromJid = [notification object];
@@ -154,13 +151,12 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         if ([type isEqualToString:@"user"] && [self.friendRequestDict valueForKey:fromJid] == nil) {
             
             FriendRequest *newFriendRequest = [[ModelHelper sharedInstance] newFriendRequestWithEPostalID:fromJid andJson:responseObject];
+            MOCSave(self.managedObjectContext);
 
             [self.friendRequestDict setValue:newFriendRequest forKey:fromJid];
             self.newFriendRequestCount +=1;
             
-            
-#warning TODO - add flag mark new friend request
-            [self appDelegate].functionListController.tabBarItem.badgeValue =  [NSString stringWithFormat:@"%d", self.newFriendRequestCount];
+            [self appDelegate].functionListController.tabBarItem.badgeValue =  [NSString stringWithFormat:@"%i", self.newFriendRequestCount];
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {

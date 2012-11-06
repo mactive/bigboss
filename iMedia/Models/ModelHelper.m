@@ -299,7 +299,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     newFriendRequest.requesterEPostalID = jid;
     newFriendRequest.requestDate = [NSDate date];
     newFriendRequest.userJSONData = jsonData;
-    newFriendRequest.state = [NSNumber numberWithInt:FriendRequestUnprocessed];
+    newFriendRequest.state = FriendRequestUnprocessed;
     
     return newFriendRequest;
 }

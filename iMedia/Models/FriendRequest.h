@@ -24,7 +24,7 @@ typedef enum _FriendRequestState
 
 @property (nonatomic, retain) NSString * userJSONData;
 @property (nonatomic, retain) NSDate * requestDate;
-@property (nonatomic, retain) NSNumber * state;
+@property (nonatomic) int16_t state;
 @property (nonatomic, retain) NSString * requesterEPostalID;
 
 @end

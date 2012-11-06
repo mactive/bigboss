@@ -179,11 +179,7 @@
         
         [self.navigationController pushViewController:profileMeController animated:YES];
     }
-    
-    if (indexPath.row == 0 && indexPath.section == 2 ) {
-        RateViewController *rateViewController = [[RateViewController alloc]initWithNibName:nil bundle:nil];
-        [self.navigationController presentModalViewController:rateViewController animated:YES];
-    }
+
 }
 
 
