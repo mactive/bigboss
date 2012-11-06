@@ -368,6 +368,49 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     
 }
 
+- (void)loadImage:(NSString *)urlPath withBlock:(void (^)(UIImage *, NSError *))block
+{
+    AFImageRequestOperation *operation = [AFImageRequestOperation imageRequestOperationWithRequest:[[NSURLRequest alloc] initWithURL:[NSURL URLWithString:urlPath]] imageProcessingBlock:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+        if (block) {
+            block (image, nil);
+        }
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+        if (block) {
+            block (nil, error);
+        }
+    }];
+    [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:operation];
+}
+
+- (void)updateMyChannel:(Me *)me withBlock:(void (^)(id, NSError *))block
+{
+    // proceed to make server updates
+    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: me.guid, @"guid", @"8", @"op", nil];
+    
+    [[AppNetworkAPIClient sharedClient] getPath:GET_DATA_PATH parameters:getDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        DDLogVerbose(@"get channel %@ data received: %@", me, responseObject);
+        
+        NSString* type = [responseObject valueForKey:@"type"];
+        
+        if (![@"error" isEqualToString:type]) {
+            if (block) {
+                block (responseObject, nil);
+            }
+        } else {
+            if (block) {
+                block (nil, nil);
+            }
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        //
+        if (block) {
+            block (nil, error);
+        }
+    }];
+
+}
+
 - (BOOL)isConnectable
 {
     if (self.kNetworkStatus.intValue == AFNetworkReachabilityStatusReachableViaWiFi || self.kNetworkStatus.intValue == AFNetworkReachabilityStatusReachableViaWWAN) {

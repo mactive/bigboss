@@ -131,7 +131,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     }
 }
 
-- (void)populateIdentity:(Identity *)identity withJSONData:(NSString *)json
+- (void)populateIdentity:(Identity *)identity withJSONData:(id)json
 {
     
     if ([identity isKindOfClass:[User class]]) {
@@ -157,6 +157,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     user.thumbnailURL = [ServerDataTransformer getThumbnailFromServerJSON:json];
     user.cell = [ServerDataTransformer getCellFromServerJSON:json];
     user.name = [ServerDataTransformer getNicknameFromServerJSON:json];
+    user.type = [NSNumber numberWithInt:IdentityTypeMe];
     
     NSMutableDictionary *imageURLDict = [[NSMutableDictionary alloc] initWithCapacity:8];
     for (int i = 1; i <=8; i++) {
@@ -261,15 +262,16 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             imageRemote.sequence = 0;
         }
     }
+    user.type = [NSNumber numberWithInt:IdentityTypeUser];
 }
 
 
-- (void)populateChannel:(Channel *)channel withServerJSONData:(NSString *)json
+- (void)populateChannel:(Channel *)channel withServerJSONData:(id)json
 {
     channel.guid = [ServerDataTransformer getGUIDFromServerJSON:json];
     channel.node = [ServerDataTransformer getNodeFromServerJSON:json];
     channel.displayName = [ServerDataTransformer getNicknameFromServerJSON:json];
-    channel.ePostalID = [ServerDataTransformer getCSContactIDFromServerJSON:json];
+    channel.ePostalID = [ServerDataTransformer getChannelEPostalIDFromServerJSON:json];
     channel.csContactPostalID = [ServerDataTransformer getCSContactIDFromServerJSON:json];
     channel.avatarURL = [ServerDataTransformer getAvatarFromServerJSON:json];
     channel.thumbnailURL = [ServerDataTransformer getThumbnailFromServerJSON:json];
@@ -287,7 +289,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         image.sequence = 0;
         [newUser addImagesObject:image];
     }
-    
+    newUser.type = [NSNumber numberWithInt:IdentityTypeUser];
     return newUser;
 }
 

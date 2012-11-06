@@ -11,7 +11,6 @@
 #import "WelcomeViewController.h"
 #import "AppNetworkAPIClient.h"
 #import "XMPPNetworkCenter.h"
-#import "SBJson.h"
 #import "DDLog.h"
 #import <unistd.h>
 #import <QuartzCore/QuartzCore.h>

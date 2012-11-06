@@ -16,6 +16,7 @@
 #import "UIImageView+AFNetworking.h"
 #import "MBProgressHUD.h"
 #import "ServerDataTransformer.h"
+#import "AppNetworkAPIClient.h"
 
 @interface ChannelViewController ()<MBProgressHUDDelegate>
 {
@@ -79,47 +80,68 @@
     [self.cancelButton addTarget:self action:@selector(cancelRequest) forControlEvents:UIControlEventTouchUpInside];
     
     
-    
-    // Now set content. Either user or jsonData must have value
-    if (self.channel == nil) {
-        self.title = [ServerDataTransformer getNicknameFromServerJSON:jsonData];
-        [self.confirmButton setTitle:T(@"订阅此频道") forState:UIControlStateNormal];
-        [self.confirmButton addTarget:self action:@selector(subscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
-    } else {
-        self.title = self.channel.ePostalID;
-        [self.confirmButton setTitle:T(@"发送信息") forState:UIControlStateNormal];
-        [self.confirmButton addTarget:self action:@selector(sendMsgButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
-    }
-    
+     
     UIImageView *avatarImage = [[UIImageView alloc] initWithFrame:CGRectMake(20, 20, 75, 75)];
     CALayer *avatarLayer = [avatarImage layer];
     [avatarLayer setMasksToBounds:YES];
     [avatarLayer setCornerRadius:5.0];
     [avatarLayer setBorderWidth:1.0];
     [avatarLayer setBorderColor:[[UIColor whiteColor] CGColor]];
-    //    avatarImage setImage: //self.channel.avatar
-    [avatarImage setImageWithURL:[NSURL URLWithString:@"http://ww1.sinaimg.cn/bmiddle/48933ee4jw1dydaveb47tj.jpg"]];
+
     [self.requestView addSubview:avatarImage];
     
     
-    UILabel *label;
-    label = [[UILabel alloc] initWithFrame:CGRectMake(110, 45, 170, 30)];
-	label.font = [UIFont boldSystemFontOfSize:20.0];
-	label.textAlignment = UITextAlignmentLeft;
-    label.textColor = RGBCOLOR(127, 127, 127);
-    label.backgroundColor = [UIColor clearColor];
-    label.text = self.channel.displayName;
-    [self.requestView addSubview:label];
+    UILabel *nameLabel;
+    nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(110, 45, 170, 30)];
+	nameLabel.font = [UIFont boldSystemFontOfSize:20.0];
+	nameLabel.textAlignment = UITextAlignmentLeft;
+    nameLabel.textColor = RGBCOLOR(127, 127, 127);
+    nameLabel.backgroundColor = [UIColor clearColor];
     
-    label = [[UILabel alloc] initWithFrame:CGRectMake(20, 100, 260, 60)];
-	label.font = [UIFont boldSystemFontOfSize:12.0];
-    label.textAlignment = UITextAlignmentLeft;
-    label.textColor = RGBCOLOR(158, 158, 158);
-    label.numberOfLines = 0;
-    label.backgroundColor = [UIColor clearColor];
-    label.text = @"Li Qianming on the system construction of trial operation made summary speech.";//self.channel.signature;
-    [self.requestView addSubview:label];
+    [self.requestView addSubview:nameLabel];
     
+    UILabel *infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 100, 260, 60)];
+	infoLabel.font = [UIFont boldSystemFontOfSize:12.0];
+    infoLabel.textAlignment = UITextAlignmentLeft;
+    infoLabel.textColor = RGBCOLOR(158, 158, 158);
+    infoLabel.numberOfLines = 0;
+    infoLabel.backgroundColor = [UIColor clearColor];
+
+    [self.requestView addSubview:infoLabel];
+    
+    
+    // Now set content. Either user or jsonData must have value
+    if (self.channel == nil) {
+        self.title = [ServerDataTransformer getNicknameFromServerJSON:jsonData];
+        nameLabel.text = [ServerDataTransformer getNicknameFromServerJSON:jsonData];
+        infoLabel.text = [ServerDataTransformer getSelfIntroductionFromServerJSON:jsonData];
+        NSString *thumbnail = [ServerDataTransformer getThumbnailFromServerJSON:jsonData];
+        if (StringHasValue(thumbnail)) {
+            [avatarImage setImageWithURL:[NSURL URLWithString:thumbnail] placeholderImage:nil];
+        } else {
+            [avatarImage setImageWithURL:[NSURL URLWithString:@"http://ww1.sinaimg.cn/bmiddle/48933ee4jw1dydaveb47tj.jpg"]];
+        }
+        [self.confirmButton setTitle:T(@"订阅此频道") forState:UIControlStateNormal];
+        [self.confirmButton addTarget:self action:@selector(subscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
+    } else {
+        self.title = self.channel.displayName;
+        infoLabel.text = self.channel.selfIntroduction;
+        nameLabel.text = self.channel.displayName;
+        if (channel.thumbnailImage != nil) {
+            [avatarImage setImage:channel.thumbnailImage];
+        } else if (StringHasValue(channel.thumbnailURL)) {
+            [[AppNetworkAPIClient sharedClient] loadImage:channel.thumbnailURL withBlock:^(UIImage *image, NSError *error) {
+                [avatarImage setImage:image];
+                self.channel.thumbnailImage = image;
+            }];
+        } else {
+            [avatarImage setImageWithURL:[NSURL URLWithString:@"http://ww1.sinaimg.cn/bmiddle/48933ee4jw1dydaveb47tj.jpg"]];
+        }
+        
+        [self.confirmButton setTitle:T(@"发送信息") forState:UIControlStateNormal];
+        [self.confirmButton addTarget:self action:@selector(sendMsgButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
+    }
+
     
     [self.requestView addSubview:self.nameLabel];
     [self.requestView addSubview:self.confirmButton];

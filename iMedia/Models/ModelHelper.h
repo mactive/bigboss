@@ -23,7 +23,7 @@
 - (Channel *)findChannelWithNode:(NSString *)node;
 - (Channel *)findChannelWithSubrequestID:(NSString *)subID;
 
-- (void)populateIdentity:(Identity *)identity withJSONData:(NSString *)json;
+- (void)populateIdentity:(Identity *)identity withJSONData:(id)json;
 
 
 - (User *)createNewUser;

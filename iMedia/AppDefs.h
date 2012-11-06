@@ -83,13 +83,13 @@ typedef enum _IdentityType
 
 typedef enum _IdentityState
 {
-    IdentityStateInactive   = 0,
     IdentityStateActive     = 1,
     IdentityStatePendingAddSubscription     = 2,
     IdentityStatePendingAddFriend   = 3,
     IdentityStatePendingRemoveSubscription  = 4,
     IdentityStatePendingRemoveFriend    =5,
-    IdentityStatePendingServerDataUpdate = 6
+    IdentityStatePendingServerDataUpdate = 6,
+    IdentityStateInactive   = 100
 } IdentityState;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

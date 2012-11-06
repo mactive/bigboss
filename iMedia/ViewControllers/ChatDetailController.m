@@ -20,6 +20,7 @@
 #import "ACPlaceholderTextView.h"
 #import <CocoaPlant/CocoaPlant.h>
 #import "UIImageView+AFNetworking.h"
+#import "AppNetworkAPIClient.h"
 
 // TODO: Rename to CHAT_BAR_HEIGHT_1, etc.
 #define kChatBarHeight1                      40
@@ -364,9 +365,13 @@
     {
         NSBubbleData *itemBubble = [NSBubbleData dataWithText:msg.text date:msg.sentDate type:type];
         
-        UIImageView *_tmpImageView = [[UIImageView alloc]init];
-        [_tmpImageView setImageWithURL:[NSURL URLWithString:msg.from.thumbnailURL]];
-        itemBubble.avatar = _tmpImageView.image;
+        itemBubble.avatar = msg.from.thumbnailImage;
+        if (msg.from.thumbnailImage == nil) {
+            [[AppNetworkAPIClient sharedClient] loadImage:msg.from.thumbnailURL withBlock:^(UIImage *image, NSError *error) {
+                msg.from.thumbnailImage = image;
+                itemBubble.avatar = msg.from.thumbnailImage;
+            }];
+        }
         [bubbleData addObject:itemBubble];
         bubbleTable.showAvatars = YES;
     } else if (msg.type == [NSNumber numberWithInt:MessageTypePublish]) {
