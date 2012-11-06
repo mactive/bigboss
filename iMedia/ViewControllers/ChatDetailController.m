@@ -387,7 +387,7 @@
     } else if (msg.type == [NSNumber numberWithInt:MessageTypePublish]) {
         [bubbleData addObject:[NSBubbleData dataWithWeb:msg.text date:msg.sentDate type:BubbleTypeWebview]];
         bubbleTable.showAvatars = NO;
-    } else if (msg.type == [NSNumber numberWithInt:MessageTypeStar]) {
+    } else if (msg.type == [NSNumber numberWithInt:MessageTypeRate]) {
         [bubbleData addObject:[NSBubbleData dataWithWeb:msg.text date:msg.sentDate type:BubbleTypeRateview]];
         bubbleTable.showAvatars = NO;
     }

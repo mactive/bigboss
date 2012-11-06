@@ -502,7 +502,7 @@
             self.me.thumbnailImage = avatar.thumbnail;
             
             NSNotification *myNotification =
-            [NSNotification notificationWithName:THUMBNAIL_IMAGE_CHANGE_NOTIFICATION object:nil];
+            [NSNotification notificationWithName:THUMBNAIL_IMAGE_CHANGE_NOTIFICATION object:self.me];
             [[NSNotificationQueue defaultQueue]
              enqueueNotification:myNotification
              postingStyle:NSPostWhenIdle
