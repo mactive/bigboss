@@ -156,11 +156,11 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             FriendRequest *newFriendRequest = [[ModelHelper sharedInstance] newFriendRequestWithEPostalID:fromJid andJson:responseObject];
 
             [self.friendRequestDict setValue:newFriendRequest forKey:fromJid];
-            self.newFriendRequestCount = self.newFriendRequestCount + 1;
+            self.newFriendRequestCount += 1;
             
             
 #warning TODO - add flag mark new friend request
-            [self appDelegate].functionListController.tabBarItem.badgeValue =  [NSString stringWithFormat:@"%d", self.newFriendRequestCount];
+            [self appDelegate].functionListController.tabBarItem.badgeValue =  [NSString stringWithFormat:@"%@", self.newFriendRequestCount];
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {

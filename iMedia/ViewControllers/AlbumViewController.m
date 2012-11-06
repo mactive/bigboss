@@ -45,10 +45,15 @@
             }
         } else if ([obj isKindOfClass:[ImageRemote class]]) {
             ImageRemote *imageRemote = obj;
-            if (imageRemote.imageThumbnailURL == nil || [imageRemote.imageThumbnailURL isEqualToString:@""]) {
+            if (!StringHasValue(imageRemote.imageURL)) {
                 continue;
             }
-        } else {
+        } else if ([obj isKindOfClass:[NSString class]]) {
+            NSString *urlPath = obj;
+            if (!StringHasValue(urlPath)) {
+                continue;
+            }
+        }else {
             continue;
         }
         
@@ -91,6 +96,8 @@
     } else if ([obj isKindOfClass:[ImageRemote class]]) {
         ImageRemote *imageRemote = obj;
         [imageView setImageWithURL:[NSURL URLWithString:imageRemote.imageThumbnailURL] placeholderImage:nil];
+    } else if ([obj isKindOfClass:[NSString class]]) {
+        [imageView setImageWithURL:[NSURL URLWithString:obj] placeholderImage:nil];
     }
     
     [imageView setContentMode:UIViewContentModeScaleAspectFit];
