@@ -19,6 +19,8 @@
 #import "UIImageView+AFNetworking.h"
 #import "ImageRemote.h"
 #import "MBProgressHUD.h"
+#import "AFImageRequestOperation.h"
+#import "AppNetworkAPIClient.h"
 
 @interface ContactDetailController ()<MBProgressHUDDelegate>
 {
@@ -156,9 +158,15 @@
             if ([imageURLDict objectForKey:key] != nil && [imageThumbnailURLDict objectForKey:key] != nil) {
                 NSString* imageThumbnailURL = [imageThumbnailURLDict objectForKey:key];
                 albumButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-                UIImageView *view = [[UIImageView alloc] init];
-                [view setImageWithURL:[NSURL URLWithString:imageThumbnailURL] placeholderImage:nil];
-                [albumButton setImage:view.image forState:UIControlStateNormal];
+                
+                AFImageRequestOperation *operation = [AFImageRequestOperation imageRequestOperationWithRequest:[[NSURLRequest alloc] initWithURL:[NSURL URLWithString:imageThumbnailURL]] imageProcessingBlock:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                    [albumButton setImage:image forState:UIControlStateNormal];
+                } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+                    [albumButton setTitle:@"下载失败" forState:UIControlStateNormal];
+                }];
+                
+                [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:operation];
+
                 int pos = i - 1;
                 [albumButton setFrame:CGRectMake(VIEW_ALBUM_OFFSET * (pos%4*2 + 1) + VIEW_ALBUM_WIDTH * (pos%4), VIEW_ALBUM_OFFSET * (floor(pos/4)*2+1) + VIEW_ALBUM_WIDTH * floor(pos/4), VIEW_ALBUM_WIDTH, VIEW_ALBUM_WIDTH)];
                 [albumButton.layer setMasksToBounds:YES];
@@ -685,8 +693,8 @@
         }
     } else {
         NSString *nickname = [ServerDataTransformer getNicknameFromServerJSON:self.jsonData];
-        if (nickname == nil || [nickname isEqualToString:@""]) {
-            return [ServerDataTransformer getGUIDFromServerJSON:self.jsonData];
+        if (StringHasValue(nickname)) {
+            return nickname;
         } else {
             return [ServerDataTransformer getGUIDFromServerJSON:self.jsonData];
         }
