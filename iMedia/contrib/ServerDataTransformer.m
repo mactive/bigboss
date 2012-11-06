@@ -38,7 +38,6 @@
         _sharedClient = [[NSDictionary alloc] initWithObjectsAndKeys:
                          T(@"男滴"),   @"m",
                          T(@"女滴"),   @"f",
-                         T(@"你说嘞"),  @"o",
                          nil];
     });
     

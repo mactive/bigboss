@@ -32,7 +32,7 @@
     if (self) {
         // Custom initialization
         self.me = [self appDelegate].me;
-        
+        self.navigationItem.rightBarButtonItem = nil;
     }
     return self;
 }
@@ -49,7 +49,7 @@
     self.title = T(@"欢迎");
     
     UIImageView *backgroundView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320,417)];
-    [backgroundView setImage:[UIImage imageNamed:@"welcome_bg_2.jpg"]];
+    [backgroundView setImage:[UIImage imageNamed:@"welcome_bg.png"]];
     [self.view addSubview:backgroundView];
     
     self.welcomeButton = [UIButton buttonWithType:UIButtonTypeCustom];
