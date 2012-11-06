@@ -68,6 +68,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 @synthesize fetchedResultsController = _fetchedResultsController;
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize editingIndexPath;
+@synthesize unreadMessageCount;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -500,6 +501,28 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 - (void)newMessageReceived:(NSNotification *)notification
 {
+    Conversation *conv = [notification object];
+    conv.unreadMessagesCount += 1;
+    
+    self.unreadMessageCount += 1;
+    
+    self.tabBarItem.badgeValue = [NSString stringWithFormat:@"%d", self.unreadMessageCount];
+    [self.tableView reloadData];
+}
+
+- (void)contentChanged
+{
+    NSArray *conversations = [_fetchedResultsController fetchedObjects];
+    self.unreadMessageCount = 0;
+    for (int i = 0 ; i < [conversations count] ; i++) {
+        self.unreadMessageCount += ((Conversation *)[conversations objectAtIndex:i]).unreadMessagesCount;
+    }
+    
+    if (self.unreadMessageCount > 0) {
+        self.tabBarItem.badgeValue = [NSString stringWithFormat:@"%d", self.unreadMessageCount];
+    } else {
+        self.tabBarItem.badgeValue = nil;
+    }
     [self.tableView reloadData];
 }
 @end

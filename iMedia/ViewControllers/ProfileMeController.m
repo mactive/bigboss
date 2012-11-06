@@ -488,6 +488,29 @@
         }
     }
     
+    // set main avatar and thumbnail depends on current available images
+    if ([self.albumArray count] == 0) {
+        self.me.avatarURL = @"";
+        self.me.thumbnailURL = @"";
+        self.me.thumbnailImage = nil;
+
+    } else {
+        Avatar *avatar = [self.albumArray objectAtIndex:0];        
+        if (![avatar.imageRemoteThumbnailURL isEqualToString:self.me.thumbnailURL]) {
+            self.me.avatarURL = avatar.imageRemoteURL;
+            self.me.thumbnailURL = avatar.imageRemoteThumbnailURL;
+            self.me.thumbnailImage = avatar.thumbnail;
+            
+            NSNotification *myNotification =
+            [NSNotification notificationWithName:THUMBNAIL_IMAGE_CHANGE_NOTIFICATION object:nil];
+            [[NSNotificationQueue defaultQueue]
+             enqueueNotification:myNotification
+             postingStyle:NSPostWhenIdle
+             coalesceMask:NSNotificationNoCoalescing
+             forModes:nil];
+        }
+    }
+    
     for (int i = self.albumCount; i < [self.albumButtonArray count]; i++) {
         UIButton *albumButton = [self.albumButtonArray objectAtIndex:i];
         [albumButton setHidden:YES];

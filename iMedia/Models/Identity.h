@@ -10,6 +10,8 @@
 #import <CoreData/CoreData.h>
 #import "DataTransformer.h"
 
+#define THUMBNAIL_IMAGE_CHANGE_NOTIFICATION  @"Thumbnail_Image_Change_Notification"
+
 @class ImageRemote;
 
 @interface Identity : NSManagedObject

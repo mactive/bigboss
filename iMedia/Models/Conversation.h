@@ -17,7 +17,7 @@
 @property (nonatomic, retain) NSDate * lastMessageSentDate;
 @property (nonatomic, retain) NSString * lastMessageText;
 @property (nonatomic, retain) NSNumber * messagesLength;
-@property (nonatomic, retain) NSNumber * unreadMessagesCount;
+@property (nonatomic) int16_t unreadMessagesCount;
 @property (nonatomic, retain) Channel *channel;
 @property (nonatomic, retain) NSSet *messages;
 @property (nonatomic, retain) NSSet *users;

@@ -51,7 +51,7 @@
 @synthesize contentView;
 
 @synthesize albumView;
-@synthesize albumArray;
+@synthesize albumArray = _albumArray;
 @synthesize albumViewController;
 
 @synthesize statusView;
@@ -119,9 +119,9 @@
     if (self.user != nil) {
         self.albumArray = [[NSMutableArray alloc] initWithArray:[self.user getOrderedNonNilImages]];
         
-        for (int i = 0; i< [albumArray count]; i++) {
+        for (int i = 0; i< [self.albumArray count]; i++) {
             albumButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-            ImageRemote* remote = [albumArray objectAtIndex:i];
+            ImageRemote* remote = [self.albumArray objectAtIndex:i];
             
             [[AppNetworkAPIClient sharedClient] loadImage:remote.imageThumbnailURL withBlock:^(UIImage *image, NSError *error) {
                 if (image) {

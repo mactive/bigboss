@@ -17,9 +17,11 @@
 
 @property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic) int unreadMessageCount;
 
 - (UITableViewCell *)tableViewCellWithReuseIdentifier:(NSString *)identifier;
 - (void)configureCell:(UITableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath;
 
 - (void)chatWithIdentity:(id)obj;
+- (void)contentChanged;
 @end
