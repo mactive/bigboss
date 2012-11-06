@@ -51,11 +51,31 @@
     NSString* jid = [[msg from] bare];
     Message *message;
     User *from = [[ModelHelper sharedInstance] findUserWithEPostalID:jid];
-    NSString *node = [[msg elementForName:@"thread"] stringValue];
+    NSString *node ; 
+    BOOL isCloseMsg ; 
+    NSString* rateKey ;
     
-    if (from == nil && (node == nil || [node isEqualToString:@""])) {
-        // not from a known user nor from a cs rep
-        return nil;
+    
+    if (from == nil) {
+        node = [[msg elementForName:@"thread"] stringValue];
+        isCloseMsg = [@"" isEqualToString:[[msg elementForName:@"close"] stringValue]];
+        rateKey = [[msg elementForName:@"rate"] stringValue];
+        
+        if (StringHasValue(rateKey)) {
+            isCloseMsg = YES;
+            // post a notification
+#warning how to do rate ? simulate a webview message or do separate UI?
+        }
+        
+        if (isCloseMsg) {
+            [[self threadToReceiverJidMap] removeObjectForKey:node];
+            return nil;
+        }
+        
+        if (!StringHasValue(node)) {
+            // not from a known user nor from a cs rep
+            return nil;
+        }
     }
   
     message = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:context];
@@ -166,7 +186,7 @@
         NSString* csJID = [[self threadToReceiverJidMap] valueForKey:message.conversation.channel.node];
         NSDate *last_talk_date = [[self threadToLastConversationDateMap] valueForKey:message.conversation.channel.node];
         NSTimeInterval diff = [last_talk_date timeIntervalSinceNow];
-        if (csJID != nil && ![csJID isEqualToString:@""] && (abs(diff) > kOneHourInSeconds)) {
+        if (StringHasValue(csJID) && (abs(diff) > kOneHourInSeconds)) {
             toJid = csJID;
         } else {
             toJid = message.conversation.channel.csContactPostalID;
