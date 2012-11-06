@@ -19,6 +19,8 @@
 #import "UIImageView+AFNetworking.h"
 #import "ImageRemote.h"
 #import "MBProgressHUD.h"
+#import "AFImageRequestOperation.h"
+#import "AppNetworkAPIClient.h"
 
 @interface ContactDetailController ()<MBProgressHUDDelegate>
 {
@@ -115,7 +117,7 @@
     UIButton *albumButton;
     
     if (self.user != nil) {
-        self.albumArray = [self.user getOrderedNonNilImages];
+        self.albumArray = [[NSMutableArray alloc] initWithArray:[self.user getOrderedNonNilImages]];
         
         for (int i = 0; i< [albumArray count]; i++) {
             albumButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -133,6 +135,8 @@
             [self.albumView addSubview:albumButton];
         }
     } else {
+        self.albumArray = [NSMutableArray arrayWithCapacity:8];
+                           
         NSMutableDictionary *imageURLDict = [[NSMutableDictionary alloc] initWithCapacity:8];
         for (int i = 1; i <=8; i++) {
             NSString *key = [NSString stringWithFormat:@"avatar%d", i];
@@ -154,17 +158,26 @@
             if ([imageURLDict objectForKey:key] != nil && [imageThumbnailURLDict objectForKey:key] != nil) {
                 NSString* imageThumbnailURL = [imageThumbnailURLDict objectForKey:key];
                 albumButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-                UIImageView *view = [[UIImageView alloc] init];
-                [view setImageWithURL:[NSURL URLWithString:imageThumbnailURL] placeholderImage:nil];
-                [albumButton setImage:view.image forState:UIControlStateNormal];
-                [albumButton setFrame:CGRectMake(VIEW_ALBUM_OFFSET * (i%4*2 + 1) + VIEW_ALBUM_WIDTH * (i%4), VIEW_ALBUM_OFFSET * (floor(i/4)*2+1) + VIEW_ALBUM_WIDTH * floor(i/4), VIEW_ALBUM_WIDTH, VIEW_ALBUM_WIDTH)];
+                
+                AFImageRequestOperation *operation = [AFImageRequestOperation imageRequestOperationWithRequest:[[NSURLRequest alloc] initWithURL:[NSURL URLWithString:imageThumbnailURL]] imageProcessingBlock:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                    [albumButton setImage:image forState:UIControlStateNormal];
+                } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+                    [albumButton setTitle:@"下载失败" forState:UIControlStateNormal];
+                }];
+                
+                [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:operation];
+
+                int pos = i - 1;
+                [albumButton setFrame:CGRectMake(VIEW_ALBUM_OFFSET * (pos%4*2 + 1) + VIEW_ALBUM_WIDTH * (pos%4), VIEW_ALBUM_OFFSET * (floor(pos/4)*2+1) + VIEW_ALBUM_WIDTH * floor(pos/4), VIEW_ALBUM_WIDTH, VIEW_ALBUM_WIDTH)];
                 [albumButton.layer setMasksToBounds:YES];
                 [albumButton.layer setCornerRadius:3.0];
                 albumButton.tag = i;
-#warning TODO: add ability to view other's full image. Need to rewrite self.albumArray
-               // [albumButton addTarget:self action:@selector(albumClick:) forControlEvents:UIControlEventTouchUpInside];
+                [albumButton addTarget:self action:@selector(albumClick:) forControlEvents:UIControlEventTouchUpInside];
                 
-                [self.albumView addSubview:albumButton];
+                [self.albumView addSubview:albumButton];                
+                [self.albumArray setObject:[imageURLDict objectForKey:key] atIndexedSubscript:(i-1)];
+            } else {
+                [self.albumArray setObject:@"" atIndexedSubscript:(i-1)];
             }
         }
     }
@@ -680,8 +693,8 @@
         }
     } else {
         NSString *nickname = [ServerDataTransformer getNicknameFromServerJSON:self.jsonData];
-        if (nickname == nil || [nickname isEqualToString:@""]) {
-            return [ServerDataTransformer getGUIDFromServerJSON:self.jsonData];
+        if (StringHasValue(nickname)) {
+            return nickname;
         } else {
             return [ServerDataTransformer getGUIDFromServerJSON:self.jsonData];
         }

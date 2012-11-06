@@ -62,11 +62,15 @@ NS_INLINE NSUInteger NSManagedObjectContextCount(id self, SEL _cmd, NSManagedObj
     return objectsCount;
 }
 
+NS_INLINE BOOL StringHasValue(NSString * str) {
+    return (str != nil) && (![str isEqualToString:@""]);
+}
+
 typedef enum _MessageType
 {
-    MessageTypeChat = 0,
-    MessageTypePublish = 1,
-    MessageTypeNone = 2
+    MessageTypeChat = 1,
+    MessageTypePublish = 2,
+    MessageTypeNone = 3
 } MessageType;
 
 typedef enum _IdentityType

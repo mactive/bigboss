@@ -12,6 +12,6 @@
 
 @property (nonatomic, strong) NSMutableDictionary* friendRequestDict;
 @property (nonatomic, strong) NSManagedObjectContext* managedObjectContext;
-@property (nonatomic) NSInteger* newFriendRequestCount;
+@property (nonatomic) int newFriendRequestCount;
 
 @end

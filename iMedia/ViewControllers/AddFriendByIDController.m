@@ -117,10 +117,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [[AppNetworkAPIClient sharedClient] getPath:GET_DATA_PATH parameters:getDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
         DDLogVerbose(@"get config JSON received: %@", responseObject);
         
+        [HUD hide:YES];
         NSString* type = [responseObject valueForKey:@"type"];
         if ([type isEqualToString:@"user"]) {
             sleep(1);
-            [HUD hide:YES];
             
             ContactDetailController *controller = [[ContactDetailController alloc] initWithNibName:nil bundle:nil];
             controller.jsonData = responseObject;
@@ -133,18 +133,30 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             
         } else if ([type isEqualToString:@"channel"]) {
             sleep(1);
-            [HUD hide:YES];
 
             ChannelViewController *controller = [[ChannelViewController alloc] initWithNibName:nil bundle:nil];
             controller.jsonData = responseObject;
             controller.managedObjectContext = [self appDelegate].context;
             
             [self.navigationController pushViewController:controller animated:YES];
+        } else {
+            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            HUD.mode = MBProgressHUDModeText;
+            HUD.delegate = self;
+            HUD.labelText = T(@"用户名不存在");
+            [HUD hide:YES afterDelay:1];
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         //
         DDLogVerbose(@"error received: %@", error);
+        [HUD hide:YES];
+        
+        HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        HUD.mode = MBProgressHUDModeText;
+        HUD.delegate = self;
+        HUD.labelText = T(@"网络错误，无法获取用户数据");
+        [HUD hide:YES afterDelay:1];
     }];
 
 }

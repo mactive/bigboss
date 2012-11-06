@@ -156,7 +156,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             FriendRequest *newFriendRequest = [[ModelHelper sharedInstance] newFriendRequestWithEPostalID:fromJid andJson:responseObject];
 
             [self.friendRequestDict setValue:newFriendRequest forKey:fromJid];
-            self.newFriendRequestCount = self.newFriendRequestCount + 1;
+            self.newFriendRequestCount +=1;
             
             
 #warning TODO - add flag mark new friend request

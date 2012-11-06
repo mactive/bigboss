@@ -251,6 +251,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             imageRemote.imageURL = [imageURLDict objectForKey:key];
             imageRemote.imageThumbnailURL = [imageThumbnailURLDict objectForKey:key];
             imageRemote.sequence = [NSNumber numberWithInt:i];
+            if (i == 1) {
+                user.thumbnailURL = imageRemote.imageThumbnailURL;
+                user.avatarURL = imageRemote.imageURL;
+            }
         } else {
             imageRemote.imageURL = @"";
             imageRemote.imageThumbnailURL = @"";

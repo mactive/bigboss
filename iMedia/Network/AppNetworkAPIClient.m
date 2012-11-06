@@ -270,8 +270,8 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
             }
             if (identity.state.intValue == IdentityStatePendingServerDataUpdate) {
                 identity.state = [NSNumber numberWithInt:IdentityStateActive];
-                [[self appDelegate].contactListController contentChanged];
             }
+            [[self appDelegate].contactListController contentChanged];
             
             identity.last_serverupdate_on = [NSDate date];
             
