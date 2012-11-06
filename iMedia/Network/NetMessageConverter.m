@@ -107,7 +107,7 @@
         message.from = channel;
         conv = channel.conversation;
         
-        [[self threadToReceiverJidMap] setValue:jid forKey:node];
+        [[self threadToReceiverJidMap] setValue:[[msg from] full] forKey:node];
         [[self threadToLastConversationDateMap] setValue:[NSDate date] forKey:node];
     }
             

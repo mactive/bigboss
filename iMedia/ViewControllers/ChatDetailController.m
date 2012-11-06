@@ -21,6 +21,7 @@
 #import <CocoaPlant/CocoaPlant.h>
 #import "UIImageView+AFNetworking.h"
 #import "AppNetworkAPIClient.h"
+#import "ConversationsController.h"
 
 // TODO: Rename to CHAT_BAR_HEIGHT_1, etc.
 #define kChatBarHeight1                      40
@@ -193,6 +194,11 @@
     } else {
         self.title = anUser.displayName;
     }
+    
+    if (self.conversation.unreadMessagesCount > 0) {
+        self.conversation.unreadMessagesCount = 0;
+        [[self appDelegate].conversationController contentChanged];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -215,6 +221,10 @@
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
+    if (self.conversation.unreadMessagesCount > 0) {
+        self.conversation.unreadMessagesCount = 0;
+        [[self appDelegate].conversationController contentChanged];
+    }
 }
 
 

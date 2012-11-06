@@ -419,7 +419,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
     
-    if ([message isChatMessageWithBody])
+    if ([message isChatMessage])
 	{
 		XMPPUserMemoryStorageObject *user = [xmppRosterStorage userForJID:[[message from] bareJID]];
         

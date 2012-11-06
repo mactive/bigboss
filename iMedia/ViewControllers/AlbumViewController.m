@@ -59,7 +59,11 @@
         
         [self.scrollView addContentSubview:[self createViewForObj:obj]];
     }
-    
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
     [self.scrollView setPage:self.albumIndex];
 }
 
