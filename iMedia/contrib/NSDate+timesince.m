@@ -21,9 +21,62 @@
 
 -(NSString *)timesince 
 {
-	return [self timesinceWithDepth:kDepth];
+//	return [self timesinceWithDepth:kDepth];
+	return [self timesinceWithHuman];
+}
+#define A_DAY 86400
+#define A_WEEK 604800
+#define SIX_DAYS 518400
+
+-(NSString *)timesinceWithHuman
+{
+    NSString *result = [[NSString alloc]init];
+    int delta = -(int)[self timeIntervalSinceNow];
+    BOOL isToday;
+    NSDateComponents *otherDay = [[NSCalendar currentCalendar] components:NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:self];
+    NSDateComponents *today = [[NSCalendar currentCalendar] components:NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:[NSDate date]];
+    if([today day] == [otherDay day] &&
+       [today month] == [otherDay month] &&
+       [today year] == [otherDay year] &&
+       [today era] == [otherDay era]) {
+        //do stuff
+        isToday = YES;
+    }else{
+        isToday = NO;
+    }
+    
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+
+    
+    if (delta <= A_DAY) {
+        //22:10
+        if (isToday) {
+            [dateFormatter setDateFormat:@"HH:mm"];
+            result = [dateFormatter stringFromDate:self];
+        }else{
+            result = T(@"昨天");
+        }
+		
+    }else if( delta > A_DAY &&  delta <= A_DAY *2 ){
+        //昨天
+        result = T(@"昨天");
+    }else if( delta > A_DAY *2 && delta <= SIX_DAYS){
+        //星期X
+        NSArray *weekdayAry = [NSArray arrayWithObjects:T(@"星期天"),T(@"星期一"),T(@"星期二"),T(@"星期三"),T(@"星期四"),T(@"星期五"),T(@"星期六"),nil];
+        [dateFormatter setDateFormat:NSLocalizedString(@"eee", nil)];
+        // 此处更改显示的大写字母的星期几
+        [dateFormatter setShortWeekdaySymbols:weekdayAry];
+        result = [dateFormatter stringFromDate:self];
+    }else if( delta > SIX_DAYS ){
+        // mm:dd
+		[dateFormatter setDateFormat:@"MM-dd"];
+        result = [dateFormatter stringFromDate:self];
+    }
+    
+    return result;
 }
 
+/*
 -(NSString *)timesinceWithDepth:(int)depth 
 {
 	NSArray *timeUnits = [NSArray arrayWithObjects:
@@ -81,5 +134,5 @@
 	
 	return s;
 }
-
+*/
 @end
