@@ -15,6 +15,7 @@
 #import "ImageRemote.h"
 #import "Me.h"
 #import "Avatar.h"
+#import "Channel.h"
 #import "Conversation.h"
 #import "AppDefs.h"
 #import <CocoaPlant/NSManagedObject+CocoaPlant.h>
@@ -29,6 +30,7 @@
 #import "AppNetworkAPIClient.h"
 #import "LocationManager.h"
 #import "ModelHelper.h"
+#import "NSObject+SBJson.h"
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -39,7 +41,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 #define NAVIGATION_CONTROLLER() ((UINavigationController *)_window.rootViewController)
 
-
+#define CHANNEL_UPDATE_REQUEST_EVENT   @"Channel_Update_Request_Event"
 
 @interface AppDelegate()
 {
@@ -111,6 +113,11 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     self.window.backgroundColor = BGCOLOR;
     
     application.applicationSupportsShakeToEdit = YES;
+    
+    // Add notification to enable keeping trying update channel data
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateMyChannelInformation:)
+                                                 name:CHANNEL_UPDATE_REQUEST_EVENT object:nil];
     return YES;
 }
 
@@ -183,6 +190,37 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [self.window makeKeyAndVisible];
 }
 
+- (void)updateMyChannelInformation:(NSNotification *)notification
+{
+    [[AppNetworkAPIClient sharedClient] updateMyChannel:self.me withBlock:^(id responseObject, NSError *error) {
+        if (responseObject != nil) {
+            NSArray *allChannelsArray = [responseObject allValues];
+            for (int i = 0; i < [allChannelsArray count]; i++) {
+                NSDictionary *channelInfo = [allChannelsArray objectAtIndex:i];
+                
+                // create Channel subscription
+                NSString *nodeStr = [channelInfo objectForKey:@"node_address"];
+                Channel *newChannel = [[ModelHelper sharedInstance] findChannelWithNode:nodeStr];
+                if (newChannel == nil) {
+                    newChannel = [NSEntityDescription insertNewObjectForEntityForName:@"Channel" inManagedObjectContext:_managedObjectContext];
+                }
+                [[ModelHelper sharedInstance] populateIdentity:newChannel withJSONData:channelInfo];
+                newChannel.state = [NSNumber numberWithInt:IdentityStateActive];
+            }
+            
+            [self.contactListController contentChanged];
+        } else {
+            NSNotification *myNotification =
+            [NSNotification notificationWithName:CHANNEL_UPDATE_REQUEST_EVENT object:nil];
+            [[NSNotificationQueue defaultQueue]
+             enqueueNotification:myNotification
+             postingStyle:NSPostWhenIdle
+             coalesceMask:NSNotificationNoCoalescing
+             forModes:nil];
+        }
+    }];
+}
+
 -(void)createMeWithUsername:(NSString *)username password:(NSString *)passwd jid:(NSString *)jidStr jidPasswd:(NSString *)jidPass andGUID:(NSString *)guid withBlock:(void (^)(id responseObject, NSError *error))block
 {
     if(self.me == nil) {
@@ -209,6 +247,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         self.me.career = @"";
         
         [LocationManager sharedInstance].me = self.me;
+        
+        [self updateMyChannelInformation:nil];
         
         [[AppNetworkAPIClient sharedClient] updateIdentity:self.me withBlock:block];
         

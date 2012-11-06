@@ -43,6 +43,8 @@ extern NSString *const kXMPPmyUsername;
 
 - (void)loadImage:(NSString *)urlPath withBlock:(void (^)(UIImage *image, NSError *error))block;
 
+- (void)updateMyChannel:(Me *)me withBlock:(void (^)(id responseObject, NSError *error))block;
+
 - (BOOL)isConnectable;
 
 @end

@@ -10,23 +10,23 @@
 
 @interface ServerDataTransformer : NSObject
 
-+ (NSString *)getNicknameFromServerJSON:(NSString *)jsonData;
-+ (NSString *)getSignatureFromServerJSON:(NSString *)jsonData;
-+ (NSString *)getAvatarFromServerJSON:(NSString *)jsonData;
-+ (NSString *)getThumbnailFromServerJSON:(NSString *)jsonData;
-+ (NSString *)getGUIDFromServerJSON:(NSString *)jsonData;
-+ (NSString *)getGenderFromServerJSON:(NSString *)jsonData;
-+ (NSString *)getSelfIntroductionFromServerJSON:(NSString *)jsonData;
-+ (NSString *)getCareerFromServerJSON:(NSString *)jsonData;
-+ (NSString *)getHometownFromServerJSON:(NSString *)jsonData;
-+ (NSString *)getCellFromServerJSON:(NSString *)jsonData;
-+ (NSString *)getNodeFromServerJSON:(NSString *)jsonData;
-+ (NSString *)getCSContactIDFromServerJSON:(NSString *)jsonData;
-+ (NSString *)getChannelEPostalIDFromServerJSON:(NSString *)jsonData;
-+ (NSString *)getEPostalIDFromServerJSON:(NSString *)jsonData;
-+ (NSString *)getRealNameFromServerJSON:(NSString *)jsonData;
-+ (NSDate *)getBirthdateFromServerJSON:(NSString *)jsonData;
-+ (NSDate *)getLastGPSUpdatedFromServerJSON:(NSString *)jsonData;
++ (NSString *)getNicknameFromServerJSON:(id)jsonData;
++ (NSString *)getSignatureFromServerJSON:(id)jsonData;
++ (NSString *)getAvatarFromServerJSON:(id)jsonData;
++ (NSString *)getThumbnailFromServerJSON:(id)jsonData;
++ (NSString *)getGUIDFromServerJSON:(id)jsonData;
++ (NSString *)getGenderFromServerJSON:(id)jsonData;
++ (NSString *)getSelfIntroductionFromServerJSON:(id)jsonData;
++ (NSString *)getCareerFromServerJSON:(id)jsonData;
++ (NSString *)getHometownFromServerJSON:(id)jsonData;
++ (NSString *)getCellFromServerJSON:(id)jsonData;
++ (NSString *)getNodeFromServerJSON:(id)jsonData;
++ (NSString *)getCSContactIDFromServerJSON:(id)jsonData;
++ (NSString *)getChannelEPostalIDFromServerJSON:(id)jsonData;
++ (NSString *)getEPostalIDFromServerJSON:(id)jsonData;
++ (NSString *)getRealNameFromServerJSON:(id)jsonData;
++ (NSDate *)getBirthdateFromServerJSON:(id)jsonData;
++ (NSDate *)getLastGPSUpdatedFromServerJSON:(id)jsonData;
 
 // static dict
 + (NSDictionary *)sexDict;
@@ -35,6 +35,6 @@
 + (NSString *)dateStrfromNSDate:(NSDate *)date;
 + (NSDate *)dateFromNSDatetimeStr:(NSString *)dateStr;
 
-+ (NSString *)getStringObjFromServerJSON:(NSString *)jsonData byName:(NSString *)name;
++ (NSString *)getStringObjFromServerJSON:(id)jsonData byName:(NSString *)name;
 
 @end

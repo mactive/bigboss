@@ -45,61 +45,61 @@
 }
 
 
-+ (NSString *)getNicknameFromServerJSON:(NSString *)jsonData
++ (NSString *)getNicknameFromServerJSON:(id)jsonData
 {
     return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"nickname"];
 }
 
-+ (NSString *)getSignatureFromServerJSON:(NSString *)jsonData
++ (NSString *)getSignatureFromServerJSON:(id)jsonData
 {
     return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"signature"];
 
 }
 
-+ (NSString *)getAvatarFromServerJSON:(NSString *)jsonData
++ (NSString *)getAvatarFromServerJSON:(id)jsonData
 {
     return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"avatar"];
 
 }
-+ (NSString *)getThumbnailFromServerJSON:(NSString *)jsonData
++ (NSString *)getThumbnailFromServerJSON:(id)jsonData
 {
     return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"thumbnail"];
 }
-+ (NSString *)getGUIDFromServerJSON:(NSString *)jsonData
++ (NSString *)getGUIDFromServerJSON:(id)jsonData
 {
     return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"guid"];
 }
-+ (NSString *)getGenderFromServerJSON:(NSString *)jsonData {
++ (NSString *)getGenderFromServerJSON:(id)jsonData {
     return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"gender"];
 }
-+ (NSString *)getSelfIntroductionFromServerJSON:(NSString *)jsonData {
++ (NSString *)getSelfIntroductionFromServerJSON:(id)jsonData {
     return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"self_introduction"];
 }
-+ (NSString *)getCareerFromServerJSON:(NSString *)jsonData {
++ (NSString *)getCareerFromServerJSON:(id)jsonData {
     return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"career"];
 }
-+ (NSString *)getHometownFromServerJSON:(NSString *)jsonData {
++ (NSString *)getHometownFromServerJSON:(id)jsonData {
     return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"hometown"];
 }
-+ (NSString *)getCellFromServerJSON:(NSString *)jsonData {
++ (NSString *)getCellFromServerJSON:(id)jsonData {
     return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"cell"];
 }
-+ (NSString *)getNodeFromServerJSON:(NSString *)jsonData {
++ (NSString *)getNodeFromServerJSON:(id)jsonData {
     return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"node_address"];
 }
-+ (NSString *)getCSContactIDFromServerJSON:(NSString *)jsonData {
++ (NSString *)getCSContactIDFromServerJSON:(id)jsonData {
     return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"receive_jid"];
 }
-+ (NSString *)getEPostalIDFromServerJSON:(NSString *)jsonData {
++ (NSString *)getEPostalIDFromServerJSON:(id)jsonData {
     return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"jid"];
 }
-+ (NSString *)getChannelEPostalIDFromServerJSON:(NSString *)jsonData{
++ (NSString *)getChannelEPostalIDFromServerJSON:(id)jsonData{
     return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"receive_jid"];
 }
-+ (NSString *)getRealNameFromServerJSON:(NSString *)jsonData{
++ (NSString *)getRealNameFromServerJSON:(id)jsonData{
     return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"true_name"];
 }
-+ (NSDate *)getBirthdateFromServerJSON:(NSString *)jsonData
++ (NSDate *)getBirthdateFromServerJSON:(id)jsonData
 {
     NSString *dateStr = [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"birthdate"];
     NSDate *date = [self dateFromNSDateStr:dateStr];
@@ -109,7 +109,7 @@
         return date;
     }
 }
-+ (NSDate *)getLastGPSUpdatedFromServerJSON:(NSString *)jsonData
++ (NSDate *)getLastGPSUpdatedFromServerJSON:(id)jsonData
 {
     NSString *dateStr = [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"last_gps_updated"];
     return [self dateFromNSDatetimeStr:dateStr];
@@ -117,7 +117,7 @@
 
 
 
-+(NSString *)getStringObjFromServerJSON:(NSString *)jsonData byName:(NSString *)name
++(NSString *)getStringObjFromServerJSON:(id)jsonData byName:(id)name
 {
     id obj = [jsonData valueForKey:name];
     if (obj == nil) return @"";

@@ -131,7 +131,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     }
 }
 
-- (void)populateIdentity:(Identity *)identity withJSONData:(NSString *)json
+- (void)populateIdentity:(Identity *)identity withJSONData:(id)json
 {
     
     if ([identity isKindOfClass:[User class]]) {
@@ -266,12 +266,12 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 }
 
 
-- (void)populateChannel:(Channel *)channel withServerJSONData:(NSString *)json
+- (void)populateChannel:(Channel *)channel withServerJSONData:(id)json
 {
     channel.guid = [ServerDataTransformer getGUIDFromServerJSON:json];
     channel.node = [ServerDataTransformer getNodeFromServerJSON:json];
     channel.displayName = [ServerDataTransformer getNicknameFromServerJSON:json];
-    channel.ePostalID = [ServerDataTransformer getCSContactIDFromServerJSON:json];
+    channel.ePostalID = [ServerDataTransformer getChannelEPostalIDFromServerJSON:json];
     channel.csContactPostalID = [ServerDataTransformer getCSContactIDFromServerJSON:json];
     channel.avatarURL = [ServerDataTransformer getAvatarFromServerJSON:json];
     channel.thumbnailURL = [ServerDataTransformer getThumbnailFromServerJSON:json];
