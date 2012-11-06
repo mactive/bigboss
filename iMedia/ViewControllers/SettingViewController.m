@@ -22,6 +22,7 @@
 @property(nonatomic, strong) NSArray *settingTitleArray;
 @property(nonatomic, strong) UIButton *logoutButton;
 @property (strong, nonatomic) Me *me;
+@property (nonatomic, strong) UIImageView *myAvatar;
 
 @end
 
@@ -35,6 +36,7 @@
 @synthesize managedObjectContext;
 @synthesize logoutButton;
 @synthesize me;
+@synthesize myAvatar;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -43,7 +45,9 @@
     if (self) {
         // Custom initialization
         self.me = [self appDelegate].me ;
-        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(thumbnailChanged:)
+                                                     name:THUMBNAIL_IMAGE_CHANGE_NOTIFICATION object:self.me];
     }
     return self;
 }
@@ -58,6 +62,8 @@
 //    UIImageView *tabbarBgView  = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"navigationBar_bg.png"]];
 //    [self.navigationController.navigationBar insertSubview:tabbarBgView atIndex:1];
 //    [self.navigationController.navigationBar setBackgroundColor:[UIColor blackColor]];
+    CGRect imageRect = CGRectMake(220, 5,  50, 50);
+    self.myAvatar = [[UIImageView alloc] initWithFrame:imageRect];
 }
 
 - (void)viewDidLoad
@@ -136,15 +142,13 @@
     NSUInteger labelY = 12;
     
     if (indexPath.section == 0 && indexPath.row == 0) {
-        // Create an image view for the quarter image.
-        CGRect imageRect = CGRectMake(220, 5,  50, 50);
-        UIImageView *meAvatar = [[UIImageView alloc] initWithFrame:imageRect];
-        CALayer *avatarLayer = [meAvatar layer];
+        // Create an image view for the quarter image
+        CALayer *avatarLayer = [self.myAvatar layer];
         [avatarLayer setMasksToBounds:YES];
         [avatarLayer setCornerRadius:5.0];
         [avatarLayer setBorderColor:[[UIColor whiteColor] CGColor]];
-        [meAvatar setImage:self.me.thumbnailImage];
-        [cell.contentView addSubview:meAvatar];
+        [self.myAvatar setImage:self.me.thumbnailImage];
+        [cell.contentView addSubview:self.myAvatar];
         labelY = 20;
     }
     
@@ -193,6 +197,11 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+- (void)thumbnailChanged:(NSNotification *)notification
+{
+    [self.myAvatar setImage:self.me.thumbnailImage];
 }
 
 @end
