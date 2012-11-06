@@ -163,13 +163,16 @@
         
         HUD = [[MBProgressHUD alloc] initWithView:self.view];
         [self.view addSubview:HUD];
-        HUD.labelText = T(@"订阅请求成功发送");
+        HUD.labelText = T(@"订阅中");
         
         [HUD showAnimated:YES whileExecutingBlock:^{
             sleep(2);
             [HUD hide:YES];
         } completionBlock:^{
-            
+            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            HUD.mode = MBProgressHUDModeText;
+            HUD.labelText = T(@"订阅成功");
+            [HUD hide:YES afterDelay:1];
         }];
 
     }];
@@ -179,12 +182,16 @@
 {
     HUD = [[MBProgressHUD alloc] initWithView:self.view];
 	[self.view addSubview:HUD];
-    HUD.labelText = T(@"退定成功");
+    HUD.labelText = T(@"退定中");
 
 	[HUD showAnimated:YES whileExecutingBlock:^{
         sleep(2);
         [HUD hide:YES];
 	} completionBlock:^{
+        HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        HUD.mode = MBProgressHUDModeText;
+        HUD.labelText = T(@"退订成功");
+        [HUD hide:YES afterDelay:1];
 		[self.confirmButton setTitle:T(@"订阅此频道") forState:UIControlStateNormal];
         [self.confirmButton removeTarget:self action:@selector(unSubscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
         [self.confirmButton addTarget:self action:@selector(subscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
