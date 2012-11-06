@@ -41,6 +41,8 @@ extern NSString *const kXMPPmyUsername;
 
 - (void)uploadMe:(Me *)me withBlock:(void (^)(id responseObject, NSError *error))block;
 
+- (void)loadImage:(NSString *)urlPath withBlock:(void (^)(UIImage *image, NSError *error))block;
+
 - (BOOL)isConnectable;
 
 @end

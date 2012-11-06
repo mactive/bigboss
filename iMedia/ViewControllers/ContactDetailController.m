@@ -122,12 +122,12 @@
         for (int i = 0; i< [albumArray count]; i++) {
             albumButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
             ImageRemote* remote = [albumArray objectAtIndex:i];
-            AFImageRequestOperation *operation = [AFImageRequestOperation imageRequestOperationWithRequest:[[NSURLRequest alloc] initWithURL:[NSURL URLWithString:remote.imageThumbnailURL]] imageProcessingBlock:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-                [albumButton setImage:image forState:UIControlStateNormal];
-            } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
-                [albumButton setTitle:@"下载失败" forState:UIControlStateNormal];
-            }];            
-            [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:operation];
+            
+            [[AppNetworkAPIClient sharedClient] loadImage:remote.imageThumbnailURL withBlock:^(UIImage *image, NSError *error) {
+                if (image) {
+                    [albumButton setImage:image forState:UIControlStateNormal];
+                }
+            }];
 
             [albumButton setFrame:CGRectMake(VIEW_ALBUM_OFFSET * (i%4*2 + 1) + VIEW_ALBUM_WIDTH * (i%4), VIEW_ALBUM_OFFSET * (floor(i/4)*2+1) + VIEW_ALBUM_WIDTH * floor(i/4), VIEW_ALBUM_WIDTH, VIEW_ALBUM_WIDTH)];
             [albumButton.layer setMasksToBounds:YES];
@@ -163,14 +163,12 @@
                 NSString* imageThumbnailURL = [imageThumbnailURLDict objectForKey:key];
                 albumButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
                 
-                AFImageRequestOperation *operation = [AFImageRequestOperation imageRequestOperationWithRequest:[[NSURLRequest alloc] initWithURL:[NSURL URLWithString:imageThumbnailURL]] imageProcessingBlock:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-                    [albumButton setImage:image forState:UIControlStateNormal];
-                } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
-                    [albumButton setTitle:@"下载失败" forState:UIControlStateNormal];
+                [[AppNetworkAPIClient sharedClient] loadImage:imageThumbnailURL withBlock:^(UIImage *image, NSError *error) {
+                    if (image) {
+                        [albumButton setImage:image forState:UIControlStateNormal];
+                    }
                 }];
                 
-                [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:operation];
-
                 int pos = i - 1;
                 [albumButton setFrame:CGRectMake(VIEW_ALBUM_OFFSET * (pos%4*2 + 1) + VIEW_ALBUM_WIDTH * (pos%4), VIEW_ALBUM_OFFSET * (floor(pos/4)*2+1) + VIEW_ALBUM_WIDTH * floor(pos/4), VIEW_ALBUM_WIDTH, VIEW_ALBUM_WIDTH)];
                 [albumButton.layer setMasksToBounds:YES];

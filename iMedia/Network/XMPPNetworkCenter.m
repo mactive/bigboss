@@ -622,6 +622,49 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     
     MOCSave(_managedObjectContext);
 }
+
+- (void)xmppRoster:(XMPPRosterMemoryStorage *)sender didUpdateUser:(XMPPUserMemoryStorageObject *)user
+{
+    DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+    
+    DDLogVerbose(@"update user: %@", user);
+    
+    NSString* ePostalID = [user.jid bare];
+    NSString *meID ;
+    
+    XMPPUserMemoryStorageObject *me = [sender myUser];
+    if (me == nil) {
+        meID = [self appDelegate].me.ePostalID;
+    } else {
+        meID = [me.jid bare];
+    }
+    if ([ePostalID isEqualToString:meID]) {
+        return;
+    }
+    
+    User* thisUser = [[ModelHelper sharedInstance] findUserWithEPostalID:ePostalID];
+    
+    // insert user if it doesn't exist
+    if (thisUser == nil) {
+        thisUser = [[ModelHelper sharedInstance] createNewUser];
+    }
+    
+    
+    if ( thisUser.state.intValue == IdentityStatePendingAddFriend || thisUser.state.intValue == IdentityStatePendingServerDataUpdate)
+    {
+        thisUser.ePostalID = [user.jid bare];
+        thisUser.displayName = [thisUser.ePostalID substringToIndex:[thisUser.ePostalID rangeOfString: @"@"].location];
+        thisUser.state = [NSNumber numberWithInt:IdentityStatePendingServerDataUpdate];
+        
+        [[AppNetworkAPIClient sharedClient] updateIdentity:thisUser withBlock:nil];
+    }
+
+}
+
+- (void)xmppRosterDidChange:(XMPPRosterMemoryStorage *)sender
+{
+    DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark XMPPRosterDelegate
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
