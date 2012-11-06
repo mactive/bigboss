@@ -53,19 +53,13 @@
     User *from = [[ModelHelper sharedInstance] findUserWithEPostalID:jid];
     NSString *node ; 
     BOOL isCloseMsg ; 
-    NSString* rateKey ;
+    NSString* rateKey = nil;
     
     
     if (from == nil) {
         node = [[msg elementForName:@"thread"] stringValue];
         isCloseMsg = [@"" isEqualToString:[[msg elementForName:@"close"] stringValue]];
         rateKey = [[msg elementForName:@"rate"] stringValue];
-        
-        if (StringHasValue(rateKey)) {
-            isCloseMsg = YES;
-            // post a notification
-#warning how to do rate ? simulate a webview message or do separate UI?
-        }
         
         if (isCloseMsg) {
             [[self threadToReceiverJidMap] removeObjectForKey:node];
@@ -80,8 +74,14 @@
   
     message = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:context];
     message.sentDate = [NSDate date];
-    message.text = [[msg elementForName:@"body"] stringValue];
-    message.type = [NSNumber numberWithInt:MessageTypeChat];
+    if (StringHasValue(rateKey)) {
+        // is a final rate message
+        message.text = rateKey;
+        message.type = [NSNumber numberWithInt:MessageTypeRate];
+    } else {
+        message.text = [[msg elementForName:@"body"] stringValue];
+        message.type = [NSNumber numberWithInt:MessageTypeChat];
+    }
     
     Conversation *conv;
     if (from != nil) {
@@ -107,8 +107,13 @@
         message.from = channel;
         conv = channel.conversation;
         
-        [[self threadToReceiverJidMap] setValue:[[msg from] full] forKey:node];
-        [[self threadToLastConversationDateMap] setValue:[NSDate date] forKey:node];
+        if (StringHasValue(rateKey)) {
+            [[self threadToReceiverJidMap] removeObjectForKey:node];
+            [[self threadToLastConversationDateMap] removeObjectForKey:node];
+        } else {
+            [[self threadToReceiverJidMap] setValue:[[msg from] full] forKey:node];
+            [[self threadToLastConversationDateMap] setValue:[NSDate date] forKey:node];
+        }
     }
             
         

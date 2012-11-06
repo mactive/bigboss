@@ -45,6 +45,8 @@ extern NSString *const kXMPPmyUsername;
 
 - (void)updateMyChannel:(Me *)me withBlock:(void (^)(id responseObject, NSError *error))block;
 
+- (void)uploadRating:(NSString *)rateKey rate:(NSString *)rating andComment:(NSString *)comment withBlock:(void (^)(id responseObject, NSError *error))block;
+
 - (BOOL)isConnectable;
 
 @end
