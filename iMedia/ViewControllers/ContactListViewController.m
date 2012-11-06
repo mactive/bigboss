@@ -475,7 +475,9 @@ NSInteger SortIndex(id char1, id char2, void* context)
 }
 */
 
+/////////////////////////////////////////////////////////////////////////////
 #pragma mark - Table view delegate
+/////////////////////////////////////////////////////////////////////////////
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -510,6 +512,23 @@ NSInteger SortIndex(id char1, id char2, void* context)
        
 }
 
+/////////////////////////////////////////////////////////////////////////////
+#pragma mark - right section index 
+/////////////////////////////////////////////////////////////////////////////
+
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView
+{
+    NSArray *newarr=[[contacts_list_fix allKeys] sortedArrayUsingFunction:SortIndex context:NULL];
+    return newarr;
+}
+
+-(NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index
+{
+    NSArray *newarr=[[contacts_list_fix allKeys] sortedArrayUsingFunction:SortIndex context:NULL];
+
+    return [newarr indexOfObject:title];
+}
+  
 
 
 @end
