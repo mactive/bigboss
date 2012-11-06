@@ -8,8 +8,6 @@
 	<string>春水堂</string>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
-	<key>CFBundleGetInfoString</key>
-	<string></string>
 	<key>CFBundleIcons</key>
 	<dict>
 		<key>CFBundlePrimaryIcon</key>
@@ -38,6 +36,19 @@
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>UINewsstandIcon</key>
+	<dict>
+		<key>CFBundleIconFiles</key>
+		<array>
+			<string></string>
+		</array>
+		<key>UINewsstandBindingEdge</key>
+		<string>UINewsstandBindingEdgeLeft</string>
+		<key>UINewsstandBindingType</key>
+		<string>UINewsstandBindingTypeMagazine</string>
+	</dict>
+	<key>UIPrerenderedIcon</key>
 	<true/>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
