@@ -25,6 +25,8 @@
 
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
+#define BANDWIDTH_MONITOR   NO
+
 //static NSString * const pubsubhost = @"pubsub.192.168.1.104";
 static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 
@@ -43,6 +45,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 @property (nonatomic, strong, readonly) XMPPReconnect *xmppReconnect;
 @property (nonatomic, strong) XMPPRoster *xmppRoster;
 @property (nonatomic, strong) XMPPRosterMemoryStorage *xmppRosterStorage;
+@property (nonatomic, strong) XMPPBandwidthMonitor *xmppBandwidthMonitor;
 /*@property (nonatomic, strong, readonly) XMPPvCardTempModule *xmppvCardTempModule;
  @property (nonatomic, strong, readonly) XMPPvCardCoreDataStorage *xmppvCardStorage;
  @property (nonatomic, strong, readonly) XMPPvCardAvatarModule *xmppvCardAvatarModule;
@@ -64,6 +67,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 @synthesize xmppRosterStorage;
 @synthesize xmppPubsub;
 @synthesize managedObjectContext = _managedObjectContext;
+@synthesize xmppBandwidthMonitor;
 
 + (XMPPNetworkCenter *)sharedClient {
     static XMPPNetworkCenter *_sharedClient = nil;
@@ -139,18 +143,23 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 #warning Pubsub needs to be moved to later stage where serviceJiD is available
     xmppPubsub = [[XMPPPubSub alloc] initWithServiceJID:[XMPPJID jidWithString:pubsubhost]];
     
-    
+#ifdef BANDWIDTH_MONITOR
+    // bandwidth monitor
+    self.xmppBandwidthMonitor = [[XMPPBandwidthMonitor alloc] init];
+    [xmppBandwidthMonitor  activate:xmppStream];
+    [xmppBandwidthMonitor addDelegate:self delegateQueue:dispatch_get_current_queue()];
+#endif
 	// Activate xmpp modules
     
 	[xmppReconnect         activate:xmppStream];
 	[xmppRoster            activate:xmppStream];
     [xmppPubsub            activate:xmppStream];
     
-	// Add ourself as a delegate to anything we may be interested in
-    
+	// Add ourself as a delegate to anything we may be interested in    
 	[xmppStream addDelegate:self delegateQueue:dispatch_get_main_queue()];
 	[xmppRoster addDelegate:self delegateQueue:dispatch_get_main_queue()];
     [xmppPubsub addDelegate:self delegateQueue:dispatch_get_main_queue()];
+    
     
 	// Optional:
 	//
@@ -418,7 +427,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 - (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)message
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-    
+
     if ([message isChatMessage])
 	{
 		XMPPUserMemoryStorageObject *user = [xmppRosterStorage userForJID:[[message from] bareJID]];

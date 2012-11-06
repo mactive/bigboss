@@ -46,5 +46,7 @@
 
 #import "XMPPPubSub.h"
 
+#import "XMPPBandwidthMonitor.h"
+
 //#import "XMPPMessageArchiving.h"
 //#import "XMPPMessageArchivingCoreDataStorage.h"
