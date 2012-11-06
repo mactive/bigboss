@@ -24,8 +24,8 @@
         self.colorArray = [[NSArray alloc] initWithObjects:
                            RGBCOLOR(151, 206, 45),
                            RGBCOLOR(117, 198, 231),
-                           RGBCOLOR(248, 139, 202),
-                           RGBCOLOR(236, 134, 94),nil];
+                           RGBCOLOR(238, 175, 212),
+                           RGBCOLOR(253, 152, 113),nil];
         
         self.iconView  = [[UIImageView alloc]initWithFrame:CGRectMake((frame.size.width-75)/2, (frame.size.height-75)/3, 75, 75)];
         
@@ -38,7 +38,6 @@
         
         [self addSubview:self.iconView];
         [self addSubview:self.titleLabel];
-        
     }
     return self;
 }
@@ -47,9 +46,25 @@
 {
     [self.iconView setImage:image];
     self.titleLabel.text = titleString;
-    [self setBackgroundColor:[self.colorArray objectAtIndex:index]];
+    UIImage *normalImage = [self createImageWithColor:[self.colorArray objectAtIndex:index]];
+    UIImage *selectedImage = [self createImageWithColor:RGBCOLOR(195, 195, 195)];
+    [self setBackgroundImage:normalImage forState:UIControlStateNormal];
+    [self setBackgroundImage:selectedImage forState:UIControlStateHighlighted];
 }
 
+
+- (UIImage *) createImageWithColor: (UIColor *) color
+{
+    CGRect rect=CGRectMake(0.0f, 0.0f, 1.0f, 1.0f);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, rect);
+    
+    UIImage *theImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return theImage;
+}
 
 /*
 // Only override drawRect: if you perform custom drawing.
