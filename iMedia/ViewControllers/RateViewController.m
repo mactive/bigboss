@@ -1,12 +1,12 @@
 //
-//  StarViewController.m
+//  RateViewController.m
 //  iMedia
 //
 //  Created by meng qian on 12-11-6.
 //  Copyright (c) 2012年 Li Xiaosi. All rights reserved.
 //
 
-#import "StarViewController.h"
+#import "RateViewController.h"
 #import "MBProgressHUD.h"
 #import <QuartzCore/QuartzCore.h>
 #import "AppDelegate.h"
@@ -14,7 +14,7 @@
 #import "ServerDataTransformer.h"
 #import "AppNetworkAPIClient.h"
 
-@interface StarViewController ()<MBProgressHUDDelegate>
+@interface RateViewController ()<MBProgressHUDDelegate>
 {
     MBProgressHUD *HUD;
 }
@@ -33,7 +33,7 @@
 
 @end
 
-@implementation StarViewController
+@implementation RateViewController
 
 @synthesize welcomeLabel;
 @synthesize starWordArray;

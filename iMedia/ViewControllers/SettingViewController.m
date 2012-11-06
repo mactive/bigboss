@@ -12,7 +12,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "Me.h" 
 #import "AppDelegate.h"
-#import "StarViewController.h"
+#import "RateViewController.h"
 
 @interface SettingViewController () 
 
@@ -172,14 +172,13 @@
     if (indexPath.row == 0 && indexPath.section == 0 ) {
         ProfileMeController *profileMeController = [[ProfileMeController alloc] initWithNibName:nil bundle:nil];
         profileMeController.managedObjectContext = self.managedObjectContext;
-        //        [profileMeController  :YES];
         
         [self.navigationController pushViewController:profileMeController animated:YES];
     }
     
     if (indexPath.row == 0 && indexPath.section == 2 ) {
-        StarViewController *starViewController = [[StarViewController alloc]initWithNibName:nil bundle:nil];
-        [self.navigationController presentModalViewController:starViewController animated:YES];
+        RateViewController *rateViewController = [[RateViewController alloc]initWithNibName:nil bundle:nil];
+        [self.navigationController presentModalViewController:rateViewController animated:YES];
     }
 }
 

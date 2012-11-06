@@ -1,5 +1,5 @@
 //
-//  StarViewController.h
+//  RateViewController.h
 //  iMedia
 //
 //  Created by meng qian on 12-11-6.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface StarViewController : UIViewController
+@interface RateViewController : UIViewController
 
 @property(strong, nonatomic) NSString *conversionKey;
 
