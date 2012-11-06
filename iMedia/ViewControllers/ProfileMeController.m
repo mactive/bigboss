@@ -547,10 +547,10 @@
 {
     if (actionSheet == self.photoActionsheet) {
         if (buttonIndex == 0) {
-            self.isEditing = YES;
+            [self setEditMode]; 
             [self takePhotoFromLibaray];  
         }else if (buttonIndex == 1) {
-            self.isEditing = YES;
+            [self setEditMode]; 
             [self takePhotoFromCamera];  
         }
     }
