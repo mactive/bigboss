@@ -374,7 +374,7 @@ NSInteger SortIndex(id char1, id char2, void* context)
         
     } else if ([identity isKindOfClass:[Channel class]]) {
         Channel *channel = (Channel *)identity;
-        _nameString = channel.node;
+        _nameString = channel.displayName;
         signature = channel.selfIntroduction;
     } else if ([identity isKindOfClass:[Me class]]) {
         Me *me = (Me *)identity;
