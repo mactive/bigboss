@@ -220,7 +220,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [self.loginButton addTarget:self action:@selector(loginAction:) forControlEvents:UIControlEventTouchUpInside];
     
     // set thekeyboard type and color and first letter
-    self.usernameField.keyboardType = UIKeyboardTypeURL;
+    self.usernameField.keyboardType = UIKeyboardTypeEmailAddress;
     self.usernameField.returnKeyType = UIReturnKeyNext;
     self.usernameField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     self.usernameField.autocorrectionType = UITextAutocorrectionTypeNo;

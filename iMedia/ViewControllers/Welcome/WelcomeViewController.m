@@ -32,7 +32,7 @@
     if (self) {
         // Custom initialization
         self.me = [self appDelegate].me;
-        
+        self.navigationItem.rightBarButtonItem = nil;
     }
     return self;
 }
