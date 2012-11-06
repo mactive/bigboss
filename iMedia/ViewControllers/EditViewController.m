@@ -99,7 +99,7 @@
     [self.doneButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
     [self.doneButton.titleLabel setTextAlignment:UITextAlignmentCenter];
     [self.doneButton setTitle:T(@"完成") forState:UIControlStateNormal];
-    [self.doneButton setBackgroundImage:[UIImage imageNamed:@"button_arrow_bg.png"] forState:UIControlStateNormal];
+    [self.doneButton setBackgroundImage:[UIImage imageNamed:@"button_bg.png"] forState:UIControlStateNormal];
     [self.doneButton addTarget:self action:@selector(doneAction) forControlEvents:UIControlEventTouchUpInside];
 //    [self.view addSubview:self.doneButton];
     

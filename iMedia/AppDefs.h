@@ -70,7 +70,8 @@ typedef enum _MessageType
 {
     MessageTypeChat = 1,
     MessageTypePublish = 2,
-    MessageTypeNone = 3
+    MessageTypeStar = 3,
+    MessageTypeNone = 4
 } MessageType;
 
 typedef enum _IdentityType

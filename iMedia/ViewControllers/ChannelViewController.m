@@ -67,7 +67,7 @@
     [self.confirmButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
     [self.confirmButton.titleLabel setTextAlignment:UITextAlignmentCenter];
     [self.confirmButton setTitle:T(@"加为好友") forState:UIControlStateNormal];
-    [self.confirmButton setBackgroundImage:[UIImage imageNamed:@"button_arrow_bg.png"] forState:UIControlStateNormal];
+    [self.confirmButton setBackgroundImage:[UIImage imageNamed:@"button_bg.png"] forState:UIControlStateNormal];
     
     
     self.cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 250, 275, 40)];

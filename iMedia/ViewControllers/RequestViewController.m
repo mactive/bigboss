@@ -101,7 +101,7 @@
     [self.confirmButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
     [self.confirmButton.titleLabel setTextAlignment:UITextAlignmentCenter];
     [self.confirmButton setTitle:T(@"加为好友") forState:UIControlStateNormal];
-    [self.confirmButton setBackgroundImage:[UIImage imageNamed:@"button_bg.png"] forState:UIControlStateNormal];
+    [self.confirmButton setBackgroundImage:[UIImage imageNamed:@"button_add_bg.png"] forState:UIControlStateNormal];
     [self.confirmButton addTarget:self action:@selector(confirmRequest) forControlEvents:UIControlEventTouchUpInside];
     
     

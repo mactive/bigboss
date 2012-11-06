@@ -105,6 +105,9 @@
 		2692531416350580000D7AFB /* sns_icon_weibo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2692530E16350580000D7AFB /* sns_icon_weibo@2x.png */; };
 		2692531F16353F6E000D7AFB /* pinyin.c in Sources */ = {isa = PBXBuildFile; fileRef = 2692531B16353F6E000D7AFB /* pinyin.c */; };
 		2692532016353F6E000D7AFB /* POAPinyin.m in Sources */ = {isa = PBXBuildFile; fileRef = 2692531E16353F6E000D7AFB /* POAPinyin.m */; };
+		26A5877416490CF900009968 /* star_grey@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26A5877216490CF900009968 /* star_grey@2x.png */; };
+		26A5877516490CF900009968 /* star@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26A5877316490CF900009968 /* star@2x.png */; };
+		26A587781649199600009968 /* RateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 26A587771649199600009968 /* RateViewController.m */; };
 		26C76E5A162EB01200298865 /* barbutton_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26C76E59162EB01200298865 /* barbutton_bg@2x.png */; };
 		26C76E65162EB4F400298865 /* UINavigationBar+Background.m in Sources */ = {isa = PBXBuildFile; fileRef = 26C76E64162EB4F400298865 /* UINavigationBar+Background.m */; };
 		26F3BF1916428DDB00E2899C /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F3BF1816428DDB00E2899C /* MBProgressHUD.m */; };
@@ -463,6 +466,10 @@
 		2692531C16353F6E000D7AFB /* pinyin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pinyin.h; path = POAPinyin/pinyin.h; sourceTree = "<group>"; };
 		2692531D16353F6E000D7AFB /* POAPinyin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = POAPinyin.h; path = POAPinyin/POAPinyin.h; sourceTree = "<group>"; };
 		2692531E16353F6E000D7AFB /* POAPinyin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = POAPinyin.m; path = POAPinyin/POAPinyin.m; sourceTree = "<group>"; };
+		26A5877216490CF900009968 /* star_grey@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "star_grey@2x.png"; path = "Resources/star_grey@2x.png"; sourceTree = "<group>"; };
+		26A5877316490CF900009968 /* star@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "star@2x.png"; path = "Resources/star@2x.png"; sourceTree = "<group>"; };
+		26A587761649199600009968 /* RateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RateViewController.h; path = ViewControllers/RateViewController.h; sourceTree = "<group>"; };
+		26A587771649199600009968 /* RateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RateViewController.m; path = ViewControllers/RateViewController.m; sourceTree = "<group>"; };
 		26C76E59162EB01200298865 /* barbutton_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "barbutton_bg@2x.png"; path = "Resources/barbutton_bg@2x.png"; sourceTree = "<group>"; };
 		26C76E63162EB4F400298865 /* UINavigationBar+Background.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UINavigationBar+Background.h"; path = "ViewControllers/ViewCategory/UINavigationBar+Background.h"; sourceTree = "<group>"; };
 		26C76E64162EB4F400298865 /* UINavigationBar+Background.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UINavigationBar+Background.m"; path = "ViewControllers/ViewCategory/UINavigationBar+Background.m"; sourceTree = "<group>"; };
@@ -918,6 +925,8 @@
 			isa = PBXGroup;
 			children = (
 				266958311647DEA300A7106C /* login_intro_oyeah@2x.png */,
+				26A5877216490CF900009968 /* star_grey@2x.png */,
+				26A5877316490CF900009968 /* star@2x.png */,
 				267B5E341648E40200D56910 /* gender_male@2x.png */,
 				267B5E351648E40200D56910 /* gender_female@2x.png */,
 				264E35841648BB6400ACA1C1 /* icon@512.png */,
@@ -1776,6 +1785,8 @@
 				56615620163E9A1900199DB4 /* FriendRequestListViewController.m */,
 				267F508C1640DAAC00B42D21 /* EditViewController.h */,
 				267F508D1640DAAD00B42D21 /* EditViewController.m */,
+				26A587761649199600009968 /* RateViewController.h */,
+				26A587771649199600009968 /* RateViewController.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -2091,6 +2102,8 @@
 				264E358D1648BB8100ACA1C1 /* Icon@2x.png in Resources */,
 				267B5E361648E40200D56910 /* gender_male@2x.png in Resources */,
 				267B5E371648E40200D56910 /* gender_female@2x.png in Resources */,
+				26A5877416490CF900009968 /* star_grey@2x.png in Resources */,
+				26A5877516490CF900009968 /* star@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2287,6 +2300,7 @@
 				56B834FD1643B50B00941C1C /* DataTransformer.m in Sources */,
 				0450A5ED164649080002BA54 /* LoginSettingViewController.m in Sources */,
 				2669583B164803AC00A7106C /* MetroButton.m in Sources */,
+				26A587781649199600009968 /* RateViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

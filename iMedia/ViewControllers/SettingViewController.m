@@ -12,6 +12,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "Me.h" 
 #import "AppDelegate.h"
+#import "RateViewController.h"
 
 @interface SettingViewController () 
 
@@ -171,14 +172,13 @@
     if (indexPath.row == 0 && indexPath.section == 0 ) {
         ProfileMeController *profileMeController = [[ProfileMeController alloc] initWithNibName:nil bundle:nil];
         profileMeController.managedObjectContext = self.managedObjectContext;
-        //        [profileMeController  :YES];
         
         [self.navigationController pushViewController:profileMeController animated:YES];
     }
     
-    if (indexPath.row == 4 && indexPath.section == 0 ) {
-        RequestViewController *requestViewController = [[RequestViewController alloc] initWithNibName:nil bundle:nil];        
-        [self.navigationController pushViewController:requestViewController animated:YES];
+    if (indexPath.row == 0 && indexPath.section == 2 ) {
+        RateViewController *rateViewController = [[RateViewController alloc]initWithNibName:nil bundle:nil];
+        [self.navigationController presentModalViewController:rateViewController animated:YES];
     }
 }
 
