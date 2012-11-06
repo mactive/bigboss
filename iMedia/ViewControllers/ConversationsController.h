@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "ChatDetailController.h"
 @class User;
 
 @interface ConversationsController : UITableViewController <NSFetchedResultsControllerDelegate>
@@ -15,6 +15,7 @@
     NSFetchedResultsController *_fetchedResultsController;
 }
 
+@property (nonatomic, strong) ChatDetailController *chatDetailController;
 @property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic) int unreadMessageCount;

@@ -65,7 +65,7 @@
 
     if ([self.me.gender isEqualToString:@""] || [self.me.displayName isEqualToString:@""] || self.me.gender == nil || self.me.displayName == nil ) {
         LoginSettingViewController *settingViewController = [[LoginSettingViewController alloc]initWithNibName:nil bundle:nil];
-        [self.navigationController presentModalViewController:settingViewController animated:YES];
+        [self.navigationController presentModalViewController:settingViewController animated:NO];
     }
     
     [self.welcomeButton setTitle:T(@"春水堂") forState:UIControlStateNormal];

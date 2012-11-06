@@ -69,6 +69,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize editingIndexPath;
 @synthesize unreadMessageCount;
+@synthesize chatDetailController = _detailController;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {

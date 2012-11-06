@@ -12,6 +12,9 @@
 #import "NSBubbleData.h"
 #import "UIBubbleHeaderTableViewCell.h"
 #import "UIBubbleTypingTableViewCell.h"
+#import "RateViewController.h"
+#import "AppDelegate.h"
+#import "ConversationsController.h"
 
 @interface UIBubbleTableView ()
 
@@ -254,6 +257,25 @@
     
     return cell;
 }
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // Standard bubble
+    NSBubbleData *data = [[self.bubbleSection objectAtIndex:indexPath.section] objectAtIndex:indexPath.row - 1];
+    
+    if (data.type == BubbleTypeRateview) {
+        RateViewController *rateViewController = [[RateViewController alloc]initWithNibName:nil bundle:nil];
+        rateViewController.conversionKey = data.content;
+        [[self appDelegate].conversationController.chatDetailController.navigationController presentModalViewController:rateViewController animated:YES];
+    }
+}
+
+
+- (AppDelegate *)appDelegate
+{
+	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
+}
+
 
 - (BOOL)scrollViewDidScroll:(UIScrollView *)scrollView{
     return true;

@@ -23,6 +23,8 @@
 			</array>
 		</dict>
 	</dict>
+	<key>Icon already includes gloss effects</key>
+	<string>YES</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.wingedstone.${PRODUCT_NAME:rfc1034identifier}</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -55,7 +57,7 @@
 		<string>UINewsstandBindingTypeMagazine</string>
 	</dict>
 	<key>UIPrerenderedIcon</key>
-	<true/>
+	<false/>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>

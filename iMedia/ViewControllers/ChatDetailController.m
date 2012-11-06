@@ -388,7 +388,7 @@
         [bubbleData addObject:[NSBubbleData dataWithWeb:msg.text date:msg.sentDate type:BubbleTypeWebview]];
         bubbleTable.showAvatars = NO;
     } else if (msg.type == [NSNumber numberWithInt:MessageTypeStar]) {
-        [bubbleData addObject:[NSBubbleData dataWithWeb:msg.text date:msg.sentDate type:BubbleTypeStarview]];
+        [bubbleData addObject:[NSBubbleData dataWithWeb:msg.text date:msg.sentDate type:BubbleTypeRateview]];
         bubbleTable.showAvatars = NO;
     }
 
@@ -397,5 +397,10 @@
 - (void)newMessageReceived:(NSNotification *)notification
 {
     [self refreshBubbleData];
+}
+
+- (void)rateAction:(id)sender
+{
+    
 }
 @end
