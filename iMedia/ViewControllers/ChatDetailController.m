@@ -372,7 +372,11 @@
     } else if (msg.type == [NSNumber numberWithInt:MessageTypePublish]) {
         [bubbleData addObject:[NSBubbleData dataWithWeb:msg.text date:msg.sentDate type:BubbleTypeWebview]];
         bubbleTable.showAvatars = NO;
+    } else if (msg.type == [NSNumber numberWithInt:MessageTypeStar]) {
+        [bubbleData addObject:[NSBubbleData dataWithWeb:msg.text date:msg.sentDate type:BubbleTypeStarview]];
+        bubbleTable.showAvatars = NO;
     }
+
 }
 
 - (void)newMessageReceived:(NSNotification *)notification
