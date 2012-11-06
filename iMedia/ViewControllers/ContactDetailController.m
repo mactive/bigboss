@@ -122,9 +122,13 @@
         for (int i = 0; i< [albumArray count]; i++) {
             albumButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
             ImageRemote* remote = [albumArray objectAtIndex:i];
-            UIImageView *view = [[UIImageView alloc] init];
-            [view setImageWithURL:[NSURL URLWithString:remote.imageThumbnailURL] placeholderImage:nil];
-            [albumButton setImage:view.image forState:UIControlStateNormal];
+            AFImageRequestOperation *operation = [AFImageRequestOperation imageRequestOperationWithRequest:[[NSURLRequest alloc] initWithURL:[NSURL URLWithString:remote.imageThumbnailURL]] imageProcessingBlock:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                [albumButton setImage:image forState:UIControlStateNormal];
+            } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+                [albumButton setTitle:@"下载失败" forState:UIControlStateNormal];
+            }];            
+            [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:operation];
+
             [albumButton setFrame:CGRectMake(VIEW_ALBUM_OFFSET * (i%4*2 + 1) + VIEW_ALBUM_WIDTH * (i%4), VIEW_ALBUM_OFFSET * (floor(i/4)*2+1) + VIEW_ALBUM_WIDTH * floor(i/4), VIEW_ALBUM_WIDTH, VIEW_ALBUM_WIDTH)];
             [albumButton.layer setMasksToBounds:YES];
             [albumButton.layer setCornerRadius:3.0];
@@ -561,8 +565,6 @@
     HUD.labelText = T(@"正在发送");
     
     [HUD hide:YES afterDelay:2];
-
-    
     
     [[XMPPNetworkCenter sharedClient] removeBuddy:self.user.ePostalID withCallbackBlock:^(NSError *error) {
 

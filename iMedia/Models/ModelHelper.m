@@ -157,6 +157,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     user.thumbnailURL = [ServerDataTransformer getThumbnailFromServerJSON:json];
     user.cell = [ServerDataTransformer getCellFromServerJSON:json];
     user.name = [ServerDataTransformer getNicknameFromServerJSON:json];
+    user.type = [NSNumber numberWithInt:IdentityTypeMe];
     
     NSMutableDictionary *imageURLDict = [[NSMutableDictionary alloc] initWithCapacity:8];
     for (int i = 1; i <=8; i++) {
@@ -261,6 +262,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             imageRemote.sequence = 0;
         }
     }
+    user.type = [NSNumber numberWithInt:IdentityTypeUser];
 }
 
 
@@ -287,7 +289,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         image.sequence = 0;
         [newUser addImagesObject:image];
     }
-    
+    newUser.type = [NSNumber numberWithInt:IdentityTypeUser];
     return newUser;
 }
 

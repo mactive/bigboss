@@ -557,7 +557,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
         DDLogError(@"user have to exist! ERROR NEED CHECK: %@", user);
     } else if (thisUser.state.intValue == IdentityStateActive || thisUser.state.intValue == IdentityStatePendingRemoveFriend) {
         thisUser.state = [NSNumber numberWithInt:IdentityStateInactive];
-        MOCSave(_managedObjectContext);
+//        MOCSave(_managedObjectContext);
         [[self appDelegate].contactListController contentChanged];
     }
 }
