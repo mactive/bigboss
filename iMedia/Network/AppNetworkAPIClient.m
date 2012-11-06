@@ -444,6 +444,41 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     }];
 }
 
+- (void)reportID:(NSString *)hisGUID myID:(NSString *)myGUID type:(NSString *)type description:(NSString *)desc otherInfo:(NSString *)otherInfo withBlock:(void (^)(id, NSError *))block
+{
+    NSString* csrfToken = [[NSUserDefaults standardUserDefaults] valueForKey:@"csrfmiddlewaretoken"];
+    
+    NSMutableDictionary *postDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                     csrfToken, @"csrfmiddlewaretoken",
+                                     @"7", @"op",
+                                     hisGUID, @"guid",
+                                     myGUID, @"myguid",
+                                     type, @"type",
+                                     desc, @"note",
+                                     otherInfo, @"other_info",
+                                     nil];
+    
+    [[AppNetworkAPIClient sharedClient] postPath:POST_DATA_PATH parameters:postDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        DDLogInfo(@"upload rating received response: %@", responseObject);
+        NSString* status = [responseObject valueForKey:@"status"];
+        if ([status isEqualToString:@"success"]) {
+            if (block ) {
+                block(responseObject, nil);
+            }
+        }
+        else {
+            if (block) {
+                block (nil, nil);
+            }
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        DDLogError(@"upload rating failed: %@", error);
+        if (block) {
+            block(nil, error);
+        }
+    }];
+}
+
 - (BOOL)isConnectable
 {
     if (self.kNetworkStatus.intValue == AFNetworkReachabilityStatusReachableViaWiFi || self.kNetworkStatus.intValue == AFNetworkReachabilityStatusReachableViaWWAN) {

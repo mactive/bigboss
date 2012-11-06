@@ -47,6 +47,8 @@ extern NSString *const kXMPPmyUsername;
 
 - (void)uploadRating:(NSString *)rateKey rate:(NSString *)rating andComment:(NSString *)comment withBlock:(void (^)(id responseObject, NSError *error))block;
 
+- (void)reportID:(NSString *)hisGUID myID:(NSString *)myGUID type:(NSString *)type description:(NSString *)desc otherInfo:(NSString *)otherInfo withBlock:(void (^)(id responseObject, NSError *error))block;
+
 - (BOOL)isConnectable;
 
 @end
