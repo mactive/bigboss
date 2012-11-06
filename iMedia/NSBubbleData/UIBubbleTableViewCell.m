@@ -20,7 +20,7 @@
 @property (nonatomic, strong) UIWebView *webView;
 @property (nonatomic, strong) UIView *backWebView;
 @property (nonatomic, strong) UIButton *webViewOverlayButton;
-@property (nonatomic, strong) UIButton *rateButton;
+@property (nonatomic, strong) UIImageView *rateView;
 
 - (void) setupInternalData;
 
@@ -36,7 +36,7 @@
 @synthesize webView =_webView;
 @synthesize webViewOverlayButton;
 @synthesize backWebView;
-@synthesize rateButton;
+@synthesize rateView;
 
 - (void)setFrame:(CGRect)frame
 {
@@ -50,8 +50,7 @@
     id obj = [super init];
     
     self.webViewOverlayButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.rateButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.rateButton setFrame:CGRectMake(80, 0, 160, 41)];
+    self.rateView = [[UIImageView alloc]initWithFrame:CGRectMake(80, 10, 160, 41)];
     self.backWebView = [[UIView alloc] initWithFrame:CGRectMake(10, 0, 300,1)];
     self.webView = [[UIWebView alloc]initWithFrame:CGRectMake(12.5, 12.5, 275, 1)];
     
@@ -159,12 +158,15 @@
         [self.bubbleImage removeFromSuperview];
         
     }else if(type == BubbleTypeRateview){
-        [self.rateButton setImage:[UIImage imageNamed:@"welcome_btn.png"] forState:UIControlStateNormal];
-        [self.rateButton setTitle:T(@"评价客服") forState:UIControlStateNormal];
-        [self.rateButton.titleLabel setTextAlignment:NSTextAlignmentCenter];
-        [self.rateButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [self.rateButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
-        [self.contentView addSubview:self.rateButton];
+        [self.rateView setImage:[UIImage imageNamed:@"welcome_btn.png"]];
+        UILabel *rateLabel = [[UILabel alloc]initWithFrame:rateView.bounds];
+        
+        [rateLabel setText:T(@"评价客服")];
+        [rateLabel setTextAlignment:NSTextAlignmentCenter];
+        [rateLabel setTextColor:[UIColor whiteColor]];
+        [rateLabel setBackgroundColor:[UIColor clearColor]];
+        [self.rateView addSubview:rateLabel];
+        [self.contentView addSubview:self.rateView];
         
         [self.customView removeFromSuperview];
         [self.avatarImage removeFromSuperview];

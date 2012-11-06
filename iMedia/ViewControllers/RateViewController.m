@@ -29,6 +29,7 @@
 @property(strong, nonatomic)UILabel *noticeLabel;
 @property(strong, nonatomic)UIButton *sendButton;
 @property(strong, nonatomic)UIButton *cancelButton;
+@property(strong, nonatomic)NSString *rateString;
 
 
 @end
@@ -47,6 +48,7 @@
 @synthesize sendButton;
 @synthesize cancelButton;
 @synthesize conversionKey;
+@synthesize rateString;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -177,7 +179,7 @@
     }
     
     self.noticeLabel.text = [self.starWordArray objectAtIndex:sender.tag];
-
+    self.rateString = [NSString stringWithFormat:@"%i",(sender.tag+1)];
 }
 
 - (void)sendButtonPushed:(id)sender
@@ -186,16 +188,28 @@
     [self.view addSubview:HUD];
     HUD.labelText = T(@"发送中");
     
-    [HUD showAnimated:YES whileExecutingBlock:^{
-        sleep(2);
-        [HUD hide:YES];
-    } completionBlock:^{
-        HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        HUD.mode = MBProgressHUDModeText;
-        HUD.labelText = T(@"评价成功");
-        [HUD hide:YES afterDelay:1];
-    }];
+    [[AppNetworkAPIClient sharedClient] uploadRating:self.conversionKey rate:self.rateString andComment:nil withBlock:^(id responseObject, NSError *error) {
+        
+        if (error == nil) {
+            [HUD hide:YES];
+            
+            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            HUD.mode = MBProgressHUDModeText;
+            HUD.labelText = T(@"评价成功");
+            sleep(2);
+            [HUD hide:YES];
+            [self dismissModalViewControllerAnimated:YES];
+        } else {
+            [HUD hide:YES];
 
+            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            HUD.mode = MBProgressHUDModeText;
+            HUD.labelText =  T(@"评价失败,请重试"); //[responseObject objectForKey:@"status"];
+            [HUD hide:YES afterDelay:1];
+        }
+        
+        
+    }];
 }
 
 - (void)cancelButtonPushed:(id)sender
