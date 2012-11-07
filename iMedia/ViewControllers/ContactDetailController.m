@@ -21,6 +21,7 @@
 #import "MBProgressHUD.h"
 #import "AFImageRequestOperation.h"
 #import "AppNetworkAPIClient.h"
+#import "NSDate+timesince.h"
 
 @interface ContactDetailController ()<MBProgressHUDDelegate>
 {
@@ -242,7 +243,8 @@
 	timeLabel.textAlignment = UITextAlignmentLeft;
 	timeLabel.textColor = RGBCOLOR(140, 140, 140);
     timeLabel.backgroundColor = [UIColor clearColor];
-    timeLabel.text  = [self getLastGPSUpdatedTimeStr];
+    NSDate *tmp = [ServerDataTransformer getLastGPSUpdatedFromServerJSON:self.jsonData];
+    timeLabel.text  = [tmp timesince];
     [timeLabel sizeToFit];
     
     // Create a label icon for the time.
@@ -477,12 +479,12 @@
     // Now set content. Either user or jsonData must have value
     self.title = [self getNickname];
     if (self.user == nil) {
-        [self.sendMsgButton setTitle:T(@"Add") forState:UIControlStateNormal];
+        [self.sendMsgButton setTitle:T(@"添加") forState:UIControlStateNormal];
         [self.sendMsgButton setBackgroundImage:[UIImage imageNamed:@"profile_tabbar_btn2.png"] forState:UIControlStateNormal];
         [self.sendMsgButton addTarget:self action:@selector(addFriendButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
         
     } else {
-        [self.sendMsgButton setTitle:T(@"Send") forState:UIControlStateNormal];
+        [self.sendMsgButton setTitle:T(@"发送") forState:UIControlStateNormal];
         [self.sendMsgButton setBackgroundImage:[UIImage imageNamed:@"profile_tabbar_btn1.png"] forState:UIControlStateNormal];
         [self.sendMsgButton addTarget:self action:@selector(sendMsgButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
         
@@ -493,7 +495,7 @@
         [self.deleteUserButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
         [self.deleteUserButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 18, 0, 0)];
         [self.deleteUserButton setBackgroundImage:[UIImage imageNamed:@"profile_tabbar_btn4.png"] forState:UIControlStateNormal];
-        [self.deleteUserButton setTitle:T(@"Delete") forState:UIControlStateNormal];
+        [self.deleteUserButton setTitle:T(@"删除") forState:UIControlStateNormal];
         [self.deleteUserButton addTarget:self action:@selector(deleteUserButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
         [self.actionView addSubview:self.deleteUserButton];
     }

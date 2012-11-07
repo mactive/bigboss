@@ -12,5 +12,6 @@
 
 -(NSString *)timesince;
 -(NSString *)timesinceWithDepth:(int)depth;
+-(NSString *)timesinceWithHuman;
 
 @end

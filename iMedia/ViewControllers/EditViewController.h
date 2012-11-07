@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "PassValueDelegate.h"
 
-@interface EditViewController : UIViewController<UITextViewDelegate,UIPickerViewDataSource,UIPickerViewDelegate>
+@interface EditViewController : UIViewController<UITextViewDelegate,UITextFieldDelegate,UIPickerViewDataSource,UIPickerViewDelegate>
 {
     
 }

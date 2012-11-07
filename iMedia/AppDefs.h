@@ -33,6 +33,17 @@
 #define TEMPLATE_CELL_HEIGHT 50
 
 
+// PROFILE ME EDIT INDEX
+#define NICKNAME_ITEM_INDEX     0
+#define SEX_ITEM_INDEX          1
+#define BIRTH_ITEM_INDEX        2
+#define SIGNATURE_ITEM_INDEX    3
+#define CELL_ITEM_INDEX         4
+#define CAREER_ITEM_INDEX       5
+#define HOMETOWN_ITEM_INDEX     6
+#define SELF_INTRO_ITEM_INDEX   7
+#define JPEG_QUALITY 0.6
+
 
 
 #define UIKeyboardNotificationsObserve() \
