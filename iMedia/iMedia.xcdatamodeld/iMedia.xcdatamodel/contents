@@ -22,7 +22,7 @@
         <attribute name="requestDate" attributeType="Date" syncable="YES"/>
         <attribute name="requesterEPostalID" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="state" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
-        <attribute name="userJSONData" optional="YES" attributeType="Transformable" valueTransformerName="JSONToDataTransformer" syncable="YES"/>
+        <attribute name="userJSONData" optional="YES" attributeType="String" valueTransformerName="JSONToDataTransformer" syncable="YES"/>
     </entity>
     <entity name="Identity" representedClassName="Identity" isAbstract="YES" syncable="YES">
         <attribute name="avatarURL" optional="YES" attributeType="String" syncable="YES"/>

@@ -298,7 +298,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     FriendRequest *newFriendRequest = [NSEntityDescription insertNewObjectForEntityForName:@"FriendRequest" inManagedObjectContext:self.managedObjectContext];
     newFriendRequest.requesterEPostalID = jid;
     newFriendRequest.requestDate = [NSDate date];
-    newFriendRequest.userJSONData = jsonData;
+    newFriendRequest.userJSONData = [jsonData JSONRepresentation];
     newFriendRequest.state = FriendRequestUnprocessed;
     
     return newFriendRequest;

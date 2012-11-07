@@ -18,29 +18,3 @@
 @dynamic requesterEPostalID;
 
 @end
-
-@implementation JSONToDataTransformer
-
-
-+ (BOOL)allowsReverseTransformation {
-	return YES;
-}
-
-+ (Class)transformedValueClass {
-	return [NSString class];
-}
-
-
-- (id)transformedValue:(id)value {
-	NSString *data = [value JSONRepresentation];
-	return data;
-}
-
-
-- (id)reverseTransformedValue:(id)value {
-	id  obj = [value JSONValue];
-	return obj;
-}
-
-@end
-
