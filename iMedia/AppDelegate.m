@@ -321,5 +321,28 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - disableLeftBarButtonItemOnNavbar
+////////////////////////////////////////////////////////////////////////////////////
+- (void) disableLeftBarButtonItemOnNavbar:(BOOL)disable
+{
+    static UILabel *l = nil;
+    
+    if (disable) {
+        if (l != nil)
+            return;
+        l = [[UILabel alloc] initWithFrame:CGRectMake(0, 20, 160, 44)];
+        l.backgroundColor = [UIColor redColor];
+        l.userInteractionEnabled = YES;
+        [self.window addSubview:l];
+    }
+    else {
+        if (l == nil)
+            return;
+        [l removeFromSuperview];
+        l = nil;
+    }
+}
+
 
 @end

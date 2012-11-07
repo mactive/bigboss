@@ -77,7 +77,10 @@
     [self.view addSubview:self.welcomeButton];
     [self.view addSubview:self.welcomeTitleView];
 	// Do any additional setup after loading the view.
+    
+    [[self appDelegate] disableLeftBarButtonItemOnNavbar:YES];
 }
+
 
 ////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - init the editing view
