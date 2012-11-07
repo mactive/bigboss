@@ -225,25 +225,35 @@
     }
     
     UIImageView* sexView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:bgImgStr]];
-    [sexView setFrame:CGRectMake(0, 0, 40, 15)];
+    [sexView setFrame:CGRectMake(0, 0, 50, 20)];
 
     
-    UILabel* sexLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 0, 15, 15)];
+    UILabel* sexLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, 20, 20)];
     [sexLabel setBackgroundColor:[UIColor clearColor]];
     sexLabel.text  = [self getAgeStr];
-    [sexLabel setFont:[UIFont systemFontOfSize:12.0]];
+    [sexLabel setFont:[UIFont systemFontOfSize:14.0]];
     [sexLabel setTextColor:[UIColor whiteColor]];
     [sexView addSubview:sexLabel];
     
     // horoscope
     UILabel* horoscopeLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 0, 100, 15)];
     [horoscopeLabel setBackgroundColor:[UIColor clearColor]];
-    horoscopeLabel.text = [self.user.birthdate horoscope];
     [horoscopeLabel setFont:[UIFont boldSystemFontOfSize:14.0]];
     [horoscopeLabel setShadowColor:[UIColor whiteColor]];
     [horoscopeLabel setShadowOffset:CGSizeMake(0, 1)];
     [horoscopeLabel setTextColor:RGBCOLOR(97, 97, 97)];
     [self.statusView addSubview:horoscopeLabel];
+    
+    
+    if (self.user == nil) {
+        NSDateFormatter * dateFormater = [[NSDateFormatter alloc]init];
+        [dateFormater setDateFormat:@"yyyy-MM-dd"];
+        NSDate *_date = [dateFormater dateFromString:[self.jsonData objectForKey:@"birthdate"]];
+        horoscopeLabel.text = [_date horoscope];
+    }else {
+        horoscopeLabel.text = [self.user.birthdate horoscope];
+    }
+    
     
     
     // Create a label icon for the time.
@@ -260,13 +270,13 @@
         if (tmp == nil) {
             timeLabel.text = T(@"无时间");
         } else {
-            timeLabel.text = [tmp timesince];
+            timeLabel.text = [tmp timesinceAgo];
         }
     }else {
         if (self.user.lastGPSUpdated == nil) {
             timeLabel.text = T(@"无时间");
         } else {
-            timeLabel.text = [self.user.lastGPSUpdated timesince];
+            timeLabel.text = [self.user.lastGPSUpdated timesinceAgo];
         }
     }
     

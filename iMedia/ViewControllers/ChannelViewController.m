@@ -61,7 +61,7 @@
     [self.requestView.layer setCornerRadius:10.0];
         
 
-    self.confirmButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 200, 275, 40)];
+    self.confirmButton = [[UIButton alloc] initWithFrame:CGRectMake(12.5, 200, 275, 40)];
     [self.confirmButton.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
     [self.confirmButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [self.confirmButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
@@ -69,7 +69,7 @@
     [self.confirmButton setBackgroundImage:[UIImage imageNamed:@"button_bg.png"] forState:UIControlStateNormal];
     
     
-    self.cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 250, 275, 40)];
+    self.cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(12.5, 250, 275, 40)];
     [self.cancelButton.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
     [self.cancelButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
     [self.cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
@@ -194,9 +194,15 @@
             [HUD hide:YES];
         } completionBlock:^{
             HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            HUD.mode = MBProgressHUDModeText;
+            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
+            HUD.mode = MBProgressHUDModeCustomView;
             HUD.labelText = T(@"订阅成功");
-            [HUD hide:YES afterDelay:1];
+            [HUD hide:YES afterDelay:2];
+            
+            [self.confirmButton setTitle:T(@"退订此频道") forState:UIControlStateNormal];
+            [self.confirmButton removeTarget:self action:@selector(subscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
+            [self.confirmButton addTarget:self action:@selector(unSubscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
+
         }];
 
     }];
@@ -224,7 +230,8 @@
             [HUD hide:YES];
         } completionBlock:^{
             HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            HUD.mode = MBProgressHUDModeText;
+            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
+            HUD.mode = MBProgressHUDModeCustomView;
             HUD.labelText = T(@"退订成功");
             [HUD hide:YES afterDelay:1];
             [self.confirmButton setTitle:T(@"订阅此频道") forState:UIControlStateNormal];

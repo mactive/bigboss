@@ -734,12 +734,12 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     }
     
     self.sexView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:bgImgStr]];
-    [self.sexView setFrame:CGRectMake(0, 0, 40, 15)];
+    [self.sexView setFrame:CGRectMake(0, 0, 50, 20)];
     
     
-    self.sexLabel = [[UILabel alloc]initWithFrame:CGRectMake(18, 0, 15, 15)];
+    self.sexLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, 20, 20)];
     [self.sexLabel setBackgroundColor:[UIColor clearColor]];
-    [self.sexLabel setFont:[UIFont systemFontOfSize:12.0]];
+    [self.sexLabel setFont:[UIFont systemFontOfSize:14.0]];
     [self.sexLabel setTextColor:[UIColor whiteColor]];
     [self.sexView addSubview:self.sexLabel];
 

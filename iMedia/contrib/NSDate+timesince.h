@@ -11,7 +11,8 @@
 @interface NSDate (timesince)
 
 -(NSString *)timesince;
-//-(NSString *)timesinceWithDepth:(int)depth;
+-(NSString *)timesinceAgo;
+-(NSString *)timesinceWithDepth:(int)depth;
 -(NSString *)timesinceWithHuman;
 - (NSString *)horoscope;
 

@@ -340,7 +340,6 @@
 {
     // Autocomplete text before sending. @hack
     [self.textView resignFirstResponder];
-    [self.textView becomeFirstResponder];
     
     Message *message = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:managedObjectContext];
     

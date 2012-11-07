@@ -184,8 +184,8 @@
 
 - (void)sendButtonPushed:(id)sender
 {
-    HUD = [[MBProgressHUD alloc] initWithView:self.view];
-    [self.view addSubview:HUD];
+    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    HUD.delegate = self;
     HUD.labelText = T(@"发送中");
     
     [[AppNetworkAPIClient sharedClient] uploadRating:self.conversionKey rate:self.rateString andComment:nil withBlock:^(id responseObject, NSError *error) {

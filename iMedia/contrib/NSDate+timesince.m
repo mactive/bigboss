@@ -22,7 +22,11 @@
 -(NSString *)timesince 
 {
     return [self timesinceWithHuman];
-//	return [self timesinceWithDepth:kDepth];
+}
+
+-(NSString *)timesinceAgo
+{
+    return [self timesinceWithDepth:kDepth];
 }
 #define A_DAY 86400
 #define A_WEEK 604800
@@ -81,7 +85,7 @@
 {
     NSString * cConstellation = @"";
     NSArray * Constellation = [[NSArray alloc] initWithObjects:
-                               T(@"牡羊座"),T(@"金牛座"),T(@"双子座"),T(@"巨蟹座"),T(@"狮子座"),
+                               T(@"白羊座"),T(@"金牛座"),T(@"双子座"),T(@"巨蟹座"),T(@"狮子座"),
                                T(@"处女座"),T(@"天秤座"),T(@"天蝎座"),T(@"射手座"),T(@"魔羯座"),
                                T(@"水瓶座"),T(@"双鱼座"),T(@"不明"), nil];
     int mCnt = 0;
@@ -143,7 +147,7 @@
     return cConstellation;
 }
 
-/*
+
 -(NSString *)timesinceWithDepth:(int)depth 
 {
 	NSArray *timeUnits = [NSArray arrayWithObjects:
@@ -201,5 +205,5 @@
 	
 	return s;
 }
-*/
+
 @end
