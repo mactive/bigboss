@@ -38,7 +38,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 @synthesize settingView;
 @synthesize settingDescArray;
 @synthesize settingTitleArray;
-@synthesize friendRequestDict;
+@synthesize friendRequestArray;
 @synthesize managedObjectContext;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -46,7 +46,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        self.friendRequestDict = [NSMutableDictionary dictionaryWithCapacity:5];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(friendRequestReceived:)
                                                      name:NEW_FRIEND_NOTIFICATION object:nil];
@@ -100,19 +99,20 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 }
 - (void) initFriendRequestDictFromDB
 {
+    // Need to sort the returned value, because 
     NSManagedObjectContext *moc = self.managedObjectContext;
     NSEntityDescription *entityDescription = [NSEntityDescription
                                               entityForName:@"FriendRequest" inManagedObjectContext:moc];
+    NSSortDescriptor *sortDesc = [NSSortDescriptor sortDescriptorWithKey:@"requestDate" ascending:YES];
+    NSArray *sortDescArray = [NSArray arrayWithObject:sortDesc];
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:entityDescription];
+    [request setSortDescriptors:sortDescArray];
     
     NSError *error = nil;
     NSArray *array = [moc executeFetchRequest:request error:&error];
     
-    for (int i = 0; i < [array count]; i++) {
-        FriendRequest *request = [array objectAtIndex:i];
-        [self.friendRequestDict setValue:request forKey:request.requesterEPostalID];
-    }
+    self.friendRequestArray = [NSMutableArray arrayWithArray:array];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -120,18 +120,18 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 ////////////////////////////////////////////////////////////////////////////////////////
 - (void)sayhiAction
 {
-    if ([self.friendRequestDict count] == 1) {
+    if ([self.friendRequestArray count] == 1) {
         RequestViewController *controller = [[RequestViewController alloc] initWithNibName:nil bundle:nil];
-        controller.request = [[self.friendRequestDict allValues] objectAtIndex:0];
+        controller.request = [self.friendRequestArray objectAtIndex:0];
         [self.navigationController pushViewController:controller animated:YES];
         
         //            FriendRequestListViewController *controller = [[FriendRequestListViewController alloc] initWithNibName:nil bundle:nil];
         //            controller.friendRequestArray = [NSMutableArray arrayWithArray:[self.friendRequestDict allValues]];
         //            [self.navigationController pushViewController:controller animated:YES];
         
-    } else if ([self.friendRequestDict count] > 1) {
+    } else if ([self.friendRequestArray count] > 1) {
         FriendRequestListViewController *controller = [[FriendRequestListViewController alloc] initWithNibName:nil bundle:nil];
-        controller.friendRequestArray = [NSMutableArray arrayWithArray:[self.friendRequestDict allValues]];
+        controller.friendRequestArray = self.friendRequestArray;
         [self.navigationController pushViewController:controller animated:YES];
     }
 }
@@ -153,16 +153,27 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         DDLogVerbose(@"friend request - get user %@ data received: %@", fromJid, responseObject);
         
         NSString* type = [responseObject valueForKey:@"type"];
-        if ([type isEqualToString:@"user"] && [self.friendRequestDict valueForKey:fromJid] == nil) {
+        if ([type isEqualToString:@"user"]) {
             
             FriendRequest *newFriendRequest = [[ModelHelper sharedInstance] newFriendRequestWithEPostalID:fromJid andJson:responseObject];
             MOCSave(self.managedObjectContext);
 
-            if ([self.friendRequestDict count] == 0) {
+            if ([self.friendRequestArray count] == 0) {
                 [self initFriendRequestDictFromDB];
             }
-            [self.friendRequestDict setValue:newFriendRequest forKey:fromJid];
-            self.newFriendRequestCount +=1;
+            // filter off duplicates
+            BOOL exists = false;
+            for (int i = 0; i < [self.friendRequestArray count]; i++) {
+                FriendRequest *request = [self.friendRequestArray objectAtIndex:i];
+                if ([request.requesterEPostalID isEqualToString:newFriendRequest.requesterEPostalID] &&
+                    (request.state == FriendRequestUnprocessed)) {
+                    exists = YES;
+                }
+            }
+            if (!exists) {
+                [self.friendRequestArray addObject:newFriendRequest];
+                self.newFriendRequestCount +=1;
+            }
             
             [self appDelegate].functionListController.tabBarItem.badgeValue =  [NSString stringWithFormat:@"%i", self.newFriendRequestCount];
         }
