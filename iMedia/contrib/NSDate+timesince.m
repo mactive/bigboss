@@ -21,11 +21,7 @@
 
 -(NSString *)timesince 
 {
-    if (self == nil ) {
-        return T(@"空时间");
-    } else {
-        return [self timesinceWithHuman];
-    }
+    return [self timesinceWithHuman];
 //	return [self timesinceWithDepth:kDepth];
 }
 #define A_DAY 86400

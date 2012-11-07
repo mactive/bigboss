@@ -243,8 +243,21 @@
 	timeLabel.textAlignment = UITextAlignmentLeft;
 	timeLabel.textColor = RGBCOLOR(140, 140, 140);
     timeLabel.backgroundColor = [UIColor clearColor];
-    NSDate *tmp = [ServerDataTransformer getLastGPSUpdatedFromServerJSON:self.jsonData];
-    timeLabel.text  = [tmp timesince];
+    if (self.user == nil) {
+        NSDate *tmp = [ServerDataTransformer getLastGPSUpdatedFromServerJSON:self.jsonData];
+        if (tmp = nil) {
+            timeLabel.text = T(@"无时间");
+        } else {
+            timeLabel.text  = [tmp timesince];
+        }
+    } else {
+        if (self.user.lastGPSUpdated = nil) {
+            timeLabel.text = T(@"无时间");
+        } else {
+            timeLabel.text  = [self.user.lastGPSUpdated timesince];
+        }
+    }
+    
     [timeLabel sizeToFit];
     
     // Create a label icon for the time.
