@@ -190,7 +190,7 @@
     
     User *anUser = [enumerator nextObject];
     if (anUser == nil) {
-        self.title = conversation.channel.node;
+        self.title = conversation.channel.displayName;
     } else {
         self.title = anUser.displayName;
     }

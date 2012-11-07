@@ -15,17 +15,13 @@
 #define kDepth 1
 
 #import "NSDate+timesince.h"
-
+#import "NSDate-Utilities.h"
 
 @implementation NSDate (timesince)
 
 -(NSString *)timesince 
 {
-    if (self == nil ) {
-        return T(@"空时间");
-    } else {
-        return [self timesinceWithHuman];
-    }
+    return [self timesinceWithHuman];
 //	return [self timesinceWithDepth:kDepth];
 }
 #define A_DAY 86400
@@ -78,6 +74,73 @@
     }
     
     return result;
+}
+
+
+- (NSString *)horoscope
+{
+    NSString * cConstellation = @"";
+    NSArray * Constellation = [[NSArray alloc] initWithObjects:
+                               T(@"牡羊座"),T(@"金牛座"),T(@"双子座"),T(@"巨蟹座"),T(@"狮子座"),
+                               T(@"处女座"),T(@"天秤座"),T(@"天蝎座"),T(@"射手座"),T(@"魔羯座"),
+                               T(@"水瓶座"),T(@"双鱼座"),T(@"不明"), nil];
+    int mCnt = 0;
+    mCnt = self.month * 100 + self.day;
+    
+    if (mCnt > 320 && mCnt < 421)
+    {
+        cConstellation = [Constellation objectAtIndex:0];
+    }
+    else if (mCnt > 420 && mCnt < 522)
+    {
+        cConstellation = [Constellation objectAtIndex:1];
+    }
+    else if (mCnt > 521 && mCnt < 622)
+    {
+        cConstellation = [Constellation objectAtIndex:2];
+    }
+    else if (mCnt > 621 && mCnt < 724)
+    {
+        cConstellation = [Constellation objectAtIndex:3];
+    }
+    else if (mCnt > 723 && mCnt < 824)
+    {
+        cConstellation = [Constellation objectAtIndex:4];
+    }
+    else if (mCnt > 823 && mCnt < 924)
+    {
+        cConstellation = [Constellation objectAtIndex:5];
+    }
+    else if (mCnt > 923 && mCnt < 1024)
+    {
+        cConstellation = [Constellation objectAtIndex:6];
+    }
+    else if (mCnt > 1023 && mCnt < 1123)
+    {
+        cConstellation = [Constellation objectAtIndex:7];
+    }
+    else if (mCnt > 1123 && mCnt < 1223)
+    {
+        cConstellation = [Constellation objectAtIndex:8];
+    }
+    else if (mCnt > 1222 || mCnt < 121)
+    {
+        cConstellation = [Constellation objectAtIndex:9];
+    }
+    else if (mCnt > 120 && mCnt < 220)
+    {
+        cConstellation = [Constellation objectAtIndex:10];
+    }
+    else if (mCnt > 219 && mCnt < 321)
+    {
+        cConstellation = [Constellation objectAtIndex:11];
+    }
+    else
+    {
+        cConstellation = [Constellation objectAtIndex:12];
+    }
+    
+    return cConstellation;
 }
 
 /*

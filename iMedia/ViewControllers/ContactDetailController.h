@@ -13,7 +13,7 @@
 @class AlbumViewController;
 
 
-@interface ContactDetailController : UIViewController<UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate>
+@interface ContactDetailController : UIViewController<UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate,UIActionSheetDelegate>
 {
     User  *_user;
     id    jsonData;

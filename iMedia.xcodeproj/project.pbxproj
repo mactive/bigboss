@@ -64,6 +64,7 @@
 		2673F5A1163003B3004DAACB /* cell_bg_company@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2673F59E163003B3004DAACB /* cell_bg_company@2x.png */; };
 		2673F5A2163003B3004DAACB /* cell_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2673F59F163003B3004DAACB /* cell_bg@2x.png */; };
 		2674B84F164A3DB60092D980 /* button_add_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2674B84E164A3DB60092D980 /* button_add_bg@2x.png */; };
+		2674B852164A51950092D980 /* NSDate-Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 2674B851164A51950092D980 /* NSDate-Utilities.m */; };
 		267B5E361648E40200D56910 /* gender_male@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 267B5E341648E40200D56910 /* gender_male@2x.png */; };
 		267B5E371648E40200D56910 /* gender_female@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 267B5E351648E40200D56910 /* gender_female@2x.png */; };
 		267F5087164015BD00B42D21 /* sex_unknown_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 267F5086164015BD00B42D21 /* sex_unknown_bg@2x.png */; };
@@ -419,6 +420,8 @@
 		2673F59E163003B3004DAACB /* cell_bg_company@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "cell_bg_company@2x.png"; path = "Resources/cell_bg_company@2x.png"; sourceTree = "<group>"; };
 		2673F59F163003B3004DAACB /* cell_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "cell_bg@2x.png"; path = "Resources/cell_bg@2x.png"; sourceTree = "<group>"; };
 		2674B84E164A3DB60092D980 /* button_add_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "button_add_bg@2x.png"; path = "Resources/button_add_bg@2x.png"; sourceTree = "<group>"; };
+		2674B850164A51950092D980 /* NSDate-Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDate-Utilities.h"; path = "contrib/NSDate-Utilities.h"; sourceTree = "<group>"; };
+		2674B851164A51950092D980 /* NSDate-Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDate-Utilities.m"; path = "contrib/NSDate-Utilities.m"; sourceTree = "<group>"; };
 		267B5E341648E40200D56910 /* gender_male@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "gender_male@2x.png"; path = "Resources/gender_male@2x.png"; sourceTree = "<group>"; };
 		267B5E351648E40200D56910 /* gender_female@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "gender_female@2x.png"; path = "Resources/gender_female@2x.png"; sourceTree = "<group>"; };
 		267F5086164015BD00B42D21 /* sex_unknown_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "sex_unknown_bg@2x.png"; path = "Resources/sex_unknown_bg@2x.png"; sourceTree = "<group>"; };
@@ -861,6 +864,8 @@
 		2631C5271631301E004DE7FB /* contrib */ = {
 			isa = PBXGroup;
 			children = (
+				2674B850164A51950092D980 /* NSDate-Utilities.h */,
+				2674B851164A51950092D980 /* NSDate-Utilities.m */,
 				26F3BF1716428DDB00E2899C /* MBProgressHUD.h */,
 				26F3BF1816428DDB00E2899C /* MBProgressHUD.m */,
 				26695839164803AB00A7106C /* MetroButton.h */,
@@ -2305,6 +2310,7 @@
 				0450A5ED164649080002BA54 /* LoginSettingViewController.m in Sources */,
 				2669583B164803AC00A7106C /* MetroButton.m in Sources */,
 				26A587781649199600009968 /* RateViewController.m in Sources */,
+				2674B852164A51950092D980 /* NSDate-Utilities.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

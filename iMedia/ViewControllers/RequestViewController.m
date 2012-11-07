@@ -112,7 +112,7 @@
         [self.confirmButton addTarget:self action:@selector(confirmRequest) forControlEvents:UIControlEventTouchUpInside];
     }
     
-    [self.confirmButton setBackgroundImage:[UIImage imageNamed:@"button_add_bg.png"] forState:UIControlStateNormal];
+    [self.confirmButton setBackgroundImage:[UIImage imageNamed:@"button_bg.png"] forState:UIControlStateNormal];
     
     
     if (request.state == FriendRequestUnprocessed) {
