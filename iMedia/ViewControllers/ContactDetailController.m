@@ -638,6 +638,8 @@
             HUD.labelText = T(@"删除成功");
             [HUD hide:YES afterDelay:2];
             
+            [self.navigationController popViewControllerAnimated:YES];
+            
         }else{
             [HUD hide:YES];
             
