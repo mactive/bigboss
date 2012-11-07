@@ -23,6 +23,7 @@
 @property(strong, nonatomic) UIDatePicker *datePicker;
 @property(strong, nonatomic) NSDateFormatter *dateFormatter;
 @property(strong, nonatomic) UIButton* doneButton;
+@property(strong, nonatomic) UILabel *restCountLabel;
 
 @end
 
@@ -43,6 +44,7 @@
 @synthesize datePicker;
 @synthesize dateFormatter;
 @synthesize doneButton;
+@synthesize restCountLabel;
 
 #define NICKNAME_MAX_LENGTH 20
 #define SIGNATURE_MAX_LENGTH 200
@@ -97,6 +99,14 @@
     self.noticeLabel.shadowOffset = CGSizeMake(0, 1);
     
     [self.view addSubview:self.noticeLabel];
+    
+    self.restCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(270, 25, 30, 20)];
+    [self.restCountLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.restCountLabel setBackgroundColor:RGBCOLOR(213, 213, 213)];
+    [self.restCountLabel setFont:[UIFont systemFontOfSize:16.0]];
+    self.restCountLabel.textColor = RGBCOLOR(106, 106, 106);
+    self.restCountLabel.layer.cornerRadius = 3;
+
     
     self.valueTextField = [[UITextField alloc] initWithFrame:CGRectMake(20 , 60, 280 , 40)];
     self.valueTextField.font = [UIFont systemFontOfSize:18.0];
@@ -183,6 +193,9 @@
             self.noticeLabel.text = T(@"请填写11位手机号码");
             self.valueTextField.keyboardType = UIKeyboardTypeNumberPad;
         }
+        
+        [self.view addSubview:self.restCountLabel];
+        
         self.valueTextField.text = self.valueText;
         [self.view addSubview:self.self.valueTextField];
         [self.valueTextView becomeFirstResponder];
@@ -203,6 +216,9 @@
     if (self.valueTextField == textField)
     {
         if (self.valueIndex == NICKNAME_ITEM_INDEX || self.valueIndex  == CAREER_ITEM_INDEX) {
+            
+            self.restCountLabel.text = [NSString stringWithFormat:@"%i",NICKNAME_MAX_LENGTH - [self.valueTextField.text length]];
+
             if ([toBeString length] > NICKNAME_MAX_LENGTH) {
                 textField.text = [toBeString substringToIndex:NICKNAME_MAX_LENGTH];
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:T(@"超过最大字数不能输入了") delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
@@ -210,6 +226,8 @@
                 return NO;
             }
         }else if (self.valueIndex == CELL_ITEM_INDEX){
+            self.restCountLabel.text = [NSString stringWithFormat:@"%i",CELL_MAX_LENGTH - [self.valueTextField.text length]];
+
             if ([toBeString length] > CELL_MAX_LENGTH) {
                 textField.text = [toBeString substringToIndex:CELL_MAX_LENGTH];
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:T(@"手机号码有点长") delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
@@ -217,6 +235,16 @@
                 return NO;
             }
 
+        }else if (self.valueIndex == SIGNATURE_ITEM_INDEX){
+            self.restCountLabel.text = [NSString stringWithFormat:@"%i",SIGNATURE_MAX_LENGTH - [self.valueTextField.text length]];
+            
+            if ([toBeString length] > SIGNATURE_MAX_LENGTH) {
+                textField.text = [toBeString substringToIndex:SIGNATURE_MAX_LENGTH];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:T(@"个人签名有点长") delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                [alert show];
+                return NO;
+            }
+            
         }
 
     }
