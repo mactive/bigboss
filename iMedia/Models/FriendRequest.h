@@ -22,7 +22,7 @@ typedef enum _FriendRequestState
 
 @interface FriendRequest : NSManagedObject
 
-@property (nonatomic, retain) NSString * userJSONData;
+@property (nonatomic, retain) id userJSONData;
 @property (nonatomic, retain) NSDate * requestDate;
 @property (nonatomic) int16_t state;
 @property (nonatomic, retain) NSString * requesterEPostalID;
