@@ -280,6 +280,21 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     return subID;
 }
 
+- (NSString *)unsubscribeToChannel:(NSString *)nodeName withCallbackBlock:(void (^)(NSError *))block
+{
+    DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+    NSString *subID = [xmppPubsub unsubscribeFromNode:nodeName];
+    if (subID && block) {
+        block(nil);
+    } else {
+        NSError *error = [[NSError alloc] initWithDomain:@"wingedstone.com" code:403 userInfo:nil];
+        if (block) {
+            block(error);
+        }
+    }
+    return subID;
+}
+
 -(void)addBuddy:(NSString *)jidStr withCallbackBlock:(void (^)(NSError *))block
 {
     DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
@@ -788,7 +803,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     else
         channel = [[ModelHelper sharedInstance] findChannelWithNode:nodeStr];
     
-    if (channel && channel.state.intValue == IdentityStatePendingAddSubscription) {
+    if (channel && channel.state.intValue != IdentityStateActive) {
         channel.state = [NSNumber numberWithInt:IdentityStateActive];
         channel.subID = subID;
         [[self appDelegate].contactListController contentChanged];
@@ -808,6 +823,60 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
             DDLogVerbose(@"login failed: %@", error);
     }];
 
+}
+- (void)xmppPubSub:(XMPPPubSub *)sender didUnsubscribe:(XMPPIQ *)iq
+{
+    DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+    
+    // <iq from="pubsub.host.com" to="user@host.com/rsrc" id="ABC123:subscribenode" type="result">
+    //   <pubsub xmlns="http://jabber.org/protocol/pubsub">
+    //     <subscription jid="tv@xmpp.local" subscription="unsubscribed" subid="DEF456"/>
+    //   </pubsub>
+    // </iq>
+    
+    
+    NSXMLElement *pubsub = [iq elementForName:@"pubsub"];
+    NSString *subrequestID = [iq attributeStringValueForName:@"id"];
+    NSXMLElement *subscription = [pubsub elementForName:@"subscription"];
+    NSString* subID = [subscription attributeStringValueForName:@"subid"];
+    NSString *nodeStr = [subscription attributeStringValueForName:@"node"];
+    
+    //unsubscribe this channel
+    Channel *channel;
+    if (nodeStr == nil)
+        channel = [[ModelHelper sharedInstance] findChannelWithSubrequestID:subrequestID];
+    else
+        channel = [[ModelHelper sharedInstance] findChannelWithNode:nodeStr];
+    
+    if (!channel || channel.state.intValue == IdentityStateInactive) {
+        return;
+    }
+
+    NSString* csrftoken = [[NSUserDefaults standardUserDefaults] valueForKey:@"csrfmiddlewaretoken"];
+    
+    // notify server about the subscription
+    NSDictionary *postDict = [NSDictionary dictionaryWithObjectsAndKeys: channel.guid, @"guid", @"5", @"op", csrftoken, @"csrfmiddlewaretoken", nil];
+    
+    [[AppNetworkAPIClient sharedClient] postPath:POST_DATA_PATH parameters:postDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        DDLogVerbose(@"login JSON received: %@", responseObject);
+        
+        //unsubscribe this channel
+        if (channel && channel.state.intValue != IdentityStateInactive) {
+            channel.state = [NSNumber numberWithInt:IdentityStateInactive];
+            channel.subID = subID;
+            [[self appDelegate].contactListController contentChanged];
+            MOCSave(_managedObjectContext);
+        }
+
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        //
+        if (channel != nil) {
+            [self unsubscribeToChannel:channel.node withCallbackBlock:nil];
+        } else if (StringHasValue(nodeStr)) {
+            [self unsubscribeToChannel:nodeStr withCallbackBlock:nil];
+        }
+    }];
 }
 
 

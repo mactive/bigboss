@@ -49,6 +49,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     self.title = T(@"Request List");
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.backgroundColor = BGCOLOR;
+    [self scrollToBottomAnimated:NO];
 }
 
 - (void)didReceiveMemoryWarning
@@ -346,5 +347,17 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [self.navigationController pushViewController:requestViewController animated:YES];
 
 }
+
+- (void)scrollToBottomAnimated:(BOOL)animated {
+    NSInteger numberOfRows = 0;
+    NSInteger numberOfSections = [self.tableView numberOfSections];
+    if (numberOfSections > 0) {
+        numberOfRows = [self.tableView numberOfRowsInSection:numberOfSections-1];
+    }
+    if (numberOfRows) {
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:numberOfRows-1 inSection:numberOfSections-1] atScrollPosition:UITableViewScrollPositionBottom animated:animated];
+    }
+}
+
 
 @end

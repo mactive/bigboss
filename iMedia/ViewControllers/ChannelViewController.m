@@ -66,7 +66,6 @@
     [self.confirmButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [self.confirmButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
     [self.confirmButton.titleLabel setTextAlignment:UITextAlignmentCenter];
-    [self.confirmButton setTitle:T(@"加为好友") forState:UIControlStateNormal];
     [self.confirmButton setBackgroundImage:[UIImage imageNamed:@"button_bg.png"] forState:UIControlStateNormal];
     
     
@@ -75,9 +74,8 @@
     [self.cancelButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
     [self.cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     [self.cancelButton.titleLabel setTextAlignment:UITextAlignmentCenter];
-    [self.cancelButton setTitle:T(@"取消") forState:UIControlStateNormal];
     [self.cancelButton setBackgroundImage:[UIImage imageNamed:@"button_cancel_bg.png"] forState:UIControlStateNormal];
-    [self.cancelButton addTarget:self action:@selector(cancelRequest) forControlEvents:UIControlEventTouchUpInside];
+
     
     
      
@@ -123,6 +121,8 @@
         }
         [self.confirmButton setTitle:T(@"订阅此频道") forState:UIControlStateNormal];
         [self.confirmButton addTarget:self action:@selector(subscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
+        [self.cancelButton setTitle:T(@"取消") forState:UIControlStateNormal];
+        [self.cancelButton addTarget:self action:@selector(cancelRequest:) forControlEvents:UIControlEventTouchUpInside];
     } else {
         self.title = self.channel.displayName;
         infoLabel.text = self.channel.selfIntroduction;
@@ -140,6 +140,8 @@
         
         [self.confirmButton setTitle:T(@"发送信息") forState:UIControlStateNormal];
         [self.confirmButton addTarget:self action:@selector(sendMsgButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
+        [self.cancelButton setTitle:T(@"取消订阅") forState:UIControlStateNormal];
+        [self.cancelButton addTarget:self action:@selector(unSubscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
     }
 
     
@@ -202,22 +204,34 @@
 
 -(void)unSubscribeButtonPushed:(id)sender
 {
-    HUD = [[MBProgressHUD alloc] initWithView:self.view];
-	[self.view addSubview:HUD];
-    HUD.labelText = T(@"退定中");
+    if (self.channel == nil) {
+        NSLog(@"CRITICAL ERROR: Display unsubscribe button with empty channel object");
+        return;
+    }
+    
+    if (self.channel.state.intValue != IdentityStateActive) {
+        return;
+        
+    }
+    self.channel.subrequestID = [[XMPPNetworkCenter sharedClient] unsubscribeToChannel:self.channel.node withCallbackBlock:^(NSError *error) {
 
-	[HUD showAnimated:YES whileExecutingBlock:^{
-        sleep(2);
-        [HUD hide:YES];
-	} completionBlock:^{
-        HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        HUD.mode = MBProgressHUDModeText;
-        HUD.labelText = T(@"退订成功");
-        [HUD hide:YES afterDelay:1];
-		[self.confirmButton setTitle:T(@"订阅此频道") forState:UIControlStateNormal];
-        [self.confirmButton removeTarget:self action:@selector(unSubscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
-        [self.confirmButton addTarget:self action:@selector(subscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
-	}];
+        HUD = [[MBProgressHUD alloc] initWithView:self.view];
+        [self.view addSubview:HUD];
+        HUD.labelText = T(@"退定中");
+
+        [HUD showAnimated:YES whileExecutingBlock:^{
+            sleep(2);
+            [HUD hide:YES];
+        } completionBlock:^{
+            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            HUD.mode = MBProgressHUDModeText;
+            HUD.labelText = T(@"退订成功");
+            [HUD hide:YES afterDelay:1];
+            [self.confirmButton setTitle:T(@"订阅此频道") forState:UIControlStateNormal];
+            [self.confirmButton removeTarget:self action:@selector(unSubscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
+            [self.confirmButton addTarget:self action:@selector(subscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
+        }];
+    }];
     
 }
 @end

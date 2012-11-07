@@ -200,7 +200,7 @@
 	NSXMLElement *ps = [NSXMLElement elementWithName:@"pubsub" xmlns:NS_PUBSUB];
 	NSXMLElement *subscribe = [NSXMLElement elementWithName:@"subscribe"];
 	[subscribe addAttributeWithName:@"node" stringValue:node];
-	[subscribe addAttributeWithName:@"jid" stringValue:[xmppStream.myJID full]];
+	[subscribe addAttributeWithName:@"jid" stringValue:[xmppStream.myJID bare]];
 
 	[ps addChild:subscribe];
 	[iq addChild:ps];
