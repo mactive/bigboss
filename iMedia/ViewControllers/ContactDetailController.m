@@ -236,7 +236,7 @@
     [sexView addSubview:sexLabel];
     
     // horoscope
-    UILabel* horoscopeLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 0, 100, 15)];
+    UILabel* horoscopeLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 0, 100, 20)];
     [horoscopeLabel setBackgroundColor:[UIColor clearColor]];
     [horoscopeLabel setFont:[UIFont boldSystemFontOfSize:14.0]];
     [horoscopeLabel setShadowColor:[UIColor whiteColor]];
@@ -257,10 +257,10 @@
     
     
     // Create a label icon for the time.
-    UIImageView *timeIconView = [[UIImageView alloc] initWithFrame:CGRectMake(210, 0 , 15, 15)];
+    UIImageView *timeIconView = [[UIImageView alloc] initWithFrame:CGRectMake(210, 3 , 15, 15)];
     timeIconView.image = [UIImage imageNamed:@"time_icon.png"];
     
-    UILabel* timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(228, 0 ,60, 15)];
+    UILabel* timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(228, 0 ,60, 20)];
 	timeLabel.font = [UIFont systemFontOfSize:12.0];
 	timeLabel.textAlignment = UITextAlignmentLeft;
 	timeLabel.textColor = RGBCOLOR(140, 140, 140);

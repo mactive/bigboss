@@ -743,7 +743,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     [self.sexLabel setTextColor:[UIColor whiteColor]];
     [self.sexView addSubview:self.sexLabel];
 
-    UILabel* horoscopeLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 0, 100, 15)];
+    UILabel* horoscopeLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 0, 100, 20)];
     [horoscopeLabel setBackgroundColor:[UIColor clearColor]];
     horoscopeLabel.text = [self.me.birthdate horoscope];
     [horoscopeLabel setFont:[UIFont boldSystemFontOfSize:14.0]];
@@ -752,7 +752,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     [horoscopeLabel setTextColor:RGBCOLOR(97, 97, 97)];
     [self.statusView addSubview:horoscopeLabel];
     
-    UILabel* guidLabel = [[UILabel alloc]initWithFrame:CGRectMake(210, 0, 100, 15)];
+    UILabel* guidLabel = [[UILabel alloc]initWithFrame:CGRectMake(210, 0, 100, 20)];
     [guidLabel setBackgroundColor:[UIColor clearColor]];
     guidLabel.text  = [ NSString stringWithFormat:@" %@: %@",T(@"ID"),self.me.guid ];
     [guidLabel setFont:[UIFont boldSystemFontOfSize:14.0]];
