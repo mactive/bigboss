@@ -13,7 +13,9 @@
 @interface EditViewController ()
 
 @property(strong, nonatomic) UILabel * nameLabel;
+@property(strong, nonatomic) UILabel *noticeLabel;
 @property(strong, nonatomic) UITextView * valueTextView;
+@property(strong, nonatomic) UITextField * valueTextField;
 @property(strong, nonatomic) UIPickerView *sexPicker;
 @property(strong, nonatomic) NSDictionary *sexTitleDict;
 @property(strong, nonatomic) NSArray *sexTitleValue;
@@ -26,7 +28,9 @@
 
 @implementation EditViewController
 @synthesize nameLabel;
+@synthesize noticeLabel;
 @synthesize valueTextView;
+@synthesize valueTextField;
 @synthesize nameText;
 @synthesize valueText;
 @synthesize delegate;
@@ -39,6 +43,10 @@
 @synthesize datePicker;
 @synthesize dateFormatter;
 @synthesize doneButton;
+
+#define NICKNAME_MAX_LENGTH 20
+#define SIGNATURE_MAX_LENGTH 200
+#define CELL_MAX_LENGTH 11
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -79,7 +87,27 @@
     self.valueTextView.textColor = [UIColor blackColor];
     self.valueTextView.backgroundColor = [UIColor whiteColor];
     self.valueTextView.delegate = self;
-    self.valueTextView.text = self.valueText;
+    
+    self.noticeLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 110, 320, 20)];
+    [self.noticeLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.noticeLabel setBackgroundColor:[UIColor clearColor]];
+    [self.noticeLabel setFont:[UIFont systemFontOfSize:16.0]];
+    self.noticeLabel.textColor = RGBCOLOR(195, 70, 21);
+    self.noticeLabel.shadowColor = [UIColor whiteColor];
+    self.noticeLabel.shadowOffset = CGSizeMake(0, 1);
+    
+    [self.view addSubview:self.noticeLabel];
+    
+    self.valueTextField = [[UITextField alloc] initWithFrame:CGRectMake(20 , 60, 280 , 40)];
+    self.valueTextField.font = [UIFont systemFontOfSize:18.0];
+    self.valueTextField.textColor = [UIColor grayColor];
+    self.valueTextField.delegate = self;
+    self.valueTextField.backgroundColor = RGBCOLOR(240, 240, 240);
+    self.valueTextField.layer.borderColor = [RGBCOLOR(147, 150, 157) CGColor];
+    self.valueTextField.layer.borderWidth  = 1.0f;
+    self.valueTextField.layer.cornerRadius = 5.0f;
+    self.valueTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+    self.valueTextField.textAlignment = UITextAlignmentCenter;
     
     self.sexPicker = [[UIPickerView alloc]init ];
     self.sexPicker.delegate = self;
@@ -93,52 +121,111 @@
     [self.datePicker setFrame:CGRectMake(0, 60, 320, 300)];
     [self.datePicker setDatePickerMode:UIDatePickerModeDate];
     
-    self.doneButton  = [[UIButton alloc] initWithFrame:CGRectMake(22.5, 300, 275, 40)];
-    [self.doneButton.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
-    [self.doneButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [self.doneButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
-    [self.doneButton.titleLabel setTextAlignment:UITextAlignmentCenter];
-    [self.doneButton setTitle:T(@"完成") forState:UIControlStateNormal];
-    [self.doneButton setBackgroundImage:[UIImage imageNamed:@"button_bg.png"] forState:UIControlStateNormal];
-    [self.doneButton addTarget:self action:@selector(doneAction) forControlEvents:UIControlEventTouchUpInside];
+//    self.doneButton  = [[UIButton alloc] initWithFrame:CGRectMake(22.5, 300, 275, 40)];
+//    [self.doneButton.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
+//    [self.doneButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//    [self.doneButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
+//    [self.doneButton.titleLabel setTextAlignment:UITextAlignmentCenter];
+//    [self.doneButton setTitle:T(@"完成") forState:UIControlStateNormal];
+//    [self.doneButton setBackgroundImage:[UIImage imageNamed:@"button_bg.png"] forState:UIControlStateNormal];
+//    [self.doneButton addTarget:self action:@selector(doneAction) forControlEvents:UIControlEventTouchUpInside];
 //    [self.view addSubview:self.doneButton];
-    
 }
 
 - (void)doneAction
 {
-    [self.navigationController popViewControllerAnimated:YES];
+    if(self.valueIndex == CELL_ITEM_INDEX)
+    {
+        if ([self.valueTextField.text length] < CELL_MAX_LENGTH && [self.valueTextField.text length] != 0) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:T(@"手机号码有点短") delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+            [alert show];
+        }else{
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+    }else if(self.valueIndex == NICKNAME_ITEM_INDEX){
+        if ([self.valueTextField.text length] == 0 ) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:T(@"所填项目不能为空") delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+            [alert show];
+        }else{
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+    }else{
+        [self.navigationController popViewControllerAnimated:YES];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    if ([self.valueType isEqualToString:@"sex"]) {
+    if (self.valueIndex == SEX_ITEM_INDEX) {
 //        [self.sexPicker selectRow:1 inComponent:1 animated:YES];
         NSInteger index =  [self.sexTitleKey indexOfObject:self.valueText];
         [self.sexPicker selectRow:index inComponent:0 animated:YES];
         [self.view addSubview:self.sexPicker];
         
-    }else if([self.valueType isEqualToString:@"date"])
+    }else if(self.valueIndex == BIRTH_ITEM_INDEX)
     {
         NSDate *_date = [self.dateFormatter dateFromString:self.valueText];
         NSLog(@"date:%@", _date);
         [self.datePicker setDate:_date animated:YES];
         [self.datePicker addTarget:self action:@selector(dateChanged) forControlEvents:UIControlEventValueChanged];
         [self.view addSubview:self.datePicker];
+    }else if(self.valueIndex == SIGNATURE_ITEM_INDEX || self.valueIndex == SELF_INTRO_ITEM_INDEX)
+    {
+        [self.valueTextView  setFrame:CGRectMake(20 , 60, 280 , 100)];
+        self.valueTextView.text = self.valueText;
+        [self.view addSubview:self.valueTextView];
+        [self.valueTextView becomeFirstResponder];
     }
     else {
-        if (self.valueIndex == 3 || self.valueIndex == 7) {
-            [self.doneButton  setFrame:CGRectMake(22.5, 180, 275, 40)];
-            [self.valueTextView  setFrame:CGRectMake(20 , 60, 280 , 100)];
-        }else{
-            [self.doneButton  setFrame:CGRectMake(22.5, 120, 275, 40)];
-            [self.valueTextView  setFrame:CGRectMake(20 , 60, 280 , 40)];
+        if (self.valueIndex == NICKNAME_ITEM_INDEX) {
+            self.noticeLabel.text = [NSString stringWithFormat:T(@"昵称不能超过%i个字符."),NICKNAME_MAX_LENGTH];
+        }else if (self.valueIndex == CELL_ITEM_INDEX){
+            self.noticeLabel.text = T(@"请填写11位手机号码");
+            self.valueTextField.keyboardType = UIKeyboardTypeNumberPad;
         }
-        
-        [self.view addSubview:self.valueTextView];
+        self.valueTextField.text = self.valueText;
+        [self.view addSubview:self.self.valueTextField];
+        [self.valueTextView becomeFirstResponder];
     }
 }
 
+/////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - uitextfield delegate
+/////////////////////////////////////////////////////////////////////////////////////
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string;
+{
+    if ([string isEqualToString:@"\n"])
+    {
+        return YES;
+    }
+    NSString * toBeString = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    
+    if (self.valueTextField == textField)
+    {
+        if (self.valueIndex == NICKNAME_ITEM_INDEX || self.valueIndex  == CAREER_ITEM_INDEX) {
+            if ([toBeString length] > NICKNAME_MAX_LENGTH) {
+                textField.text = [toBeString substringToIndex:NICKNAME_MAX_LENGTH];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:T(@"超过最大字数不能输入了") delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                [alert show];
+                return NO;
+            }
+        }else if (self.valueIndex == CELL_ITEM_INDEX){
+            if ([toBeString length] > CELL_MAX_LENGTH) {
+                textField.text = [toBeString substringToIndex:CELL_MAX_LENGTH];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:T(@"手机号码有点长") delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                [alert show];
+                return NO;
+            }
+
+        }
+
+    }
+    return YES;
+}
+- (BOOL)textFieldShouldEndEditing:(UITextField *)textField
+{
+    [self.delegate passStringValue:self.valueTextField.text andIndex:self.valueIndex];
+}
 
 /////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - uipickerview delegate

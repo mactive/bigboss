@@ -126,6 +126,8 @@
     self.displayNameField.delegate = self;
     self.displayNameField.returnKeyType = UIReturnKeyNext;
     self.displayNameField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    self.displayNameField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
+
     [self.view addSubview:self.displayNameField];
     
         

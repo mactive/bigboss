@@ -30,16 +30,6 @@
 #define kCameraSource       UIImagePickerControllerSourceTypeCamera
 #define MAX_ALBUN_COUNT 8
 
-#define NICKNAME_INDEX      0
-#define SEX_ITEM_INDEX      1
-#define BIRTH_ITEM_INDEX    2
-#define SIGNATURE_ITEM_INDEX  3
-#define CELL_ITEM_INDEX     4
-#define CAREER_ITEM_INDEX   5
-#define HOMETOWN_ITEM_INDEX 6
-#define SELF_INTRO_ITEM_INDEX 7
-#define JPEG_QUALITY 0.6
-
 @interface ProfileMeController ()<MBProgressHUDDelegate>
 {
     MBProgressHUD *HUD;
@@ -184,9 +174,12 @@
 
 - (void)infoTableEditing{
     for (int index =0; index < [self.infoCellArray count]; index++) {
-        
         UITableViewCell *cell = [self.infoCellArray objectAtIndex:index];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        if (index != SEX_ITEM_INDEX ) {
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        }else{
+            cell.accessoryType = UITableViewCellAccessoryNone;
+        }
     }
 }
 
@@ -195,7 +188,7 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 //    UITableViewCell *cell = [self.infoCellArray objectAtIndex:indexPath.row];
     
-    if (self.isEditing) {
+    if (self.isEditing && indexPath.row != SEX_ITEM_INDEX) {
         NSLog(@"click the %d",indexPath.row);
         
         EditViewController *controller = [[EditViewController alloc] initWithNibName:nil bundle:nil];
@@ -210,9 +203,11 @@
         controller.delegate = self;
         
         if (indexPath.row == SEX_ITEM_INDEX  ) {
-            controller.valueType = @"sex";
+            controller.valueType = @"gender";
         }else if (indexPath.row == BIRTH_ITEM_INDEX) {
             controller.valueType = @"date";
+        }else if (indexPath.row == NICKNAME_ITEM_INDEX) {
+            controller.valueType = @"shorttext";
         }else {
             controller.valueType = nil;
         }
@@ -260,7 +255,7 @@
     [self.infoDescArray replaceObjectAtIndex:index withObject:value];
     
     switch (index) {
-        case NICKNAME_INDEX:
+        case NICKNAME_ITEM_INDEX:
             self.me.displayName = value;
             break;
         case SEX_ITEM_INDEX:
@@ -822,8 +817,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     self.infoView.backgroundColor = [UIColor clearColor];
     self.infoCellArray = [[NSMutableArray alloc] init];
 
-    self.infoArray = [[NSArray alloc] initWithObjects:@"昵称",@"性别",@"生日",@"签名",@"手机",@"职业",@"家乡",@"个人说明",nil ];
-    
+    self.infoArray = [[NSArray alloc] initWithObjects:T(@"昵称"),T(@"性别"),T(@"生日"),T(@"签名"),T(@"手机"),T(@"职业"),T(@"家乡"),T(@"个人说明"),nil ];
     
     // brithdate transform
     NSDateFormatter *df = [[NSDateFormatter alloc] init]; 
