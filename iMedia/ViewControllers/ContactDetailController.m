@@ -28,6 +28,8 @@
     MBProgressHUD *HUD;
 }
 
+@property(strong, nonatomic) UIActionSheet *reportActionsheet;
+
 - (NSString *)getGender;
 - (NSString *)getAgeStr;
 - (NSString *)getLastGPSUpdatedTimeStr;
@@ -62,7 +64,7 @@
 @synthesize infoView;
 @synthesize infoTableView;
 @synthesize actionView;
-
+@synthesize reportActionsheet;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -245,16 +247,16 @@
     timeLabel.backgroundColor = [UIColor clearColor];
     if (self.user == nil) {
         NSDate *tmp = [ServerDataTransformer getLastGPSUpdatedFromServerJSON:self.jsonData];
-        if (tmp = nil) {
+        if (tmp == nil) {
             timeLabel.text = T(@"无时间");
         } else {
-            timeLabel.text  = [tmp timesince];
+            timeLabel.text = [tmp timesince];
         }
-    } else {
-        if (self.user.lastGPSUpdated = nil) {
+    }else {
+        if (self.user.lastGPSUpdated == nil) {
             timeLabel.text = T(@"无时间");
         } else {
-            timeLabel.text  = [self.user.lastGPSUpdated timesince];
+            timeLabel.text = [self.user.lastGPSUpdated timesince];
         }
     }
     
@@ -485,8 +487,9 @@
     [self.reportUserButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [self.reportUserButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
     [self.reportUserButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 18, 0, 0)];
-    [self.reportUserButton setTitle:NSLocalizedString(@"Report", nil) forState:UIControlStateNormal];
+    [self.reportUserButton setTitle:T(@"举报") forState:UIControlStateNormal];
     [self.reportUserButton setBackgroundImage:[UIImage imageNamed:@"profile_tabbar_btn3.png"] forState:UIControlStateNormal];
+    [self.reportUserButton addTarget:self action:@selector(reportAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.actionView addSubview:self.reportUserButton];
     
     // Now set content. Either user or jsonData must have value
@@ -516,7 +519,32 @@
     [self.view addSubview:self.actionView];
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - actionsheet when report
+/////////////////////////////////////////////////////////////////////////////////////////
 
+- (void)reportAction:(UIButton *)sender
+{
+    self.reportActionsheet = [[UIActionSheet alloc]
+                            initWithTitle:nil
+                            delegate:self
+                            cancelButtonTitle:T(@"取消")
+                            destructiveButtonTitle:nil
+                            otherButtonTitles:T(@"举报用户"),nil];
+    self.reportActionsheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+    [self.reportActionsheet showFromTabBar:[[self tabBarController] tabBar]];
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0 ) {
+        HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        HUD.delegate = self;
+        HUD.mode = MBProgressHUDModeText;
+        HUD.labelText = T(@"举报成功");
+        [HUD hide:YES afterDelay:2];
+    }
+}
 
 
 - (void)viewDidLoad
