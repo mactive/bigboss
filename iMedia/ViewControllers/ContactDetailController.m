@@ -211,7 +211,7 @@
 
 - (void)initStatusView
 {
-    self.statusView = [[UIView alloc] initWithFrame:CGRectMake(VIEW_PADDING_LEFT, VIEW_ALBUM_HEIGHT + 12, VIEW_COMMON_WIDTH, 15)];
+    self.statusView = [[UIView alloc] initWithFrame:CGRectMake(VIEW_PADDING_LEFT, VIEW_ALBUM_HEIGHT + 15, VIEW_COMMON_WIDTH, 15)];
     
     // Create a label icon for the sex.
     NSString *gender = [self getGender];
@@ -234,6 +234,16 @@
     [sexLabel setFont:[UIFont systemFontOfSize:12.0]];
     [sexLabel setTextColor:[UIColor whiteColor]];
     [sexView addSubview:sexLabel];
+    
+    // horoscope
+    UILabel* horoscopeLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 0, 100, 15)];
+    [horoscopeLabel setBackgroundColor:[UIColor clearColor]];
+    horoscopeLabel.text = [self.user.birthdate horoscope];
+    [horoscopeLabel setFont:[UIFont boldSystemFontOfSize:14.0]];
+    [horoscopeLabel setShadowColor:[UIColor whiteColor]];
+    [horoscopeLabel setShadowOffset:CGSizeMake(0, 1)];
+    [horoscopeLabel setTextColor:RGBCOLOR(97, 97, 97)];
+    [self.statusView addSubview:horoscopeLabel];
     
     
     // Create a label icon for the time.

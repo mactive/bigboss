@@ -13,5 +13,6 @@
 -(NSString *)timesince;
 //-(NSString *)timesinceWithDepth:(int)depth;
 -(NSString *)timesinceWithHuman;
+- (NSString *)horoscope;
 
 @end

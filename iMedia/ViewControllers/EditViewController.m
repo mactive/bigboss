@@ -9,10 +9,12 @@
 #import "EditViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "ServerDataTransformer.h"
+#import "NSDate+timesince.h"
 
 @interface EditViewController ()
 
 @property(strong, nonatomic) UILabel * nameLabel;
+@property(strong, nonatomic) UILabel * horoscopeLabel;
 @property(strong, nonatomic) UILabel *noticeLabel;
 @property(strong, nonatomic) UITextView * valueTextView;
 @property(strong, nonatomic) UITextField * valueTextField;
@@ -29,6 +31,7 @@
 
 @implementation EditViewController
 @synthesize nameLabel;
+@synthesize horoscopeLabel;
 @synthesize noticeLabel;
 @synthesize valueTextView;
 @synthesize valueTextField;
@@ -47,7 +50,8 @@
 @synthesize restCountLabel;
 
 #define NICKNAME_MAX_LENGTH 20
-#define SIGNATURE_MAX_LENGTH 200
+#define SIGNATURE_MAX_LENGTH 40
+#define SELF_INTRO_MAX_LENGTH 200
 #define CELL_MAX_LENGTH 11
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -100,6 +104,16 @@
     
     [self.view addSubview:self.noticeLabel];
     
+    self.horoscopeLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 100, 320 , 30)];
+    [self.horoscopeLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.horoscopeLabel setBackgroundColor:[UIColor clearColor]];
+    [self.horoscopeLabel setFont:[UIFont systemFontOfSize:20.0]];
+    self.horoscopeLabel.textColor = RGBCOLOR(195, 70, 21);
+    self.horoscopeLabel.shadowColor = [UIColor whiteColor];
+    self.horoscopeLabel.shadowOffset = CGSizeMake(0, 1);
+    
+    [self.view addSubview:self.horoscopeLabel];
+    
     self.restCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(270, 25, 30, 20)];
     [self.restCountLabel setTextAlignment:NSTextAlignmentCenter];
     [self.restCountLabel setBackgroundColor:RGBCOLOR(213, 213, 213)];
@@ -107,7 +121,6 @@
     self.restCountLabel.textColor = RGBCOLOR(106, 106, 106);
     self.restCountLabel.layer.cornerRadius = 3;
 
-    
     self.valueTextField = [[UITextField alloc] initWithFrame:CGRectMake(20 , 60, 280 , 40)];
     self.valueTextField.font = [UIFont systemFontOfSize:18.0];
     self.valueTextField.textColor = [UIColor grayColor];
@@ -128,7 +141,7 @@
     self.sexTitleKey = [self.sexTitleDict allKeys];
     
     self.datePicker = [[UIDatePicker alloc]init];
-    [self.datePicker setFrame:CGRectMake(0, 60, 320, 300)];
+    [self.datePicker setFrame:CGRectMake(0, 200, 320, 300)];
     [self.datePicker setDatePickerMode:UIDatePickerModeDate];
     
 //    self.doneButton  = [[UIButton alloc] initWithFrame:CGRectMake(22.5, 300, 275, 40)];
@@ -174,17 +187,25 @@
         
     }else if(self.valueIndex == BIRTH_ITEM_INDEX)
     {
-        NSDate *_date = [self.dateFormatter dateFromString:self.valueText];
-        NSLog(@"date:%@", _date);
-        [self.datePicker setDate:_date animated:YES];
-        [self.datePicker addTarget:self action:@selector(dateChanged) forControlEvents:UIControlEventValueChanged];
-        [self.view addSubview:self.datePicker];
+        if (self.valueText == nil) {
+            self.horoscopeLabel.text = T(@"星座");
+        } else {
+            NSDate *_date = [self.dateFormatter dateFromString:self.valueText];
+            NSLog(@"date:%@", _date);
+            [self.datePicker setDate:_date animated:YES];
+            self.horoscopeLabel.text = [_date horoscope];
+            [self.datePicker addTarget:self action:@selector(dateChanged) forControlEvents:UIControlEventValueChanged];
+            [self.view addSubview:self.datePicker];
+        }
+        
     }else if(self.valueIndex == SIGNATURE_ITEM_INDEX || self.valueIndex == SELF_INTRO_ITEM_INDEX)
     {
         [self.valueTextView  setFrame:CGRectMake(20 , 60, 280 , 100)];
         self.valueTextView.text = self.valueText;
         [self.view addSubview:self.valueTextView];
         [self.valueTextView becomeFirstResponder];
+        
+        [self.view addSubview:self.restCountLabel];
     }
     else {
         if (self.valueIndex == NICKNAME_ITEM_INDEX) {
@@ -253,6 +274,7 @@
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField
 {
     [self.delegate passStringValue:self.valueTextField.text andIndex:self.valueIndex];
+    return YES;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -295,6 +317,8 @@
 
 - (void)dateChanged
 {
+    NSString *_horoscope = [self.datePicker.date horoscope];
+    self.horoscopeLabel.text = _horoscope;
     [self.delegate passNSDateValue:self.datePicker.date  andIndex:self.valueIndex];
 }
 /////////////////////////////////////////////////////////////////////////////////////
@@ -306,6 +330,37 @@
     [self.delegate passStringValue:self.valueTextView.text andIndex:self.valueIndex];
 }
 
+-(BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+{
+    NSString * toBeString = [textView.text stringByReplacingCharactersInRange:range withString:text];
+    
+    if (self.valueTextView == textView)
+    {
+        if (self.valueIndex == SIGNATURE_ITEM_INDEX ) {
+            
+            self.restCountLabel.text = [NSString stringWithFormat:@"%i", SIGNATURE_MAX_LENGTH - [self.valueTextView.text length]];
+            
+            if ([toBeString length] > SIGNATURE_MAX_LENGTH) {
+                textView.text = [toBeString substringToIndex:SIGNATURE_MAX_LENGTH];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:T(@"超过最大字数不能输入了") delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                [alert show];
+                return NO;
+            }
+        }else if ( self.valueIndex  == SELF_INTRO_ITEM_INDEX){
+            self.restCountLabel.text = [NSString stringWithFormat:@"%i", SELF_INTRO_MAX_LENGTH - [self.valueTextView.text length]];
+            
+            if ([toBeString length] > SELF_INTRO_MAX_LENGTH) {
+                textView.text = [toBeString substringToIndex:SELF_INTRO_MAX_LENGTH];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:T(@"超过最大字数不能输入了") delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                [alert show];
+                return NO;
+            }
+            
+        }
+        
+    }
+    return YES;
+}
 
 
 - (void)viewDidUnload
