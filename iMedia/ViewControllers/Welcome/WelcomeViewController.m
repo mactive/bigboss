@@ -96,6 +96,7 @@
 
 - (void)welcomeAction:(id)sender
 {
+    [[self appDelegate] disableLeftBarButtonItemOnNavbar:NO];
     [[self appDelegate] startMainSession];
 }
 

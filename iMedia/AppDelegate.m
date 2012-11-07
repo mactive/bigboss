@@ -326,13 +326,13 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 ////////////////////////////////////////////////////////////////////////////////////
 - (void) disableLeftBarButtonItemOnNavbar:(BOOL)disable
 {
-    static UILabel *l = nil;
+    static UIImageView *l = nil;
     
     if (disable) {
         if (l != nil)
             return;
-        l = [[UILabel alloc] initWithFrame:CGRectMake(0, 20, 160, 44)];
-        l.backgroundColor = [UIColor redColor];
+        l = [[UIImageView alloc] initWithFrame:CGRectMake(0, 20, 80, 44)];
+        l.image = [UIImage imageNamed:@"navigationBar_bg_part.png"];
         l.userInteractionEnabled = YES;
         [self.window addSubview:l];
     }

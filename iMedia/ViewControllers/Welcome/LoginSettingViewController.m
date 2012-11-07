@@ -77,14 +77,21 @@
     
     self.welcomeLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0 , 320, 44)];
     [self.welcomeLabel setTextAlignment:NSTextAlignmentCenter];
-    [self.welcomeLabel setBackgroundColor:RGBCOLOR(62, 67, 76)];
+    [self.welcomeLabel setBackgroundColor:[UIColor clearColor]];
     [self.welcomeLabel setFont:[UIFont systemFontOfSize:16.0]];
     self.welcomeLabel.textColor = [UIColor whiteColor];
     self.welcomeLabel.numberOfLines = 2;
     self.welcomeLabel.shadowColor = [UIColor blackColor];
     self.welcomeLabel.shadowOffset = CGSizeMake(0, 1);
     self.welcomeLabel.text = T(@"请设置昵称和性别");
-    [self.view addSubview:self.welcomeLabel];
+    
+    
+    
+    UIImageView * welcomeBg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
+    welcomeBg.image = [UIImage imageNamed:@"navigationBar_bg.png"];
+    [welcomeBg addSubview:self.welcomeLabel];
+    [self.view addSubview:welcomeBg];
+
     
     self.noticeLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 44, 320, 20)];
     [self.noticeLabel setTextAlignment:NSTextAlignmentCenter];
@@ -104,7 +111,7 @@
     [self.displayNameLabel setTextColor:[UIColor grayColor]];
     self.displayNameLabel.shadowColor = [UIColor whiteColor];
     self.displayNameLabel.shadowOffset = CGSizeMake(0, 1);
-    self.displayNameLabel.text = T(@"姓名");
+    self.displayNameLabel.text = T(@"昵称");
     self.displayNameLabel.backgroundColor = [UIColor clearColor];
     [self.view addSubview:self.displayNameLabel];
     
@@ -124,6 +131,7 @@
     self.displayNameField.textColor = [UIColor grayColor];
     self.displayNameField.backgroundColor = [UIColor whiteColor];
     self.displayNameField.delegate = self;
+    self.displayNameField.textAlignment = NSTextAlignmentCenter;
     self.displayNameField.returnKeyType = UIReturnKeyNext;
     self.displayNameField.autocapitalizationType = UITextAutocapitalizationTypeNone;
     self.displayNameField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;

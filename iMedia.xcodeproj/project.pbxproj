@@ -114,6 +114,7 @@
 		26A587781649199600009968 /* RateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 26A587771649199600009968 /* RateViewController.m */; };
 		26C76E5A162EB01200298865 /* barbutton_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26C76E59162EB01200298865 /* barbutton_bg@2x.png */; };
 		26C76E65162EB4F400298865 /* UINavigationBar+Background.m in Sources */ = {isa = PBXBuildFile; fileRef = 26C76E64162EB4F400298865 /* UINavigationBar+Background.m */; };
+		26E75AF1164A787200774755 /* navigationBar_bg_part@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26E75AF0164A787200774755 /* navigationBar_bg_part@2x.png */; };
 		26F3BF1916428DDB00E2899C /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F3BF1816428DDB00E2899C /* MBProgressHUD.m */; };
 		26F3BF23164294AC00E2899C /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F3BF22164294AC00E2899C /* LoginViewController.m */; };
 		26F759E4163CEF70005E9FB4 /* ProfileMeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F759E3163CEF6F005E9FB4 /* ProfileMeController.m */; };
@@ -482,6 +483,7 @@
 		26C76E59162EB01200298865 /* barbutton_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "barbutton_bg@2x.png"; path = "Resources/barbutton_bg@2x.png"; sourceTree = "<group>"; };
 		26C76E63162EB4F400298865 /* UINavigationBar+Background.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UINavigationBar+Background.h"; path = "ViewControllers/ViewCategory/UINavigationBar+Background.h"; sourceTree = "<group>"; };
 		26C76E64162EB4F400298865 /* UINavigationBar+Background.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UINavigationBar+Background.m"; path = "ViewControllers/ViewCategory/UINavigationBar+Background.m"; sourceTree = "<group>"; };
+		26E75AF0164A787200774755 /* navigationBar_bg_part@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "navigationBar_bg_part@2x.png"; path = "Resources/navigationBar_bg_part@2x.png"; sourceTree = "<group>"; };
 		26F3BF1716428DDB00E2899C /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBProgressHUD.h; path = contrib/MBProgressHUD.h; sourceTree = "<group>"; };
 		26F3BF1816428DDB00E2899C /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBProgressHUD.m; path = contrib/MBProgressHUD.m; sourceTree = "<group>"; };
 		26F3BF21164294AC00E2899C /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginViewController.h; path = ViewControllers/Welcome/LoginViewController.h; sourceTree = "<group>"; };
@@ -936,6 +938,7 @@
 			isa = PBXGroup;
 			children = (
 				266958311647DEA300A7106C /* login_intro_oyeah@2x.png */,
+				26E75AF0164A787200774755 /* navigationBar_bg_part@2x.png */,
 				2674B857164A661A0092D980 /* 37x-Checkmark.png */,
 				2674B858164A661A0092D980 /* 37x-Checkmark@2x.png */,
 				2674B84E164A3DB60092D980 /* button_add_bg@2x.png */,
@@ -2121,6 +2124,7 @@
 				2674B84F164A3DB60092D980 /* button_add_bg@2x.png in Resources */,
 				2674B859164A661A0092D980 /* 37x-Checkmark.png in Resources */,
 				2674B85A164A661A0092D980 /* 37x-Checkmark@2x.png in Resources */,
+				26E75AF1164A787200774755 /* navigationBar_bg_part@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
