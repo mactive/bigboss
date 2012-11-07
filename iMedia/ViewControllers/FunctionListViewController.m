@@ -94,7 +94,12 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    
+    [self initFriendRequestDictFromDB];
 
+}
+- (void) initFriendRequestDictFromDB
+{
     NSManagedObjectContext *moc = self.managedObjectContext;
     NSEntityDescription *entityDescription = [NSEntityDescription
                                               entityForName:@"FriendRequest" inManagedObjectContext:moc];
@@ -153,6 +158,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             FriendRequest *newFriendRequest = [[ModelHelper sharedInstance] newFriendRequestWithEPostalID:fromJid andJson:responseObject];
             MOCSave(self.managedObjectContext);
 
+            if ([self.friendRequestDict count] == 0) {
+                [self initFriendRequestDictFromDB];
+            }
             [self.friendRequestDict setValue:newFriendRequest forKey:fromJid];
             self.newFriendRequestCount +=1;
             

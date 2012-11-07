@@ -186,7 +186,7 @@
 
 - (void)confirmRequest
 {
-    self.request.state = [NSNumber numberWithInt:FriendRequestApproved];
+    self.request.state = FriendRequestApproved;
     [[ModelHelper sharedInstance] createActiveUserWithFullServerJSONData:_localJSONDataDict];
     [[XMPPNetworkCenter sharedClient] acceptPresenceSubscriptionRequestFrom:self.request.requesterEPostalID andAddToRoster:YES];
     [[self appDelegate].contactListController contentChanged];
@@ -199,7 +199,7 @@
 
 - (void)cancelRequest
 {
-    self.request.state = [NSNumber numberWithInt:FriendRequestDeclined];
+    self.request.state = FriendRequestDeclined;
     [[XMPPNetworkCenter sharedClient] rejectPresenceSubscriptionRequestFrom:self.request.requesterEPostalID];
 
     HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
