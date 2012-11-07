@@ -16,10 +16,6 @@ typedef enum _FriendRequestState
     FriendRequestUnprocessed = 3
 } FriendRequestStateType;
 
-@interface JSONToDataTransformer : NSValueTransformer {
-}
-@end
-
 @interface FriendRequest : NSManagedObject
 
 @property (nonatomic, retain) NSString * userJSONData;

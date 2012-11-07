@@ -19,10 +19,12 @@
 #import "ModelHelper.h"
 #import "ContactListViewController.h"
 #import "MBProgressHUD.h"
+#import "NSObject+SBJson.h"
 
 @interface RequestViewController ()<MBProgressHUDDelegate>
 {
     MBProgressHUD *HUD;
+    id  _localJSONDataDict;
 }
 
 @property(nonatomic, strong) UIView * requestView;
@@ -66,10 +68,11 @@
     NSLog(@"%@",self.request);
 
     NSDate * date = self.request.requestDate;
+    _localJSONDataDict = [self.request.userJSONData JSONValue];
     
-    NSString* title = [ServerDataTransformer getNicknameFromServerJSON:self.request.userJSONData];
+    NSString* title = [ServerDataTransformer getNicknameFromServerJSON:_localJSONDataDict];
     if (title == nil || [title isEqualToString:@""]) {
-        title = [ServerDataTransformer getGUIDFromServerJSON:self.request.userJSONData];
+        title = [ServerDataTransformer getGUIDFromServerJSON:_localJSONDataDict];
     }
 	// Do any additional setup after loading the view.
     
@@ -152,7 +155,7 @@
     [avatarLayer setBorderWidth:1.0];
     [avatarLayer setBorderColor:[[UIColor whiteColor] CGColor]];
 //    avatarImage setImage:
-    [avatarImage setImageWithURL:[NSURL URLWithString:[ServerDataTransformer getThumbnailFromServerJSON:self.request.userJSONData]]];
+    [avatarImage setImageWithURL:[NSURL URLWithString:[ServerDataTransformer getThumbnailFromServerJSON:_localJSONDataDict]]];
     [self.contentView addSubview:avatarImage];
 
     
@@ -162,7 +165,7 @@
 	label.textAlignment = UITextAlignmentLeft;
     label.textColor = RGBCOLOR(127, 127, 127);
     label.backgroundColor = [UIColor clearColor];
-    label.text = [ServerDataTransformer getNicknameFromServerJSON:self.request.userJSONData];
+    label.text = [ServerDataTransformer getNicknameFromServerJSON:_localJSONDataDict];
     [self.contentView addSubview:label];
 
     label = [[UILabel alloc] initWithFrame:CGRectMake(100, 30, 170, 60)];
@@ -171,7 +174,7 @@
     label.textColor = RGBCOLOR(158, 158, 158);
     label.numberOfLines = 0;
     label.backgroundColor = [UIColor clearColor];
-    label.text = [ServerDataTransformer getSignatureFromServerJSON:self.request.userJSONData];
+    label.text = [ServerDataTransformer getSignatureFromServerJSON:_localJSONDataDict];
     [self.contentView addSubview:label];   
 
     [self.requestView addSubview:self.contentView];
@@ -184,7 +187,7 @@
 - (void)confirmRequest
 {
     self.request.state = [NSNumber numberWithInt:FriendRequestApproved];
-    [[ModelHelper sharedInstance] createActiveUserWithFullServerJSONData:self.request.userJSONData];
+    [[ModelHelper sharedInstance] createActiveUserWithFullServerJSONData:_localJSONDataDict];
     [[XMPPNetworkCenter sharedClient] acceptPresenceSubscriptionRequestFrom:self.request.requesterEPostalID andAddToRoster:YES];
     [[self appDelegate].contactListController contentChanged];
     

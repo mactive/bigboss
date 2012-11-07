@@ -151,7 +151,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         if ([type isEqualToString:@"user"] && [self.friendRequestDict valueForKey:fromJid] == nil) {
             
             FriendRequest *newFriendRequest = [[ModelHelper sharedInstance] newFriendRequestWithEPostalID:fromJid andJson:responseObject];
- //           MOCSave(self.managedObjectContext);
+            MOCSave(self.managedObjectContext);
 
             [self.friendRequestDict setValue:newFriendRequest forKey:fromJid];
             self.newFriendRequestCount +=1;
