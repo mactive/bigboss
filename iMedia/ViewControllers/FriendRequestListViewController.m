@@ -212,6 +212,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 - (void)configureCell:(UITableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath {
     
     FriendRequest *request = [self.friendRequestArray objectAtIndex:indexPath.row];
+    NSDictionary *localDict = [request.userJSONData JSONValue];
     
     // set max size
     CGSize nameMaxSize = CGSizeMake(MIDDLE_COLUMN_WIDTH, LABEL_HEIGHT*1);
@@ -224,7 +225,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
     //set avatar
     imageView = (UIImageView *)[cell viewWithTag:AVATAR_TAG];
-    NSString *imageUrl = [ServerDataTransformer getAvatarFromServerJSON:request.userJSONData];
+    NSString *imageUrl = [ServerDataTransformer getAvatarFromServerJSON:localDict];
     [imageView setImageWithURL:[NSURL URLWithString:imageUrl]];
     
     //set sns icon
@@ -253,7 +254,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
     // set the name text
     UILabel *nameLabel = (UILabel *)[cell viewWithTag:NAME_TAG];
-    NSString *_nameString = [ServerDataTransformer getNicknameFromServerJSON:request.userJSONData];
+    NSString *_nameString = [ServerDataTransformer getNicknameFromServerJSON:localDict];
     
     // set the state text
     UILabel *stateLabel = (UILabel *)[cell viewWithTag:STATE_TAG];
@@ -277,7 +278,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
     // set the user signature
     UILabel *signatureLabel = (UILabel *)[cell viewWithTag:SUMMARY_TAG];
-    NSString *signature =[ServerDataTransformer getSignatureFromServerJSON:request.userJSONData];
+    NSString *signature =[ServerDataTransformer getSignatureFromServerJSON:localDict];
     
     CGSize signatureSize = [signature sizeWithFont:signatureLabel.font constrainedToSize:summaryMaxSize lineBreakMode: UILineBreakModeTailTruncation];
     if (signatureSize.height > LABEL_HEIGHT) {
