@@ -15,6 +15,7 @@
 #import "Me.h"
 #import "ConversationsController.h"
 #import "AddFriendController.h"
+#import "AddFriendByIDController.h"
 #import "UINavigationBar+Background.h"
 #import <QuartzCore/QuartzCore.h>
 #import "pinyin.h"
@@ -75,7 +76,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 }
 
 - (void)add:(id)sender {
-    AddFriendController *controller = [[AddFriendController alloc] initWithStyle:UITableViewStyleGrouped];
+    AddFriendByIDController *controller  = [[AddFriendByIDController alloc]initWithNibName:nil bundle:nil];
+//    AddFriendController *controller = [[AddFriendController alloc] initWithStyle:UITableViewStyleGrouped];
     [self.navigationController pushViewController:controller animated:YES];
 }
 
@@ -401,7 +403,11 @@ NSInteger SortIndex(id char1, id char2, void* context)
         _labelHeight = 20.0;
     }
     signatureLabel.text = signature;
-    signatureLabel.frame = CGRectMake(signatureLabel.frame.origin.x, _labelHeight, signatureSize.width + SUMMARY_PADDING, signatureSize.height+SUMMARY_PADDING);
+    signatureLabel.frame = CGRectMake(280 - signatureSize.width - SUMMARY_PADDING, _labelHeight, signatureSize.width + SUMMARY_PADDING, signatureSize.height+SUMMARY_PADDING);
+    
+    if ([signature length] == 0 || signature == nil ) {
+        [signatureLabel removeFromSuperview];
+    }
 
 }
 

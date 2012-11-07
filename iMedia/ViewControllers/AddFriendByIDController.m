@@ -63,7 +63,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     self.desc = [[UILabel alloc]initWithFrame:CGRectMake(30, 20, 300 , 30)];
     
     [self.desc setFont:[UIFont boldSystemFontOfSize:20.0]];
-    self.desc.text = T(@"用户名,用户ID");
+    self.desc.text = T(@"用户ID");
     [self.desc setBackgroundColor:[UIColor clearColor]];
     self.desc.textColor = [UIColor grayColor];
     self.desc.shadowColor = [UIColor whiteColor];
