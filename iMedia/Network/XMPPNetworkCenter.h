@@ -34,6 +34,8 @@
 
 -(BOOL)sendMessage:(Message *)message;
 -(NSString *)subscribeToChannel:(NSString *)nodeName withCallbackBlock:(void (^)(NSError *error))block;
+-(NSString *)unsubscribeToChannel:(NSString *)nodeName withCallbackBlock:(void (^)(NSError *error))block;
+
 -(void)addBuddy:(NSString *)jidStr withCallbackBlock:(void (^)(NSError *error))block;
 -(void)removeBuddy:(NSString *)jidStr withCallbackBlock:(void (^)(NSError *erro))block;
 
