@@ -638,7 +638,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
 	UIImage *originalImage = [info objectForKey:UIImagePickerControllerEditedImage];
     NSData *imageData = UIImageJPEGRepresentation(originalImage, JPEG_QUALITY);
-    NSLog(@"Imagedata size %@", imageData.bytes);
+    NSLog(@"Imagedata size %i", [imageData length]);
     UIImage *image = [UIImage imageWithData:imageData];
     
     
