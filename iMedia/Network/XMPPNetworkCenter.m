@@ -632,6 +632,8 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     MOCSave(_managedObjectContext);
 }
 
+/* 
+ //Comment this out because it let a user to add another user without consent.
 - (void)xmppRoster:(XMPPRosterMemoryStorage *)sender didUpdateUser:(XMPPUserMemoryStorageObject *)user
 {
     DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
@@ -669,6 +671,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     }
 
 }
+ */
 
 - (void)xmppRosterDidChange:(XMPPRosterMemoryStorage *)sender
 {

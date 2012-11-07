@@ -115,27 +115,22 @@
     [self.confirmButton setBackgroundImage:[UIImage imageNamed:@"button_add_bg.png"] forState:UIControlStateNormal];
     
     
-    
-    self.cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 250, 275, 40)];
-    [self.cancelButton.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
-    [self.cancelButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
-    [self.cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-    [self.cancelButton.titleLabel setTextAlignment:UITextAlignmentCenter];
-    if (request.state == FriendRequestDeclined) {
-        [self.cancelButton setTitle:T(@"已拒绝") forState:UIControlStateNormal];
-    } else if (request.state == FriendRequestApproved) {
-        [self.cancelButton setTitle:T(@"已添加") forState:UIControlStateNormal];
-    } else {
+    if (request.state == FriendRequestUnprocessed) {
+        self.cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 250, 275, 40)];
+        [self.cancelButton.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
+        [self.cancelButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+        [self.cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+        [self.cancelButton.titleLabel setTextAlignment:UITextAlignmentCenter];
         [self.cancelButton setTitle:T(@"拒绝请求") forState:UIControlStateNormal];
         [self.cancelButton addTarget:self action:@selector(cancelRequest) forControlEvents:UIControlEventTouchUpInside];
+        [self.cancelButton setBackgroundImage:[UIImage imageNamed:@"button_cancel_bg.png"] forState:UIControlStateNormal];
+        [self.requestView addSubview:self.cancelButton];
     }
-    [self.cancelButton setBackgroundImage:[UIImage imageNamed:@"button_cancel_bg.png"] forState:UIControlStateNormal];
-        
     
     [self.requestView addSubview:self.titleLabel];
     [self.requestView addSubview:self.timeLabel];
     [self.requestView addSubview:self.confirmButton];
-    [self.requestView addSubview:self.cancelButton];
+    
     
     
     [self.view addSubview:self.requestView];
