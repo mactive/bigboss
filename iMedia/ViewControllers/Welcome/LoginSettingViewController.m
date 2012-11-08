@@ -85,8 +85,6 @@
     self.welcomeLabel.shadowOffset = CGSizeMake(0, 1);
     self.welcomeLabel.text = T(@"请设置昵称和性别");
     
-    
-    
     UIImageView * welcomeBg = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
     welcomeBg.image = [UIImage imageNamed:@"navigationBar_bg.png"];
     [welcomeBg addSubview:self.welcomeLabel];
@@ -103,7 +101,6 @@
     self.noticeLabel.text = T(@"性别一旦选定,不可以更改");
     
     [self.view addSubview:self.noticeLabel];
-    
     
     self.displayNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(LEFT_OFFSET, LABEL_HEIGHT+LOGO_HEIGHT, LABEL_WIDTH, 30)];
     [self.displayNameLabel setBackgroundColor:[UIColor clearColor]];
@@ -138,14 +135,18 @@
 
     [self.view addSubview:self.displayNameField];
     
-        
-    
     self.genderTitleDict = [ServerDataTransformer sexDict];
     self.genderTitleValue = [self.genderTitleDict allValues];
     self.genderTitleKey = [self.genderTitleDict allKeys];
     self.genderControl = [[UISegmentedControl alloc]initWithItems:self.genderTitleValue];
     self.genderControl.frame = CGRectMake(TEXTFIELD_OFFSET , LABEL_HEIGHT*2+LOGO_HEIGHT-5, TEXTFIELD_WIDTH, 40);
-    self.genderControl.selectedSegmentIndex = -1; //设置默认选择项索引
+    
+    if (self.me.gender != nil) {
+        self.genderControl.selectedSegmentIndex = [self.genderTitleKey indexOfObject:self.me.gender];
+    }else{
+        self.genderControl.selectedSegmentIndex = -1; //设置默认选择项索引
+    }
+    
     [self.genderControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
 
     
@@ -170,7 +171,7 @@
 
 - (void)welcomeAction
 {
-    [[AppNetworkAPIClient sharedClient] uploadMe:self.me withBlock:nil];
+//    [[AppNetworkAPIClient sharedClient] uploadMe:self.me withBlock:nil];
     [self dismissModalViewControllerAnimated:YES];
 }
 
@@ -202,6 +203,41 @@
 
 #pragma mark - textfield delegate
 
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string;
+{
+    if ([string isEqualToString:@"\n"])
+    {
+        return YES;
+    }
+    NSString * toBeString = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    
+    if (self.displayNameField == textField)
+    {
+        NSLog(@"[toBeString length] %i",[toBeString length]);
+        if ([toBeString length] == 0) {
+            [self.welcomeButton setEnabled:NO];
+            [self.welcomeButton setAlpha:0.3];
+        }else{
+            [self.welcomeButton setEnabled:YES];
+            
+            if ([toBeString length] > NICKNAME_MAX_LENGTH) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:T(@"超过最大字数不能输入了") delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                [alert show];
+            }
+            
+            if (self.welcomeButton.alpha != 1.0) {
+                [self.welcomeButton setAlpha:0.3];
+                [UIView beginAnimations:nil context:NULL];
+                [UIView setAnimationDuration:0.5];
+                [self.welcomeButton setAlpha:1];
+                [self.welcomeButton addTarget:self action:@selector(welcomeAction) forControlEvents:UIControlEventTouchUpInside];
+                [UIView commitAnimations];
+            }
+            
+        }
+    }
+    return YES;
+}
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     if ([self.displayNameField isEqual:textField]) {
@@ -210,14 +246,13 @@
 
         if ([self.me.gender length] != 0 && [self.me.displayName length] != 0 )
         {
-            
-                [self.welcomeButton setHidden:NO];
-                [self.welcomeButton setAlpha:0.3];
-                [UIView beginAnimations:nil context:NULL];
-                [UIView setAnimationDuration:0.5];
-                [self.welcomeButton setAlpha:1];
-                [self.welcomeButton addTarget:self action:@selector(welcomeAction) forControlEvents:UIControlEventTouchUpInside];
-                [UIView commitAnimations];
+            [self.welcomeButton setHidden:NO];
+            [self.welcomeButton setAlpha:0.3];
+            [UIView beginAnimations:nil context:NULL];
+            [UIView setAnimationDuration:0.5];
+            [self.welcomeButton setAlpha:1];
+            [self.welcomeButton addTarget:self action:@selector(welcomeAction) forControlEvents:UIControlEventTouchUpInside];
+            [UIView commitAnimations];
         }else{
             [self.welcomeButton setHidden:YES];
         }

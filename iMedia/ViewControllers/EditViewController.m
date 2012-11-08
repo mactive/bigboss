@@ -63,12 +63,6 @@
 @synthesize ageValueLabel;
 @synthesize horoscopeValueLabel;
 
-#define NICKNAME_MAX_LENGTH 20
-#define SIGNATURE_MAX_LENGTH 40
-#define SELF_INTRO_MAX_LENGTH 128
-#define CELL_MAX_LENGTH 11
-#define HOMETOWN_MAX_LENGTH 10
-
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];

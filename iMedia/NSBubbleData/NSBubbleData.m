@@ -80,6 +80,7 @@ const UIEdgeInsets textInsetsSomeone = {5, 15, 11, 10};
 #pragma mark - Image bubble
 
 const UIEdgeInsets imageInsetsMine = {11, 13, 16, 22};
+const UIEdgeInsets templateInsetsMine = {30, 30, 16, 22};
 const UIEdgeInsets imageInsetsSomeone = {11, 18, 16, 14};
 
 + (id)dataWithImage:(UIImage *)image date:(NSDate *)date type:(NSBubbleType)type
@@ -146,16 +147,16 @@ const UIEdgeInsets imageInsetsSomeone = {11, 18, 16, 14};
 #endif
     
     if (image == nil || [image length] == 0) {
-        self.templateView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 275, label.frame.size.height)];
+        self.templateView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 275, label.frame.size.height + TEMPLATE_TITLE_HEIGHT)];
     } else {
-        self.templateView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 275, TEMPLATE_IMAGE_HEIGHT+label.frame.size.height)];
+        self.templateView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 275, TEMPLATE_IMAGE_HEIGHT+label.frame.size.height+TEMPLATE_TITLE_HEIGHT)];
     }
     
 #if !__has_feature(objc_arc)
     [self.templateView autorelease];
 #endif
     
-    UIEdgeInsets insets = (type == BubbleTypeMine ? imageInsetsMine : imageInsetsSomeone);
+    UIEdgeInsets insets = templateInsetsMine;
     return [self initWithView:self.templateView date:date content:urlString type:type insets:insets];
     
 }

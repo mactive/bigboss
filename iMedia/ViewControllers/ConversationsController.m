@@ -365,6 +365,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
     _detailController.managedObjectContext = self.managedObjectContext;
     [self.navigationController popToRootViewControllerAnimated:NO];
+    [_detailController setHidesBottomBarWhenPushed:YES];
     [self.navigationController pushViewController:_detailController animated:YES];
 }
 

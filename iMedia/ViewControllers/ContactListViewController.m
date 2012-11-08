@@ -224,7 +224,7 @@ NSInteger SortIndex(id char1, id char2, void* context)
             
             
             if (_first_letter != NSNotFound) {
-                            [[_section_temp objectAtIndex:_first_letter] addObject:identity];
+                [[_section_temp objectAtIndex:_first_letter] addObject:identity];
             }
         }
 
