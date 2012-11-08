@@ -188,6 +188,8 @@
     
     HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     HUD.delegate = self;
+    HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
+    HUD.mode = MBProgressHUDModeCustomView;
     HUD.labelText = T(@"确认成功");
     [HUD hide:YES afterDelay:2];
 }
@@ -199,6 +201,7 @@
 
     HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     HUD.delegate = self;
+    HUD.mode = MBProgressHUDModeText;
     HUD.labelText = T(@"取消成功");
     [HUD hide:YES afterDelay:2];
 }
