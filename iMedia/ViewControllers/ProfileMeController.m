@@ -647,11 +647,10 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     }
 
     UIImage *thumbnail = [image resizedImageToSize:CGSizeMake(75, 75)];
-    Avatar *avatar;
     
     if (self.editingAlbumIndex != NSNotFound) {
         
-        avatar = [self.albumArray objectAtIndex:self.editingAlbumIndex];
+        Avatar *avatar = [self.albumArray objectAtIndex:self.editingAlbumIndex];
         self.editingAlbumIndex = NSNotFound;
     
         // HUD show
@@ -660,13 +659,9 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
         HUD.labelText = T(@"上传中");
         
         //网路传输
-        [[AppNetworkAPIClient sharedClient] storeAvatar:avatar forMe:self.me andOrder:avatar.sequence.intValue withBlock:^(id responseObject, NSError *error) {
+        [[AppNetworkAPIClient sharedClient] storeImage:image thumbnail:thumbnail forMe:me andAvatar:avatar withBlock:^(id responseObject, NSError *error) {
             if ((responseObject != nil) && error == nil) {
 
-                avatar.image = image;
-                avatar.thumbnail = thumbnail;
-                avatar.imageRemoteURL = @"";
-                avatar.imageRemoteThumbnailURL = @"";
                 MOCSave(self.managedObjectContext);
 
                 // HUD hide
