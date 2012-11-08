@@ -171,7 +171,7 @@
 
 - (void)welcomeAction
 {
-    [[AppNetworkAPIClient sharedClient] uploadMe:self.me withBlock:nil];
+//    [[AppNetworkAPIClient sharedClient] uploadMe:self.me withBlock:nil];
     [self dismissModalViewControllerAnimated:YES];
 }
 
@@ -219,8 +219,7 @@
             [self.welcomeButton setAlpha:0.3];
         }else{
             if ([self.me.gender length] > 0) {
-                
-            
+                self.me.displayName = self.displayNameField.text;
                 [self.welcomeButton setEnabled:YES];
                 
                 if ([toBeString length] > NICKNAME_MAX_LENGTH) {

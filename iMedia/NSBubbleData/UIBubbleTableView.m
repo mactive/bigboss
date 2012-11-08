@@ -13,8 +13,10 @@
 #import "UIBubbleHeaderTableViewCell.h"
 #import "UIBubbleTypingTableViewCell.h"
 #import "RateViewController.h"
+#import "WebViewController.h"
 #import "AppDelegate.h"
 #import "ConversationsController.h"
+#import "XMPPFramework.h"
 
 @interface UIBubbleTableView ()
 
@@ -264,9 +266,14 @@
         [[self appDelegate].conversationController.chatDetailController.navigationController presentModalViewController:rateViewController animated:YES];
     }
     if (data.type == BubbleTypeTemplateview) {
-        RateViewController *rateViewController = [[RateViewController alloc]initWithNibName:nil bundle:nil];
-        rateViewController.conversionKey = data.content;
-        [[self appDelegate].conversationController.chatDetailController.navigationController presentModalViewController:rateViewController animated:YES];
+        
+        NSXMLElement *element = [[NSXMLElement alloc] initWithXMLString:data.content error:nil];
+        NSString* imageString = [[element elementForName:@"link9"] stringValue];
+        
+        WebViewController *controller = [[WebViewController alloc]initWithNibName:nil bundle:nil];
+        controller.urlString = imageString;
+        [[self appDelegate].conversationController.chatDetailController.navigationController setHidesBottomBarWhenPushed:YES];
+        [[self appDelegate].conversationController.chatDetailController.navigationController pushViewController:controller animated:YES];
     }
 }
 

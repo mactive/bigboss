@@ -689,7 +689,7 @@
     HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     HUD.delegate = self;
     HUD.mode = MBProgressHUDModeText;
-    HUD.labelText = T(@"添加成功");
+    HUD.labelText = T(@"请求已发送");
     [HUD hide:YES afterDelay:2];
 
     if (newUser.state.intValue != IdentityStateActive) {
