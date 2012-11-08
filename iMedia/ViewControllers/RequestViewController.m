@@ -195,6 +195,7 @@
 - (void)cancelRequest
 {
     self.request.state = FriendRequestDeclined;
+    [[XMPPNetworkCenter sharedClient] removeBuddy:self.request.requesterEPostalID withCallbackBlock:nil];
     [[XMPPNetworkCenter sharedClient] rejectPresenceSubscriptionRequestFrom:self.request.requesterEPostalID];
 
     HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
