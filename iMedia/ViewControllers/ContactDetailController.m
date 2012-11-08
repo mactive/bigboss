@@ -8,6 +8,7 @@
 
 #import "ContactDetailController.h"
 #import "User.h"
+#import "Me.h"
 #import "Channel.h"
 #import "ChatWithIdentity.h"
 #import "ModelHelper.h"
@@ -21,6 +22,7 @@
 #import "MBProgressHUD.h"
 #import "AFImageRequestOperation.h"
 #import "AppNetworkAPIClient.h"
+#import "AppDelegate.h"
 #import "NSDate+timesince.h"
 
 @interface ContactDetailController ()<MBProgressHUDDelegate>
@@ -73,6 +75,11 @@
         self.albumViewController = [[AlbumViewController alloc] init];
     }
     return self;
+}
+
+- (AppDelegate *)appDelegate
+{
+	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
 #define VIEW_ALBUM_WIDTH 75
@@ -558,11 +565,47 @@
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex == 0 ) {
+        NSString* hisGUID;
+        if (self.user != nil) {
+            hisGUID = self.user.guid;
+        } else {
+            hisGUID = [ServerDataTransformer getGUIDFromServerJSON:self.jsonData];
+        }
+        
         HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         HUD.delegate = self;
-        HUD.mode = MBProgressHUDModeText;
-        HUD.labelText = T(@"举报成功");
+        HUD.labelText = T(@"正在发送");
+        
         [HUD hide:YES afterDelay:2];
+
+        [[AppNetworkAPIClient sharedClient] reportID:hisGUID myID:[self appDelegate].me.guid type:@"p" description:@"用户举报，无具体描述" otherInfo:@"" withBlock:nil];
+        
+        self.user.state = [NSNumber numberWithInt:IdentityStatePendingRemoveFriend];
+                
+        [[XMPPNetworkCenter sharedClient] removeBuddy:self.user.ePostalID withCallbackBlock:^(NSError *error) {
+            
+            if (error == nil) {
+                [HUD hide:YES];
+                
+                HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                HUD.delegate = self;
+                HUD.mode = MBProgressHUDModeText;
+                HUD.labelText = T(@"举报成功");
+                [HUD hide:YES afterDelay:2];
+                
+                [self.navigationController popViewControllerAnimated:YES];
+                
+            }else{
+                [HUD hide:YES];
+                
+                HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                HUD.delegate = self;
+                HUD.mode = MBProgressHUDModeText;
+                HUD.labelText = T(@"网络问题，请稍候再试");
+                [HUD hide:YES afterDelay:2];
+            }
+        }];
+        
     }
 }
 

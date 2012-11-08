@@ -59,7 +59,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 {
     [super viewWillAppear:animated];
     self.usernameField.text = [[NSUserDefaults standardUserDefaults] stringForKey:kXMPPmyUsername];
-    self.passwordField.text = [[NSUserDefaults standardUserDefaults] stringForKey:kXMPPmyPassword];
+//    self.passwordField.text = [[NSUserDefaults standardUserDefaults] stringForKey:kXMPPmyPassword];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
@@ -194,6 +194,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     self.passwordField.font = [UIFont systemFontOfSize:18.0];
     self.passwordField.textColor = [UIColor grayColor];
     self.passwordField.delegate = self;
+    self.passwordField.placeholder = T(@"密码");
     self.passwordField.backgroundColor = RGBCOLOR(240, 240, 240);
     self.passwordField.layer.borderColor = [RGBCOLOR(147, 150, 157) CGColor];
     self.passwordField.layer.borderWidth  = 1.0f;

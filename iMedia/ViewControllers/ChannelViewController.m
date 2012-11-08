@@ -17,6 +17,8 @@
 #import "MBProgressHUD.h"
 #import "ServerDataTransformer.h"
 #import "AppNetworkAPIClient.h"
+#import "AppDelegate.h"
+#import "ContactListViewController.h"
 
 @interface ChannelViewController ()<MBProgressHUDDelegate>
 {
@@ -48,6 +50,11 @@
         // Custom initialization
     }
     return self;
+}
+
+- (AppDelegate *)appDelegate
+{
+	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
 - (void)loadView
@@ -181,6 +188,25 @@
         newChannel = [NSEntityDescription insertNewObjectForEntityForName:@"Channel" inManagedObjectContext:self.managedObjectContext];
         [[ModelHelper sharedInstance] populateIdentity:newChannel withJSONData:jsonData];
         newChannel.state = [NSNumber numberWithInt:IdentityStatePendingAddSubscription];
+    } else if (newChannel.state.intValue == IdentityStateInactive) {
+        newChannel.state = [NSNumber numberWithInt:IdentityStatePendingAddSubscription];
+    } else if (newChannel.state.intValue == IdentityStatePendingRemoveSubscription) {
+        HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
+        HUD.mode = MBProgressHUDModeCustomView;
+        HUD.labelText = T(@"网络错误，请稍候重试");
+        [HUD hide:YES afterDelay:2];
+        return;
+    } else if (newChannel.state.intValue == IdentityStateActive) {
+        HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
+        HUD.mode = MBProgressHUDModeCustomView;
+        HUD.labelText = T(@"已订阅");
+        [HUD hide:YES afterDelay:2];
+        return ;
+    } else {
+        NSLog(@"CRITICAL ERROR: new channel STATE wrong (%@)", newChannel);
+        return;
     }
     
     newChannel.subrequestID = [[XMPPNetworkCenter sharedClient] subscribeToChannel:nodeStr withCallbackBlock:^(NSError *error) {
@@ -196,13 +222,16 @@
             HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
             HUD.mode = MBProgressHUDModeCustomView;
-            HUD.labelText = T(@"订阅成功");
+            HUD.labelText = T(@"订阅信息已发送");
             [HUD hide:YES afterDelay:2];
-            
-            [self.confirmButton setTitle:T(@"退订此频道") forState:UIControlStateNormal];
-            [self.confirmButton removeTarget:self action:@selector(subscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
-            [self.confirmButton addTarget:self action:@selector(unSubscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
 
+            [self.confirmButton setTitle:T(@"查看信息") forState:UIControlStateNormal];
+            [self.confirmButton removeTarget:self action:@selector(subscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
+            [self.confirmButton addTarget:self action:@selector(sendMsgButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
+            /*
+            [self.cancelButton setTitle:T(@"取消订阅") forState:UIControlStateNormal];
+            [self.cancelButton addTarget:self action:@selector(unSubscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
+**/
         }];
 
     }];
@@ -215,7 +244,12 @@
         return;
     }
     
-    if (self.channel.state.intValue != IdentityStateActive) {
+    if (self.channel.state.intValue != IdentityStateActive || self.channel.state.intValue != IdentityStatePendingRemoveSubscription) {
+        HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
+        HUD.mode = MBProgressHUDModeCustomView;
+        HUD.labelText = T(@"已退订");
+        [HUD hide:YES afterDelay:1];
         return;
         
     }
@@ -224,6 +258,9 @@
         HUD = [[MBProgressHUD alloc] initWithView:self.view];
         [self.view addSubview:HUD];
         HUD.labelText = T(@"退定中");
+        
+        channel.state = [NSNumber numberWithInt:IdentityStatePendingRemoveSubscription];
+        [[self appDelegate].contactListController contentChanged];
 
         [HUD showAnimated:YES whileExecutingBlock:^{
             sleep(2);
@@ -232,8 +269,9 @@
             HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
             HUD.mode = MBProgressHUDModeCustomView;
-            HUD.labelText = T(@"退订成功");
+            HUD.labelText = T(@"退订信息已发送");
             [HUD hide:YES afterDelay:1];
+
             [self.confirmButton setTitle:T(@"订阅此频道") forState:UIControlStateNormal];
             [self.confirmButton removeTarget:self action:@selector(unSubscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
             [self.confirmButton addTarget:self action:@selector(subscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];

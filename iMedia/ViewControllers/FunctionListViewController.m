@@ -176,7 +176,11 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
                 self.newFriendRequestCount +=1;
             }
             
-            [self appDelegate].functionListController.tabBarItem.badgeValue =  [NSString stringWithFormat:@"%i", self.newFriendRequestCount];
+            if (self.newFriendRequestCount > 0 ) {
+                [self appDelegate].functionListController.tabBarItem.badgeValue =  [NSString stringWithFormat:@"%i", self.newFriendRequestCount];
+            } else {
+                [self appDelegate].functionListController.tabBarItem.badgeValue =  nil;
+            }
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {

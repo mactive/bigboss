@@ -8,8 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-#import "XMPPNetworkCenter.h"
-
 @class ContactListViewController;
 @class ConversationsController;
 @class FunctionListViewController;

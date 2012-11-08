@@ -21,6 +21,7 @@
 #import <CocoaPlant/CocoaPlant.h>
 #import "UIImageView+AFNetworking.h"
 #import "AppNetworkAPIClient.h"
+#import "XMPPNetworkCenter.h"
 #import "ConversationsController.h"
 
 // TODO: Rename to CHAT_BAR_HEIGHT_1, etc.
