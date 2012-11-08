@@ -31,9 +31,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 #import "AppDelegate.h" 
 #import "ContactListViewController.h"
 #import "UIImage+Resize.h"
+#import "XMPPJID.h"
 
-static NSString * const kAppNetworkAPIBaseURLString = @"http://192.168.1.104:8000/";
-//static NSString * const kAppNetworkAPIBaseURLString = @"http://media.wingedstone.com:8000/";
+//static NSString * const kAppNetworkAPIBaseURLString = @"http://192.168.1.104:8000/";//
+static NSString * const kAppNetworkAPIBaseURLString = @"http://media.wingedstone.com:8000/";
 
 NSString *const kXMPPmyJID = @"kXMPPmyJID";
 NSString *const kXMPPmyJIDPassword = @"kXMPPmyJIDPassword";
@@ -208,7 +209,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     if (identity.guid != nil && ![identity.guid isEqualToString:@""]) {
         getDict = [NSDictionary dictionaryWithObjectsAndKeys: identity.guid, @"guid", @"1", @"op", nil];
     } else {
-        getDict = [NSDictionary dictionaryWithObjectsAndKeys: identity.ePostalID, @"jid", @"2", @"op", nil];
+        getDict = [NSDictionary dictionaryWithObjectsAndKeys:identity.ePostalID , @"jid", @"2", @"op", nil];
     }
     
     [[AppNetworkAPIClient sharedClient] getPath:GET_DATA_PATH parameters:getDict success:^(AFHTTPRequestOperation *operation, id responseObject) {

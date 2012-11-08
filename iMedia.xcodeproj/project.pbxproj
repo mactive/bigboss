@@ -146,6 +146,9 @@
 		5646FAFD160D4BC400175B78 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5646FAFC160D4BC400175B78 /* QuartzCore.framework */; };
 		5646FAFF160F1EBF00175B78 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5646FAFE160F1EBF00175B78 /* libicucore.dylib */; };
 		5646FB23160F246500175B78 /* libCocoaPlant.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5646FB1C160F243200175B78 /* libCocoaPlant.a */; };
+		564A6F2B164B6EE100B04A00 /* Channel.m in Sources */ = {isa = PBXBuildFile; fileRef = 564A6F2A164B6EE100B04A00 /* Channel.m */; };
+		564A6F2E164B6EFE00B04A00 /* Me.m in Sources */ = {isa = PBXBuildFile; fileRef = 564A6F2D164B6EFE00B04A00 /* Me.m */; };
+		564A6F34164BE78D00B04A00 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 564A6F33164BE78D00B04A00 /* Message.m */; };
 		5661561E163E90ED00199DB4 /* FunctionListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5661561D163E90EC00199DB4 /* FunctionListViewController.m */; };
 		56615621163E9A1A00199DB4 /* FriendRequestListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56615620163E9A1900199DB4 /* FriendRequestListViewController.m */; };
 		56615625163FB8A900199DB4 /* LocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 56615624163FB8A900199DB4 /* LocationManager.m */; };
@@ -153,7 +156,6 @@
 		566743BD164123ED0043A29C /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 566743BC164123EC0043A29C /* libz.dylib */; };
 		566743C5164129630043A29C /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 566743C0164129630043A29C /* LICENSE */; };
 		566743C6164129630043A29C /* NSData+Godzippa.m in Sources */ = {isa = PBXBuildFile; fileRef = 566743C2164129630043A29C /* NSData+Godzippa.m */; };
-		566743DA164248CE0043A29C /* Channel.m in Sources */ = {isa = PBXBuildFile; fileRef = 566743D9164248CE0043A29C /* Channel.m */; };
 		566E80A21609A24C00A333EA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 566E80A11609A24C00A333EA /* UIKit.framework */; };
 		566E80A41609A24C00A333EA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 566E80A31609A24C00A333EA /* Foundation.framework */; };
 		566E80A61609A24C00A333EA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 566E80A51609A24C00A333EA /* CoreGraphics.framework */; };
@@ -296,13 +298,11 @@
 		56B4CD1A1626C9E100E046CC /* ModelHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CD181626C9E100E046CC /* ModelHelper.m */; };
 		56B4CD211627AAFB00E046CC /* Conversation.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CD201627AAFB00E046CC /* Conversation.m */; };
 		56B4CD221627AAFB00E046CC /* Conversation.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CD201627AAFB00E046CC /* Conversation.m */; };
-		56B4CD461627E55400E046CC /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CD451627E55400E046CC /* Message.m */; };
 		56B4CD531628101500E046CC /* AddFriendController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CD521628101500E046CC /* AddFriendController.m */; };
 		56B4CD541628101500E046CC /* AddFriendController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B4CD521628101500E046CC /* AddFriendController.m */; };
 		56B834FA1643B49D00941C1C /* Identity.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B834F91643B49D00941C1C /* Identity.m */; };
 		56B834FD1643B50B00941C1C /* DataTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 56B834FC1643B50A00941C1C /* DataTransformer.m */; };
 		56D0C61B163D1F8A007FD7B2 /* Avatar.m in Sources */ = {isa = PBXBuildFile; fileRef = 56D0C61A163D1F8A007FD7B2 /* Avatar.m */; };
-		56D0C625163D43E1007FD7B2 /* Me.m in Sources */ = {isa = PBXBuildFile; fileRef = 56D0C624163D43E1007FD7B2 /* Me.m */; };
 		56DF5E6516257F5600E75105 /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 56DF5E5016257F5600E75105 /* SBJsonParser.m */; };
 		56DF5E6616257F5600E75105 /* SBJsonStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 56DF5E5216257F5600E75105 /* SBJsonStreamParser.m */; };
 		56DF5E6716257F5600E75105 /* SBJsonStreamParserAccumulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 56DF5E5416257F5600E75105 /* SBJsonStreamParserAccumulator.m */; };
@@ -529,6 +529,12 @@
 		5646FAFC160D4BC400175B78 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		5646FAFE160F1EBF00175B78 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		5646FB11160F243200175B78 /* CocoaPlant.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CocoaPlant.xcodeproj; path = CocoaPlant/CocoaPlant.xcodeproj; sourceTree = "<group>"; };
+		564A6F29164B6EE000B04A00 /* Channel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Channel.h; path = Models/Channel.h; sourceTree = "<group>"; };
+		564A6F2A164B6EE100B04A00 /* Channel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Channel.m; path = Models/Channel.m; sourceTree = "<group>"; };
+		564A6F2C164B6EFE00B04A00 /* Me.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Me.h; path = Models/Me.h; sourceTree = "<group>"; };
+		564A6F2D164B6EFE00B04A00 /* Me.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Me.m; path = Models/Me.m; sourceTree = "<group>"; };
+		564A6F32164BE78D00B04A00 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Message.h; path = Models/Message.h; sourceTree = "<group>"; };
+		564A6F33164BE78D00B04A00 /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Message.m; path = Models/Message.m; sourceTree = "<group>"; };
 		5661561C163E90EC00199DB4 /* FunctionListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FunctionListViewController.h; path = ViewControllers/FunctionListViewController.h; sourceTree = "<group>"; };
 		5661561D163E90EC00199DB4 /* FunctionListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FunctionListViewController.m; path = ViewControllers/FunctionListViewController.m; sourceTree = "<group>"; };
 		5661561F163E9A1900199DB4 /* FriendRequestListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FriendRequestListViewController.h; path = ViewControllers/FriendRequestListViewController.h; sourceTree = "<group>"; };
@@ -541,8 +547,6 @@
 		566743C0164129630043A29C /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		566743C1164129630043A29C /* NSData+Godzippa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Godzippa.h"; sourceTree = "<group>"; };
 		566743C2164129630043A29C /* NSData+Godzippa.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Godzippa.m"; sourceTree = "<group>"; };
-		566743D8164248CD0043A29C /* Channel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Channel.h; path = Models/Channel.h; sourceTree = "<group>"; };
-		566743D9164248CE0043A29C /* Channel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Channel.m; path = Models/Channel.m; sourceTree = "<group>"; };
 		566743DB164254A70043A29C /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		566E809D1609A24C00A333EA /* iMedia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iMedia.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		566E80A11609A24C00A333EA /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -798,8 +802,6 @@
 		56B4CD181626C9E100E046CC /* ModelHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ModelHelper.m; path = Models/ModelHelper.m; sourceTree = "<group>"; };
 		56B4CD1F1627AAFB00E046CC /* Conversation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Conversation.h; path = Models/Conversation.h; sourceTree = "<group>"; };
 		56B4CD201627AAFB00E046CC /* Conversation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Conversation.m; path = Models/Conversation.m; sourceTree = "<group>"; };
-		56B4CD441627E55400E046CC /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Message.h; path = Models/Message.h; sourceTree = "<group>"; };
-		56B4CD451627E55400E046CC /* Message.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Message.m; path = Models/Message.m; sourceTree = "<group>"; };
 		56B4CD511628101400E046CC /* AddFriendController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AddFriendController.h; path = ViewControllers/AddFriendController.h; sourceTree = "<group>"; };
 		56B4CD521628101500E046CC /* AddFriendController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AddFriendController.m; path = ViewControllers/AddFriendController.m; sourceTree = "<group>"; };
 		56B834F81643B49D00941C1C /* Identity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Identity.h; path = Models/Identity.h; sourceTree = "<group>"; };
@@ -808,8 +810,6 @@
 		56B834FC1643B50A00941C1C /* DataTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DataTransformer.m; path = Models/DataTransformer.m; sourceTree = "<group>"; };
 		56D0C619163D1F8A007FD7B2 /* Avatar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Avatar.h; path = Models/Avatar.h; sourceTree = "<group>"; };
 		56D0C61A163D1F8A007FD7B2 /* Avatar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Avatar.m; path = Models/Avatar.m; sourceTree = "<group>"; };
-		56D0C623163D43E1007FD7B2 /* Me.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Me.h; path = Models/Me.h; sourceTree = "<group>"; };
-		56D0C624163D43E1007FD7B2 /* Me.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Me.m; path = Models/Me.m; sourceTree = "<group>"; };
 		56DF5E4E16257F5600E75105 /* SBJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBJson.h; path = SBJson/SBJson.h; sourceTree = "<group>"; };
 		56DF5E4F16257F5600E75105 /* SBJsonParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SBJsonParser.h; path = SBJson/SBJsonParser.h; sourceTree = "<group>"; };
 		56DF5E5016257F5600E75105 /* SBJsonParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBJsonParser.m; path = SBJson/SBJsonParser.m; sourceTree = "<group>"; };
@@ -1752,23 +1752,23 @@
 		566E825E1609A5FE00A333EA /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				564A6F32164BE78D00B04A00 /* Message.h */,
+				564A6F33164BE78D00B04A00 /* Message.m */,
 				566E80B51609A24C00A333EA /* iMedia.xcdatamodeld */,
+				564A6F2C164B6EFE00B04A00 /* Me.h */,
+				564A6F2D164B6EFE00B04A00 /* Me.m */,
+				564A6F29164B6EE000B04A00 /* Channel.h */,
+				564A6F2A164B6EE100B04A00 /* Channel.m */,
 				56B834F81643B49D00941C1C /* Identity.h */,
 				56B834F91643B49D00941C1C /* Identity.m */,
 				56A75E8D164394FA001FEB83 /* FriendRequest.h */,
 				56A75E8E164394FA001FEB83 /* FriendRequest.m */,
-				566743D8164248CD0043A29C /* Channel.h */,
-				566743D9164248CE0043A29C /* Channel.m */,
 				5661562A163FCA6900199DB4 /* User.h */,
 				5661562B163FCA6900199DB4 /* User.m */,
-				56D0C623163D43E1007FD7B2 /* Me.h */,
-				56D0C624163D43E1007FD7B2 /* Me.m */,
 				56D0C619163D1F8A007FD7B2 /* Avatar.h */,
 				56D0C61A163D1F8A007FD7B2 /* Avatar.m */,
 				5681B64F163D1BFC0056AFAD /* ImageRemote.h */,
 				5681B650163D1BFC0056AFAD /* ImageRemote.m */,
-				56B4CD441627E55400E046CC /* Message.h */,
-				56B4CD451627E55400E046CC /* Message.m */,
 				56B4CD1F1627AAFB00E046CC /* Conversation.h */,
 				56B4CD201627AAFB00E046CC /* Conversation.m */,
 				56B834FB1643B50A00941C1C /* DataTransformer.h */,
@@ -2296,7 +2296,6 @@
 				56B4CD151626B9ED00E046CC /* NetMessageConverter.m in Sources */,
 				56B4CD191626C9E100E046CC /* ModelHelper.m in Sources */,
 				56B4CD211627AAFB00E046CC /* Conversation.m in Sources */,
-				56B4CD461627E55400E046CC /* Message.m in Sources */,
 				56B4CD531628101500E046CC /* AddFriendController.m in Sources */,
 				56202F46162AA32F00F6306F /* AddFriendByIDController.m in Sources */,
 				56202F49162AE85B00F6306F /* ChannelViewController.m in Sources */,
@@ -2317,7 +2316,6 @@
 				5681B651163D1BFC0056AFAD /* ImageRemote.m in Sources */,
 				26F759E7163D14F1005E9FB4 /* UIImage+Resize.m in Sources */,
 				56D0C61B163D1F8A007FD7B2 /* Avatar.m in Sources */,
-				56D0C625163D43E1007FD7B2 /* Me.m in Sources */,
 				264AA538163E534A00607861 /* RequestViewController.m in Sources */,
 				5661561E163E90ED00199DB4 /* FunctionListViewController.m in Sources */,
 				56615621163E9A1A00199DB4 /* FriendRequestListViewController.m in Sources */,
@@ -2326,7 +2324,6 @@
 				5661562C163FCA6900199DB4 /* User.m in Sources */,
 				267F508E1640DAAD00B42D21 /* EditViewController.m in Sources */,
 				566743C6164129630043A29C /* NSData+Godzippa.m in Sources */,
-				566743DA164248CE0043A29C /* Channel.m in Sources */,
 				26F3BF1916428DDB00E2899C /* MBProgressHUD.m in Sources */,
 				26F3BF23164294AC00E2899C /* LoginViewController.m in Sources */,
 				2640031F1642B45E00A1B779 /* WelcomeViewController.m in Sources */,
@@ -2337,6 +2334,9 @@
 				2669583B164803AC00A7106C /* MetroButton.m in Sources */,
 				26A587781649199600009968 /* RateViewController.m in Sources */,
 				2674B852164A51950092D980 /* NSDate-Utilities.m in Sources */,
+				564A6F2B164B6EE100B04A00 /* Channel.m in Sources */,
+				564A6F2E164B6EFE00B04A00 /* Me.m in Sources */,
+				564A6F34164BE78D00B04A00 /* Message.m in Sources */,
 				268CEEB5164B8CFB00BFBA13 /* FeedBackViewController.m in Sources */,
 				268CEEB8164B8D1000BFBA13 /* AboutUsViewController.m in Sources */,
 			);

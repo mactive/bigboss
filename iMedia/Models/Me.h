@@ -26,6 +26,7 @@
 @property (nonatomic, retain) NSString * selfIntroduction;
 @property (nonatomic, retain) NSString * signature;
 @property (nonatomic, retain) NSString * username;
+@property (nonatomic, retain) NSString * fullEPostalID;
 @property (nonatomic, retain) NSSet *avatars;
 @property (nonatomic, retain) NSSet *channels;
 
