@@ -166,7 +166,6 @@
     self.tapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(handleTaps:)];
     self.tapGestureRecognizer.numberOfTapsRequired = 1;
     self.tapGestureRecognizer.numberOfTouchesRequired = 1;
-    [self.view addGestureRecognizer:self.tapGestureRecognizer];
 }
 
 - (void)handleTaps:(UIGestureRecognizer *)paramSender
@@ -253,6 +252,8 @@
 #pragma mark - Keyboard Notification
 
 - (void)keyboardWillShow:(NSNotification *)notification {
+    [self.bubbleTable addGestureRecognizer:self.tapGestureRecognizer];
+
     NSTimeInterval animationDuration;
     UIViewAnimationCurve animationCurve;
     CGRect frameEnd;
@@ -273,6 +274,8 @@
 }
 
 - (void)keyboardWillHide:(NSNotification*)notification {
+    [self.bubbleTable removeGestureRecognizer:self.tapGestureRecognizer];
+
     NSTimeInterval animationDuration;
     UIViewAnimationCurve animationCurve;
     CGRect frameEnd;
