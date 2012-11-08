@@ -171,7 +171,7 @@
 
 - (void)welcomeAction
 {
-//    [[AppNetworkAPIClient sharedClient] uploadMe:self.me withBlock:nil];
+    [[AppNetworkAPIClient sharedClient] uploadMe:self.me withBlock:nil];
     [self dismissModalViewControllerAnimated:YES];
 }
 
@@ -218,20 +218,24 @@
             [self.welcomeButton setEnabled:NO];
             [self.welcomeButton setAlpha:0.3];
         }else{
-            [self.welcomeButton setEnabled:YES];
+            if ([self.me.gender length] > 0) {
+                
             
-            if ([toBeString length] > NICKNAME_MAX_LENGTH) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:T(@"超过最大字数不能输入了") delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                [alert show];
-            }
-            
-            if (self.welcomeButton.alpha != 1.0) {
-                [self.welcomeButton setAlpha:0.3];
-                [UIView beginAnimations:nil context:NULL];
-                [UIView setAnimationDuration:0.5];
-                [self.welcomeButton setAlpha:1];
-                [self.welcomeButton addTarget:self action:@selector(welcomeAction) forControlEvents:UIControlEventTouchUpInside];
-                [UIView commitAnimations];
+                [self.welcomeButton setEnabled:YES];
+                
+                if ([toBeString length] > NICKNAME_MAX_LENGTH) {
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:T(@"超过最大字数不能输入了") delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                    [alert show];
+                }
+                
+                if (self.welcomeButton.alpha != 1.0 ) {
+                    [self.welcomeButton setAlpha:0.3];
+                    [UIView beginAnimations:nil context:NULL];
+                    [UIView setAnimationDuration:0.5];
+                    [self.welcomeButton setAlpha:1];
+                    [self.welcomeButton addTarget:self action:@selector(welcomeAction) forControlEvents:UIControlEventTouchUpInside];
+                    [UIView commitAnimations];
+                }
             }
             
         }
