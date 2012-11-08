@@ -20,6 +20,7 @@
 @property (nonatomic, strong) UIImageView *bubbleImage;
 @property (nonatomic, strong) UIImageView *avatarImage;
 @property (nonatomic, strong) UIView *templateBackView;
+@property (nonatomic, strong) UILabel *templateTitle;
 @property (nonatomic, strong) UIImageView *templateImage;
 @property (nonatomic, strong) UILabel *templateContent;
 @property (nonatomic, strong) UIImageView *rateView;
@@ -41,6 +42,7 @@
 @synthesize templateBackView;
 @synthesize rateView;
 @synthesize viewSize;
+@synthesize templateTitle;
 
 - (void)setFrame:(CGRect)frame
 {
@@ -51,7 +53,31 @@
 
 - (id)init
 {
-    id obj = [super init];    
+    id obj = [super init];
+    
+    if (self.data.type == BubbleTypeTemplateview ) {
+        self.templateBackView = [[UIView alloc] initWithFrame:CGRectMake(10, 0, 300, 0)];
+        self.templateContent = [[UILabel alloc] initWithFrame:CGRectMake(12.5, 190, 275, 0)];
+        self.templateTitle = [[UILabel alloc] initWithFrame:CGRectMake(12.5, 0, 275, 30)];
+        self.templateImage = [[UIImageView alloc]initWithFrame:CGRectMake(12.5, 42.5, 275, TEMPLATE_IMAGE_HEIGHT)];
+        
+        self.templateTitle.backgroundColor = [UIColor clearColor];
+        self.templateTitle.font = [UIFont boldSystemFontOfSize:18];
+        self.templateTitle.textColor = RGBCOLOR(68, 68, 68);
+        self.templateTitle.textAlignment = NSTextAlignmentLeft;
+        
+        self.templateContent.font = [UIFont systemFontOfSize:14];
+        self.templateContent.numberOfLines = 0;
+        self.templateContent.textColor = RGBCOLOR(100, 100, 100);
+        self.templateContent.backgroundColor = [UIColor clearColor];
+        [self.templateBackView setBackgroundColor:[UIColor whiteColor]];
+        [self.templateBackView.layer setMasksToBounds:YES];
+        [self.templateBackView.layer setCornerRadius:10.0];
+        [self.templateBackView.layer setBorderColor:[RGBCOLOR(194, 194, 194) CGColor]];
+        [self.templateBackView.layer setBorderWidth:1.0];
+    }
+    
+    
     return obj;
 }
 
@@ -130,34 +156,31 @@
     else if (type == BubbleTypeTemplateview){
         
         NSXMLElement *element = [[NSXMLElement alloc] initWithXMLString:self.data.content error:nil];
+        
+        [self.templateBackView setFrame:CGRectMake(10, 0, 300, height +20)];
+        [self.templateContent setFrame:CGRectMake(12.5, 190, 275, height)];
+        [self.templateImage setFrame:CGRectMake(12.5, 42.5, 275, TEMPLATE_IMAGE_HEIGHT)];
+        
+        
         NSString* imageString = [[element elementForName:@"image9"] stringValue];
         NSString* contentString = [[element elementForName:@"content9"] stringValue];
-        
-        self.templateBackView = [[UIView alloc] initWithFrame:CGRectMake(10, 0, 300, height +20)];
-        self.templateContent = [[UILabel alloc] initWithFrame:CGRectMake(12.5, 160, 275, height)];
-        self.templateImage = [[UIImageView alloc]initWithFrame:CGRectMake(12.5, 12.5, 275, TEMPLATE_IMAGE_HEIGHT)];
+        NSString* titleString = [[element elementForName:@"title9"] stringValue];
+
         self.templateImage.contentMode = UIViewContentModeScaleAspectFit;
 
         if (imageString == nil || [imageString length] == 0) {
-            [self.templateContent setFrame:CGRectMake(12.5, 10, 275, height )];
-            
+            [self.templateContent setFrame:CGRectMake(12.5, 40, 275, height )];
         }else{
-            [self.templateContent setFrame:CGRectMake(12.5, 160, 275, height - TEMPLATE_IMAGE_HEIGHT)];
+            [self.templateContent setFrame:CGRectMake(12.5, 190, 275, height - TEMPLATE_IMAGE_HEIGHT)];
         }
         
-//        imageString = @"http://img.hb.aicdn.com/b524a99d6cd18479f2316613e5babe016e6d3112ce7dc-qkksEP_fw554";
-        [self.templateImage setImageWithURL:[NSURL URLWithString:imageString] placeholderImage:nil];
         
-        self.templateContent.font = [UIFont systemFontOfSize:14];
         self.templateContent.text = contentString;
-        self.templateContent.numberOfLines = 0;
-        self.templateContent.textColor = RGBCOLOR(33, 33, 33);
-        self.templateContent.backgroundColor = [UIColor clearColor];
+        [self.templateImage setImageWithURL:[NSURL URLWithString:imageString] placeholderImage:nil];
+        self.templateTitle.text = titleString;
+
         
-        
-        [self.templateBackView setBackgroundColor:[UIColor whiteColor]];
-        [self.templateBackView.layer setMasksToBounds:YES];
-        [self.templateBackView.layer setCornerRadius:10.0];
+
         
         /*[[data.content elementForName:@"title9"] stringValue]
          MYUIVIew = kkk

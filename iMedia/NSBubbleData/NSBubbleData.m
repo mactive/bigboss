@@ -146,9 +146,9 @@ const UIEdgeInsets imageInsetsSomeone = {11, 18, 16, 14};
 #endif
     
     if (image == nil || [image length] == 0) {
-        self.templateView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 275, label.frame.size.height)];
+        self.templateView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 275, label.frame.size.height + TEMPLATE_TITLE_HEIGHT)];
     } else {
-        self.templateView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 275, TEMPLATE_IMAGE_HEIGHT+label.frame.size.height)];
+        self.templateView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 275, TEMPLATE_IMAGE_HEIGHT+label.frame.size.height+TEMPLATE_TITLE_HEIGHT)];
     }
     
 #if !__has_feature(objc_arc)
