@@ -23,8 +23,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 #import "ChannelViewController.h"
 #import "AppDelegate.h"
 #import <QuartzCore/QuartzCore.h>
+#import "ConversationsController.h"
 
-@interface AddFriendByIDController () <UITextFieldDelegate,MBProgressHUDDelegate>
+@interface AddFriendByIDController () <UITextFieldDelegate,MBProgressHUDDelegate, ChatWithIdentityDelegate>
 {
     MBProgressHUD * HUD;
 }
@@ -135,6 +136,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             sleep(1);
 
             ChannelViewController *controller = [[ChannelViewController alloc] initWithNibName:nil bundle:nil];
+            controller.delegate = self;
             controller.jsonData = responseObject;
             controller.managedObjectContext = [self appDelegate].context;
             
@@ -198,5 +200,17 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+- (void)viewController:(UIViewController *)viewController didChatIdentity:(id)obj
+{
+    [self dismissModalViewControllerAnimated:YES];
+    
+    if (obj) {
+        [self.tabBarController setSelectedIndex:0];
+        [[self appDelegate].conversationController chatWithIdentity:obj];
+    }
+    
+}
+
 
 @end

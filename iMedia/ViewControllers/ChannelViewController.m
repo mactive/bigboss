@@ -74,6 +74,7 @@
     [self.confirmButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
     [self.confirmButton.titleLabel setTextAlignment:UITextAlignmentCenter];
     [self.confirmButton setBackgroundImage:[UIImage imageNamed:@"button_bg.png"] forState:UIControlStateNormal];
+
     
     
     self.cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(12.5, 250, 275, 40)];
@@ -159,6 +160,11 @@
     [self.view addSubview:self.requestView];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    
+}
+
 - (void)cancelRequest
 {
     [self.navigationController popViewControllerAnimated:YES];
@@ -178,7 +184,9 @@
 
 -(void)sendMsgButtonPushed:(id)sender
 {
-    [self.delegate viewController:self didChatIdentity:self.channel];
+    NSString *nodeStr = [jsonData valueForKey:@"node_address"];
+    Channel *newChannel = [[ModelHelper sharedInstance] findChannelWithNode:nodeStr];
+    [self.delegate viewController:self didChatIdentity:newChannel];
 }
 -(void)subscribeButtonPushed:(id)sender
 {
@@ -186,6 +194,7 @@
     Channel *newChannel = [[ModelHelper sharedInstance] findChannelWithNode:nodeStr];
     if (newChannel == nil) {
         newChannel = [NSEntityDescription insertNewObjectForEntityForName:@"Channel" inManagedObjectContext:self.managedObjectContext];
+        newChannel.owner = [self appDelegate].me;
         [[ModelHelper sharedInstance] populateIdentity:newChannel withJSONData:jsonData];
         newChannel.state = [NSNumber numberWithInt:IdentityStatePendingAddSubscription];
     } else if (newChannel.state.intValue == IdentityStateInactive) {
@@ -203,6 +212,11 @@
         HUD.mode = MBProgressHUDModeCustomView;
         HUD.labelText = T(@"已订阅");
         [HUD hide:YES afterDelay:2];
+        [self.confirmButton setTitle:T(@"查看信息") forState:UIControlStateNormal];
+        [self.confirmButton removeTarget:self action:@selector(subscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
+        [self.confirmButton addTarget:self action:@selector(sendMsgButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
+        [self.cancelButton setHidden:YES];
+
         return ;
     } else {
         NSLog(@"CRITICAL ERROR: new channel STATE wrong (%@)", newChannel);
@@ -231,7 +245,8 @@
             /*
             [self.cancelButton setTitle:T(@"取消订阅") forState:UIControlStateNormal];
             [self.cancelButton addTarget:self action:@selector(unSubscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
-**/
+*/
+            [self.cancelButton setHidden:YES];
         }];
 
     }];
@@ -244,7 +259,7 @@
         return;
     }
     
-    if (self.channel.state.intValue != IdentityStateActive || self.channel.state.intValue != IdentityStatePendingRemoveSubscription) {
+    if (self.channel.state.intValue != IdentityStateActive && self.channel.state.intValue != IdentityStatePendingRemoveSubscription) {
         HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
         HUD.mode = MBProgressHUDModeCustomView;
@@ -275,6 +290,7 @@
             [self.confirmButton setTitle:T(@"订阅此频道") forState:UIControlStateNormal];
             [self.confirmButton removeTarget:self action:@selector(unSubscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
             [self.confirmButton addTarget:self action:@selector(subscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
+            [self.cancelButton setHidden:YES];
         }];
     }];
     
