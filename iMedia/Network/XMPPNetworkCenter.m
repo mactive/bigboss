@@ -137,7 +137,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 	xmppRoster = [[XMPPRoster alloc] initWithRosterStorage:xmppRosterStorage];
     
 	xmppRoster.autoFetchRoster = NO;
-	xmppRoster.autoAcceptKnownPresenceSubscriptionRequests = YES;
+	xmppRoster.autoAcceptKnownPresenceSubscriptionRequests = NO;
     xmppRoster.allowRosterlessOperation = YES;
     
     // Setup XMPP PubSub
@@ -500,6 +500,37 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
             thisUser.state = [NSNumber numberWithInt:IdentityStatePendingServerDataUpdate];
             
             [[AppNetworkAPIClient sharedClient] updateIdentity:thisUser withBlock:nil];
+        }
+    } else if (subscriptionResult != nil && [subscriptionResult isEqualToString:@"unsubscribed"]) {
+        User* thisUser = [[ModelHelper sharedInstance] findUserWithEPostalID:ePostalID];
+        
+        if (thisUser != nil &&  thisUser.state.intValue == IdentityStatePendingAddFriend)
+        {
+            thisUser.state = [NSNumber numberWithInt:IdentityStateInactive];
+            
+            [self removeBuddy:ePostalID withCallbackBlock:nil];
+        }
+    } else if (subscriptionResult != nil && [subscriptionResult isEqualToString:@"subscribe"]) {
+        User* thisUser = [[ModelHelper sharedInstance] findUserWithEPostalID:ePostalID];
+        if (thisUser != nil &&  thisUser.state.intValue == IdentityStatePendingAddFriend)
+        {
+            thisUser.state = [NSNumber numberWithInt:IdentityStatePendingServerDataUpdate];
+            [[AppNetworkAPIClient sharedClient] updateIdentity:thisUser withBlock:nil];
+        } else if ((thisUser == nil ) || (thisUser != nil &&  thisUser.state.intValue == IdentityStateInactive)) {
+            NSNotification *myNotification =
+            [NSNotification notificationWithName:NEW_FRIEND_NOTIFICATION object:[[presence from] bare]];
+            [[NSNotificationQueue defaultQueue]
+             enqueueNotification:myNotification
+             postingStyle:NSPostWhenIdle
+             coalesceMask:NSNotificationNoCoalescing
+             forModes:nil];
+        }
+    } else if (subscriptionResult != nil && [subscriptionResult isEqualToString:@"unsubscribe"]) {
+        User* thisUser = [[ModelHelper sharedInstance] findUserWithEPostalID:ePostalID];
+        if (thisUser != nil &&  thisUser.state.intValue == IdentityStatePendingAddFriend)
+        {
+            thisUser.state = [NSNumber numberWithInt:IdentityStateInactive];
+            [self removeBuddy:ePostalID withCallbackBlock:nil];
         }
     }
 }

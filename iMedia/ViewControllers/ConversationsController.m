@@ -18,6 +18,7 @@
 #import "NSDate+timesince.h"
 #import "UIImageView+AFNetworking.h"
 #import "XMPPNetworkCenter.h"
+#import "AppNetworkAPIClient.h"
 
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
@@ -495,9 +496,32 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	UIImageView *imageView = (UIImageView *)[cell viewWithTag:IMAGE_TAG];
     if (conv.channel == nil) {
         User *user = [conv.users anyObject];
-        [imageView setImage:user.thumbnailImage];
+        if (user.thumbnailImage) {
+            [imageView setImage:user.thumbnailImage];
+        } else {
+            AFImageRequestOperation *operation = [AFImageRequestOperation imageRequestOperationWithRequest:[[NSURLRequest alloc] initWithURL:[NSURL URLWithString:user.thumbnailURL]] imageProcessingBlock:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                user.thumbnailImage = image;
+                [imageView setImage:user.thumbnailImage];
+            } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+                [imageView setImage:[UIImage imageNamed:@"user_avatar_placeholder.png"]];
+            }];
+            
+            [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:operation];
+        }
+    
     } else {
-        [imageView setImage:conv.channel.thumbnailImage];
+        if (conv.channel.thumbnailImage) {
+            [imageView setImage:conv.channel.thumbnailImage];
+        } else {
+            AFImageRequestOperation *operation = [AFImageRequestOperation imageRequestOperationWithRequest:[[NSURLRequest alloc] initWithURL:[NSURL URLWithString:conv.channel.thumbnailURL]] imageProcessingBlock:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                conv.channel.thumbnailImage = image;
+                [imageView setImage:conv.channel.thumbnailImage];
+            } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+                [imageView setImage:[UIImage imageNamed:@"company_thumbnail_placeholder.png"]];
+            }];
+            
+            [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:operation];
+        }
     }
 }
 
