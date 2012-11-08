@@ -288,9 +288,9 @@
     [UIView animateWithDuration:animationDuration delay:0.0 options:(UIViewAnimationOptionsFromCurve(animationCurve) | UIViewAnimationOptionBeginFromCurrentState) animations:^{
         CGFloat viewHeight = [self.view convertRect:frameEnd fromView:nil].origin.y;
         UIView *messageInputBar = _textView.superview;
-        UIViewSetFrameY(messageInputBar, self.view.frame.size.height-messageInputBar.frame.size.height);
- //       self.bubbleTable.contentInset = self.bubbleTable.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, self.view.frame.size.height-messageInputBar.frame.size.height, 0);
-        self.bubbleTable.contentInset = self.bubbleTable.scrollIndicatorInsets = UIEdgeInsetsZero; 
+        UIViewSetFrameY(messageInputBar, self.view.frame.size.height - messageInputBar.frame.size.height);
+        self.bubbleTable.contentInset = self.bubbleTable.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 60, 0);
+//        self.bubbleTable.contentInset = self.bubbleTable.scrollIndicatorInsets = UIEdgeInsetsZero;
         [self scrollToBottomAnimated:NO];
     } completion:nil];
 }
