@@ -185,6 +185,9 @@
 -(void)sendMsgButtonPushed:(id)sender
 {
     NSString *nodeStr = [jsonData valueForKey:@"node_address"];
+    if (self.channel != nil) {
+        nodeStr = self.channel.node;
+    }
     Channel *newChannel = [[ModelHelper sharedInstance] findChannelWithNode:nodeStr];
     [self.delegate viewController:self didChatIdentity:newChannel];
 }
