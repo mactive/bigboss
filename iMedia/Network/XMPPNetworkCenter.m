@@ -803,13 +803,6 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     else
         channel = [[ModelHelper sharedInstance] findChannelWithNode:nodeStr];
     
-    if (channel && channel.state.intValue != IdentityStateActive) {
-        channel.state = [NSNumber numberWithInt:IdentityStateActive];
-        channel.subID = subID;
-        [[self appDelegate].contactListController contentChanged];
-        MOCSave(_managedObjectContext);
-    }
-    
     NSString* csrftoken = [[NSUserDefaults standardUserDefaults] valueForKey:@"csrfmiddlewaretoken"];
     
     // notify server about the subscription 
@@ -817,10 +810,23 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
         
     [[AppNetworkAPIClient sharedClient] postPath:POST_DATA_PATH parameters:postDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
             DDLogVerbose(@"login JSON received: %@", responseObject);
+        
+        if (channel && channel.state.intValue != IdentityStateActive) {
+            channel.state = [NSNumber numberWithInt:IdentityStateActive];
+            channel.subID = subID;
+            [[self appDelegate].contactListController contentChanged];
+            MOCSave(_managedObjectContext);
+        }
             
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
             //
             DDLogVerbose(@"login failed: %@", error);
+        if (channel != nil) {
+            [self subscribeToChannel:channel.node withCallbackBlock:nil];
+        } else if (StringHasValue(nodeStr)) {
+            [self subscribeToChannel:nodeStr withCallbackBlock:nil];
+        }
+
     }];
 
 }

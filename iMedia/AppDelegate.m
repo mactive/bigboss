@@ -20,6 +20,7 @@
 #import "AppDefs.h"
 #import <CocoaPlant/NSManagedObject+CocoaPlant.h>
 #import "AFNetworkActivityIndicatorManager.h"
+#import "XMPPNetworkCenter.h"
 
 #import "ConversationsController.h"
 #import "ContactListViewController.h"

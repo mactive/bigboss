@@ -650,12 +650,8 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     Avatar *avatar;
     
     if (self.editingAlbumIndex != NSNotFound) {
-        avatar = [self.albumArray objectAtIndex:self.editingAlbumIndex];
-        avatar.image = image;
-        avatar.thumbnail = thumbnail;
-        avatar.imageRemoteURL = @"";
-        avatar.imageRemoteThumbnailURL = @"";
         
+        avatar = [self.albumArray objectAtIndex:self.editingAlbumIndex];
         self.editingAlbumIndex = NSNotFound;
     
         // HUD show
@@ -665,7 +661,14 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
         
         //网路传输
         [[AppNetworkAPIClient sharedClient] storeAvatar:avatar forMe:self.me andOrder:avatar.sequence.intValue withBlock:^(id responseObject, NSError *error) {
-            if (error == nil) {
+            if ((responseObject != nil) && error == nil) {
+
+                avatar.image = image;
+                avatar.thumbnail = thumbnail;
+                avatar.imageRemoteURL = @"";
+                avatar.imageRemoteThumbnailURL = @"";
+                MOCSave(self.managedObjectContext);
+
                 // HUD hide
                 [HUD hide:YES];
                 // HUD show success
@@ -673,7 +676,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
                 HUD.mode = MBProgressHUDModeText;
                 HUD.delegate = self;
                 HUD.labelText = T(@"上传成功");
-                [HUD hide:YES afterDelay:1];
+                [HUD hide:YES afterDelay:2];
             } else {
                 NSLog (@"NSError received during store avatar: %@", error);
                 
@@ -684,10 +687,9 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
                 HUD.mode = MBProgressHUDModeText;
                 HUD.delegate = self;
                 HUD.labelText = T(@"上传失败");
-                [HUD hide:YES afterDelay:1];
+                [HUD hide:YES afterDelay:2];
             }
             
-            MOCSave(self.managedObjectContext);
             [self refreshAlbumView];
             [picker dismissModalViewControllerAnimated:YES];
             

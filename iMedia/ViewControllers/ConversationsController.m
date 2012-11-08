@@ -17,7 +17,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "NSDate+timesince.h"
 #import "UIImageView+AFNetworking.h"
-
+#import "XMPPNetworkCenter.h"
 
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
