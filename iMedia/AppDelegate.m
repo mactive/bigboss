@@ -139,7 +139,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 {
     [LocationManager sharedInstance].me = self.me;
     // Update local data with latest server info
-    [[AppNetworkAPIClient sharedClient] updateIdentity:(Identity *)self.me withBlock:nil];
+    [self updateMeWithBlock:nil];
     
     //
     // Creating all the initial controllers
@@ -195,19 +195,71 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 {
     [[AppNetworkAPIClient sharedClient] updateMyChannel:self.me withBlock:^(id responseObject, NSError *error) {
         if (responseObject != nil) {
-            NSArray *allChannelsArray = [responseObject allValues];
-            for (int i = 0; i < [allChannelsArray count]; i++) {
-                NSDictionary *channelInfo = [allChannelsArray objectAtIndex:i];
+            // When Sync local channel information from Server, there are a couple scenarios
+            // for what exists on the server, local could be 1) in sync; 2) doesn't exist; 3) exist out of sync;
+            // for what exists locally, server could be 1) in sync; 2) doesn't exist; 3) out of sync
+            // server only returns currently subscribed channel so the scenario simplified to be:
+            // 1) all server returns should be in local db with subscribed state;
+            // 2) except for these server returns, all other local channels need to be either Inactive, or if they
+            // are in pending (add/removal) state, these requests need to be redrived.
+            
+            
+            NSMutableDictionary *allServerChannels = [NSMutableDictionary dictionaryWithCapacity:5];
+            NSMutableSet *channelsToSubscribe = [NSMutableSet setWithCapacity:5];
+            NSMutableSet *channelsToUnsubscribe = [NSMutableSet setWithCapacity:5];
+            
+            NSArray *allServerChannelsArray = [responseObject allValues];
+            [allServerChannelsArray enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                NSDictionary *channelInfo = obj;
                 
-                // create Channel subscription
+                // Sync channels from Servers
                 NSString *nodeStr = [channelInfo objectForKey:@"node_address"];
-                Channel *newChannel = [[ModelHelper sharedInstance] findChannelWithNode:nodeStr];
-                if (newChannel == nil) {
-                    newChannel = [NSEntityDescription insertNewObjectForEntityForName:@"Channel" inManagedObjectContext:_managedObjectContext];
+                Channel *aChannel = [[ModelHelper sharedInstance] findChannelWithNode:nodeStr];
+                
+                if (aChannel == nil) {
+                    aChannel = [NSEntityDescription insertNewObjectForEntityForName:@"Channel" inManagedObjectContext:_managedObjectContext];
+                    aChannel.owner = self.me;
+                    [[ModelHelper sharedInstance] populateIdentity:aChannel withJSONData:channelInfo];
+                    aChannel.state = [NSNumber numberWithInt:IdentityStateActive];
+                    
+                } else if (aChannel.state.intValue == IdentityStateActive){
+                    // already exists and good, just refresh content, no special handing here
+                    [[ModelHelper sharedInstance] populateIdentity:aChannel withJSONData:channelInfo];
+                    
+                } else if (aChannel.state.intValue == IdentityStatePendingAddSubscription || aChannel.state.intValue == IdentityStateInactive) {
+                    // this should not happen, but we can sub again to clear the state;
+                    [channelsToSubscribe addObject:aChannel];
+                } else if (aChannel.state.intValue == IdentityStatePendingRemoveSubscription) {
+                    [channelsToUnsubscribe addObject:aChannel];
                 }
-                [[ModelHelper sharedInstance] populateIdentity:newChannel withJSONData:channelInfo];
-                newChannel.state = [NSNumber numberWithInt:IdentityStateActive];
-            }
+                
+                [allServerChannels setObject:aChannel forKey:nodeStr];
+            }];
+            
+            
+            // Now i will go through all local channels to check their status
+            [self.me.channels enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
+                Channel* aChannel = obj;
+                if (aChannel.state.intValue == IdentityStateActive) {
+                    if ([allServerChannels objectForKey:aChannel.node] == nil) {
+                        [channelsToUnsubscribe addObject:aChannel];
+                    }
+                } else if (aChannel.state.intValue == IdentityStatePendingAddSubscription) {
+                    [channelsToSubscribe addObject:aChannel];
+                } else if (aChannel.state.intValue == IdentityStatePendingRemoveSubscription) {
+                    [channelsToUnsubscribe addObject:aChannel];
+                }
+            }];
+            
+            // Now process all the channel stuff
+            [channelsToSubscribe enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
+                Channel *aChannel = obj;
+                [[XMPPNetworkCenter sharedClient] subscribeToChannel:aChannel.node withCallbackBlock:nil];
+            }];
+            [channelsToUnsubscribe enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
+                Channel *aChannel = obj;
+                [[XMPPNetworkCenter sharedClient] unsubscribeToChannel:aChannel.node withCallbackBlock:nil];
+            }];
             
             [self.contactListController contentChanged];
         } else {
@@ -220,6 +272,18 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
              forModes:nil];
         }
     }];
+}
+
+- (void)updateMeWithBlock:(void (^)(id responseObject, NSError *error))block
+{
+    [LocationManager sharedInstance].me = self.me;
+    
+    [self updateMyChannelInformation:nil];
+    
+    [[AppNetworkAPIClient sharedClient] updateIdentity:self.me withBlock:block];
+    
+    self.me.lastSyncFromServerDate = [NSDate date];
+    
 }
 
 -(void)createMeWithUsername:(NSString *)username password:(NSString *)passwd jid:(NSString *)jidStr jidPasswd:(NSString *)jidPass andGUID:(NSString *)guid withBlock:(void (^)(id responseObject, NSError *error))block
@@ -242,16 +306,12 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         self.me.password = passwd;
         self.me.guid = guid;
         self.me.state = [NSNumber numberWithInt:IdentityStatePendingServerDataUpdate];
-        self.me.birthdate = [NSDate dateWithTimeIntervalSince1970:0];
+        self.me.birthdate = nil;
         self.me.selfIntroduction = @"";
         self.me.signature = @"";
         self.me.career = @"";
         
-        [LocationManager sharedInstance].me = self.me;
-        
-        [self updateMyChannelInformation:nil];
-        
-        [[AppNetworkAPIClient sharedClient] updateIdentity:self.me withBlock:block];
+        [self updateMeWithBlock:block];
         
         MOCSave(_managedObjectContext);
     }

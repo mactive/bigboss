@@ -7,6 +7,7 @@
         <attribute name="subID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="subrequestID" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="conversation" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Conversation" inverseName="channel" inverseEntity="Conversation" syncable="YES"/>
+        <relationship name="owner" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Me" inverseName="channels" inverseEntity="Me" syncable="YES"/>
     </entity>
     <entity name="Conversation" representedClassName="Conversation" syncable="YES">
         <attribute name="draft" optional="YES" attributeType="String" syncable="YES"/>
@@ -61,12 +62,14 @@
         <attribute name="ePostalPassword" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="gender" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="hometown" optional="YES" attributeType="String" defaultValueString="@&quot;&quot;" syncable="YES"/>
+        <attribute name="lastSyncFromServerDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="password" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="selfIntroduction" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="signature" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="avatars" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ImageLocal" inverseName="me" inverseEntity="ImageLocal" syncable="YES"/>
+        <relationship name="channels" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Channel" inverseName="owner" inverseEntity="Channel" syncable="YES"/>
     </entity>
     <entity name="Message" representedClassName="Message" syncable="YES">
         <attribute name="sentDate" optional="YES" attributeType="Date" syncable="YES"/>
@@ -87,13 +90,13 @@
         <relationship name="conversations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Conversation" inverseName="users" inverseEntity="Conversation" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Channel" positionX="160" positionY="192" width="128" height="135"/>
+        <element name="Channel" positionX="160" positionY="192" width="128" height="150"/>
         <element name="Conversation" positionX="0" positionY="0" width="128" height="165"/>
         <element name="FriendRequest" positionX="160" positionY="192" width="128" height="105"/>
         <element name="Identity" positionX="160" positionY="192" width="128" height="225"/>
         <element name="ImageLocal" positionX="160" positionY="192" width="128" height="150"/>
         <element name="ImageRemote" positionX="160" positionY="192" width="128" height="120"/>
-        <element name="Me" positionX="0" positionY="0" width="128" height="225"/>
+        <element name="Me" positionX="0" positionY="0" width="128" height="255"/>
         <element name="Message" positionX="0" positionY="0" width="128" height="135"/>
         <element name="User" positionX="-234" positionY="141" width="128" height="165"/>
     </elements>
