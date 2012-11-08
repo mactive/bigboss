@@ -172,6 +172,7 @@
 - (void)handleTaps:(UIGestureRecognizer *)paramSender
 {
     NSLog(@"handleTaps");
+    [self.textView resignFirstResponder];
 }
 
 /*

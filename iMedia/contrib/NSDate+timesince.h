@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "NSDate-Utilities.h"
 
 @interface NSDate (timesince)
 
