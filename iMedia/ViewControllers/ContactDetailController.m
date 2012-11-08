@@ -106,13 +106,17 @@
 
     
     [self initAlbumView];
-    [self initStatusView];
 //    [self initSNSView];
-    [self initInfoView];
     [self initActionView];
     
     [self.view addSubview:self.contentView];
 
+}
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self initStatusView];
+    [self initInfoView];
 }
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -  ablum view
@@ -218,7 +222,7 @@
 
 - (void)initStatusView
 {
-    self.statusView = [[UIView alloc] initWithFrame:CGRectMake(VIEW_PADDING_LEFT, VIEW_ALBUM_HEIGHT + 15, VIEW_COMMON_WIDTH, 15)];
+    self.statusView = [[UIView alloc] initWithFrame:CGRectMake(VIEW_PADDING_LEFT, VIEW_ALBUM_HEIGHT + 10, VIEW_COMMON_WIDTH, 15)];
     
     // Create a label icon for the sex.
     NSString *gender = [self getGender];
@@ -243,7 +247,7 @@
     [sexView addSubview:sexLabel];
     
     // horoscope
-    UILabel* horoscopeLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 0, 100, 20)];
+    UILabel* horoscopeLabel = [[UILabel alloc]initWithFrame:CGRectMake(60, 0, 100, 20)];
     [horoscopeLabel setBackgroundColor:[UIColor clearColor]];
     [horoscopeLabel setFont:[UIFont boldSystemFontOfSize:14.0]];
     [horoscopeLabel setShadowColor:[UIColor whiteColor]];
@@ -264,7 +268,7 @@
     
     
     // Create a label icon for the time.
-    UIImageView *timeIconView = [[UIImageView alloc] initWithFrame:CGRectMake(210, 3 , 15, 15)];
+    UIImageView *timeIconView = [[UIImageView alloc] initWithFrame:CGRectMake(210, 0 , 15, 15)];
     timeIconView.image = [UIImage imageNamed:@"time_icon.png"];
     
     UILabel* timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(228, 0 ,60, 20)];
@@ -311,7 +315,6 @@
 //	[self.statusView addSubview:locationLabel];
     
     [self.contentView addSubview: self.statusView];
-    
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -627,11 +630,6 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-- (void) viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-}
 
 -(void)sendMsgButtonPushed:(id)sender
 {

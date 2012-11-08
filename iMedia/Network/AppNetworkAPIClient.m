@@ -459,7 +459,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
                                      nil];
     
     [[AppNetworkAPIClient sharedClient] postPath:POST_DATA_PATH parameters:postDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        DDLogInfo(@"upload rating received response: %@", responseObject);
+        DDLogInfo(@"upload report received response: %@", responseObject);
         NSString* status = [responseObject valueForKey:@"status"];
         if ([status isEqualToString:@"success"]) {
             if (block ) {

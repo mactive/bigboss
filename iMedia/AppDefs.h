@@ -136,7 +136,7 @@ alpha:(a)]
 #define BGCOLOR [UIColor colorWithRed:222.0f/255.0f green:224.0f/255.0f blue:227.0f/255.0f alpha:1]
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-#define NAMEFIRSTLATTER	@"#ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+#define NAMEFIRSTLATTER	@"&ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 /*
 #define MOCFetch(managedObjectContext, fetchRequest) \

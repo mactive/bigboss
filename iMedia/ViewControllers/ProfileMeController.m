@@ -726,7 +726,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
 
 - (void)initStatusView
 {
-    self.statusView = [[UIView alloc] initWithFrame:CGRectMake(VIEW_PADDING_LEFT, VIEW_ALBUM_HEIGHT + 15, VIEW_COMMON_WIDTH, 15)];
+    self.statusView = [[UIView alloc] initWithFrame:CGRectMake(VIEW_PADDING_LEFT, VIEW_ALBUM_HEIGHT + 12, VIEW_COMMON_WIDTH, 15)];
     
     // Create a label icon for the sex.
     NSString* bgImgStr ;

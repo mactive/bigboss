@@ -34,6 +34,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 @interface ContactListViewController ()
 
+@property (strong, nonatomic) NSMutableDictionary* contacts_list_fix;
+@property (strong, nonatomic) NSMutableArray* contacts_list;
+@property (strong, nonatomic) NSMutableArray* channelList;
+
 @end
 
 @implementation ContactListViewController
@@ -143,7 +147,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     return [self.contacts_list_fix count];
 }
 
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)sectionIndex
 {
     NSString* _section = [[[self.contacts_list_fix allKeys] sortedArrayUsingFunction:SortIndex context:NULL] objectAtIndex:sectionIndex];
@@ -152,8 +155,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 NSInteger SortIndex(id char1, id char2, void* context)
 {
-    NSUInteger _char1_location = [ALPHA rangeOfString:[char1 substringToIndex:1]].location;
-    NSUInteger _char2_location = [ALPHA rangeOfString:[char2 substringToIndex:1]].location;
+    NSUInteger _char1_location = [NAMEFIRSTLATTER rangeOfString:[char1 substringToIndex:1]].location;
+    NSUInteger _char2_location = [NAMEFIRSTLATTER rangeOfString:[char2 substringToIndex:1]].location;
     if (_char1_location < _char2_location) {
         return NSOrderedAscending;
     } else if (_char1_location > _char2_location) {
@@ -195,38 +198,47 @@ NSInteger SortIndex(id char1, id char2, void* context)
             // don't display me
             continue;
         }
-        NSString* _pinyin = [POAPinyin quickConvert:identity.displayName];
-        NSString* _section = nil;
-        NSUInteger _first_letter;
         
-        if (_pinyin == nil || [_pinyin isEqualToString:@""]) {
-            _first_letter = 26;
+        // 频道 不去写入排序
+        
+        if ([identity isKindOfClass:[Channel class]]) {
+            [[_section_temp objectAtIndex:0] addObject:identity];
         } else {
-            _section = [[NSString stringWithFormat:@"%c", [_pinyin characterAtIndex:0] ] uppercaseString];
-        
-            // if the section is
-            if ([_section isEqualToString:@"0"]) {
+            NSLog(@"%@",[identity class]);
+            NSString* _pinyin = [POAPinyin quickConvert:identity.displayName];
+            NSString* _section = nil;
+            NSUInteger _first_letter;
+            
+            if (_pinyin == nil || [_pinyin isEqualToString:@""]) {
+                _first_letter = 26;
+            } else {
+                _section = [[NSString stringWithFormat:@"%c", [_pinyin characterAtIndex:0] ] uppercaseString];
+                
+                // if the section is
+                if ([_section isEqualToString:@"0"]) {
                     _first_letter = 26;
-            }else{
-            _first_letter = [NAMEFIRSTLATTER rangeOfString:[_section substringToIndex:1]].location;
+                }else{
+                    _first_letter = [NAMEFIRSTLATTER rangeOfString:[_section substringToIndex:1]].location;
+                }
+            }
+            
+            
+            if (_first_letter != NSNotFound) {
+                            [[_section_temp objectAtIndex:_first_letter] addObject:identity];
             }
         }
-        
-        
-        if (_first_letter != NSNotFound) {
-            [[_section_temp objectAtIndex:_first_letter] addObject:identity];
-        }
+
     }
     
     self.contacts_list_fix = [[NSMutableDictionary alloc] init];
+    
 	for (int i = 0; i < 27; i++) {
         if ([[_section_temp objectAtIndex:i] count] > 0) {
             NSLog(@"user %d count %d", i,[[_section_temp objectAtIndex:i] count]);
             [self.contacts_list_fix setObject:[_section_temp objectAtIndex:i] forKey:[[NAMEFIRSTLATTER substringFromIndex:i] substringToIndex:1]];
         }
     }
-    
-    
+
     
 }
 
@@ -429,12 +441,17 @@ NSInteger SortIndex(id char1, id char2, void* context)
     [_section_bg setFrame:_section_view.bounds];
     
     NSString* _section = [[[contacts_list_fix allKeys] sortedArrayUsingFunction:SortIndex context:NULL] objectAtIndex:section];
-    UILabel* _section_text = [[UILabel alloc] initWithFrame:CGRectMake( 10, 0, 15, 15)];
+    UILabel* _section_text = [[UILabel alloc] initWithFrame:CGRectMake( 10, 0, 50, 15)];
     _section_text.textColor = [UIColor whiteColor];
+    _section_text.textAlignment = NSTextAlignmentLeft;
     _section_text.font = [UIFont boldSystemFontOfSize:14.0];
     _section_text.shadowOffset = CGSizeMake(0, 1);
     _section_text.shadowColor = [UIColor grayColor];
     _section_text.backgroundColor = [UIColor clearColor];
+    
+    if (section == 0) {
+        _section = T(@"频道");
+    } 
     _section_text.text = [NSString stringWithFormat:@"%@", _section];
     
     [_section_view addSubview:_section_bg];

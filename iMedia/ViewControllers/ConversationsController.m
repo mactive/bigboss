@@ -131,7 +131,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 		
 		NSEntityDescription *entity = [NSEntityDescription entityForName:@"Conversation"
 		                                          inManagedObjectContext:moc];
-		NSSortDescriptor *sd1 = [[NSSortDescriptor alloc] initWithKey:@"lastMessageSentDate" ascending:YES];
+		NSSortDescriptor *sd1 = [[NSSortDescriptor alloc] initWithKey:@"lastMessageSentDate" ascending:NO];
 		NSArray *sortDescriptors = [NSArray arrayWithObjects:sd1, nil];
 		
 		NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
