@@ -409,7 +409,33 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
             block (nil, error);
         }
     }];
-
+}
+- (void)updateMyPresetChannel:(Me *)me withBlock:(void (^)(id, NSError *))block
+{
+    // proceed to make server updates
+    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: @"9", @"op", nil];
+    
+    [[AppNetworkAPIClient sharedClient] getPath:GET_DATA_PATH parameters:getDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        DDLogVerbose(@"get channel %@ data received: %@", me, responseObject);
+        
+        NSString* type = [responseObject valueForKey:@"type"];
+        
+        if (![@"error" isEqualToString:type]) {
+            if (block) {
+                block (responseObject, nil);
+            }
+        } else {
+            if (block) {
+                block (nil, nil);
+            }
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        //
+        if (block) {
+            block (nil, error);
+        }
+    }];
 }
 
 - (void)uploadRating:(NSString *)rateKey rate:(NSString *)rating andComment:(NSString *)comment withBlock:(void (^)(id, NSError *))block

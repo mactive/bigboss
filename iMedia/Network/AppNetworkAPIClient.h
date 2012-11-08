@@ -44,6 +44,7 @@ extern NSString *const kXMPPmyUsername;
 - (void)loadImage:(NSString *)urlPath withBlock:(void (^)(UIImage *image, NSError *error))block;
 
 - (void)updateMyChannel:(Me *)me withBlock:(void (^)(id responseObject, NSError *error))block;
+- (void)updateMyPresetChannel:(Me *)me withBlock:(void (^)(id responseObject, NSError *error))block;
 
 - (void)uploadRating:(NSString *)rateKey rate:(NSString *)rating andComment:(NSString *)comment withBlock:(void (^)(id responseObject, NSError *error))block;
 
