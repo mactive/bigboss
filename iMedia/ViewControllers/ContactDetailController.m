@@ -650,11 +650,17 @@
     
     NSLog(@"NewUSer %@",newUser);
     
+    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    HUD.delegate = self;
+    HUD.mode = MBProgressHUDModeText;
+    HUD.labelText = T(@"添加成功");
+    [HUD hide:YES afterDelay:2];
+
     if (newUser.state.intValue != IdentityStateActive) {
         [[ModelHelper sharedInstance] populateIdentity:newUser withJSONData:jsonData];
         newUser.state = [NSNumber numberWithInt:IdentityStatePendingAddFriend];
         NSLog(@"userJid %@",userJid);
-
+    
         [[XMPPNetworkCenter sharedClient] addBuddy:userJid withCallbackBlock:nil];
     }
 }
@@ -665,7 +671,6 @@
     HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     HUD.delegate = self;
     HUD.labelText = T(@"正在发送");
-    
     [HUD hide:YES afterDelay:2];
     
     [[XMPPNetworkCenter sharedClient] removeBuddy:self.user.ePostalID withCallbackBlock:^(NSError *error) {
