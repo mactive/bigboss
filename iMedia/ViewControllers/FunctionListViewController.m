@@ -140,6 +140,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 - (void)shakeAction
 {
     ShakeViewController *shakeViewController = [[ShakeViewController alloc] initWithNibName:nil bundle:nil];
+    [self.navigationController setHidesBottomBarWhenPushed:YES];
     [self.navigationController pushViewController:shakeViewController animated:YES];
 }
 
