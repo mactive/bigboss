@@ -288,7 +288,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
                             aChannel = [NSEntityDescription insertNewObjectForEntityForName:@"Channel" inManagedObjectContext:_managedObjectContext];
                             aChannel.owner = self.me;
                             [[ModelHelper sharedInstance] populateIdentity:aChannel withJSONData:channelInfo];
-                            aChannel.state = [NSNumber numberWithInt:IdentityStateActive];
+                            aChannel.state = [NSNumber numberWithInt:IdentityStatePendingAddSubscription];
+                            [channelsToSubscribe addObject:aChannel];
                             
                         } else if (aChannel.state.intValue == IdentityStateActive){
                             // already exists and good, just refresh content, no special handing here
@@ -304,20 +305,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
                         [allServerChannels setObject:aChannel forKey:nodeStr];
                     }];
                     
-                    
-                    // Now i will go through all local channels to check their status
-                    [self.me.channels enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
-                        Channel* aChannel = obj;
-                        if (aChannel.state.intValue == IdentityStateActive) {
-                            if ([allServerChannels objectForKey:aChannel.node] == nil) {
-                                [channelsToUnsubscribe addObject:aChannel];
-                            }
-                        } else if (aChannel.state.intValue == IdentityStatePendingAddSubscription) {
-                            [channelsToSubscribe addObject:aChannel];
-                        } else if (aChannel.state.intValue == IdentityStatePendingRemoveSubscription) {
-                            [channelsToUnsubscribe addObject:aChannel];
-                        }
-                    }];
                     
                     // Now process all the channel stuff
                     [channelsToSubscribe enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
