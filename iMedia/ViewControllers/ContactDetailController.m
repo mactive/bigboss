@@ -32,6 +32,32 @@
 
 @property(strong, nonatomic) UIActionSheet *reportActionsheet;
 
+@property (strong, nonatomic) UIScrollView *contentView;
+@property (strong, nonatomic) UITableView *infoTableView;
+
+@property (strong, nonatomic) UIView *albumView;
+@property (strong, nonatomic) UIView *statusView;
+@property (strong, nonatomic) UIView *snsView;
+@property (strong, nonatomic) UIView *infoView;
+@property (strong, nonatomic) UIView *actionView;
+
+@property (strong, nonatomic) UILabel *sexLabel;
+@property (strong, nonatomic) UILabel *horoscopeLabel;
+@property (strong, nonatomic) UILabel *timeLabel;
+@property (strong, nonatomic) UIButton *sendMsgButton;
+@property (strong, nonatomic) UIButton *deleteUserButton;
+@property (strong, nonatomic) UIButton *reportUserButton;
+@property (strong, nonatomic) UILabel  *nameLabel;
+
+
+
+// could contain ImageRemote object or NSString for url
+@property (strong, nonatomic) NSMutableArray *albumArray;
+
+@property (strong, nonatomic) NSArray *infoArray;
+@property (strong, nonatomic) NSArray *infoDescArray;
+@property (strong, nonatomic) AlbumViewController* albumViewController;
+
 - (NSString *)getGender;
 - (NSString *)getAgeStr;
 - (NSString *)getLastGPSUpdatedTimeStr;
@@ -67,6 +93,9 @@
 @synthesize infoTableView;
 @synthesize actionView;
 @synthesize reportActionsheet;
+@synthesize sexLabel;
+@synthesize horoscopeLabel;
+@synthesize timeLabel;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -239,59 +268,31 @@
     [sexView setFrame:CGRectMake(0, 0, 50, 20)];
 
     
-    UILabel* sexLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, 20, 20)];
-    [sexLabel setBackgroundColor:[UIColor clearColor]];
-    sexLabel.text  = [self getAgeStr];
-    [sexLabel setFont:[UIFont systemFontOfSize:14.0]];
-    [sexLabel setTextColor:[UIColor whiteColor]];
+    self.sexLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, 0, 20, 20)];
+    [self.sexLabel setBackgroundColor:[UIColor clearColor]];
+    [self.sexLabel setFont:[UIFont systemFontOfSize:14.0]];
+    [self.sexLabel setTextColor:[UIColor whiteColor]];
     [sexView addSubview:sexLabel];
     
     // horoscope
-    UILabel* horoscopeLabel = [[UILabel alloc]initWithFrame:CGRectMake(60, 0, 100, 20)];
-    [horoscopeLabel setBackgroundColor:[UIColor clearColor]];
-    [horoscopeLabel setFont:[UIFont boldSystemFontOfSize:14.0]];
-    [horoscopeLabel setShadowColor:[UIColor whiteColor]];
-    [horoscopeLabel setShadowOffset:CGSizeMake(0, 1)];
-    [horoscopeLabel setTextColor:RGBCOLOR(97, 97, 97)];
-    [self.statusView addSubview:horoscopeLabel];
-    
-    
-    if (self.user == nil) {
-        NSDateFormatter * dateFormater = [[NSDateFormatter alloc]init];
-        [dateFormater setDateFormat:@"yyyy-MM-dd"];
-        NSDate *_date = [dateFormater dateFromString:[self.jsonData objectForKey:@"birthdate"]];
-        horoscopeLabel.text = [_date horoscope];
-    }else {
-        horoscopeLabel.text = [self.user.birthdate horoscope];
-    }
-    
+    self.horoscopeLabel = [[UILabel alloc]initWithFrame:CGRectMake(60, 0, 100, 20)];
+    [self.horoscopeLabel setBackgroundColor:[UIColor clearColor]];
+    [self.horoscopeLabel setFont:[UIFont boldSystemFontOfSize:14.0]];
+    [self.horoscopeLabel setShadowColor:[UIColor whiteColor]];
+    [self.horoscopeLabel setShadowOffset:CGSizeMake(0, 1)];
+    [self.horoscopeLabel setTextColor:RGBCOLOR(97, 97, 97)];
     
     
     // Create a label icon for the time.
     UIImageView *timeIconView = [[UIImageView alloc] initWithFrame:CGRectMake(210, 0 , 15, 15)];
     timeIconView.image = [UIImage imageNamed:@"time_icon.png"];
     
-    UILabel* timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(228, 0 ,60, 20)];
-	timeLabel.font = [UIFont systemFontOfSize:12.0];
-	timeLabel.textAlignment = UITextAlignmentLeft;
-	timeLabel.textColor = RGBCOLOR(140, 140, 140);
-    timeLabel.backgroundColor = [UIColor clearColor];
-    if (self.user == nil) {
-        NSDate *tmp = [ServerDataTransformer getLastGPSUpdatedFromServerJSON:self.jsonData];
-        if (tmp == nil) {
-            timeLabel.text = T(@"未知");
-        } else {
-            timeLabel.text = [tmp timesinceAgo];
-        }
-    }else {
-        if (self.user.lastGPSUpdated == nil) {
-            timeLabel.text = T(@"未知");
-        } else {
-            timeLabel.text = [self.user.lastGPSUpdated timesinceAgo];
-        }
-    }
-    
-    [timeLabel sizeToFit];
+    self.timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(228, 0 ,60, 20)];
+	self.timeLabel.font = [UIFont systemFontOfSize:12.0];
+	self.timeLabel.textAlignment = UITextAlignmentLeft;
+	self.timeLabel.textColor = RGBCOLOR(140, 140, 140);
+    self.timeLabel.backgroundColor = [UIColor clearColor];
+
     
     // Create a label icon for the time.
     /*
@@ -308,13 +309,48 @@
     */ 
     
     // add to the statusView
+    [self.statusView addSubview:self.horoscopeLabel];
     [self.statusView addSubview:sexView];
     [self.statusView addSubview:timeIconView];
-	[self.statusView addSubview:timeLabel];
+	[self.statusView addSubview:self.timeLabel];
 //    [self.statusView addSubview:locationIconView];
 //	[self.statusView addSubview:locationLabel];
     
     [self.contentView addSubview: self.statusView];
+    [self refreshStatusView];
+}
+
+- (void)refreshStatusView
+{
+    
+    if (self.user == nil) {
+        NSDate *tmp = [ServerDataTransformer getLastGPSUpdatedFromServerJSON:self.jsonData];
+        if (tmp == nil) {
+            timeLabel.text = T(@"未知");
+        } else {
+            self.timeLabel.text = [tmp timesinceAgo];
+        }
+    }else {
+        if (self.user.lastGPSUpdated == nil) {
+            self.timeLabel.text = T(@"未知");
+        } else {
+            self.timeLabel.text = [self.user.lastGPSUpdated timesinceAgo];
+        }
+    }
+    [self.timeLabel sizeToFit];
+    
+    if (self.user == nil) {
+        NSDateFormatter * dateFormater = [[NSDateFormatter alloc]init];
+        [dateFormater setDateFormat:@"yyyy-MM-dd"];
+        NSDate *_date = [dateFormater dateFromString:[self.jsonData objectForKey:@"birthdate"]];
+        self.horoscopeLabel.text = [_date horoscope];
+    }else {
+        self.horoscopeLabel.text = [self.user.birthdate horoscope];
+    }
+    
+    
+    self.sexLabel.text  = [self getAgeStr];
+    
 }
 
 ////////////////////////////////////////////////////////////////////////////////
