@@ -18,6 +18,7 @@
 @dynamic selfIntroduction;
 @dynamic subID;
 @dynamic subrequestID;
+@dynamic isMandatory;
 @dynamic conversation;
 @dynamic owner;
 

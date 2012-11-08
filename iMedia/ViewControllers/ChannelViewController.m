@@ -148,8 +148,13 @@
         
         [self.confirmButton setTitle:T(@"发送信息") forState:UIControlStateNormal];
         [self.confirmButton addTarget:self action:@selector(sendMsgButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
-        [self.cancelButton setTitle:T(@"取消订阅") forState:UIControlStateNormal];
-        [self.cancelButton addTarget:self action:@selector(unSubscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
+        
+        if (self.channel.isMandatory.intValue == 0) {
+            [self.cancelButton setTitle:T(@"取消订阅") forState:UIControlStateNormal];
+            [self.cancelButton addTarget:self action:@selector(unSubscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
+        } else {
+            [self.cancelButton setHidden:YES];
+        }
     }
 
     

@@ -146,7 +146,6 @@
 		5646FAFD160D4BC400175B78 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5646FAFC160D4BC400175B78 /* QuartzCore.framework */; };
 		5646FAFF160F1EBF00175B78 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5646FAFE160F1EBF00175B78 /* libicucore.dylib */; };
 		5646FB23160F246500175B78 /* libCocoaPlant.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5646FB1C160F243200175B78 /* libCocoaPlant.a */; };
-		564A6F2B164B6EE100B04A00 /* Channel.m in Sources */ = {isa = PBXBuildFile; fileRef = 564A6F2A164B6EE100B04A00 /* Channel.m */; };
 		564A6F2E164B6EFE00B04A00 /* Me.m in Sources */ = {isa = PBXBuildFile; fileRef = 564A6F2D164B6EFE00B04A00 /* Me.m */; };
 		564A6F34164BE78D00B04A00 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 564A6F33164BE78D00B04A00 /* Message.m */; };
 		5661561E163E90ED00199DB4 /* FunctionListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5661561D163E90EC00199DB4 /* FunctionListViewController.m */; };
@@ -315,6 +314,7 @@
 		56DF5E6E16257F5600E75105 /* SBJsonUTF8Stream.m in Sources */ = {isa = PBXBuildFile; fileRef = 56DF5E6216257F5600E75105 /* SBJsonUTF8Stream.m */; };
 		56DF5E6F16257F5600E75105 /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 56DF5E6416257F5600E75105 /* SBJsonWriter.m */; };
 		56DF5E7216257F7A00E75105 /* NSObject+SBJson.m in Sources */ = {isa = PBXBuildFile; fileRef = 56DF5E7116257F7A00E75105 /* NSObject+SBJson.m */; };
+		56EDEFCC164C06EB003B0E9D /* Channel.m in Sources */ = {isa = PBXBuildFile; fileRef = 56EDEFCB164C06EB003B0E9D /* Channel.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -529,8 +529,6 @@
 		5646FAFC160D4BC400175B78 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		5646FAFE160F1EBF00175B78 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		5646FB11160F243200175B78 /* CocoaPlant.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CocoaPlant.xcodeproj; path = CocoaPlant/CocoaPlant.xcodeproj; sourceTree = "<group>"; };
-		564A6F29164B6EE000B04A00 /* Channel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Channel.h; path = Models/Channel.h; sourceTree = "<group>"; };
-		564A6F2A164B6EE100B04A00 /* Channel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Channel.m; path = Models/Channel.m; sourceTree = "<group>"; };
 		564A6F2C164B6EFE00B04A00 /* Me.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Me.h; path = Models/Me.h; sourceTree = "<group>"; };
 		564A6F2D164B6EFE00B04A00 /* Me.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Me.m; path = Models/Me.m; sourceTree = "<group>"; };
 		564A6F32164BE78D00B04A00 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Message.h; path = Models/Message.h; sourceTree = "<group>"; };
@@ -835,6 +833,8 @@
 		56DF5E6416257F5600E75105 /* SBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SBJsonWriter.m; path = SBJson/SBJsonWriter.m; sourceTree = "<group>"; };
 		56DF5E7016257F7A00E75105 /* NSObject+SBJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSObject+SBJson.h"; path = "SBJson/NSObject+SBJson.h"; sourceTree = "<group>"; };
 		56DF5E7116257F7A00E75105 /* NSObject+SBJson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSObject+SBJson.m"; path = "SBJson/NSObject+SBJson.m"; sourceTree = "<group>"; };
+		56EDEFCA164C06EB003B0E9D /* Channel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Channel.h; path = Models/Channel.h; sourceTree = "<group>"; };
+		56EDEFCB164C06EB003B0E9D /* Channel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Channel.m; path = Models/Channel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1752,13 +1752,13 @@
 		566E825E1609A5FE00A333EA /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				566E80B51609A24C00A333EA /* iMedia.xcdatamodeld */,
+				56EDEFCA164C06EB003B0E9D /* Channel.h */,
+				56EDEFCB164C06EB003B0E9D /* Channel.m */,
 				564A6F32164BE78D00B04A00 /* Message.h */,
 				564A6F33164BE78D00B04A00 /* Message.m */,
-				566E80B51609A24C00A333EA /* iMedia.xcdatamodeld */,
 				564A6F2C164B6EFE00B04A00 /* Me.h */,
 				564A6F2D164B6EFE00B04A00 /* Me.m */,
-				564A6F29164B6EE000B04A00 /* Channel.h */,
-				564A6F2A164B6EE100B04A00 /* Channel.m */,
 				56B834F81643B49D00941C1C /* Identity.h */,
 				56B834F91643B49D00941C1C /* Identity.m */,
 				56A75E8D164394FA001FEB83 /* FriendRequest.h */,
@@ -2334,11 +2334,11 @@
 				2669583B164803AC00A7106C /* MetroButton.m in Sources */,
 				26A587781649199600009968 /* RateViewController.m in Sources */,
 				2674B852164A51950092D980 /* NSDate-Utilities.m in Sources */,
-				564A6F2B164B6EE100B04A00 /* Channel.m in Sources */,
 				564A6F2E164B6EFE00B04A00 /* Me.m in Sources */,
 				564A6F34164BE78D00B04A00 /* Message.m in Sources */,
 				268CEEB5164B8CFB00BFBA13 /* FeedBackViewController.m in Sources */,
 				268CEEB8164B8D1000BFBA13 /* AboutUsViewController.m in Sources */,
+				56EDEFCC164C06EB003B0E9D /* Channel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

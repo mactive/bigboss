@@ -2,6 +2,7 @@
 <model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1811" systemVersion="12C60" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Channel" representedClassName="Channel" parentEntity="Identity" syncable="YES">
         <attribute name="csContactPostalID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isMandatory" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="node" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="selfIntroduction" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="subID" optional="YES" attributeType="String" syncable="YES"/>
@@ -92,7 +93,7 @@
         <relationship name="conversations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Conversation" inverseName="users" inverseEntity="Conversation" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Channel" positionX="160" positionY="192" width="128" height="150"/>
+        <element name="Channel" positionX="160" positionY="192" width="128" height="165"/>
         <element name="Conversation" positionX="0" positionY="0" width="128" height="165"/>
         <element name="FriendRequest" positionX="160" positionY="192" width="128" height="105"/>
         <element name="Identity" positionX="160" positionY="192" width="128" height="225"/>

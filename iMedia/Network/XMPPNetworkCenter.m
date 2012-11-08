@@ -810,7 +810,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     NSDictionary *postDict = [NSDictionary dictionaryWithObjectsAndKeys: channel.guid, @"guid", @"4", @"op", csrftoken, @"csrfmiddlewaretoken", nil];
         
     [[AppNetworkAPIClient sharedClient] postPath:POST_DATA_PATH parameters:postDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
-            DDLogVerbose(@"login JSON received: %@", responseObject);
+            DDLogVerbose(@"set subscription succeeded: %@", responseObject);
         
         if (channel && channel.state.intValue != IdentityStateActive) {
             channel.state = [NSNumber numberWithInt:IdentityStateActive];
@@ -865,7 +865,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     NSDictionary *postDict = [NSDictionary dictionaryWithObjectsAndKeys: channel.guid, @"guid", @"5", @"op", csrftoken, @"csrfmiddlewaretoken", nil];
     
     [[AppNetworkAPIClient sharedClient] postPath:POST_DATA_PATH parameters:postDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        DDLogVerbose(@"login JSON received: %@", responseObject);
+        DDLogVerbose(@"remove subscription succeeded: %@", responseObject);
         
         //unsubscribe this channel
         if (channel && channel.state.intValue != IdentityStateInactive) {
