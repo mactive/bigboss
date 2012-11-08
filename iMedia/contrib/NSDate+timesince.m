@@ -122,7 +122,7 @@
     {
         cConstellation = [Constellation objectAtIndex:7];
     }
-    else if (mCnt > 1123 && mCnt < 1223)
+    else if (mCnt > 1122 && mCnt < 1223)
     {
         cConstellation = [Constellation objectAtIndex:8];
     }
