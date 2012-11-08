@@ -39,6 +39,7 @@
 @property(strong, nonatomic) UIActionSheet *photoActionsheet;
 @property(strong, nonatomic) UIActionSheet *editActionsheet;
 @property(readwrite, nonatomic) NSUInteger editingAlbumIndex;
+@property(readwrite, nonatomic) NSUInteger addButtonIndex;
 @property(readwrite, nonatomic) BOOL isEditing;
 
 @property(strong, nonatomic) NSMutableArray *infoCellArray;
@@ -99,6 +100,7 @@
 @synthesize photoActionsheet;
 @synthesize editActionsheet;
 @synthesize editingAlbumIndex;
+@synthesize addButtonIndex;
 @synthesize infoCellArray;
 @synthesize isEditing;
 
@@ -331,21 +333,6 @@
 #pragma mark - actionsheet when add album
 /////////////////////////////////////////////////////////////////////////////////////////
 
-- (void)removeOrReplace:(UIButton *)sender
-{   
-    self.editActionsheet = [[UIActionSheet alloc]  
-                                  initWithTitle:nil
-                                  delegate:self  
-                                  cancelButtonTitle:T(@"取消")  
-                                  destructiveButtonTitle:nil 
-                                  otherButtonTitles:T(@"替换照片"), T(@"删除照片"),nil];  
-    self.editActionsheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
-    [self.editActionsheet showFromTabBar:[[self tabBarController] tabBar]];
-    self.editingAlbumIndex = sender.tag;
-    
-    NSLog(@"editingAlbumIndex %d",self.editingAlbumIndex);
-}
-
 #define VIEW_ALBUM_WIDTH 75
 #define VIEW_ALBUM_WIDTH 75
 #define VIEW_ALBUM_OFFSET 2.5
@@ -422,7 +409,7 @@
     [self.addAlbumButton.layer setCornerRadius:3.0];
     self.addAlbumButton.tag = 1000;
     [self.addAlbumButton setImage:[UIImage imageNamed:@"profile_add.png"] forState:UIControlStateNormal];
-    [self.addAlbumButton addTarget:self action:@selector(addAlbum:) forControlEvents:UIControlEventTouchUpInside];
+    [self.addAlbumButton addTarget:self action:@selector(addOrReplaceAlbum:) forControlEvents:UIControlEventTouchUpInside];
     [self.addAlbumButton setFrame:[self calcRect:0]];
     [self.albumView addSubview:self.addAlbumButton];
 
@@ -525,14 +512,14 @@
         CGRect rect = [self calcRect:self.albumCount];
         [self.addAlbumButton setFrame:rect];
         [self.addAlbumButton setHidden:NO];
-        self.editingAlbumIndex = self.albumCount;
+        self.addButtonIndex = self.albumCount;
     }else if (self.albumCount == MAX_ALBUN_COUNT){
         [self.addAlbumButton setHidden:YES];
     } else if (self.isEditing) {
         CGRect rect = [self calcRect:self.albumCount];
         [self.addAlbumButton setFrame:rect];
         [self.addAlbumButton setHidden:NO];
-        self.editingAlbumIndex = self.albumCount;
+        self.addButtonIndex = self.albumCount;
     }else{
         [self.addAlbumButton setHidden:YES];
         
@@ -557,9 +544,13 @@
 #pragma mark - actionsheet when add album
 /////////////////////////////////////////////////////////////////////////////////////////
 
-- (void)addAlbum:(UIButton *)sender
+- (void)addOrReplaceAlbum:(UIButton *)sender
 {
-    
+    // IsReplace if sender is nil
+    if (sender == self.addAlbumButton) {
+        [self setEditMode];
+        self.editingAlbumIndex = self.addButtonIndex;
+    }
     self.photoActionsheet = [[UIActionSheet alloc] 
                                   initWithTitle:nil
                                   delegate:self
@@ -570,21 +561,35 @@
     [self.photoActionsheet showFromTabBar:[[self tabBarController] tabBar]];
 }
 
+- (void)removeOrReplace:(UIButton *)sender
+{
+    self.editActionsheet = [[UIActionSheet alloc]
+                            initWithTitle:nil
+                            delegate:self
+                            cancelButtonTitle:T(@"取消")
+                            destructiveButtonTitle:nil
+                            otherButtonTitles:T(@"替换照片"), T(@"删除照片"),nil];
+    self.editActionsheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+    [self.editActionsheet showFromTabBar:[[self tabBarController] tabBar]];
+    self.editingAlbumIndex = sender.tag;
+    
+    NSLog(@"editingAlbumIndex %d",self.editingAlbumIndex);
+}
+
+
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (actionSheet == self.photoActionsheet) {
         if (buttonIndex == 0) {
-            [self setEditMode]; 
             [self takePhotoFromLibaray];  
         }else if (buttonIndex == 1) {
-            [self setEditMode]; 
             [self takePhotoFromCamera];  
         }
     }
     
     if (actionSheet == self.editActionsheet) {
         if (buttonIndex == 0) {  
-            [self addAlbum:nil];
+            [self addOrReplaceAlbum:nil];
         }else if (buttonIndex == 1) {
             [self removeAlbum];
         }
