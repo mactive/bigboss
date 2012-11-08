@@ -27,8 +27,13 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 //#define BANDWIDTH_MONITOR
 
+<<<<<<< HEAD
 //static NSString * const pubsubhost = @"pubsub.192.168.1.104";
 static NSString * const pubsubhost = @"pubsub.121.12.104.95";
+=======
+static NSString * const pubsubhost = @"pubsub.192.168.1.104";
+//static NSString * const pubsubhost = @"pubsub.121.12.104.95";
+>>>>>>> 1ca7796cb41454983a69ad4082ed21e1c46c4f65
 
 @interface XMPPNetworkCenter () <XMPPRosterDelegate, XMPPPubSubDelegate, XMPPRosterMemoryStorageDelegate>
 {

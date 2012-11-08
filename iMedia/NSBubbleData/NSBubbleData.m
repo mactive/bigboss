@@ -10,6 +10,7 @@
 
 #import "NSBubbleData.h"
 #import <QuartzCore/QuartzCore.h>
+#import "XMPPFramework.h"
 
 @implementation NSBubbleData
 
@@ -21,7 +22,7 @@
 @synthesize insets = _insets;
 @synthesize avatar = _avatar;
 @synthesize content = _content;
-@synthesize webView = _webView;
+@synthesize templateView = templateView;
 @synthesize showAvatar = _showAvatar;
 @synthesize isDone = _isDone;
 @synthesize cellHeight = _cellHeight;
@@ -125,18 +126,37 @@ const UIEdgeInsets imageInsetsSomeone = {11, 18, 16, 14};
 
 - (id)initWithWeb:(NSString *)urlString date:(NSDate *)date type:(NSBubbleType)type
 {
-    self.webView = [[UIWebView alloc] initWithFrame:CGRectMake(12.5, 12.5, 275, 1)];
+    NSXMLElement *element =[[NSXMLElement alloc] initWithXMLString:urlString error:nil];
     
-    NSURL *url=[NSURL URLWithString:urlString];
-    NSURLRequest *resquestobj=[NSURLRequest requestWithURL:url];
-    [self.webView loadRequest:resquestobj];
+    NSString *image = [[element elementForName:@"image9"] stringValue];
+    NSString *content = [[element elementForName:@"content9"] stringValue];
+    
+    
+    UIFont *font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
+    CGSize size = [(content ? content : @"") sizeWithFont:font constrainedToSize:CGSizeMake(220, 9999) lineBreakMode:UILineBreakModeWordWrap];
+    
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
+    label.numberOfLines = 0;
+    label.lineBreakMode = UILineBreakModeWordWrap;
+    label.text = (content ? content : @"");
+    label.font = font;
     
 #if !__has_feature(objc_arc)
-    [self.webView autorelease];
+    [label autorelease];
+#endif
+    
+    if (image == nil || [image length] == 0) {
+        self.templateView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 275, label.frame.size.height)];
+    } else {
+        self.templateView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 275, TEMPLATE_IMAGE_HEIGHT+label.frame.size.height)];
+    }
+    
+#if !__has_feature(objc_arc)
+    [self.templateView autorelease];
 #endif
     
     UIEdgeInsets insets = (type == BubbleTypeMine ? imageInsetsMine : imageInsetsSomeone);
-    return [self initWithView:self.webView date:date content:urlString type:type insets:insets];
+    return [self initWithView:self.templateView date:date content:urlString type:type insets:insets];
     
 }
 
@@ -167,7 +187,7 @@ const UIEdgeInsets imageInsetsSomeone = {11, 18, 16, 14};
         _content = content;
         _insets = insets;
     
-        self.showAvatar = type != BubbleTypeWebview ? YES : NO ;
+        self.showAvatar = type != BubbleTypeTemplateview ? YES : NO ;
         self.isDone = NO;
         self.cellHeight = 0.0f;
     }

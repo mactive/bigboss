@@ -11,16 +11,19 @@
 #import <QuartzCore/QuartzCore.h>
 #import "UIBubbleTableViewCell.h"
 #import "NSBubbleData.h"
+#import "XMPPFramework.h"
+#import "UIImageView+AFNetworking.h"
 
 @interface UIBubbleTableViewCell ()<UIWebViewDelegate>
 
 @property (nonatomic, strong) UIView *customView;
 @property (nonatomic, strong) UIImageView *bubbleImage;
 @property (nonatomic, strong) UIImageView *avatarImage;
-@property (nonatomic, strong) UIWebView *webView;
-@property (nonatomic, strong) UIView *backWebView;
-@property (nonatomic, strong) UIButton *webViewOverlayButton;
+@property (nonatomic, strong) UIView *templateBackView;
+@property (nonatomic, strong) UIImageView *templateImage;
+@property (nonatomic, strong) UILabel *templateContent;
 @property (nonatomic, strong) UIImageView *rateView;
+@property (nonatomic, readwrite) CGSize viewSize;
 
 - (void) setupInternalData;
 
@@ -33,10 +36,11 @@
 @synthesize bubbleImage = _bubbleImage;
 @synthesize showAvatar = _showAvatar;
 @synthesize avatarImage;
-@synthesize webView =_webView;
-@synthesize webViewOverlayButton;
-@synthesize backWebView;
+@synthesize templateImage;
+@synthesize templateContent;
+@synthesize templateBackView;
 @synthesize rateView;
+@synthesize viewSize;
 
 - (void)setFrame:(CGRect)frame
 {
@@ -47,13 +51,7 @@
 
 - (id)init
 {
-    id obj = [super init];
-    
-    self.webViewOverlayButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.rateView = [[UIImageView alloc]initWithFrame:CGRectMake(80, 10, 160, 41)];
-    self.backWebView = [[UIView alloc] initWithFrame:CGRectMake(10, 0, 300,1)];
-    self.webView = [[UIWebView alloc]initWithFrame:CGRectMake(12.5, 12.5, 275, 1)];
-    
+    id obj = [super init];    
     return obj;
 }
 
@@ -129,35 +127,59 @@
     else if(type == BubbleTypeMine) {
         self.bubbleImage.image = [[UIImage imageNamed:@"bubbleMine.png"] stretchableImageWithLeftCapWidth:15 topCapHeight:14];
     }
-    else if (type == BubbleTypeWebview){
+    else if (type == BubbleTypeTemplateview){
         
-        [self.backWebView setBackgroundColor:[UIColor whiteColor]];
-        [self.backWebView.layer setMasksToBounds:YES];
-        [self.backWebView.layer setCornerRadius:10.0];
+        NSXMLElement *element = [[NSXMLElement alloc] initWithXMLString:self.data.content error:nil];
+        NSString* imageString = [[element elementForName:@"image9"] stringValue];
+        NSString* contentString = [[element elementForName:@"content9"] stringValue];
         
-        [self.webViewOverlayButton setFrame:self.webView.bounds];
-        [self.webViewOverlayButton setAlpha:0.3];
-        [self.webViewOverlayButton setBackgroundColor:[UIColor whiteColor]];
-        
-        if (self.data.isDone == NO) {
-            NSURL *url=[NSURL URLWithString:self.data.content];
-            NSURLRequest *resquestobj=[NSURLRequest requestWithURL:url];
-            [self.webView loadRequest:resquestobj];
-            NSLog(@"%@",resquestobj);
-            self.webView.scalesPageToFit = YES;
-            //        self.webView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
-            self.webView.delegate = self;
-            [self.webView setBackgroundColor:[UIColor clearColor]];
+        self.templateBackView = [[UIView alloc] initWithFrame:CGRectMake(10, 0, 300, height +20)];
+        self.templateContent = [[UILabel alloc] initWithFrame:CGRectMake(12.5, 160, 275, height)];
+        self.templateImage = [[UIImageView alloc]initWithFrame:CGRectMake(12.5, 12.5, 275, TEMPLATE_IMAGE_HEIGHT)];
+        self.templateImage.contentMode = UIViewContentModeScaleAspectFit;
+
+        if (imageString == nil || [imageString length] == 0) {
+            [self.templateContent setFrame:CGRectMake(12.5, 10, 275, height )];
             
-            [self.backWebView addSubview:self.webView];
-            [self.backWebView addSubview:self.webViewOverlayButton];
-            [self.contentView addSubview:self.backWebView];
+        }else{
+            [self.templateContent setFrame:CGRectMake(12.5, 160, 275, height - TEMPLATE_IMAGE_HEIGHT)];
         }
+        
+//        imageString = @"http://img.hb.aicdn.com/b524a99d6cd18479f2316613e5babe016e6d3112ce7dc-qkksEP_fw554";
+        [self.templateImage setImageWithURL:[NSURL URLWithString:imageString] placeholderImage:nil];
+        
+        self.templateContent.font = [UIFont systemFontOfSize:14];
+        self.templateContent.text = contentString;
+        self.templateContent.numberOfLines = 0;
+        self.templateContent.textColor = RGBCOLOR(33, 33, 33);
+        self.templateContent.backgroundColor = [UIColor clearColor];
+        
+        
+        [self.templateBackView setBackgroundColor:[UIColor whiteColor]];
+        [self.templateBackView.layer setMasksToBounds:YES];
+        [self.templateBackView.layer setCornerRadius:10.0];
+        
+        /*[[data.content elementForName:@"title9"] stringValue]
+         MYUIVIew = kkk
+         myui.content = NSString* summary = [[data.content elementForName:@"title9"] stringValue];
+         myui.imageView NSString* summary = [[entry elementForName:@"image9"] stringValue];
+
+        */
+        
         [self.customView removeFromSuperview];
         [self.avatarImage removeFromSuperview];
         [self.bubbleImage removeFromSuperview];
         
+        [self.templateBackView addSubview:self.templateImage];
+        [self.templateBackView addSubview:self.templateContent];
+        [self.contentView addSubview:self.templateBackView];
+
+        
+
+        
     }else if(type == BubbleTypeRateview){
+        
+        self.rateView = [[UIImageView alloc]initWithFrame:CGRectMake(80, 10, 160, 41)];
         [self.rateView setImage:[UIImage imageNamed:@"welcome_btn.png"]];
         UILabel *rateLabel = [[UILabel alloc]initWithFrame:rateView.bounds];
         
@@ -177,27 +199,27 @@
 
 
 #pragma mark - UIWebView delegate
-
-- (void)webViewDidFinishLoad:(UIWebView *)webView
-{
-    if ([self.webView isEqual:webView]) {
-        
-        CGSize actualSize = [self.webView sizeThatFits:CGSizeZero];
-        CGRect newFrame = self.webView.frame;
-        newFrame.size.height = actualSize.height;
-        self.webView.frame = newFrame;
-        self.webViewOverlayButton.frame = newFrame;
-        
-        CGRect backFrame = self.backWebView.frame;
-        backFrame.size.height = actualSize.height+25;
-        self.backWebView.frame = backFrame;
-        NSLog(@"%@", NSStringFromCGRect(self.backWebView.frame));
-        
-//        self.data.view.frame = backFrame;
-        self.data.isDone = YES;
-        self.data.cellHeight = backFrame.size.height;
-    }
-}
+//
+//- (void)webViewDidFinishLoad:(UIWebView *)webView
+//{
+//    if ([self.webView isEqual:webView]) {
+//        
+//        CGSize actualSize = [self.webView sizeThatFits:CGSizeZero];
+//        CGRect newFrame = self.webView.frame;
+//        newFrame.size.height = actualSize.height;
+//        self.webView.frame = newFrame;
+//        self.webViewOverlayButton.frame = newFrame;
+//        
+//        CGRect backFrame = self.backWebView.frame;
+//        backFrame.size.height = actualSize.height+25;
+//        self.backWebView.frame = backFrame;
+//        NSLog(@"%@", NSStringFromCGRect(self.backWebView.frame));
+//        
+////        self.data.view.frame = backFrame;
+//        self.data.isDone = YES;
+//        self.data.cellHeight = backFrame.size.height;
+//    }
+//}
 
 
 

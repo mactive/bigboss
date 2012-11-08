@@ -82,6 +82,9 @@
 		26825BE81637A983008DA7CC /* sns_icon_weibo_c@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26825BE11637A983008DA7CC /* sns_icon_weibo_c@2x.png */; };
 		26825BEE1637D043008DA7CC /* uibutton_bg_color@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26825BED1637D043008DA7CC /* uibutton_bg_color@2x.png */; };
 		26825BF01637F905008DA7CC /* profile_tabbar_btn4@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26825BEF1637F905008DA7CC /* profile_tabbar_btn4@2x.png */; };
+		268CEEB5164B8CFB00BFBA13 /* FeedBackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 268CEEB4164B8CFB00BFBA13 /* FeedBackViewController.m */; };
+		268CEEB8164B8D1000BFBA13 /* AboutUsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 268CEEB7164B8D1000BFBA13 /* AboutUsViewController.m */; };
+		268CEEBA164B90E400BFBA13 /* oyeah_logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 268CEEB9164B90E400BFBA13 /* oyeah_logo@2x.png */; };
 		268E9BF2163FB19900CD0C22 /* company_face@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 268E9BEF163FB19900CD0C22 /* company_face@2x.png */; };
 		268E9BF3163FB19900CD0C22 /* certificated_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 268E9BF0163FB19900CD0C22 /* certificated_icon.png */; };
 		268E9BF4163FB19900CD0C22 /* button_arrow_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 268E9BF1163FB19900CD0C22 /* button_arrow_bg@2x.png */; };
@@ -446,6 +449,11 @@
 		26825BE11637A983008DA7CC /* sns_icon_weibo_c@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "sns_icon_weibo_c@2x.png"; path = "Resources/sns_icon_weibo_c@2x.png"; sourceTree = "<group>"; };
 		26825BED1637D043008DA7CC /* uibutton_bg_color@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "uibutton_bg_color@2x.png"; path = "Resources/uibutton_bg_color@2x.png"; sourceTree = "<group>"; };
 		26825BEF1637F905008DA7CC /* profile_tabbar_btn4@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "profile_tabbar_btn4@2x.png"; path = "Resources/profile_tabbar_btn4@2x.png"; sourceTree = "<group>"; };
+		268CEEB3164B8CFB00BFBA13 /* FeedBackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FeedBackViewController.h; path = ViewControllers/FeedBackViewController.h; sourceTree = "<group>"; };
+		268CEEB4164B8CFB00BFBA13 /* FeedBackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FeedBackViewController.m; path = ViewControllers/FeedBackViewController.m; sourceTree = "<group>"; };
+		268CEEB6164B8D1000BFBA13 /* AboutUsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AboutUsViewController.h; path = ViewControllers/AboutUsViewController.h; sourceTree = "<group>"; };
+		268CEEB7164B8D1000BFBA13 /* AboutUsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AboutUsViewController.m; path = ViewControllers/AboutUsViewController.m; sourceTree = "<group>"; };
+		268CEEB9164B90E400BFBA13 /* oyeah_logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "oyeah_logo@2x.png"; path = "Resources/oyeah_logo@2x.png"; sourceTree = "<group>"; };
 		268E9BEF163FB19900CD0C22 /* company_face@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "company_face@2x.png"; path = "Resources/company_face@2x.png"; sourceTree = "<group>"; };
 		268E9BF0163FB19900CD0C22 /* certificated_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = certificated_icon.png; path = Resources/certificated_icon.png; sourceTree = "<group>"; };
 		268E9BF1163FB19900CD0C22 /* button_arrow_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "button_arrow_bg@2x.png"; path = "Resources/button_arrow_bg@2x.png"; sourceTree = "<group>"; };
@@ -938,6 +946,7 @@
 			isa = PBXGroup;
 			children = (
 				266958311647DEA300A7106C /* login_intro_oyeah@2x.png */,
+				268CEEB9164B90E400BFBA13 /* oyeah_logo@2x.png */,
 				26E75AF0164A787200774755 /* navigationBar_bg_part@2x.png */,
 				2674B857164A661A0092D980 /* 37x-Checkmark.png */,
 				2674B858164A661A0092D980 /* 37x-Checkmark@2x.png */,
@@ -1804,6 +1813,10 @@
 				267F508D1640DAAD00B42D21 /* EditViewController.m */,
 				26A587761649199600009968 /* RateViewController.h */,
 				26A587771649199600009968 /* RateViewController.m */,
+				268CEEB3164B8CFB00BFBA13 /* FeedBackViewController.h */,
+				268CEEB4164B8CFB00BFBA13 /* FeedBackViewController.m */,
+				268CEEB6164B8D1000BFBA13 /* AboutUsViewController.h */,
+				268CEEB7164B8D1000BFBA13 /* AboutUsViewController.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -2125,6 +2138,7 @@
 				2674B859164A661A0092D980 /* 37x-Checkmark.png in Resources */,
 				2674B85A164A661A0092D980 /* 37x-Checkmark@2x.png in Resources */,
 				26E75AF1164A787200774755 /* navigationBar_bg_part@2x.png in Resources */,
+				268CEEBA164B90E400BFBA13 /* oyeah_logo@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2323,6 +2337,8 @@
 				564A6F2B164B6EE100B04A00 /* Channel.m in Sources */,
 				564A6F2E164B6EFE00B04A00 /* Me.m in Sources */,
 				564A6F34164BE78D00B04A00 /* Message.m in Sources */,
+				268CEEB5164B8CFB00BFBA13 /* FeedBackViewController.m in Sources */,
+				268CEEB8164B8D1000BFBA13 /* AboutUsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

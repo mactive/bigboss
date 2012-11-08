@@ -726,8 +726,8 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "742"
          endingLineNumber = "742"
-         landmarkName = "-xmppPubSub:didReceiveMessage:"
-         landmarkType = "5">
+         landmarkName = "@implementation XMPPNetworkCenter"
+         landmarkType = "3">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -804,8 +804,8 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "697"
          endingLineNumber = "697"
-         landmarkName = "@implementation XMPPNetworkCenter"
-         landmarkType = "3">
+         landmarkName = "-xmppRosterDidChange:"
+         landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -934,8 +934,8 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "530"
          endingLineNumber = "530"
-         landmarkName = "-xmppRoster:didAddUser:"
-         landmarkType = "5">
+         landmarkName = "@implementation XMPPNetworkCenter"
+         landmarkType = "3">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -2079,8 +2079,8 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "595"
          endingLineNumber = "595"
-         landmarkName = "-xmppRosterDidPopulate:"
-         landmarkType = "5">
+         landmarkName = "@implementation XMPPNetworkCenter"
+         landmarkType = "3">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -2092,8 +2092,8 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "701"
          endingLineNumber = "701"
-         landmarkName = "-xmppRoster:didReceivePresenceSubscriptionRequest:"
-         landmarkType = "5">
+         landmarkName = "@implementation XMPPNetworkCenter"
+         landmarkType = "3">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"
@@ -2105,7 +2105,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "486"
          endingLineNumber = "486"
-         landmarkName = "-xmppStream:didReceivePresence:"
+         landmarkName = "-xmppStream:didReceiveMessage:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -2300,7 +2300,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "437"
          endingLineNumber = "437"
-         landmarkName = "-xmppStream:didReceiveIQ:"
+         landmarkName = "-xmppStream:didNotAuthenticate:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -2391,7 +2391,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "485"
          endingLineNumber = "485"
-         landmarkName = "-xmppStream:didReceivePresence:"
+         landmarkName = "-xmppStream:didReceiveMessage:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -2404,7 +2404,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "567"
          endingLineNumber = "567"
-         landmarkName = "-xmppRoster:didRemoveUser:"
+         landmarkName = "-xmppRoster:didAddUser:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -2521,7 +2521,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "784"
          endingLineNumber = "784"
-         landmarkName = "-xmppPubSub:didSubscribe:"
+         landmarkName = "-xmppPubSub:didReceiveMessage:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -2859,7 +2859,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "270"
          endingLineNumber = "270"
-         landmarkName = "-subscribeToChannel:withCallbackBlock:"
+         landmarkName = "-sendMessage:"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -2872,8 +2872,8 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "744"
          endingLineNumber = "744"
-         landmarkName = "-xmppPubSub:didReceiveMessage:"
-         landmarkType = "5">
+         landmarkName = "@implementation XMPPNetworkCenter"
+         landmarkType = "3">
       </FileBreakpoint>
       <FileBreakpoint
          shouldBeEnabled = "No"

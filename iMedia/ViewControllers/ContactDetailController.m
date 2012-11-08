@@ -279,13 +279,13 @@
     if (self.user == nil) {
         NSDate *tmp = [ServerDataTransformer getLastGPSUpdatedFromServerJSON:self.jsonData];
         if (tmp == nil) {
-            timeLabel.text = T(@"无时间");
+            timeLabel.text = T(@"未知");
         } else {
             timeLabel.text = [tmp timesinceAgo];
         }
     }else {
         if (self.user.lastGPSUpdated == nil) {
-            timeLabel.text = T(@"无时间");
+            timeLabel.text = T(@"未知");
         } else {
             timeLabel.text = [self.user.lastGPSUpdated timesinceAgo];
         }
