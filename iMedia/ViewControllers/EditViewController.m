@@ -27,6 +27,13 @@
 @property(strong, nonatomic) UIButton* doneButton;
 @property(strong, nonatomic) UILabel *restCountLabel;
 
+// for birth area
+@property(strong, nonatomic) UILabel * ageTitleLabel;
+@property(strong, nonatomic) UILabel * horoscopeTitleLabel;
+@property(strong, nonatomic) UILabel * birthValueLabel;
+@property(strong, nonatomic) UILabel * ageValueLabel;
+@property(strong, nonatomic) UILabel * horoscopeValueLabel;
+
 @end
 
 @implementation EditViewController
@@ -49,9 +56,16 @@
 @synthesize doneButton;
 @synthesize restCountLabel;
 
+//
+@synthesize ageTitleLabel;
+@synthesize horoscopeTitleLabel;
+@synthesize birthValueLabel;
+@synthesize ageValueLabel;
+@synthesize horoscopeValueLabel;
+
 #define NICKNAME_MAX_LENGTH 20
 #define SIGNATURE_MAX_LENGTH 40
-#define SELF_INTRO_MAX_LENGTH 200
+#define SELF_INTRO_MAX_LENGTH 128
 #define CELL_MAX_LENGTH 11
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -104,16 +118,6 @@
     
     [self.view addSubview:self.noticeLabel];
     
-    self.horoscopeLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 100, 320 , 30)];
-    [self.horoscopeLabel setTextAlignment:NSTextAlignmentCenter];
-    [self.horoscopeLabel setBackgroundColor:[UIColor clearColor]];
-    [self.horoscopeLabel setFont:[UIFont systemFontOfSize:20.0]];
-    self.horoscopeLabel.textColor = RGBCOLOR(195, 70, 21);
-    self.horoscopeLabel.shadowColor = [UIColor whiteColor];
-    self.horoscopeLabel.shadowOffset = CGSizeMake(0, 1);
-    
-    [self.view addSubview:self.horoscopeLabel];
-    
     self.restCountLabel = [[UILabel alloc]initWithFrame:CGRectMake(270, 25, 30, 20)];
     [self.restCountLabel setTextAlignment:NSTextAlignmentCenter];
     [self.restCountLabel setBackgroundColor:RGBCOLOR(213, 213, 213)];
@@ -153,6 +157,64 @@
 //    [self.doneButton setBackgroundImage:[UIImage imageNamed:@"button_bg.png"] forState:UIControlStateNormal];
 //    [self.doneButton addTarget:self action:@selector(doneAction) forControlEvents:UIControlEventTouchUpInside];
 //    [self.view addSubview:self.doneButton];
+
+}
+
+- (void)initBirthView
+{
+    // birth area
+    self.ageTitleLabel = [[UILabel alloc]initWithFrame:CGRectMake(30, 60, 100 , 30)];
+    [self.ageTitleLabel setBackgroundColor:[UIColor clearColor]];
+    [self.ageTitleLabel setFont:[UIFont boldSystemFontOfSize:20.0]];
+    [self.ageTitleLabel setTextColor:[UIColor grayColor]];
+    self.ageTitleLabel.text = self.nameText;
+    self.ageTitleLabel.shadowColor = [UIColor whiteColor];
+    self.ageTitleLabel.shadowOffset = CGSizeMake(0, 1);
+    self.ageTitleLabel.text = T(@"年龄");
+    
+    self.horoscopeTitleLabel = [[UILabel alloc]initWithFrame:CGRectMake(30, 100, 100 , 30)];
+    [self.horoscopeTitleLabel setBackgroundColor:[UIColor clearColor]];
+    [self.horoscopeTitleLabel setFont:[UIFont boldSystemFontOfSize:20.0]];
+    [self.horoscopeTitleLabel setTextColor:[UIColor grayColor]];
+    self.horoscopeTitleLabel.text = self.nameText;
+    self.horoscopeTitleLabel.shadowColor = [UIColor whiteColor];
+    self.horoscopeTitleLabel.shadowOffset = CGSizeMake(0, 1);
+    self.horoscopeTitleLabel.text = T(@"星座");
+    
+    self.ageValueLabel = [[UILabel alloc]initWithFrame:CGRectMake(120, 60, 100 , 30)];
+    [self.ageValueLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.ageValueLabel setBackgroundColor:[UIColor clearColor]];
+    [self.ageValueLabel setFont:[UIFont systemFontOfSize:20.0]];
+    self.ageValueLabel.textColor = RGBCOLOR(195, 70, 21);
+    self.ageValueLabel.shadowColor = [UIColor whiteColor];
+    self.ageValueLabel.shadowOffset = CGSizeMake(0, 1);
+    
+    self.birthValueLabel = [[UILabel alloc]initWithFrame:CGRectMake(120, 20, 120 , 30)];
+    [self.birthValueLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.birthValueLabel setBackgroundColor:[UIColor clearColor]];
+    [self.birthValueLabel setFont:[UIFont systemFontOfSize:20.0]];
+    self.birthValueLabel.textColor = RGBCOLOR(195, 70, 21);
+    self.birthValueLabel.shadowColor = [UIColor whiteColor];
+    self.birthValueLabel.shadowOffset = CGSizeMake(0, 1);
+    
+    self.horoscopeLabel = [[UILabel alloc]initWithFrame:CGRectMake(120, 100, 100 , 30)];
+    [self.horoscopeLabel setTextAlignment:NSTextAlignmentCenter];
+    [self.horoscopeLabel setBackgroundColor:[UIColor clearColor]];
+    [self.horoscopeLabel setFont:[UIFont systemFontOfSize:20.0]];
+    self.horoscopeLabel.textColor = RGBCOLOR(195, 70, 21);
+    self.horoscopeLabel.shadowColor = [UIColor whiteColor];
+    self.horoscopeLabel.shadowOffset = CGSizeMake(0, 1);
+    
+    self.birthValueLabel.text = self.valueText;
+    NSDate *_date = [self.dateFormatter dateFromString:self.valueText];
+    NSUInteger age = floor([_date daysBeforeDate:[NSDate dateWithDaysFromNow:0]] / 365);
+    self.ageValueLabel.text = [ NSString stringWithFormat:T(@"%i 岁"), age ];
+    
+    [self.view addSubview:self.horoscopeLabel];    
+    [self.view addSubview:self.ageTitleLabel];
+    [self.view addSubview:self.ageValueLabel];
+    [self.view addSubview:self.birthValueLabel];
+    [self.view addSubview:self.horoscopeTitleLabel];
 }
 
 - (void)doneAction
@@ -187,6 +249,8 @@
         
     }else if(self.valueIndex == BIRTH_ITEM_INDEX)
     {
+        [self initBirthView];
+        
         if (self.valueText == nil) {
             self.horoscopeLabel.text = T(@"星座");
         } else {
@@ -205,16 +269,23 @@
         [self.view addSubview:self.valueTextView];
         [self.valueTextView becomeFirstResponder];
         
+        if (self.valueIndex == SIGNATURE_ITEM_INDEX){
+            self.restCountLabel.text = [NSString stringWithFormat:@"%i",SIGNATURE_MAX_LENGTH - [self.valueText length] ];
+        }else{
+            self.restCountLabel.text = [NSString stringWithFormat:@"%i",SELF_INTRO_MAX_LENGTH - [self.valueText length]];
+        }
+        
         [self.view addSubview:self.restCountLabel];
     }
     else {
-        if (self.valueIndex == NICKNAME_ITEM_INDEX) {
+        if (self.valueIndex == NICKNAME_ITEM_INDEX || self.valueIndex == CAREER_ITEM_INDEX) {
             self.noticeLabel.text = [NSString stringWithFormat:T(@"昵称不能超过%i个字符."),NICKNAME_MAX_LENGTH];
+            self.restCountLabel.text = [NSString stringWithFormat:@"%i",NICKNAME_MAX_LENGTH - [self.valueText length]];
         }else if (self.valueIndex == CELL_ITEM_INDEX){
             self.noticeLabel.text = T(@"请填写11位手机号码");
+            self.restCountLabel.text = [NSString stringWithFormat:@"%i",CELL_MAX_LENGTH - [self.valueText length]];
             self.valueTextField.keyboardType = UIKeyboardTypeNumberPad;
         }
-        
         [self.view addSubview:self.restCountLabel];
         
         self.valueTextField.text = self.valueText;
@@ -238,7 +309,7 @@
     {
         if (self.valueIndex == NICKNAME_ITEM_INDEX || self.valueIndex  == CAREER_ITEM_INDEX) {
             
-            self.restCountLabel.text = [NSString stringWithFormat:@"%i",NICKNAME_MAX_LENGTH - [self.valueTextField.text length]];
+            self.restCountLabel.text = [NSString stringWithFormat:@"%i",NICKNAME_MAX_LENGTH - 1 - [self.valueTextField.text length]];
 
             if ([toBeString length] > NICKNAME_MAX_LENGTH) {
                 textField.text = [toBeString substringToIndex:NICKNAME_MAX_LENGTH];
@@ -247,7 +318,7 @@
                 return NO;
             }
         }else if (self.valueIndex == CELL_ITEM_INDEX){
-            self.restCountLabel.text = [NSString stringWithFormat:@"%i",CELL_MAX_LENGTH - [self.valueTextField.text length]];
+            self.restCountLabel.text = [NSString stringWithFormat:@"%i",CELL_MAX_LENGTH - 1 - [self.valueTextField.text length]];
 
             if ([toBeString length] > CELL_MAX_LENGTH) {
                 textField.text = [toBeString substringToIndex:CELL_MAX_LENGTH];
@@ -256,18 +327,8 @@
                 return NO;
             }
 
-        }else if (self.valueIndex == SIGNATURE_ITEM_INDEX){
-            self.restCountLabel.text = [NSString stringWithFormat:@"%i",SIGNATURE_MAX_LENGTH - [self.valueTextField.text length]];
-            
-            if ([toBeString length] > SIGNATURE_MAX_LENGTH) {
-                textField.text = [toBeString substringToIndex:SIGNATURE_MAX_LENGTH];
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:T(@"个人签名有点长") delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                [alert show];
-                return NO;
-            }
-            
         }
-
+    
     }
     return YES;
 }
@@ -319,6 +380,12 @@
 {
     NSString *_horoscope = [self.datePicker.date horoscope];
     self.horoscopeLabel.text = _horoscope;
+    
+    NSUInteger age = floor([self.datePicker.date daysBeforeDate:[NSDate dateWithDaysFromNow:0]] / 365);
+    self.ageValueLabel.text = [ NSString stringWithFormat:T(@"%i 岁"), age ];
+    
+    self.birthValueLabel.text = [self.dateFormatter stringFromDate:self.datePicker.date];
+    
     [self.delegate passNSDateValue:self.datePicker.date  andIndex:self.valueIndex];
 }
 /////////////////////////////////////////////////////////////////////////////////////
@@ -338,7 +405,7 @@
     {
         if (self.valueIndex == SIGNATURE_ITEM_INDEX ) {
             
-            self.restCountLabel.text = [NSString stringWithFormat:@"%i", SIGNATURE_MAX_LENGTH - [self.valueTextView.text length]];
+            self.restCountLabel.text = [NSString stringWithFormat:@"%i", SIGNATURE_MAX_LENGTH - 1 - [self.valueTextView.text length]];
             
             if ([toBeString length] > SIGNATURE_MAX_LENGTH) {
                 textView.text = [toBeString substringToIndex:SIGNATURE_MAX_LENGTH];
@@ -347,7 +414,7 @@
                 return NO;
             }
         }else if ( self.valueIndex  == SELF_INTRO_ITEM_INDEX){
-            self.restCountLabel.text = [NSString stringWithFormat:@"%i", SELF_INTRO_MAX_LENGTH - [self.valueTextView.text length]];
+            self.restCountLabel.text = [NSString stringWithFormat:@"%i", SELF_INTRO_MAX_LENGTH  - 1 -  [self.valueTextView.text length]];
             
             if ([toBeString length] > SELF_INTRO_MAX_LENGTH) {
                 textView.text = [toBeString substringToIndex:SELF_INTRO_MAX_LENGTH];

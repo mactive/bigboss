@@ -21,8 +21,7 @@
 
 
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
-@property (strong, nonatomic) NSMutableDictionary* contacts_list_fix;
-@property (strong, nonatomic) NSMutableArray* contacts_list;
+
 
 - (void)contentChanged;
 - (id)initWithStyle:(UITableViewStyle)style andManagementContext:(NSManagedObjectContext *)context;

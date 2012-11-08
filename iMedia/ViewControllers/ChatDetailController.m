@@ -57,6 +57,8 @@
     NSDate *_previousShownSentDate;
 }
 
+@property(strong, nonatomic)UITapGestureRecognizer *tapGestureRecognizer;
+
 - (void)addMessage:(Message *)msg toBubbleData:(NSMutableArray *)data;
 
 // receive new message notification
@@ -71,6 +73,7 @@
 @synthesize bubbleTable;
 @synthesize conversation;
 @synthesize managedObjectContext;
+@synthesize tapGestureRecognizer;
 
 - (id)init
 {
@@ -95,6 +98,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     bubbleTable = [[UIBubbleTableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-40)];
     bubbleTable.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
     bubbleTable.backgroundColor = RGBCOLOR(222, 224, 227);
@@ -157,6 +161,17 @@
     
     [self.view addSubview:bubbleTable];
     [self.view addSubview:messageInputBar];
+    
+    //  单点触控
+    self.tapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(handleTaps:)];
+    self.tapGestureRecognizer.numberOfTapsRequired = 1;
+    self.tapGestureRecognizer.numberOfTouchesRequired = 1;
+}
+
+- (void)handleTaps:(UIGestureRecognizer *)paramSender
+{
+    NSLog(@"handleTaps");
+    [self.textView resignFirstResponder];
 }
 
 /*
@@ -237,6 +252,8 @@
 #pragma mark - Keyboard Notification
 
 - (void)keyboardWillShow:(NSNotification *)notification {
+    [self.bubbleTable addGestureRecognizer:self.tapGestureRecognizer];
+
     NSTimeInterval animationDuration;
     UIViewAnimationCurve animationCurve;
     CGRect frameEnd;
@@ -257,6 +274,8 @@
 }
 
 - (void)keyboardWillHide:(NSNotification*)notification {
+    [self.bubbleTable removeGestureRecognizer:self.tapGestureRecognizer];
+
     NSTimeInterval animationDuration;
     UIViewAnimationCurve animationCurve;
     CGRect frameEnd;

@@ -63,7 +63,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = T(@"Request");
+    self.title = T(@"好友请求");
     self.view.backgroundColor = BGCOLOR;
     NSLog(@"%@",self.request);
 
@@ -100,8 +100,8 @@
     
     self.confirmButton = [[UIButton alloc] initWithFrame:CGRectMake(10, 200, 275, 40)];
     [self.confirmButton.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
-    [self.confirmButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
-    [self.confirmButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+    [self.confirmButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.confirmButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
     [self.confirmButton.titleLabel setTextAlignment:UITextAlignmentCenter];
     if (request.state == FriendRequestDeclined) {
         [self.confirmButton setTitle:T(@"已拒绝") forState:UIControlStateNormal];

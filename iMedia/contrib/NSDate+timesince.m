@@ -15,7 +15,6 @@
 #define kDepth 1
 
 #import "NSDate+timesince.h"
-#import "NSDate-Utilities.h"
 
 @implementation NSDate (timesince)
 
