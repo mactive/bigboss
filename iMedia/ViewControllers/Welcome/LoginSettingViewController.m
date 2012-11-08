@@ -163,6 +163,8 @@
     [self.welcomeButton.titleLabel setTextAlignment:UITextAlignmentCenter];
     [self.welcomeButton setAlpha:0.3];
     [self.welcomeButton setTitle:T(@"欢迎来到春水堂") forState:UIControlStateNormal];
+    [self.welcomeButton setEnabled:NO];
+    [self.welcomeButton addTarget:self action:@selector(welcomeAction) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.welcomeButton];
     
     self.displayNameField.text = self.me.displayName;
@@ -185,13 +187,13 @@
     
     
     if ([self.me.gender length] != 0 && [self.me.displayName length] != 0 )
-    {        
+    {
+        [self.welcomeButton setEnabled:YES];
         [self.welcomeButton setHidden:NO];
         [self.welcomeButton setAlpha:0.3];
         [UIView beginAnimations:nil context:NULL];
         [UIView setAnimationDuration:0.5];
         [self.welcomeButton setAlpha:1];
-        [self.welcomeButton addTarget:self action:@selector(welcomeAction) forControlEvents:UIControlEventTouchUpInside];
         [UIView commitAnimations];
         
     }else{
@@ -205,6 +207,32 @@
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string;
 {
+    if ([string isEqualToString:@"\n"])
+    {
+        return YES;
+    }
+    NSString * toBeString = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    if ([toBeString length] == 0) {
+        [self.welcomeButton setEnabled:NO];
+        [self.welcomeButton setAlpha:0.3];
+    } else if ([self.me.gender length] > 0) {
+        self.me.displayName = toBeString;
+        [self.welcomeButton setEnabled:YES];
+        
+        if ([toBeString length] > NICKNAME_MAX_LENGTH) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:T(@"超过最大字数不能输入了") delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+            [alert show];
+        }
+        
+        if (self.welcomeButton.alpha != 1.0 ) {
+            [self.welcomeButton setAlpha:0.3];
+            [UIView beginAnimations:nil context:NULL];
+            [UIView setAnimationDuration:0.5];
+            [self.welcomeButton setAlpha:1];
+            [UIView commitAnimations];
+        }
+    }
+    /*
     if ([string isEqualToString:@"\n"])
     {
         return YES;
@@ -239,6 +267,7 @@
             
         }
     }
+     */
     return YES;
 }
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
@@ -249,12 +278,12 @@
 
         if ([self.me.gender length] != 0 && [self.me.displayName length] != 0 )
         {
+            [self.welcomeButton setEnabled:YES];
             [self.welcomeButton setHidden:NO];
             [self.welcomeButton setAlpha:0.3];
             [UIView beginAnimations:nil context:NULL];
             [UIView setAnimationDuration:0.5];
             [self.welcomeButton setAlpha:1];
-            [self.welcomeButton addTarget:self action:@selector(welcomeAction) forControlEvents:UIControlEventTouchUpInside];
             [UIView commitAnimations];
         }else{
             [self.welcomeButton setHidden:YES];
