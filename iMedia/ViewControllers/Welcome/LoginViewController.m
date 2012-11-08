@@ -139,8 +139,15 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             HUD.delegate = self;
             HUD.mode = MBProgressHUDModeText;
-            HUD.labelText = [responseObject valueForKey:@"status"];
-            [HUD hide:YES afterDelay:2];
+            NSString * status = [responseObject valueForKey:@"status"];
+            if ([status isEqualToString:@"banned"]) {
+                HUD.labelText = T(@"您的帐号已被封，请联系客服");
+            } else if ([status isEqualToString:@"wrongusername"] || [status isEqualToString:@"wrongpassword"]) {
+                HUD.labelText = T(@"用户名或密码错误");
+            } else {
+                HUD.labelText = T(@"系统维护，请稍后重试或联系客服");
+            }
+            [HUD hide:YES afterDelay:3];
         }
         
     }];
