@@ -53,6 +53,9 @@
 
 @property (strong, nonatomic) UIImageView *sexView;
 @property (strong, nonatomic) UILabel *sexLabel;
+@property (strong, nonatomic) UILabel *guidLabel;
+@property (strong, nonatomic) UILabel *horoscopeLabel;
+
 
 @property (strong, nonatomic) UIButton *sendMsgButton;
 @property (strong, nonatomic) UIButton *deleteUserButton;
@@ -92,6 +95,8 @@
 @synthesize addAlbumButton;
 @synthesize sexLabel;
 @synthesize sexView;
+@synthesize guidLabel;
+@synthesize horoscopeLabel;
 
 @synthesize editProfileButton;
 @synthesize albumCount;
@@ -721,7 +726,10 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     NSDateComponents *comps = [gregorian components:NSYearCalendarUnit fromDate:self.me.birthdate  toDate:now  options:0];
     NSString* ageStr = [NSString stringWithFormat:@"%d", comps.year];
     
-    sexLabel.text  = ageStr;
+    self.sexLabel.text  = ageStr;
+    self.horoscopeLabel.text = [self.me.birthdate horoscope];
+    self.guidLabel.text  = [ NSString stringWithFormat:@" %@: %@",T(@"ID"),self.me.guid ];
+
 }
 
 - (void)initStatusView
@@ -748,23 +756,21 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     [self.sexLabel setTextColor:[UIColor whiteColor]];
     [self.sexView addSubview:self.sexLabel];
 
-    UILabel* horoscopeLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 0, 100, 20)];
-    [horoscopeLabel setBackgroundColor:[UIColor clearColor]];
-    horoscopeLabel.text = [self.me.birthdate horoscope];
-    [horoscopeLabel setFont:[UIFont boldSystemFontOfSize:14.0]];
-    [horoscopeLabel setShadowColor:[UIColor whiteColor]];
-    [horoscopeLabel setShadowOffset:CGSizeMake(0, 1)];
-    [horoscopeLabel setTextColor:RGBCOLOR(97, 97, 97)];
-    [self.statusView addSubview:horoscopeLabel];
+    self.horoscopeLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 0, 100, 20)];
+    [self.horoscopeLabel setBackgroundColor:[UIColor clearColor]];
+    [self.horoscopeLabel setFont:[UIFont boldSystemFontOfSize:14.0]];
+    [self.horoscopeLabel setShadowColor:[UIColor whiteColor]];
+    [self.horoscopeLabel setShadowOffset:CGSizeMake(0, 1)];
+    [self.horoscopeLabel setTextColor:RGBCOLOR(97, 97, 97)];
+    [self.statusView addSubview:self.horoscopeLabel];
     
-    UILabel* guidLabel = [[UILabel alloc]initWithFrame:CGRectMake(210, 0, 100, 20)];
-    [guidLabel setBackgroundColor:[UIColor clearColor]];
-    guidLabel.text  = [ NSString stringWithFormat:@" %@: %@",T(@"ID"),self.me.guid ];
-    [guidLabel setFont:[UIFont boldSystemFontOfSize:14.0]];
-    [guidLabel setShadowColor:[UIColor whiteColor]];
-    [guidLabel setShadowOffset:CGSizeMake(0, 1)];
-    [guidLabel setTextColor:RGBCOLOR(97, 97, 97)];
-    [self.statusView addSubview:guidLabel];
+    self.guidLabel = [[UILabel alloc]initWithFrame:CGRectMake(210, 0, 100, 20)];
+    [self.guidLabel setBackgroundColor:[UIColor clearColor]];
+    [self.guidLabel setFont:[UIFont boldSystemFontOfSize:14.0]];
+    [self.guidLabel setShadowColor:[UIColor whiteColor]];
+    [self.guidLabel setShadowOffset:CGSizeMake(0, 1)];
+    [self.guidLabel setTextColor:RGBCOLOR(97, 97, 97)];
+    [self.statusView addSubview:self.guidLabel];
     
     
     // add to the statusView

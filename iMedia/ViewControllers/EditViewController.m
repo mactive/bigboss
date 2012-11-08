@@ -189,7 +189,7 @@
     self.ageValueLabel.shadowColor = [UIColor whiteColor];
     self.ageValueLabel.shadowOffset = CGSizeMake(0, 1);
     
-    self.birthValueLabel = [[UILabel alloc]initWithFrame:CGRectMake(120, 20, 100 , 30)];
+    self.birthValueLabel = [[UILabel alloc]initWithFrame:CGRectMake(120, 20, 120 , 30)];
     [self.birthValueLabel setTextAlignment:NSTextAlignmentCenter];
     [self.birthValueLabel setBackgroundColor:[UIColor clearColor]];
     [self.birthValueLabel setFont:[UIFont systemFontOfSize:20.0]];
@@ -380,6 +380,12 @@
 {
     NSString *_horoscope = [self.datePicker.date horoscope];
     self.horoscopeLabel.text = _horoscope;
+    
+    NSUInteger age = floor([self.datePicker.date daysBeforeDate:[NSDate dateWithDaysFromNow:0]] / 365);
+    self.ageValueLabel.text = [ NSString stringWithFormat:T(@"%i 岁"), age ];
+    
+    self.birthValueLabel.text = [self.dateFormatter stringFromDate:self.datePicker.date];
+    
     [self.delegate passNSDateValue:self.datePicker.date  andIndex:self.valueIndex];
 }
 /////////////////////////////////////////////////////////////////////////////////////
