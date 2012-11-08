@@ -302,6 +302,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
                             [channelsToUnsubscribe addObject:aChannel];
                         }
                         
+                        aChannel.isMandatory = [NSNumber numberWithBool:YES];
+                        
                         [allServerChannels setObject:aChannel forKey:nodeStr];
                     }];
                     

@@ -19,6 +19,7 @@
 @property (nonatomic, retain) NSString * selfIntroduction;
 @property (nonatomic, retain) NSString * subID;
 @property (nonatomic, retain) NSString * subrequestID;
+@property (nonatomic, retain) NSNumber * isMandatory;
 @property (nonatomic, retain) Conversation *conversation;
 @property (nonatomic, retain) Me *owner;
 
