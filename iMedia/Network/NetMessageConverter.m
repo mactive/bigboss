@@ -154,7 +154,8 @@
 #warning Hasn't handle the rich text storage yet
     msg.from = channel;
     msg.sentDate = [NSDate date];
-    msg.text = [@"http://" stringByAppendingString:linkValue];
+ //   msg.text = [@"http://" stringByAppendingString:linkValue];
+    msg.text = [entry XMLString];
     msg.type = [NSNumber numberWithInt:MessageTypePublish];
     
     if (channel.conversation == nil)

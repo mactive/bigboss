@@ -32,8 +32,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 #import "ContactListViewController.h"
 #import "UIImage+Resize.h"
 
-//static NSString * const kAppNetworkAPIBaseURLString = @"http://192.168.1.104:8000/";
-static NSString * const kAppNetworkAPIBaseURLString = @"http://media.wingedstone.com:8000/";
+static NSString * const kAppNetworkAPIBaseURLString = @"http://192.168.1.104:8000/";
+//static NSString * const kAppNetworkAPIBaseURLString = @"http://media.wingedstone.com:8000/";
 
 NSString *const kXMPPmyJID = @"kXMPPmyJID";
 NSString *const kXMPPmyJIDPassword = @"kXMPPmyJIDPassword";

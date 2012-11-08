@@ -14,7 +14,7 @@ typedef enum _NSBubbleType
 {
     BubbleTypeMine = 0,
     BubbleTypeSomeoneElse = 1,
-    BubbleTypeWebview = 2,
+    BubbleTypeTemplateview = 2,
     BubbleTypeRateview = 3
 } NSBubbleType;
 
@@ -27,7 +27,7 @@ typedef enum _NSBubbleType
 @property (readonly, nonatomic, strong) UIView *view;
 @property (readonly, nonatomic) UIEdgeInsets insets;
 @property (nonatomic, strong) UIImage *avatar;
-@property (nonatomic, strong) UIWebView *webView;
+@property (nonatomic, strong) UIView *templateView;
 @property (nonatomic, readwrite) BOOL isDone;
 @property (nonatomic, readwrite) CGFloat cellHeight;
 
