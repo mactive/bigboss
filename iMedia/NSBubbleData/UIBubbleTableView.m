@@ -263,6 +263,11 @@
         rateViewController.conversionKey = data.content;
         [[self appDelegate].conversationController.chatDetailController.navigationController presentModalViewController:rateViewController animated:YES];
     }
+    if (data.type == BubbleTypeTemplateview) {
+        RateViewController *rateViewController = [[RateViewController alloc]initWithNibName:nil bundle:nil];
+        rateViewController.conversionKey = data.content;
+        [[self appDelegate].conversationController.chatDetailController.navigationController presentModalViewController:rateViewController animated:YES];
+    }
 }
 
 
