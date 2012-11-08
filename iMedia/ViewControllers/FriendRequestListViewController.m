@@ -46,7 +46,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 {
     [super viewDidLoad];
     
-    self.title = T(@"Request List");
+    self.title = T(@"好友请求列表");
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.backgroundColor = BGCOLOR;
     [self scrollToBottomAnimated:NO];

@@ -63,7 +63,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = T(@"Request");
+    self.title = T(@"好友请求");
     self.view.backgroundColor = BGCOLOR;
     NSLog(@"%@",self.request);
 
