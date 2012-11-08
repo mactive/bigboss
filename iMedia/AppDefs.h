@@ -46,6 +46,11 @@
 #define SELF_INTRO_ITEM_INDEX   7
 #define JPEG_QUALITY 0.6
 
+#define NICKNAME_MAX_LENGTH 20
+#define SIGNATURE_MAX_LENGTH 40
+#define SELF_INTRO_MAX_LENGTH 128
+#define CELL_MAX_LENGTH 11
+#define HOMETOWN_MAX_LENGTH 10
 
 
 #define UIKeyboardNotificationsObserve() \
