@@ -67,6 +67,7 @@
 #define SIGNATURE_MAX_LENGTH 40
 #define SELF_INTRO_MAX_LENGTH 128
 #define CELL_MAX_LENGTH 11
+#define HOMETOWN_MAX_LENGTH 10
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -234,7 +235,8 @@
         }else{
             [self.navigationController popViewControllerAnimated:YES];
         }
-    }else{
+    }
+    else{
         [self.navigationController popViewControllerAnimated:YES];
     }
 }
@@ -279,13 +281,17 @@
     }
     else {
         if (self.valueIndex == NICKNAME_ITEM_INDEX || self.valueIndex == CAREER_ITEM_INDEX) {
-            self.noticeLabel.text = [NSString stringWithFormat:T(@"昵称不能超过%i个字符."),NICKNAME_MAX_LENGTH];
+            self.noticeLabel.text = [NSString stringWithFormat:T(@"不能超过%i个字符."),NICKNAME_MAX_LENGTH];
             self.restCountLabel.text = [NSString stringWithFormat:@"%i",NICKNAME_MAX_LENGTH - [self.valueText length]];
         }else if (self.valueIndex == CELL_ITEM_INDEX){
             self.noticeLabel.text = T(@"请填写11位手机号码");
             self.restCountLabel.text = [NSString stringWithFormat:@"%i",CELL_MAX_LENGTH - [self.valueText length]];
             self.valueTextField.keyboardType = UIKeyboardTypeNumberPad;
+        }else if (self.valueIndex == HOMETOWN_ITEM_INDEX){
+            self.noticeLabel.text = [NSString stringWithFormat:T(@"不能超过%i个字符."),HOMETOWN_MAX_LENGTH];
+            self.restCountLabel.text = [NSString stringWithFormat:@"%i",HOMETOWN_MAX_LENGTH - [self.valueText length]];
         }
+        
         [self.view addSubview:self.restCountLabel];
         
         self.valueTextField.text = self.valueText;
@@ -326,7 +332,16 @@
                 [alert show];
                 return NO;
             }
-
+        }else if (self.valueIndex == HOMETOWN_ITEM_INDEX){
+            self.restCountLabel.text = [NSString stringWithFormat:@"%i",HOMETOWN_MAX_LENGTH - 1 - [self.valueTextField.text length]];
+            
+            if ([toBeString length] > HOMETOWN_MAX_LENGTH) {
+                textField.text = [toBeString substringToIndex:HOMETOWN_MAX_LENGTH];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:T(@"家乡有点长") delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                [alert show];
+                return NO;
+            }
+            
         }
     
     }
