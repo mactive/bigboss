@@ -108,15 +108,16 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
             [HUD hide:YES];
             
-            NSString* jid = [responseObject valueForKey:@"jid"];
+            NSString* barejid = [responseObject valueForKey:@"jid"];
             NSString *jPassword = [responseObject valueForKey:@"jpass"];
             NSString *guid= [[responseObject valueForKey:@"guid"] stringValue];
+            NSString *fulljid = [NSString stringWithFormat:@"%@/%@", barejid, guid];
                         
-            if (![[XMPPNetworkCenter sharedClient] connectWithUsername:jid andPassword:jPassword])
+            if (![[XMPPNetworkCenter sharedClient] connectWithUsername:fulljid andPassword:jPassword])
             {
                 DDLogVerbose(@"%@: %@ cannot connect to XMPP server", THIS_FILE, THIS_METHOD);
             }            
-            [[self appDelegate] createMeWithUsername:usernameField.text password:passwordField.text jid:jid jidPasswd:jPassword andGUID:guid withBlock:^(id responseObject, NSError *error) {
+            [[self appDelegate] createMeWithUsername:usernameField.text password:passwordField.text jid:fulljid jidPasswd:jPassword andGUID:guid withBlock:^(id responseObject, NSError *error) {
                 
                 [HUD hide:YES];
                 

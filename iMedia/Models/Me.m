@@ -25,6 +25,7 @@
 @dynamic selfIntroduction;
 @dynamic signature;
 @dynamic username;
+@dynamic fullEPostalID;
 @dynamic avatars;
 @dynamic channels;
 

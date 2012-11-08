@@ -60,6 +60,7 @@
         <attribute name="career" optional="YES" attributeType="String" defaultValueString="@&quot;&quot;" syncable="YES"/>
         <attribute name="cell" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ePostalPassword" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="fullEPostalID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="gender" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="hometown" optional="YES" attributeType="String" defaultValueString="@&quot;&quot;" syncable="YES"/>
         <attribute name="lastSyncFromServerDate" optional="YES" attributeType="Date" syncable="YES"/>
@@ -75,6 +76,7 @@
         <attribute name="sentDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="summary" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="transportID" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <relationship name="conversation" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Conversation" inverseName="messages" inverseEntity="Conversation" syncable="YES"/>
         <relationship name="from" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Identity" syncable="YES"/>
@@ -96,8 +98,8 @@
         <element name="Identity" positionX="160" positionY="192" width="128" height="225"/>
         <element name="ImageLocal" positionX="160" positionY="192" width="128" height="150"/>
         <element name="ImageRemote" positionX="160" positionY="192" width="128" height="120"/>
-        <element name="Me" positionX="0" positionY="0" width="128" height="255"/>
-        <element name="Message" positionX="0" positionY="0" width="128" height="135"/>
+        <element name="Me" positionX="0" positionY="0" width="128" height="270"/>
+        <element name="Message" positionX="0" positionY="0" width="128" height="150"/>
         <element name="User" positionX="-234" positionY="141" width="128" height="165"/>
     </elements>
 </model>

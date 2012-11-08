@@ -32,6 +32,7 @@
 #import "LocationManager.h"
 #import "ModelHelper.h"
 #import "NSObject+SBJson.h"
+#import "XMPPJID.h"
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -154,7 +155,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
     self.contactListController = [[ContactListViewController alloc] initWithStyle:UITableViewStylePlain andManagementContext:_managedObjectContext];
     UINavigationController *navController2 = [[UINavigationController alloc] initWithRootViewController:self.contactListController];
-//    self.contactListController.managedObjectContext = _managedObjectContext;
     self.contactListController.title = T(@"联系人");
     self.contactListController.tabBarItem = [[UITabBarItem alloc] initWithTitle:T(@"联系人")  image:[UIImage imageNamed:@"tabbar_item_1.png"] tag:1001];
     
@@ -298,7 +298,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             image.title = @"";
             [self.me addAvatarsObject:image];
         }
-        self.me.ePostalID = jidStr;
+        XMPPJID *bareJid = [XMPPJID jidWithString:jidStr];
+        self.me.ePostalID = [bareJid bare];
+        self.me.fullEPostalID = jidStr;
         self.me.ePostalPassword = jidPass;
         self.me.type = [NSNumber numberWithInt:IdentityTypeMe];
         self.me.displayName = jidStr;
@@ -329,7 +331,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 - (BOOL)connect
 {
-    if (![[XMPPNetworkCenter sharedClient] connectWithUsername:self.me.ePostalID andPassword:self.me.ePostalPassword])
+    if (![[XMPPNetworkCenter sharedClient] connectWithUsername:self.me.fullEPostalID andPassword:self.me.ePostalPassword])
     {
         DDLogVerbose(@"%@: %@ cannot connect to XMPP server", THIS_FILE, THIS_METHOD);
         return NO;

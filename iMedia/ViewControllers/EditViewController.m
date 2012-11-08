@@ -334,6 +334,12 @@
 }
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField
 {
+    NSString *text = textField.text;
+    const char* utf8str = text.UTF8String;
+    NSString *decodedString = [NSString stringWithUTF8String:utf8str];
+    
+    //NSString *decodedString = [NSString stringWithUTF8String:[text cStringUsingEncoding:[NSString defaultCStringEncoding]]];
+    
     [self.delegate passStringValue:self.valueTextField.text andIndex:self.valueIndex];
     return YES;
 }

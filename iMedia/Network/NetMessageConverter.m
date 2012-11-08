@@ -137,6 +137,7 @@
     NSString* linkValue = [link attributeStringValueForName:@"href"];
     NSString* summary = [[entry elementForName:@"text"] stringValue];
     NSString *nodeStr = [items attributeStringValueForName:@"node"];
+    NSString *itemID = [item attributeStringValueForName:@"id"];
     
     if (item == nil) {
         return nil;
@@ -148,6 +149,20 @@
         //Channel hasn't been setup
         return nil;
     }
+    if (channel.conversation == nil){
+        channel.conversation = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:context];
+    }
+    NSSet *messages = channel.conversation.messages;
+    BOOL isDuplicate = NO;
+    NSEnumerator *enumerator = [messages objectEnumerator];
+    id obj;
+    while (obj = [enumerator nextObject]) {
+        Message *m = obj;
+        if (m.transportID != nil && [m.transportID isEqualToString:itemID]) {
+            isDuplicate = YES;
+            return nil;
+        }
+    }
     
     Message *msg = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:context];
 
@@ -156,11 +171,7 @@
     msg.sentDate = [NSDate date];
     msg.text = [@"http://" stringByAppendingString:linkValue];
     msg.type = [NSNumber numberWithInt:MessageTypePublish];
-    
-    if (channel.conversation == nil)
-    {
-        channel.conversation = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:context];
-    }
+    msg.transportID = itemID;
     
     channel.conversation.lastMessageSentDate = msg.sentDate;
     channel.conversation.lastMessageText = summary;
