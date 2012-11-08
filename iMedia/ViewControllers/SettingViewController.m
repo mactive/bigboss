@@ -13,6 +13,9 @@
 #import "Me.h" 
 #import "AppDelegate.h"
 #import "RateViewController.h"
+#import "FeedBackViewController.h"
+#import "AboutUsViewController.h"
+
 
 @interface SettingViewController () 
 
@@ -176,8 +179,17 @@
     if (indexPath.row == 0 && indexPath.section == 0 ) {
         ProfileMeController *profileMeController = [[ProfileMeController alloc] initWithNibName:nil bundle:nil];
         profileMeController.managedObjectContext = self.managedObjectContext;
-        
         [self.navigationController pushViewController:profileMeController animated:YES];
+    }
+    
+    if (indexPath.row == 1 && indexPath.section == 2 ) {
+        FeedBackViewController *controller = [[FeedBackViewController alloc]initWithNibName:nil bundle:nil];
+        [self.navigationController pushViewController:controller animated:YES];
+    }
+    
+    if (indexPath.row == 2 && indexPath.section == 2 ) {
+        AboutUsViewController *controller = [[AboutUsViewController alloc]initWithNibName:nil bundle:nil];
+        [self.navigationController pushViewController:controller animated:YES];
     }
 
 }
