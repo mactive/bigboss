@@ -430,21 +430,21 @@ NSInteger SortIndex(id char1, id char2, void* context)
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 15.0;
+    return 20.0;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    UIView* _section_view = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0, self.view.frame.size.width, 15)];
+    UIView* _section_view = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0, self.view.frame.size.width, 20)];
     
     UIImageView *_section_bg = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"contactSectionHeader.png"]];
     [_section_bg setFrame:_section_view.bounds];
     
     NSString* _section = [[[contacts_list_fix allKeys] sortedArrayUsingFunction:SortIndex context:NULL] objectAtIndex:section];
-    UILabel* _section_text = [[UILabel alloc] initWithFrame:CGRectMake( 10, 0, 50, 15)];
+    UILabel* _section_text = [[UILabel alloc] initWithFrame:CGRectMake( 10, 0, 50, 20)];
     _section_text.textColor = [UIColor whiteColor];
     _section_text.textAlignment = NSTextAlignmentLeft;
-    _section_text.font = [UIFont boldSystemFontOfSize:14.0];
+    _section_text.font = [UIFont boldSystemFontOfSize:15.0];
     _section_text.shadowOffset = CGSizeMake(0, 1);
     _section_text.shadowColor = [UIColor grayColor];
     _section_text.backgroundColor = [UIColor clearColor];
