@@ -135,7 +135,7 @@
     NSXMLElement *entry = [item elementForName:@"entry"];
     NSXMLElement *link = [entry elementForName:@"link"];
     NSString* linkValue = [link attributeStringValueForName:@"href"];
-    NSString* summary = [[entry elementForName:@"text"] stringValue];
+    NSString* summary = [[entry elementForName:@"title9"] stringValue];
     NSString *nodeStr = [items attributeStringValueForName:@"node"];
     NSString *itemID = [item attributeStringValueForName:@"id"];
     
@@ -169,7 +169,6 @@
 #warning Hasn't handle the rich text storage yet
     msg.from = channel;
     msg.sentDate = [NSDate date];
- //   msg.text = [@"http://" stringByAppendingString:linkValue];
     msg.text = [entry XMLString];
     msg.type = [NSNumber numberWithInt:MessageTypePublish];
     msg.transportID = itemID;
