@@ -155,22 +155,22 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         NSString* type = [responseObject valueForKey:@"type"];
         if ([type isEqualToString:@"user"]) {
             
-            FriendRequest *newFriendRequest = [[ModelHelper sharedInstance] newFriendRequestWithEPostalID:fromJid andJson:responseObject];
-            MOCSave(self.managedObjectContext);
-
             if ([self.friendRequestArray count] == 0) {
                 [self initFriendRequestDictFromDB];
             }
+
             // filter off duplicates
             BOOL exists = false;
             for (int i = 0; i < [self.friendRequestArray count]; i++) {
                 FriendRequest *request = [self.friendRequestArray objectAtIndex:i];
-                if ([request.requesterEPostalID isEqualToString:newFriendRequest.requesterEPostalID] &&
+                if ([request.requesterEPostalID isEqualToString:fromJid] &&
                     (request.state == FriendRequestUnprocessed)) {
                     exists = YES;
                 }
             }
             if (!exists) {
+                FriendRequest *newFriendRequest = [[ModelHelper sharedInstance] newFriendRequestWithEPostalID:fromJid andJson:responseObject];
+                MOCSave(self.managedObjectContext);
                 [self.friendRequestArray addObject:newFriendRequest];
                 self.newFriendRequestCount +=1;
             }
