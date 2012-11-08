@@ -173,7 +173,7 @@
         
         
         self.templateContent.text = contentString;
-        [self.templateImage setImageWithURL:[NSURL URLWithString:imageString] placeholderImage:nil];
+        [self.templateImage setImageWithURL:[NSURL URLWithString:imageString] placeholderImage:[UIImage imageNamed:@"template_placeholder.png"]];
         self.templateTitle.text = titleString;
         
         [self.templateBackView addSubview:self.templateImage];
