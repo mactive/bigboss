@@ -117,6 +117,10 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)setEditMode
 {
+    if (self.isEditing) {
+        return;
+    }
+    
     UIBarButtonItem *ttButton = [[UIBarButtonItem alloc] initWithTitle:T(@"保存") 
                                                               style:UIBarButtonItemStyleDone 
                                                              target:self
@@ -134,6 +138,10 @@
 
 - (void)saveEditMode:(id)sender
 {
+    if (!self.isEditing) {
+        return;
+    }
+    
     HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     HUD.delegate = self;
     HUD.labelText = T(@"更新中");
