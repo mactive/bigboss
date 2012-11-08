@@ -171,7 +171,7 @@
 
 - (void)welcomeAction
 {
-//    [[AppNetworkAPIClient sharedClient] uploadMe:self.me withBlock:nil];
+    [[AppNetworkAPIClient sharedClient] uploadMe:self.me withBlock:nil];
     [self dismissModalViewControllerAnimated:YES];
 }
 
