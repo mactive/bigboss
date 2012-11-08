@@ -9,6 +9,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Message.h"
 
 typedef enum _NSBubbleType
 {
@@ -30,6 +31,7 @@ typedef enum _NSBubbleType
 @property (nonatomic, strong) UIView *templateView;
 @property (nonatomic, readwrite) BOOL isDone;
 @property (nonatomic, readwrite) CGFloat cellHeight;
+@property (nonatomic, retain)Message * msg;
 
 - (id)initWithText:(NSString *)text date:(NSDate *)date type:(NSBubbleType)type;
 + (id)dataWithText:(NSString *)text date:(NSDate *)date type:(NSBubbleType)type;

@@ -26,6 +26,7 @@
 @synthesize showAvatar = _showAvatar;
 @synthesize isDone = _isDone;
 @synthesize cellHeight = _cellHeight;
+@synthesize msg = _msg;
 
 #pragma mark - Lifecycle
 

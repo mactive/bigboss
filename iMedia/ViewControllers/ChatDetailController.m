@@ -407,8 +407,11 @@
         [bubbleData addObject:[NSBubbleData dataWithWeb:msg.text date:msg.sentDate type:BubbleTypeTemplateview]];
         bubbleTable.showAvatars = NO;
     } else if (msg.type == [NSNumber numberWithInt:MessageTypeRate]) {
-        [bubbleData addObject:[NSBubbleData dataWithWeb:msg.text date:msg.sentDate type:BubbleTypeRateview]];
-        bubbleTable.showAvatars = NO;
+        NSBubbleData *rateData = [NSBubbleData dataWithWeb:msg.text date:msg.sentDate type:BubbleTypeRateview];
+        rateData.msg = msg;
+        [bubbleData addObject:rateData];
+        bubbleTable.showAvatars = NO; 
+
     }
 
 }

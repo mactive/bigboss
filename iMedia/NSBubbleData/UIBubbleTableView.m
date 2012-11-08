@@ -17,6 +17,7 @@
 #import "AppDelegate.h"
 #import "ConversationsController.h"
 #import "XMPPFramework.h"
+#import "Conversation.h"
 
 @interface UIBubbleTableView ()
 
@@ -264,6 +265,10 @@
         RateViewController *rateViewController = [[RateViewController alloc]initWithNibName:nil bundle:nil];
         rateViewController.conversionKey = data.content;
         [[self appDelegate].conversationController.chatDetailController.navigationController presentModalViewController:rateViewController animated:YES];
+        
+        [[self appDelegate].conversationController.chatDetailController.conversation removeMessagesObject:data.msg];
+        data.msg = nil;
+        [[self appDelegate].conversationController contentChanged];
     }
     if (data.type == BubbleTypeTemplateview) {
         
