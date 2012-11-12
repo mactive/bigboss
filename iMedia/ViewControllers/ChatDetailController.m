@@ -7,8 +7,8 @@
 //
 
 #import "ChatDetailController.h"
-#import "UIBubbleTableView.h"
-#import "NSBubbleData.h"
+#import "WSBubbleTableView.h"
+#import "WSBubbleData.h"
 #import "User.h"
 #import "Me.h"
 #import "Message.h"
@@ -16,7 +16,6 @@
 #import "Conversation.h"
 #import "AppDefs.h"
 #import "AppDelegate.h"
-#import "UIBubbleTableViewDataSource.h"
 #import "ACPlaceholderTextView.h"
 #import <CocoaPlant/CocoaPlant.h>
 #import "UIImageView+AFNetworking.h"
@@ -48,7 +47,7 @@
 [message.text sizeWithFont:font constrainedToSize:CGSizeMake(MESSAGE_TEXT_WIDTH_MAX, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap]
 
 
-@interface ChatDetailController () <UITextViewDelegate, UIBubbleTableViewDataSource>
+@interface ChatDetailController () <UITextViewDelegate>
 {
     NSMutableArray *_heightForRow;
     UIImage *_messageBubbleGray;
@@ -99,15 +98,14 @@
 {
     [super viewDidLoad];
     
-    bubbleTable = [[UIBubbleTableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-40)];
-    bubbleTable.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
-    bubbleTable.backgroundColor = RGBCOLOR(222, 224, 227);
-    bubbleTable.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.bubbleTable = [[WSBubbleTableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-40)];
+    self.bubbleTable.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+    self.bubbleTable.backgroundColor = RGBCOLOR(222, 224, 227);
+    self.bubbleTable.separatorStyle = UITableViewCellSeparatorStyleNone;
     
-    bubbleTable.bubbleDataSource = self;
-    bubbleTable.snapInterval = 100;
-    bubbleTable.typingBubble = NSBubbleTypingTypeNobody;
-    bubbleTable.showAvatars = YES;
+//    bubbleTable.dataSource = self;
+    self.bubbleTable.snapInterval = 120;
+    self.bubbleTable.showAvatars = YES;
     
     NSSet *messages = conversation.messages;
     bubbleData = [[NSMutableArray alloc] initWithCapacity:[messages count]];
@@ -116,6 +114,9 @@
     while (aMessage = [enumerator nextObject]) {
         [self addMessage:aMessage toBubbleData:bubbleData];
     }
+    
+    self.bubbleTable.bubbleSection = bubbleData;
+
     
     // Create messageInputBar to contain _textView, messageInputBarBackgroundImageView, & _sendButton.
     UIImageView *messageInputBar = [[UIImageView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height-kChatBarHeight1, self.view.frame.size.width, kChatBarHeight1)];
@@ -159,7 +160,7 @@
     [_sendButton addTarget:self action:@selector(sendMessage) forControlEvents:UIControlEventTouchUpInside];
     [messageInputBar addSubview:_sendButton];
     
-    [self.view addSubview:bubbleTable];
+    [self.view addSubview:self.bubbleTable];
     [self.view addSubview:messageInputBar];
     
     //  单点触控
@@ -199,7 +200,8 @@
 {
     [super viewWillAppear:animated];
     
-    [self refreshBubbleData];
+    [self.bubbleTable reloadData];
+//    [self refreshBubbleData];
     
     // setup self.title
     NSEnumerator *enumerator = [conversation.users objectEnumerator];
@@ -308,20 +310,6 @@
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark - UIBubbleTableViewDataSource implementation
-////////////////////////////////////////////////////////////////////////////////////////////
-- (NSInteger)rowsForBubbleTable:(UIBubbleTableView *)tableView
-{
-    return [bubbleData count];
-}
-
-- (NSBubbleData *)bubbleTableView:(UIBubbleTableView *)tableView dataForRow:(NSInteger)row
-{
-    return [bubbleData objectAtIndex:row];
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark UITextViewDelegate
 ////////////////////////////////////////////////////////////////////////////////////////////
 - (void)textViewDidChange:(UITextView *)textView {
@@ -385,14 +373,14 @@
 
 - (void)addMessage:(Message *)msg toBubbleData:(NSMutableArray *)data
 {
-    NSBubbleType type = BubbleTypeMine; // 默认是自己的
+    WSBubbleType type = BubbleTypeMine; // 默认是自己的
     
     if (msg.from.ePostalID != [self appDelegate].me.ePostalID) {
         type = BubbleTypeSomeoneElse;   // 如果发送过来的 jid 不同就是别人的
     }
     if (msg.type == [NSNumber numberWithInt:MessageTypeChat])
     {
-        NSBubbleData *itemBubble = [NSBubbleData dataWithText:msg.text date:msg.sentDate type:type];
+        WSBubbleData *itemBubble = [WSBubbleData dataWithText:msg.text date:msg.sentDate type:type];
         
         itemBubble.avatar = msg.from.thumbnailImage;
         if (msg.from.thumbnailImage == nil) {
@@ -402,17 +390,19 @@
             }];
         }
         [bubbleData addObject:itemBubble];
-        bubbleTable.showAvatars = YES;
-    } else if (msg.type == [NSNumber numberWithInt:MessageTypePublish]) {
-        [bubbleData addObject:[NSBubbleData dataWithWeb:msg.text date:msg.sentDate type:BubbleTypeTemplateview]];
-        bubbleTable.showAvatars = NO;
-    } else if (msg.type == [NSNumber numberWithInt:MessageTypeRate]) {
-        NSBubbleData *rateData = [NSBubbleData dataWithWeb:msg.text date:msg.sentDate type:BubbleTypeRateview];
-        rateData.msg = msg;
-        [bubbleData addObject:rateData];
-        bubbleTable.showAvatars = NO; 
-
+        self.bubbleTable.showAvatars = YES;
     }
+    
+//    else if (msg.type == [NSNumber numberWithInt:MessageTypePublish]) {
+//        [bubbleData addObject:[WSBubbleData dataWithWeb:msg.text date:msg.sentDate type:BubbleTypeTemplateview]];
+//        bubbleTable.showAvatars = NO;
+//    } else if (msg.type == [NSNumber numberWithInt:MessageTypeRate]) {
+//        WSBubbleData *rateData = [WSBubbleData dataWithWeb:msg.text date:msg.sentDate type:BubbleTypeRateview];
+//        rateData.msg = msg;
+//        [bubbleData addObject:rateData];
+//        bubbleTable.showAvatars = NO; 
+//
+//    }
 
 }
 

@@ -25,6 +25,7 @@
 
 const UIEdgeInsets textInsetsMine = {5, 10, 11, 17};
 const UIEdgeInsets textInsetsSomeone = {5, 15, 11, 10};
+
 #define MAX_WIDTH 220
 
 

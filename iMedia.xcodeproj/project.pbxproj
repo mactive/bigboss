@@ -12,6 +12,7 @@
 		040127971632FB3A00845F3C /* UIBubbleTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0401278F1632FB3A00845F3C /* UIBubbleTableView.m */; };
 		040127981632FB3A00845F3C /* UIBubbleTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 040127911632FB3A00845F3C /* UIBubbleTableViewCell.m */; };
 		040127991632FB3A00845F3C /* UIBubbleTypingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 040127941632FB3A00845F3C /* UIBubbleTypingTableViewCell.m */; };
+		0436B478165136930081A6F7 /* WSBubbleTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0436B477165136930081A6F7 /* WSBubbleTableView.m */; };
 		0450A5ED164649080002BA54 /* LoginSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0450A5EC164649080002BA54 /* LoginSettingViewController.m */; };
 		0489A3E816339FA400D122DF /* MessageBubbleSectionHeader@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0489A3E716339FA400D122DF /* MessageBubbleSectionHeader@2x.png */; };
 		2605CC40162EA9F700234442 /* navigationBar_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2605CC39162EA9F700234442 /* navigationBar_bg@2x.png */; };
@@ -114,7 +115,6 @@
 		2692531416350580000D7AFB /* sns_icon_weibo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2692530E16350580000D7AFB /* sns_icon_weibo@2x.png */; };
 		2692531F16353F6E000D7AFB /* pinyin.c in Sources */ = {isa = PBXBuildFile; fileRef = 2692531B16353F6E000D7AFB /* pinyin.c */; };
 		2692532016353F6E000D7AFB /* POAPinyin.m in Sources */ = {isa = PBXBuildFile; fileRef = 2692531E16353F6E000D7AFB /* POAPinyin.m */; };
-		269DDE041650F1E200320B02 /* WSBubbleTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 269DDE031650F1E200320B02 /* WSBubbleTableView.m */; };
 		269DDE071650F21C00320B02 /* WSBubbleData.m in Sources */ = {isa = PBXBuildFile; fileRef = 269DDE061650F21C00320B02 /* WSBubbleData.m */; };
 		26A5877416490CF900009968 /* star_grey@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26A5877216490CF900009968 /* star_grey@2x.png */; };
 		26A5877516490CF900009968 /* star@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26A5877316490CF900009968 /* star@2x.png */; };
@@ -371,6 +371,8 @@
 		040127921632FB3A00845F3C /* UIBubbleTableViewDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIBubbleTableViewDataSource.h; path = iMedia/NSBubbleData/UIBubbleTableViewDataSource.h; sourceTree = SOURCE_ROOT; };
 		040127931632FB3A00845F3C /* UIBubbleTypingTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIBubbleTypingTableViewCell.h; path = iMedia/NSBubbleData/UIBubbleTypingTableViewCell.h; sourceTree = SOURCE_ROOT; };
 		040127941632FB3A00845F3C /* UIBubbleTypingTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIBubbleTypingTableViewCell.m; path = iMedia/NSBubbleData/UIBubbleTypingTableViewCell.m; sourceTree = SOURCE_ROOT; };
+		0436B476165136930081A6F7 /* WSBubbleTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WSBubbleTableView.h; path = WSBubbleData/WSBubbleTableView.h; sourceTree = "<group>"; };
+		0436B477165136930081A6F7 /* WSBubbleTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WSBubbleTableView.m; path = WSBubbleData/WSBubbleTableView.m; sourceTree = "<group>"; };
 		0450A5EB164649080002BA54 /* LoginSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginSettingViewController.h; path = ViewControllers/Welcome/LoginSettingViewController.h; sourceTree = "<group>"; };
 		0450A5EC164649080002BA54 /* LoginSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginSettingViewController.m; path = ViewControllers/Welcome/LoginSettingViewController.m; sourceTree = "<group>"; };
 		0489A3E716339FA400D122DF /* MessageBubbleSectionHeader@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "MessageBubbleSectionHeader@2x.png"; path = "Resources/MessageBubbleSectionHeader@2x.png"; sourceTree = "<group>"; };
@@ -491,8 +493,6 @@
 		2692531C16353F6E000D7AFB /* pinyin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pinyin.h; path = POAPinyin/pinyin.h; sourceTree = "<group>"; };
 		2692531D16353F6E000D7AFB /* POAPinyin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = POAPinyin.h; path = POAPinyin/POAPinyin.h; sourceTree = "<group>"; };
 		2692531E16353F6E000D7AFB /* POAPinyin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = POAPinyin.m; path = POAPinyin/POAPinyin.m; sourceTree = "<group>"; };
-		269DDE021650F1E200320B02 /* WSBubbleTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WSBubbleTableView.h; path = WSBubbleData/WSBubbleTableView.h; sourceTree = "<group>"; };
-		269DDE031650F1E200320B02 /* WSBubbleTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WSBubbleTableView.m; path = WSBubbleData/WSBubbleTableView.m; sourceTree = "<group>"; };
 		269DDE051650F21C00320B02 /* WSBubbleData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WSBubbleData.h; path = WSBubbleData/WSBubbleData.h; sourceTree = "<group>"; };
 		269DDE061650F21C00320B02 /* WSBubbleData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WSBubbleData.m; path = WSBubbleData/WSBubbleData.m; sourceTree = "<group>"; };
 		26A5877216490CF900009968 /* star_grey@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "star_grey@2x.png"; path = "Resources/star_grey@2x.png"; sourceTree = "<group>"; };
@@ -930,8 +930,8 @@
 			children = (
 				269DDE051650F21C00320B02 /* WSBubbleData.h */,
 				269DDE061650F21C00320B02 /* WSBubbleData.m */,
-				269DDE021650F1E200320B02 /* WSBubbleTableView.h */,
-				269DDE031650F1E200320B02 /* WSBubbleTableView.m */,
+				0436B476165136930081A6F7 /* WSBubbleTableView.h */,
+				0436B477165136930081A6F7 /* WSBubbleTableView.m */,
 			);
 			name = WSBubbleData;
 			sourceTree = "<group>";
@@ -2367,8 +2367,8 @@
 				268CEEB8164B8D1000BFBA13 /* AboutUsViewController.m in Sources */,
 				56EDEFCC164C06EB003B0E9D /* Channel.m in Sources */,
 				268CEED7164C177400BFBA13 /* WebViewController.m in Sources */,
-				269DDE041650F1E200320B02 /* WSBubbleTableView.m in Sources */,
 				269DDE071650F21C00320B02 /* WSBubbleData.m in Sources */,
+				0436B478165136930081A6F7 /* WSBubbleTableView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

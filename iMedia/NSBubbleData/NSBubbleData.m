@@ -46,8 +46,8 @@
 
 #pragma mark - Text bubble
 
-const UIEdgeInsets textInsetsMine = {5, 10, 11, 17};
-const UIEdgeInsets textInsetsSomeone = {5, 15, 11, 10};
+const UIEdgeInsets NStextInsetsMine = {5, 10, 11, 17};
+const UIEdgeInsets NStextInsetsSomeone = {5, 15, 11, 10};
 
 + (id)dataWithText:(NSString *)text date:(NSDate *)date type:(NSBubbleType)type
 {
@@ -74,7 +74,7 @@ const UIEdgeInsets textInsetsSomeone = {5, 15, 11, 10};
     [label autorelease];
 #endif
     
-    UIEdgeInsets insets = (type == BubbleTypeMine ? textInsetsMine : textInsetsSomeone);
+    UIEdgeInsets insets = (type == BubbleTypeMine ? NStextInsetsMine : NStextInsetsSomeone);
     return [self initWithView:label date:date content:text type:type insets:insets];
 }
 

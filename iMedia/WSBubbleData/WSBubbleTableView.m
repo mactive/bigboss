@@ -2,120 +2,123 @@
 //  WSBubbleTableView.m
 //  iMedia
 //
-//  Created by meng qian on 12-11-12.
+//  Created by mac on 12-11-12.
 //  Copyright (c) 2012年 Li Xiaosi. All rights reserved.
 //
 
 #import "WSBubbleTableView.h"
+#import "WSBubbleData.h"
 
-@interface WSBubbleTableView ()
 
-@end
 
 @implementation WSBubbleTableView
 
-- (id)initWithStyle:(UITableViewStyle)style
+@synthesize snapInterval;
+@synthesize showAvatars;
+@synthesize bubbleSection;
+
+- (id)initWithFrame:(CGRect)frame
 {
-    self = [super initWithStyle:style];
+    self = [super initWithFrame:frame];
     if (self) {
-        // Custom initialization
+        // Initialization code
     }
     return self;
 }
 
-- (void)viewDidLoad
+- (void)reloadData
 {
-    [super viewDidLoad];
+    [super reloadData];
 
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    self.showsVerticalScrollIndicator = NO;
+    self.showsHorizontalScrollIndicator = NO;
+    
+    // Cleaning up
+//	self.bubbleSection = nil;
+//    self.bubbleSection = [[NSMutableArray alloc] init];
+    
+    for (int i = 0; i < [self.bubbleSection count]; i++) {
+        WSBubbleData *tmp = [self.bubbleSection  objectAtIndex:i];
+        NSLog(@"%@",tmp.content);
+    }
+
 }
 
-- (void)didReceiveMemoryWarning
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - tableView section delegate
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    if (section >= [self.bubbleSection count]) return 1;
+    
+    return [[self.bubbleSection objectAtIndex:section] count] + 1;
 }
-
-#pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-#warning Potentially incomplete method implementation.
-    // Return the number of sections.
-    return 0;
+    int result = [self.bubbleSection count];
+    return result;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    return 0;
+    return 20.0;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - tableView section delegate
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 60.0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+    static NSString *CellIdentifier = @"ContactCell";
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil) {
+        cell = [self tableViewCellWithReuseIdentifier:CellIdentifier andIndexPath:indexPath];
+    }
+    
     
     // Configure the cell...
+//    [self configureCell:cell forIndexPath:indexPath];
     
     return cell;
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+
+- (UITableViewCell *)tableViewCellWithReuseIdentifier:(NSString *)identifier andIndexPath:(NSIndexPath *)indexPath{
+    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+    
+    UIImageView *cellBgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell_bg.png"]];
+    cell.backgroundView = cellBgView;
+    
+    UIImageView *cellBgSelectedView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell_bg_highlighted.png"]];
+    cell.selectedBackgroundView =  cellBgSelectedView;
+    
+    
+    WSBubbleData *data = [[self.bubbleSection objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+
+    
+    cell.textLabel.text = data.content;
+    NSLog(@"%@",data.content);
+    
+    return  cell;
 }
-*/
+
+
 
 /*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+// Only override drawRect: if you perform custom drawing.
+// An empty implementation adversely affects performance during animation.
+- (void)drawRect:(CGRect)rect
 {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
+    // Drawing code
 }
 */
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-#pragma mark - Table view delegate
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
-}
 
 @end
