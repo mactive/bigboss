@@ -114,6 +114,8 @@
 		2692531416350580000D7AFB /* sns_icon_weibo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2692530E16350580000D7AFB /* sns_icon_weibo@2x.png */; };
 		2692531F16353F6E000D7AFB /* pinyin.c in Sources */ = {isa = PBXBuildFile; fileRef = 2692531B16353F6E000D7AFB /* pinyin.c */; };
 		2692532016353F6E000D7AFB /* POAPinyin.m in Sources */ = {isa = PBXBuildFile; fileRef = 2692531E16353F6E000D7AFB /* POAPinyin.m */; };
+		269DDE041650F1E200320B02 /* WSBubbleTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 269DDE031650F1E200320B02 /* WSBubbleTableView.m */; };
+		269DDE071650F21C00320B02 /* WSBubbleData.m in Sources */ = {isa = PBXBuildFile; fileRef = 269DDE061650F21C00320B02 /* WSBubbleData.m */; };
 		26A5877416490CF900009968 /* star_grey@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26A5877216490CF900009968 /* star_grey@2x.png */; };
 		26A5877516490CF900009968 /* star@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26A5877316490CF900009968 /* star@2x.png */; };
 		26A587781649199600009968 /* RateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 26A587771649199600009968 /* RateViewController.m */; };
@@ -489,6 +491,10 @@
 		2692531C16353F6E000D7AFB /* pinyin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pinyin.h; path = POAPinyin/pinyin.h; sourceTree = "<group>"; };
 		2692531D16353F6E000D7AFB /* POAPinyin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = POAPinyin.h; path = POAPinyin/POAPinyin.h; sourceTree = "<group>"; };
 		2692531E16353F6E000D7AFB /* POAPinyin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = POAPinyin.m; path = POAPinyin/POAPinyin.m; sourceTree = "<group>"; };
+		269DDE021650F1E200320B02 /* WSBubbleTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WSBubbleTableView.h; path = WSBubbleData/WSBubbleTableView.h; sourceTree = "<group>"; };
+		269DDE031650F1E200320B02 /* WSBubbleTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WSBubbleTableView.m; path = WSBubbleData/WSBubbleTableView.m; sourceTree = "<group>"; };
+		269DDE051650F21C00320B02 /* WSBubbleData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WSBubbleData.h; path = WSBubbleData/WSBubbleData.h; sourceTree = "<group>"; };
+		269DDE061650F21C00320B02 /* WSBubbleData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WSBubbleData.m; path = WSBubbleData/WSBubbleData.m; sourceTree = "<group>"; };
 		26A5877216490CF900009968 /* star_grey@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "star_grey@2x.png"; path = "Resources/star_grey@2x.png"; sourceTree = "<group>"; };
 		26A5877316490CF900009968 /* star@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "star@2x.png"; path = "Resources/star@2x.png"; sourceTree = "<group>"; };
 		26A587761649199600009968 /* RateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RateViewController.h; path = ViewControllers/RateViewController.h; sourceTree = "<group>"; };
@@ -917,6 +923,17 @@
 				2692531E16353F6E000D7AFB /* POAPinyin.m */,
 			);
 			name = POApinyin;
+			sourceTree = "<group>";
+		};
+		269DDE011650F17A00320B02 /* WSBubbleData */ = {
+			isa = PBXGroup;
+			children = (
+				269DDE051650F21C00320B02 /* WSBubbleData.h */,
+				269DDE061650F21C00320B02 /* WSBubbleData.m */,
+				269DDE021650F1E200320B02 /* WSBubbleTableView.h */,
+				269DDE031650F1E200320B02 /* WSBubbleTableView.m */,
+			);
+			name = WSBubbleData;
 			sourceTree = "<group>";
 		};
 		26C76E62162EB4D900298865 /* ViewCategory */ = {
@@ -1858,6 +1875,7 @@
 		56B4CD0616267A2A00E046CC /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
+				269DDE011650F17A00320B02 /* WSBubbleData */,
 				566743BE164129620043A29C /* Godzippa */,
 				26825BD416378F96008DA7CC /* GCPagedScrollView */,
 				2692531A16353F5B000D7AFB /* POApinyin */,
@@ -2349,6 +2367,8 @@
 				268CEEB8164B8D1000BFBA13 /* AboutUsViewController.m in Sources */,
 				56EDEFCC164C06EB003B0E9D /* Channel.m in Sources */,
 				268CEED7164C177400BFBA13 /* WebViewController.m in Sources */,
+				269DDE041650F1E200320B02 /* WSBubbleTableView.m in Sources */,
+				269DDE071650F21C00320B02 /* WSBubbleData.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

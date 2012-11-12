@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "WSBubbleTableView.h"
 
 @class UIBubbleTableView;
 @class Conversation;
@@ -24,6 +24,9 @@
 @property (nonatomic, strong) UIBubbleTableView *bubbleTable;
 @property (nonatomic, strong) NSMutableArray *bubbleData;
 @property (nonatomic, strong) Conversation *conversation;
+
+@property (nonatomic, strong) WSBubbleTableView *wsBubbleTable;
+@property (nonatomic, strong) NSMutableArray *wsBubbleData;
 
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 
