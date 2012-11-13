@@ -1,20 +1,18 @@
 //
-//  UIBubbleTableViewCell.m
+//  WSBubbleTableViewCell.m
+//  iMedia
 //
-//  Created by Alex Barinov
-//  Project home page: http://alexbarinov.github.com/UIBubbleTableView/
-//
-//  This work is licensed under the Creative Commons Attribution-ShareAlike 3.0 Unported License.
-//  To view a copy of this license, visit http://creativecommons.org/licenses/by-sa/3.0/
+//  Created by meng qian on 12-11-13.
+//  Copyright (c) 2012年 Li Xiaosi. All rights reserved.
 //
 
-#import <QuartzCore/QuartzCore.h>
-#import "UIBubbleTableViewCell.h"
-#import "NSBubbleData.h"
+#import "WSBubbleTableViewCell.h"
+#import "WSBubbleData.h"
 #import "XMPPFramework.h"
 #import "UIImageView+AFNetworking.h"
+#import <QuartzCore/QuartzCore.h>
 
-@interface UIBubbleTableViewCell ()<UIWebViewDelegate>
+@interface WSBubbleTableViewCell ()
 
 @property (nonatomic, strong) UIView *customView;
 @property (nonatomic, strong) UIImageView *bubbleImage;
@@ -26,11 +24,11 @@
 @property (nonatomic, strong) UIImageView *rateView;
 @property (nonatomic, readwrite) CGSize viewSize;
 
-- (void) setupInternalData;
+- (void) setupInternalData:(WSBubbleData *)cellData;
 
 @end
 
-@implementation UIBubbleTableViewCell
+@implementation WSBubbleTableViewCell
 
 @synthesize data = _data;
 @synthesize customView = _customView;
@@ -44,80 +42,71 @@
 @synthesize viewSize;
 @synthesize templateTitle;
 
-- (void)setFrame:(CGRect)frame
+
+- (void)setData:(WSBubbleData *)data
 {
-    [super setFrame:frame];
-    [self setupInternalData];
-    
+    [self setupInternalData:data];
 }
 
-- (id)init
+
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
-    id obj = [super init];
-
-    self.templateBackView = [[UIView alloc] initWithFrame:CGRectMake(10, 0, 300, 0)];
-    self.templateContent = [[UILabel alloc] initWithFrame:CGRectMake(12, 180, 275, 0)];
-    self.templateTitle = [[UILabel alloc] initWithFrame:CGRectMake(12, 10, 275, 30)];
-    self.templateImage = [[UIImageView alloc]initWithFrame:CGRectMake(12, 40, 275, TEMPLATE_IMAGE_HEIGHT)];
-    
-    self.templateTitle.backgroundColor = [UIColor clearColor];
-    self.templateTitle.font = [UIFont boldSystemFontOfSize:18];
-    self.templateTitle.textColor = RGBCOLOR(68, 68, 68);
-    self.templateTitle.textAlignment = NSTextAlignmentLeft;
-    
-    self.templateContent.font = [UIFont systemFontOfSize:14];
-    self.templateContent.numberOfLines = 0;
-    self.templateContent.textColor = RGBCOLOR(100, 100, 100);
-    self.templateContent.backgroundColor = [UIColor clearColor];
-    [self.templateBackView setBackgroundColor:[UIColor whiteColor]];
-    [self.templateBackView.layer setMasksToBounds:YES];
-    [self.templateBackView.layer setCornerRadius:10.0];
-    [self.templateBackView.layer setBorderColor:[RGBCOLOR(194, 194, 194) CGColor]];
-    [self.templateBackView.layer setBorderWidth:1.0];
-
-    return obj;
+    if (self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier]) {
+        
+        self.templateBackView = [[UIView alloc] initWithFrame:CGRectMake(10, 0, 300, 0)];
+        self.templateContent = [[UILabel alloc] initWithFrame:CGRectMake(12, 180, 275, 0)];
+        self.templateTitle = [[UILabel alloc] initWithFrame:CGRectMake(12, 10, 275, 30)];
+        self.templateImage = [[UIImageView alloc]initWithFrame:CGRectMake(12, 40, 275, TEMPLATE_IMAGE_HEIGHT)];
+        
+        self.templateTitle.backgroundColor = [UIColor clearColor];
+        self.templateTitle.font = [UIFont boldSystemFontOfSize:18];
+        self.templateTitle.textColor = RGBCOLOR(68, 68, 68);
+        self.templateTitle.textAlignment = NSTextAlignmentLeft;
+        
+        self.templateContent.font = [UIFont systemFontOfSize:14];
+        self.templateContent.numberOfLines = 0;
+        self.templateContent.textColor = RGBCOLOR(100, 100, 100);
+        self.templateContent.backgroundColor = [UIColor clearColor];
+        [self.templateBackView setBackgroundColor:[UIColor whiteColor]];
+        [self.templateBackView.layer setMasksToBounds:YES];
+        [self.templateBackView.layer setCornerRadius:10.0];
+        [self.templateBackView.layer setBorderColor:[RGBCOLOR(194, 194, 194) CGColor]];
+        [self.templateBackView.layer setBorderWidth:1.0];
+        
+        self.customView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 220, 50)];
+        
+    }
+    return self;
 }
 
-#if !__has_feature(objc_arc)
-- (void) dealloc
-{
-    self.data = nil;
-    self.customView = nil;
-    self.bubbleImage = nil;
-    [super dealloc];
-}
-#endif
 
-//- (void)setDataInternal:(NSBubbleData *)value
-//{
-//	self.data = value;
-//	[self setupInternalData];
-//}
 
-- (void) setupInternalData
+- (void) setupInternalData:(WSBubbleData *)cellData
 {
+    
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     
-    NSBubbleType type = self.data.type;
-
+    WSBubbleType type = cellData.type;
+    
     if (!self.bubbleImage)
     {
         self.bubbleImage = [[UIImageView alloc] init];
-        [self addSubview:self.bubbleImage];
+        [self.contentView addSubview:self.bubbleImage];
     }
     
     
-    CGFloat width = self.data.view.frame.size.width;
-    CGFloat height = self.data.view.frame.size.height;
-
-    CGFloat x = (type == BubbleTypeSomeoneElse) ? 0 : self.frame.size.width - width - self.data.insets.left - self.data.insets.right;
+    CGFloat width = cellData.view.frame.size.width;
+    CGFloat height = cellData.view.frame.size.height;
+    
+    CGFloat x = (type == BubbleTypeSomeoneElse) ? 0 : self.frame.size.width - width - cellData.insets.left - cellData.insets.right;
     CGFloat y = 5;
     
     // Adjusting the x coordinate for avatar
-    if (self.data.showAvatar)
+    if (cellData.showAvatar)
     {
         [self.avatarImage removeFromSuperview];
-        self.avatarImage = [[UIImageView alloc] initWithImage:(self.data.avatar ? self.data.avatar : [UIImage imageNamed:@"missingAvatar.png"])];
+        self.avatarImage = [[UIImageView alloc] initWithImage:
+                            (cellData.avatar ? cellData.avatar : [UIImage imageNamed:@"user_avatar_placeholder.png"])];
         self.avatarImage.layer.cornerRadius = 9.0;
         self.avatarImage.layer.masksToBounds = YES;
         self.avatarImage.layer.borderColor = [[UIColor whiteColor] CGColor];
@@ -129,30 +118,29 @@
         self.avatarImage.frame = CGRectMake(avatarX, avatarY, 50, 50);
         [self addSubview:self.avatarImage];
         
-//        CGFloat delta = self.frame.size.height - (self.data.insets.top + self.data.insets.bottom + self.data.view.frame.size.height);
-//        if (delta > 0) y = delta;
+        //        CGFloat delta = self.frame.size.height - (cellData.insets.top + cellData.insets.bottom + cellData.view.frame.size.height);
+        //        if (delta > 0) y = delta;
         
         if (type == BubbleTypeSomeoneElse) x += 54;
         if (type == BubbleTypeMine) x -= 54;
     }
-
+    
     [self.customView removeFromSuperview];
-    self.customView = self.data.view;
-    self.customView.frame = CGRectMake(x + self.data.insets.left, y + self.data.insets.top, width, height);
+    self.customView = cellData.view;
+    self.customView.frame = CGRectMake(x + cellData.insets.left, y + cellData.insets.top, width, height);
     
     [self.contentView addSubview:self.customView];
-
+    
     if (type == BubbleTypeSomeoneElse)
     {
         self.bubbleImage.image = [[UIImage imageNamed:@"bubbleSomeone.png"] stretchableImageWithLeftCapWidth:21 topCapHeight:14];
-
     }
     else if(type == BubbleTypeMine) {
         self.bubbleImage.image = [[UIImage imageNamed:@"bubbleMine.png"] stretchableImageWithLeftCapWidth:15 topCapHeight:14];
     }
     else if (type == BubbleTypeTemplateview){
         
-        NSXMLElement *element = [[NSXMLElement alloc] initWithXMLString:self.data.content error:nil];
+        NSXMLElement *element = [[NSXMLElement alloc] initWithXMLString:cellData.content error:nil];
         
         [self.templateBackView setFrame:CGRectMake(10, 0, 300, height +TEMPLATE_TITLE_HEIGHT)];
         [self.templateContent setFrame:CGRectMake(12, 180, 275, height)];
@@ -162,9 +150,9 @@
         NSString* imageString = [[element elementForName:@"image9"] stringValue];
         NSString* contentString = [[element elementForName:@"content9"] stringValue];
         NSString* titleString = [[element elementForName:@"title9"] stringValue];
-
+        
         self.templateImage.contentMode = UIViewContentModeScaleAspectFit;
-
+        
         if (imageString == nil || [imageString length] == 0) {
             [self.templateContent setFrame:CGRectMake(12, 40, 275, height )];
         }else{
@@ -181,21 +169,14 @@
         [self.templateBackView addSubview:self.templateTitle];
         [self.contentView addSubview:self.templateBackView];
         
-
-        
-        /*[[data.content elementForName:@"title9"] stringValue]
-         MYUIVIew = kkk
-         myui.content = NSString* summary = [[data.content elementForName:@"title9"] stringValue];
-         myui.imageView NSString* summary = [[entry elementForName:@"image9"] stringValue];
-
-        */
         
         [self.customView removeFromSuperview];
         [self.avatarImage removeFromSuperview];
         [self.bubbleImage removeFromSuperview];
-
         
-    }else if(type == BubbleTypeRateview){
+        
+    }
+    else if(type == BubbleTypeRateview){
         
         self.rateView = [[UIImageView alloc]initWithFrame:CGRectMake(80, 10, 160, 41)];
         [self.rateView setImage:[UIImage imageNamed:@"welcome_btn.png"]];
@@ -212,33 +193,15 @@
         [self.avatarImage removeFromSuperview];
         [self.bubbleImage removeFromSuperview];
     }
-    self.bubbleImage.frame = CGRectMake(x, y, width + self.data.insets.left + self.data.insets.right, height + self.data.insets.top + self.data.insets.bottom);
+    self.bubbleImage.frame = CGRectMake(x, y, width + cellData.insets.left + cellData.insets.right, height + cellData.insets.top + cellData.insets.bottom);
 }
 
 
-#pragma mark - UIWebView delegate
-//
-//- (void)webViewDidFinishLoad:(UIWebView *)webView
-//{
-//    if ([self.webView isEqual:webView]) {
-//        
-//        CGSize actualSize = [self.webView sizeThatFits:CGSizeZero];
-//        CGRect newFrame = self.webView.frame;
-//        newFrame.size.height = actualSize.height;
-//        self.webView.frame = newFrame;
-//        self.webViewOverlayButton.frame = newFrame;
-//        
-//        CGRect backFrame = self.backWebView.frame;
-//        backFrame.size.height = actualSize.height+25;
-//        self.backWebView.frame = backFrame;
-//        NSLog(@"%@", NSStringFromCGRect(self.backWebView.frame));
-//        
-////        self.data.view.frame = backFrame;
-//        self.data.isDone = YES;
-//        self.data.cellHeight = backFrame.size.height;
-//    }
-//}
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated
+{
+    [super setSelected:selected animated:animated];
 
-
+    // Configure the view for the selected state
+}
 
 @end

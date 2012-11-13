@@ -253,7 +253,6 @@
 #warning  -  this block end
    
     
-    
     // setup self.title
     NSEnumerator *userEnumerator = [conversation.users objectEnumerator];
     

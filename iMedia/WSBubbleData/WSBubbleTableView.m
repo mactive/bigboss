@@ -8,14 +8,16 @@
 
 #import "WSBubbleTableView.h"
 #import "WSBubbleData.h"
-
-
+#import "WSBubbleSectionHeader.h"
+#import "WSBubbleTableViewCell.h"
 
 @implementation WSBubbleTableView
 
 @synthesize snapInterval;
 @synthesize showAvatars;
 @synthesize bubbleSection;
+
+#define SECTION_HEIGHT 28
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -77,28 +79,44 @@
     return 20.0;
 }
 
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    WSBubbleSectionHeader *sectionView = [[WSBubbleSectionHeader alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width, SECTION_HEIGHT)];
+    
+    WSBubbleData *firstRowData = [[self.bubbleSection objectAtIndex:section] objectAtIndex:0];
+    
+    sectionView.date = firstRowData.date;
+    
+    return sectionView;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark - tableView section delegate
+#pragma mark - tableView cell delegate
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 60.0;
+    WSBubbleData *rowData = [[self.bubbleSection objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+    
+    CGFloat cellHeight = MAX(rowData.insets.top + rowData.cellHeight + rowData.insets.bottom, self.showAvatars ? 55 : 0);
+    
+    return  cellHeight;
+     
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"ContactCell";
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    WSBubbleTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    
+    WSBubbleData *rowData = [[self.bubbleSection objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+    
     if (cell == nil) {
-        cell = [self tableViewCellWithReuseIdentifier:CellIdentifier andIndexPath:indexPath];
+        cell = [[WSBubbleTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+
     }
-    
-    
-    // Configure the cell...
-//    [self configureCell:cell forIndexPath:indexPath];
-    
+    cell.data = rowData;    
     return cell;
 }
 
@@ -109,9 +127,7 @@
     cell.backgroundColor = [UIColor clearColor];
     
     WSBubbleData *data = [[self.bubbleSection objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-
     cell.textLabel.text = data.content;
-    
     return  cell;
 }
 

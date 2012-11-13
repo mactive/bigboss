@@ -21,6 +21,7 @@
 @synthesize cellHeight = _cellHeight;
 @synthesize msg = _msg;
 @synthesize insets = _insets;
+@synthesize view = _view;
 
 
 const UIEdgeInsets textInsetsMine = {5, 10, 11, 17};
@@ -65,6 +66,7 @@ const UIEdgeInsets textInsetsSomeone = {5, 15, 11, 10};
         self.showAvatar = type != BubbleTypeTemplateview ? YES : NO ;
         self.isDone = NO;
         self.cellHeight = view.frame.size.height;
+        self.view = view;
     }
     return self;
 }

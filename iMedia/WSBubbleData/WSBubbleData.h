@@ -28,6 +28,7 @@ typedef enum _WSBubbleType
 @property (nonatomic, readwrite) CGFloat cellHeight;
 @property (nonatomic, retain)Message * msg;
 @property (readonly, nonatomic) UIEdgeInsets insets;
+@property (strong, nonatomic) UIView *view;
 
 
 - (id)initWithText:(NSString *)text date:(NSDate *)date type:(WSBubbleType)type;

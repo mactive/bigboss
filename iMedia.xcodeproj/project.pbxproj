@@ -7,11 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		040127951632FB3A00845F3C /* NSBubbleData.m in Sources */ = {isa = PBXBuildFile; fileRef = 0401278B1632FB3A00845F3C /* NSBubbleData.m */; };
-		040127961632FB3A00845F3C /* UIBubbleHeaderTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0401278D1632FB3A00845F3C /* UIBubbleHeaderTableViewCell.m */; };
-		040127971632FB3A00845F3C /* UIBubbleTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0401278F1632FB3A00845F3C /* UIBubbleTableView.m */; };
-		040127981632FB3A00845F3C /* UIBubbleTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 040127911632FB3A00845F3C /* UIBubbleTableViewCell.m */; };
-		040127991632FB3A00845F3C /* UIBubbleTypingTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 040127941632FB3A00845F3C /* UIBubbleTypingTableViewCell.m */; };
 		0436B478165136930081A6F7 /* WSBubbleTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0436B477165136930081A6F7 /* WSBubbleTableView.m */; };
 		0450A5ED164649080002BA54 /* LoginSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0450A5EC164649080002BA54 /* LoginSettingViewController.m */; };
 		0489A3E816339FA400D122DF /* MessageBubbleSectionHeader@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0489A3E716339FA400D122DF /* MessageBubbleSectionHeader@2x.png */; };
@@ -116,6 +111,8 @@
 		2692531F16353F6E000D7AFB /* pinyin.c in Sources */ = {isa = PBXBuildFile; fileRef = 2692531B16353F6E000D7AFB /* pinyin.c */; };
 		2692532016353F6E000D7AFB /* POAPinyin.m in Sources */ = {isa = PBXBuildFile; fileRef = 2692531E16353F6E000D7AFB /* POAPinyin.m */; };
 		269DDE071650F21C00320B02 /* WSBubbleData.m in Sources */ = {isa = PBXBuildFile; fileRef = 269DDE061650F21C00320B02 /* WSBubbleData.m */; };
+		269EB9CE16522811000048F7 /* WSBubbleSectionHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 269EB9CD16522811000048F7 /* WSBubbleSectionHeader.m */; };
+		269EB9D116522D80000048F7 /* WSBubbleTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 269EB9D016522D80000048F7 /* WSBubbleTableViewCell.m */; };
 		26A5877416490CF900009968 /* star_grey@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26A5877216490CF900009968 /* star_grey@2x.png */; };
 		26A5877516490CF900009968 /* star@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26A5877316490CF900009968 /* star@2x.png */; };
 		26A587781649199600009968 /* RateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 26A587771649199600009968 /* RateViewController.m */; };
@@ -360,17 +357,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0401278A1632FB3A00845F3C /* NSBubbleData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSBubbleData.h; path = iMedia/NSBubbleData/NSBubbleData.h; sourceTree = SOURCE_ROOT; };
-		0401278B1632FB3A00845F3C /* NSBubbleData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSBubbleData.m; path = iMedia/NSBubbleData/NSBubbleData.m; sourceTree = SOURCE_ROOT; };
-		0401278C1632FB3A00845F3C /* UIBubbleHeaderTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIBubbleHeaderTableViewCell.h; path = iMedia/NSBubbleData/UIBubbleHeaderTableViewCell.h; sourceTree = SOURCE_ROOT; };
-		0401278D1632FB3A00845F3C /* UIBubbleHeaderTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIBubbleHeaderTableViewCell.m; path = iMedia/NSBubbleData/UIBubbleHeaderTableViewCell.m; sourceTree = SOURCE_ROOT; };
-		0401278E1632FB3A00845F3C /* UIBubbleTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIBubbleTableView.h; path = iMedia/NSBubbleData/UIBubbleTableView.h; sourceTree = SOURCE_ROOT; };
-		0401278F1632FB3A00845F3C /* UIBubbleTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIBubbleTableView.m; path = iMedia/NSBubbleData/UIBubbleTableView.m; sourceTree = SOURCE_ROOT; };
-		040127901632FB3A00845F3C /* UIBubbleTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIBubbleTableViewCell.h; path = iMedia/NSBubbleData/UIBubbleTableViewCell.h; sourceTree = SOURCE_ROOT; };
-		040127911632FB3A00845F3C /* UIBubbleTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIBubbleTableViewCell.m; path = iMedia/NSBubbleData/UIBubbleTableViewCell.m; sourceTree = SOURCE_ROOT; };
-		040127921632FB3A00845F3C /* UIBubbleTableViewDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIBubbleTableViewDataSource.h; path = iMedia/NSBubbleData/UIBubbleTableViewDataSource.h; sourceTree = SOURCE_ROOT; };
-		040127931632FB3A00845F3C /* UIBubbleTypingTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIBubbleTypingTableViewCell.h; path = iMedia/NSBubbleData/UIBubbleTypingTableViewCell.h; sourceTree = SOURCE_ROOT; };
-		040127941632FB3A00845F3C /* UIBubbleTypingTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UIBubbleTypingTableViewCell.m; path = iMedia/NSBubbleData/UIBubbleTypingTableViewCell.m; sourceTree = SOURCE_ROOT; };
 		0436B476165136930081A6F7 /* WSBubbleTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WSBubbleTableView.h; path = WSBubbleData/WSBubbleTableView.h; sourceTree = "<group>"; };
 		0436B477165136930081A6F7 /* WSBubbleTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WSBubbleTableView.m; path = WSBubbleData/WSBubbleTableView.m; sourceTree = "<group>"; };
 		0450A5EB164649080002BA54 /* LoginSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginSettingViewController.h; path = ViewControllers/Welcome/LoginSettingViewController.h; sourceTree = "<group>"; };
@@ -495,6 +481,10 @@
 		2692531E16353F6E000D7AFB /* POAPinyin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = POAPinyin.m; path = POAPinyin/POAPinyin.m; sourceTree = "<group>"; };
 		269DDE051650F21C00320B02 /* WSBubbleData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WSBubbleData.h; path = WSBubbleData/WSBubbleData.h; sourceTree = "<group>"; };
 		269DDE061650F21C00320B02 /* WSBubbleData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WSBubbleData.m; path = WSBubbleData/WSBubbleData.m; sourceTree = "<group>"; };
+		269EB9CC16522811000048F7 /* WSBubbleSectionHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WSBubbleSectionHeader.h; path = WSBubbleData/WSBubbleSectionHeader.h; sourceTree = "<group>"; };
+		269EB9CD16522811000048F7 /* WSBubbleSectionHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WSBubbleSectionHeader.m; path = WSBubbleData/WSBubbleSectionHeader.m; sourceTree = "<group>"; };
+		269EB9CF16522D80000048F7 /* WSBubbleTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WSBubbleTableViewCell.h; path = WSBubbleData/WSBubbleTableViewCell.h; sourceTree = "<group>"; };
+		269EB9D016522D80000048F7 /* WSBubbleTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WSBubbleTableViewCell.m; path = WSBubbleData/WSBubbleTableViewCell.m; sourceTree = "<group>"; };
 		26A5877216490CF900009968 /* star_grey@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "star_grey@2x.png"; path = "Resources/star_grey@2x.png"; sourceTree = "<group>"; };
 		26A5877316490CF900009968 /* star@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "star@2x.png"; path = "Resources/star@2x.png"; sourceTree = "<group>"; };
 		26A587761649199600009968 /* RateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RateViewController.h; path = ViewControllers/RateViewController.h; sourceTree = "<group>"; };
@@ -932,6 +922,10 @@
 				269DDE061650F21C00320B02 /* WSBubbleData.m */,
 				0436B476165136930081A6F7 /* WSBubbleTableView.h */,
 				0436B477165136930081A6F7 /* WSBubbleTableView.m */,
+				269EB9CC16522811000048F7 /* WSBubbleSectionHeader.h */,
+				269EB9CD16522811000048F7 /* WSBubbleSectionHeader.m */,
+				269EB9CF16522D80000048F7 /* WSBubbleTableViewCell.h */,
+				269EB9D016522D80000048F7 /* WSBubbleTableViewCell.m */,
 			);
 			name = WSBubbleData;
 			sourceTree = "<group>";
@@ -943,25 +937,6 @@
 				26C76E64162EB4F400298865 /* UINavigationBar+Background.m */,
 			);
 			name = ViewCategory;
-			sourceTree = "<group>";
-		};
-		562DE6F3160ABF2100F782D2 /* NSBubbleData */ = {
-			isa = PBXGroup;
-			children = (
-				0401278A1632FB3A00845F3C /* NSBubbleData.h */,
-				0401278B1632FB3A00845F3C /* NSBubbleData.m */,
-				0401278C1632FB3A00845F3C /* UIBubbleHeaderTableViewCell.h */,
-				0401278D1632FB3A00845F3C /* UIBubbleHeaderTableViewCell.m */,
-				0401278E1632FB3A00845F3C /* UIBubbleTableView.h */,
-				0401278F1632FB3A00845F3C /* UIBubbleTableView.m */,
-				040127901632FB3A00845F3C /* UIBubbleTableViewCell.h */,
-				040127911632FB3A00845F3C /* UIBubbleTableViewCell.m */,
-				040127921632FB3A00845F3C /* UIBubbleTableViewDataSource.h */,
-				040127931632FB3A00845F3C /* UIBubbleTypingTableViewCell.h */,
-				040127941632FB3A00845F3C /* UIBubbleTypingTableViewCell.m */,
-			);
-			name = NSBubbleData;
-			path = src;
 			sourceTree = "<group>";
 		};
 		562DE706160AC3A300F782D2 /* Resources */ = {
@@ -1880,7 +1855,6 @@
 				26825BD416378F96008DA7CC /* GCPagedScrollView */,
 				2692531A16353F5B000D7AFB /* POApinyin */,
 				56B4CCDC1626732400E046CC /* AFNetworking */,
-				562DE6F3160ABF2100F782D2 /* NSBubbleData */,
 				566E80D61609A2AA00A333EA /* XMPPFramework */,
 				56DF5E4C16257E9D00E75105 /* SBJson */,
 			);
@@ -2330,11 +2304,6 @@
 				266A1A72162E5B10008EF1D5 /* SettingViewController.m in Sources */,
 				26C76E65162EB4F400298865 /* UINavigationBar+Background.m in Sources */,
 				2631C52A16313033004DE7FB /* NSDate+timesince.m in Sources */,
-				040127951632FB3A00845F3C /* NSBubbleData.m in Sources */,
-				040127961632FB3A00845F3C /* UIBubbleHeaderTableViewCell.m in Sources */,
-				040127971632FB3A00845F3C /* UIBubbleTableView.m in Sources */,
-				040127981632FB3A00845F3C /* UIBubbleTableViewCell.m in Sources */,
-				040127991632FB3A00845F3C /* UIBubbleTypingTableViewCell.m in Sources */,
 				2692531F16353F6E000D7AFB /* pinyin.c in Sources */,
 				2692532016353F6E000D7AFB /* POAPinyin.m in Sources */,
 				26825BD716378FA3008DA7CC /* GCPagedScrollView.m in Sources */,
@@ -2369,6 +2338,8 @@
 				268CEED7164C177400BFBA13 /* WebViewController.m in Sources */,
 				269DDE071650F21C00320B02 /* WSBubbleData.m in Sources */,
 				0436B478165136930081A6F7 /* WSBubbleTableView.m in Sources */,
+				269EB9CE16522811000048F7 /* WSBubbleSectionHeader.m in Sources */,
+				269EB9D116522D80000048F7 /* WSBubbleTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
