@@ -10,6 +10,14 @@
 #import "WSBubbleData.h"
 #import "WSBubbleSectionHeader.h"
 #import "WSBubbleTableViewCell.h"
+#import "RateViewController.h"
+#import "WebViewController.h"
+#import "AppDelegate.h"
+#import "XMPPFramework.h"
+#import "ConversationsController.h"
+#import "Conversation.h"
+
+
 
 @implementation WSBubbleTableView
 
@@ -131,6 +139,41 @@
     return  cell;
 }
 
+
+//////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - cell did selected
+//////////////////////////////////////////////////////////////////////////////////////////
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // Standard bubble
+    WSBubbleData *data = [[self.bubbleSection objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+    
+    if (data.type == BubbleTypeRateview) {
+        RateViewController *rateViewController = [[RateViewController alloc]initWithNibName:nil bundle:nil];
+        rateViewController.conversionKey = data.content;
+
+        [[self appDelegate].conversationController.chatDetailController.navigationController presentModalViewController:rateViewController animated:YES];
+        
+        [[self appDelegate].conversationController.chatDetailController.conversation removeMessagesObject:data.msg];
+        data.msg = nil;
+        [[self appDelegate].conversationController contentChanged];
+    }
+    if (data.type == BubbleTypeTemplateview) {
+        
+        NSXMLElement *element = [[NSXMLElement alloc] initWithXMLString:data.content error:nil];
+        NSString* imageString = [[element elementForName:@"link9"] stringValue];
+        
+        WebViewController *controller = [[WebViewController alloc]initWithNibName:nil bundle:nil];
+        controller.urlString = imageString;
+        
+        [[self appDelegate].conversationController.chatDetailController.navigationController setHidesBottomBarWhenPushed:YES];
+        [[self appDelegate].conversationController.chatDetailController.navigationController pushViewController:controller animated:YES];
+    }
+}
+
+
+
 ////////////////////////
 //Change Default Scrolling Behavior of UITableView Section Header
 // 如何让 UITableView 的 headerView跟随 cell一起滚动
@@ -141,6 +184,11 @@
     } else if (scrollView.contentOffset.y>=sectionHeaderHeight) {
         scrollView.contentInset = UIEdgeInsetsMake(-sectionHeaderHeight, 0, 0, 0);
     }
+}
+
+- (AppDelegate *)appDelegate
+{
+	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
 
