@@ -22,6 +22,7 @@
 #import "AppNetworkAPIClient.h"
 #import "XMPPNetworkCenter.h"
 #import "ConversationsController.h"
+#import "NSDate-Utilities.h"
 
 // TODO: Rename to CHAT_BAR_HEIGHT_1, etc.
 #define kChatBarHeight1                      40
@@ -106,16 +107,6 @@
 //    bubbleTable.dataSource = self;
     self.bubbleTable.snapInterval = 120;
     self.bubbleTable.showAvatars = YES;
-    
-    NSSet *messages = conversation.messages;
-    bubbleData = [[NSMutableArray alloc] initWithCapacity:[messages count]];
-    NSEnumerator *enumerator = [conversation.messages objectEnumerator];
-    Message* aMessage;
-    while (aMessage = [enumerator nextObject]) {
-        [self addMessage:aMessage toBubbleData:bubbleData];
-    }
-    
-    self.bubbleTable.bubbleSection = bubbleData;
 
     
     // Create messageInputBar to contain _textView, messageInputBarBackgroundImageView, & _sendButton.
@@ -175,6 +166,50 @@
     [self.textView resignFirstResponder];
 }
 
+/////////////////////////////////////////////////////
+#pragma mark - sort Bubble data make a section data
+/////////////////////////////////////////////////////
+
+- (NSMutableArray *)sortBubbleSection:(NSMutableArray *)unorderData
+{
+    if (unorderData != nil && [unorderData count] > 0)
+    {
+        int count = [unorderData count];
+        
+        NSMutableArray *bubbleSection = [[NSMutableArray alloc] init];
+        NSArray *resultData = [unorderData sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            WSBubbleData *bubbleData1 = (WSBubbleData *)obj1;
+            WSBubbleData *bubbleData2 = (WSBubbleData *)obj2;
+            
+            return [bubbleData1.date compare:bubbleData2.date];
+        }];
+        
+        NSDate *last = [NSDate dateWithTimeIntervalSince1970:0];
+        NSMutableArray *currentSection = nil;
+        
+        for (int i = 0; i < count; i++)
+        {
+            WSBubbleData *data = (WSBubbleData *)[resultData objectAtIndex:i];
+            NSInteger passedTime = [data.date timeIntervalSinceDate:last];
+            
+            if ([data.date timeIntervalSinceDate:last] > self.bubbleTable.snapInterval)
+            {
+
+                currentSection = [[NSMutableArray alloc] init];
+                [bubbleSection addObject:currentSection];
+            }
+            
+            [currentSection addObject:data];
+            last = data.date;
+        }
+        return bubbleSection;
+    }else{
+        return nil;
+    }
+    
+}
+
+
 /*
 - (void)viewDidUnload
 {
@@ -186,13 +221,15 @@
 - (void)refreshBubbleData
 {
     NSSet *messages = conversation.messages;
-    bubbleData = [[NSMutableArray alloc] initWithCapacity:[messages count]];
+    self.bubbleData = [[NSMutableArray alloc] initWithCapacity:[messages count]];
     NSEnumerator *enumerator = [conversation.messages objectEnumerator];
     Message* aMessage;
     while (aMessage = [enumerator nextObject]) {
-        [self addMessage:aMessage toBubbleData:bubbleData];
+        [self addMessage:aMessage toBubbleData:self.bubbleData];
     }
-    [bubbleTable reloadData];
+    
+    self.bubbleTable.bubbleSection = [self sortBubbleSection:self.bubbleData];
+    [self.bubbleTable reloadData];
     [self scrollToBottomAnimated:NO];
 }
 
@@ -200,13 +237,27 @@
 {
     [super viewWillAppear:animated];
     
+#warning  -  this block may be in the viewdidiload
+    
+    NSSet *messages = conversation.messages;
+    self.bubbleData = [[NSMutableArray alloc] initWithCapacity:[messages count]];
+    NSEnumerator *enumerator = [conversation.messages objectEnumerator];
+    Message* aMessage;
+    while (aMessage = [enumerator nextObject]) {
+        [self addMessage:aMessage toBubbleData:self.bubbleData];
+    }
+    
+    self.bubbleTable.bubbleSection = [self sortBubbleSection:self.bubbleData];
     [self.bubbleTable reloadData];
-//    [self refreshBubbleData];
+    
+#warning  -  this block end
+   
+    
     
     // setup self.title
-    NSEnumerator *enumerator = [conversation.users objectEnumerator];
+    NSEnumerator *userEnumerator = [conversation.users objectEnumerator];
     
-    User *anUser = [enumerator nextObject];
+    User *anUser = [userEnumerator nextObject];
     if (anUser == nil) {
         self.title = conversation.channel.displayName;
     } else {
@@ -298,14 +349,14 @@
 }
 
 - (void)scrollToBottomAnimated:(BOOL)animated {
-    NSInteger numberOfRows = 0;
-    NSInteger numberOfSections = [self.bubbleTable numberOfSections];
-    if (numberOfSections > 0) {
-        numberOfRows = [self.bubbleTable tableView:self.bubbleTable numberOfRowsInSection:numberOfSections-1];
-    }
-    if (numberOfRows) {
-        [self.bubbleTable scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:numberOfRows-1 inSection:numberOfSections-1] atScrollPosition:UITableViewScrollPositionBottom animated:animated];
-    }
+//    NSInteger numberOfRows = 0;
+//    NSInteger numberOfSections = [self.bubbleTable numberOfSections];
+//    if (numberOfSections > 0) {
+//        numberOfRows = [self.bubbleTable tableView:self.bubbleTable numberOfRowsInSection:numberOfSections-1];
+//    }
+//    if (numberOfRows) {
+//        [self.bubbleTable scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:numberOfRows-1 inSection:numberOfSections-1] atScrollPosition:UITableViewScrollPositionBottom animated:animated];
+//    }
 }
 
 
@@ -360,9 +411,10 @@
     [self.conversation addMessagesObject:message];
     self.conversation.lastMessageSentDate = message.sentDate;
     self.conversation.lastMessageText = message.text;
-     
-    [self addMessage:message toBubbleData:bubbleData];
-    [bubbleTable reloadData];
+    [self addMessage:message toBubbleData:self.bubbleData];
+    
+    self.bubbleTable.bubbleSection = [self sortBubbleSection:self.bubbleData];
+    [self.bubbleTable reloadData];
 
     self.textView.text = nil;
     [self textViewDidChange:_textView];
@@ -389,7 +441,7 @@
                 itemBubble.avatar = msg.from.thumbnailImage;
             }];
         }
-        [bubbleData addObject:itemBubble];
+        [self.bubbleData addObject:itemBubble];
         self.bubbleTable.showAvatars = YES;
     }
     

@@ -22,6 +22,9 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
+        self.dataSource = self;
+        self.delegate = self;
+        self.snapInterval = 120;
     }
     return self;
 }
@@ -35,11 +38,16 @@
     
     // Cleaning up
 //	self.bubbleSection = nil;
-//    self.bubbleSection = [[NSMutableArray alloc] init];
+//  self.bubbleSection = [[NSMutableArray alloc] init];
     
     for (int i = 0; i < [self.bubbleSection count]; i++) {
-        WSBubbleData *tmp = [self.bubbleSection  objectAtIndex:i];
-        NSLog(@"%@",tmp.content);
+        NSMutableArray *myarray = [self.bubbleSection  objectAtIndex:i];
+
+        for (int j = 0; j < [myarray count]; j++) {
+            WSBubbleData *tmp = [myarray objectAtIndex:j];
+            NSLog(@"%i - %i   %@", i,j, tmp.content);
+
+        }
     }
 
 }
@@ -51,13 +59,17 @@
 {
     if (section >= [self.bubbleSection count]) return 1;
     
-    return [[self.bubbleSection objectAtIndex:section] count] + 1;
+    return [[self.bubbleSection objectAtIndex:section ] count];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     int result = [self.bubbleSection count];
-    return result;
+    if (result > 0 ) {
+        return result;
+    }else{
+        return 1;
+    }
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -94,18 +106,11 @@
 - (UITableViewCell *)tableViewCellWithReuseIdentifier:(NSString *)identifier andIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     
-    UIImageView *cellBgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell_bg.png"]];
-    cell.backgroundView = cellBgView;
-    
-    UIImageView *cellBgSelectedView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell_bg_highlighted.png"]];
-    cell.selectedBackgroundView =  cellBgSelectedView;
-    
+    cell.backgroundColor = [UIColor clearColor];
     
     WSBubbleData *data = [[self.bubbleSection objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
 
-    
     cell.textLabel.text = data.content;
-    NSLog(@"%@",data.content);
     
     return  cell;
 }
