@@ -8,7 +8,7 @@
 
 #import "WSBubbleData.h"
 #import <QuartzCore/QuartzCore.h>
-
+#import "XMPPFramework.h"
 
 @implementation WSBubbleData
 
@@ -26,9 +26,13 @@
 
 const UIEdgeInsets textInsetsMine = {5, 10, 11, 17};
 const UIEdgeInsets textInsetsSomeone = {5, 15, 11, 10};
+const UIEdgeInsets templateInsetsMine = {30, 30, 16, 22};
 
 #define MAX_WIDTH 220
 
+//////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - text bubble
+//////////////////////////////////////////////////////////////////////////////////////////////////
 
 + (id)dataWithText:(NSString *)text date:(NSDate *)date type:(WSBubbleType)type
 {
@@ -50,7 +54,44 @@ const UIEdgeInsets textInsetsSomeone = {5, 15, 11, 10};
     return [self initWithView:label date:date content:text type:type insets:insets];
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - web bubble
+//////////////////////////////////////////////////////////////////////////////////////////////////
 
++ (id)dataWithWeb:(NSString *)urlString date:(NSDate *)date type:(WSBubbleType)type
+{
+    return [[WSBubbleData alloc] initWithWeb:urlString date:date type:type];
+}
+
+- (id)initWithWeb:(NSString *)urlString date:(NSDate *)date type:(WSBubbleType)type
+{
+    NSXMLElement *element =[[NSXMLElement alloc] initWithXMLString:urlString error:nil];
+    
+    NSString *image = [[element elementForName:@"image9"] stringValue];
+    NSString *content = [[element elementForName:@"content9"] stringValue];
+    
+    
+    UIFont *font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
+    CGSize size = [(content ? content : @"") sizeWithFont:font constrainedToSize:CGSizeMake(220, 9999) lineBreakMode:UILineBreakModeWordWrap];
+    
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
+    UIView *templateView = [[UIView alloc] init];
+    label.numberOfLines = 0;
+    label.lineBreakMode = UILineBreakModeWordWrap;
+    label.text = (content ? content : @"");
+    label.font = font;
+
+    
+    if (image == nil || [image length] == 0) {
+        templateView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 275, label.frame.size.height + TEMPLATE_TITLE_HEIGHT)];
+    } else {
+        templateView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 275, TEMPLATE_IMAGE_HEIGHT+label.frame.size.height+TEMPLATE_TITLE_HEIGHT)];
+    }
+    
+    UIEdgeInsets insets = templateInsetsMine;
+    return [self initWithView:templateView date:date content:urlString type:type insets:insets];
+    
+}
 
 - (id)initWithView:(UIView *)view date:(NSDate *)date content:(NSString *)content type:(WSBubbleType)type insets:(UIEdgeInsets)insets
 {

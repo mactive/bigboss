@@ -443,17 +443,16 @@
         [self.bubbleData addObject:itemBubble];
         self.bubbleTable.showAvatars = YES;
     }
-    
-//    else if (msg.type == [NSNumber numberWithInt:MessageTypePublish]) {
-//        [bubbleData addObject:[WSBubbleData dataWithWeb:msg.text date:msg.sentDate type:BubbleTypeTemplateview]];
-//        bubbleTable.showAvatars = NO;
-//    } else if (msg.type == [NSNumber numberWithInt:MessageTypeRate]) {
-//        WSBubbleData *rateData = [WSBubbleData dataWithWeb:msg.text date:msg.sentDate type:BubbleTypeRateview];
-//        rateData.msg = msg;
-//        [bubbleData addObject:rateData];
-//        bubbleTable.showAvatars = NO; 
-//
-//    }
+    else if (msg.type == [NSNumber numberWithInt:MessageTypePublish]) {
+        [bubbleData addObject:[WSBubbleData dataWithWeb:msg.text date:msg.sentDate type:BubbleTypeTemplateview]];
+        bubbleTable.showAvatars = NO;
+    } else if (msg.type == [NSNumber numberWithInt:MessageTypeRate]) {
+        WSBubbleData *rateData = [WSBubbleData dataWithWeb:msg.text date:msg.sentDate type:BubbleTypeRateview];
+        rateData.msg = msg;
+        [bubbleData addObject:rateData];
+        bubbleTable.showAvatars = NO; 
+
+    }
 
 }
 

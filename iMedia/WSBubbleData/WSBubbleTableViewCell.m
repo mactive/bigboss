@@ -138,8 +138,8 @@
     else if(type == BubbleTypeMine) {
         self.bubbleImage.image = [[UIImage imageNamed:@"bubbleMine.png"] stretchableImageWithLeftCapWidth:15 topCapHeight:14];
     }
-    else if (type == BubbleTypeTemplateview){
-        
+    else if (type == BubbleTypeTemplateview)
+    {
         NSXMLElement *element = [[NSXMLElement alloc] initWithXMLString:cellData.content error:nil];
         
         [self.templateBackView setFrame:CGRectMake(10, 0, 300, height +TEMPLATE_TITLE_HEIGHT)];
@@ -193,7 +193,9 @@
         [self.avatarImage removeFromSuperview];
         [self.bubbleImage removeFromSuperview];
     }
+
     self.bubbleImage.frame = CGRectMake(x, y, width + cellData.insets.left + cellData.insets.right, height + cellData.insets.top + cellData.insets.bottom);
+
 }
 
 

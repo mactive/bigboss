@@ -33,7 +33,8 @@ typedef enum _WSBubbleType
 
 - (id)initWithText:(NSString *)text date:(NSDate *)date type:(WSBubbleType)type;
 + (id)dataWithText:(NSString *)text date:(NSDate *)date type:(WSBubbleType)type;
-
+- (id)initWithWeb:(NSString *)urlString date:(NSDate *)date type:(WSBubbleType)type;
++ (id)dataWithWeb:(NSString *)urlString date:(NSDate *)date type:(WSBubbleType)type;
 
 - (id)initWithView:(UIView *)view date:(NSDate *)date content:(NSString *)content type:(WSBubbleType)type insets:(UIEdgeInsets)insets;
 
