@@ -190,8 +190,7 @@
         for (int i = 0; i < count; i++)
         {
             WSBubbleData *data = (WSBubbleData *)[resultData objectAtIndex:i];
-            NSInteger passedTime = [data.date timeIntervalSinceDate:last];
-            
+                    
             if ([data.date timeIntervalSinceDate:last] > self.bubbleTable.snapInterval)
             {
 
@@ -221,6 +220,7 @@
 - (void)refreshBubbleData
 {
     NSSet *messages = conversation.messages;
+    
     self.bubbleData = [[NSMutableArray alloc] initWithCapacity:[messages count]];
     NSEnumerator *enumerator = [conversation.messages objectEnumerator];
     Message* aMessage;
@@ -414,7 +414,6 @@
     [self.textView resignFirstResponder];
     
     Message *message = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:managedObjectContext];
-    
     message.from = [self appDelegate].me;
     message.sentDate = [NSDate date];
     message.text = self.textView.text;
@@ -424,17 +423,21 @@
     [self.conversation addMessagesObject:message];
     self.conversation.lastMessageSentDate = message.sentDate;
     self.conversation.lastMessageText = message.text;
-    [self addMessage:message toBubbleData:self.bubbleData];
-    
-    self.bubbleTable.bubbleSection = [self sortBubbleSection:self.bubbleData];
-    [self.bubbleTable reloadData];
+
 
     self.textView.text = nil;
     [self textViewDidChange:_textView];
     [self.textView resignFirstResponder];
-    
     [[XMPPNetworkCenter sharedClient] sendMessage:message];
+    
+//    [self refreshBubbleData];
+    
+    [self addMessage:message toBubbleData:self.bubbleData];
+    self.bubbleTable.bubbleSection = [self sortBubbleSection:self.bubbleData];
+    [self.bubbleTable reloadData];
+    
     [self scrollToBottomAnimated:NO];
+    
 }
 
 - (void)addMessage:(Message *)msg toBubbleData:(NSMutableArray *)data
@@ -455,16 +458,16 @@
                 itemBubble.avatar = msg.from.thumbnailImage;
             }];
         }
-        [self.bubbleData addObject:itemBubble];
+        [data addObject:itemBubble];
         self.bubbleTable.showAvatars = YES;
     }
     else if (msg.type == [NSNumber numberWithInt:MessageTypePublish]) {
-        [bubbleData addObject:[WSBubbleData dataWithWeb:msg.text date:msg.sentDate type:BubbleTypeTemplateview]];
+        [data addObject:[WSBubbleData dataWithWeb:msg.text date:msg.sentDate type:BubbleTypeTemplateview]];
         bubbleTable.showAvatars = NO;
     } else if (msg.type == [NSNumber numberWithInt:MessageTypeRate]) {
         WSBubbleData *rateData = [WSBubbleData dataWithWeb:msg.text date:msg.sentDate type:BubbleTypeRateview];
         rateData.msg = msg;
-        [bubbleData addObject:rateData];
+        [data addObject:rateData];
         bubbleTable.showAvatars = NO; 
 
     }

@@ -12,6 +12,5 @@
 @interface WSBubbleTableViewCell : UITableViewCell
 
 @property (nonatomic, strong) WSBubbleData *data;
-@property (nonatomic) BOOL showAvatar;
 
 @end

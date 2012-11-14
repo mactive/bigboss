@@ -9,13 +9,18 @@
 #import "WSBubbleTableView.h"
 #import "WSBubbleData.h"
 #import "WSBubbleSectionHeader.h"
-#import "WSBubbleTableViewCell.h"
 #import "RateViewController.h"
 #import "WebViewController.h"
 #import "AppDelegate.h"
 #import "XMPPFramework.h"
 #import "ConversationsController.h"
 #import "Conversation.h"
+
+#import "WSBubbleTableViewCell.h"
+#import "WSBubbleTextTableViewCell.h"
+#import "WSBubbleTemplateTableViewCell.h"
+#import "WSBubbleRateTableViewCell.h"
+
 
 
 
@@ -26,6 +31,9 @@
 @synthesize bubbleSection;
 
 #define SECTION_HEIGHT 28
+static NSString *CellText = @"CellText";
+static NSString *CellTemplate = @"CellTemplate";
+static NSString *CellRate = @"CellRate";
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -107,16 +115,29 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"ContactCell";
-    
-    WSBubbleTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     WSBubbleData *rowData = [[self.bubbleSection objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
     
-    if (cell == nil) {
-        cell = [[WSBubbleTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    WSBubbleTableViewCell *cell = nil;
+    
+    if (rowData.type == BubbleTypeMine || rowData.type == BubbleTypeSomeoneElse) {
+        cell = [tableView dequeueReusableCellWithIdentifier:CellText];
+    }else if ( rowData.type == BubbleTypeTemplateview){
+        cell = [tableView dequeueReusableCellWithIdentifier:CellTemplate];
+    }else if ( rowData.type == BubbleTypeRateview){
+        cell = [tableView dequeueReusableCellWithIdentifier:CellRate];
     }
     
-    cell.data = rowData;    
+    if (cell == nil) {
+        if (rowData.type == BubbleTypeMine || rowData.type == BubbleTypeSomeoneElse) {
+            cell = [[WSBubbleTextTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellText];
+        }else if ( rowData.type == BubbleTypeTemplateview){
+            cell = [[WSBubbleTemplateTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellTemplate];
+        }else if ( rowData.type == BubbleTypeRateview){
+            cell = [[WSBubbleRateTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellRate];
+        }
+    }
+    
+    cell.data = rowData;
     return cell;
 }
 
@@ -184,8 +205,6 @@
         scrollView.contentInset = UIEdgeInsetsMake(-sectionHeaderHeight, 0, insets.bottom, 0);
     }
 }
-
-
 
 - (AppDelegate *)appDelegate
 {

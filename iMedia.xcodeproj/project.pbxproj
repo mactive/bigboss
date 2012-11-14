@@ -116,6 +116,9 @@
 		26A5877416490CF900009968 /* star_grey@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26A5877216490CF900009968 /* star_grey@2x.png */; };
 		26A5877516490CF900009968 /* star@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26A5877316490CF900009968 /* star@2x.png */; };
 		26A587781649199600009968 /* RateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 26A587771649199600009968 /* RateViewController.m */; };
+		26BA7EF21653908E0094D030 /* WSBubbleTextTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 26BA7EF11653908E0094D030 /* WSBubbleTextTableViewCell.m */; };
+		26BA7EF5165390C00094D030 /* WSBubbleTemplateTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 26BA7EF4165390C00094D030 /* WSBubbleTemplateTableViewCell.m */; };
+		26BA7EF8165390D30094D030 /* WSBubbleRateTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 26BA7EF7165390D30094D030 /* WSBubbleRateTableViewCell.m */; };
 		26C76E5A162EB01200298865 /* barbutton_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26C76E59162EB01200298865 /* barbutton_bg@2x.png */; };
 		26C76E65162EB4F400298865 /* UINavigationBar+Background.m in Sources */ = {isa = PBXBuildFile; fileRef = 26C76E64162EB4F400298865 /* UINavigationBar+Background.m */; };
 		26E75AF1164A787200774755 /* navigationBar_bg_part@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26E75AF0164A787200774755 /* navigationBar_bg_part@2x.png */; };
@@ -489,6 +492,12 @@
 		26A5877316490CF900009968 /* star@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "star@2x.png"; path = "Resources/star@2x.png"; sourceTree = "<group>"; };
 		26A587761649199600009968 /* RateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RateViewController.h; path = ViewControllers/RateViewController.h; sourceTree = "<group>"; };
 		26A587771649199600009968 /* RateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RateViewController.m; path = ViewControllers/RateViewController.m; sourceTree = "<group>"; };
+		26BA7EF01653908E0094D030 /* WSBubbleTextTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WSBubbleTextTableViewCell.h; path = WSBubbleData/WSBubbleTextTableViewCell.h; sourceTree = "<group>"; };
+		26BA7EF11653908E0094D030 /* WSBubbleTextTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WSBubbleTextTableViewCell.m; path = WSBubbleData/WSBubbleTextTableViewCell.m; sourceTree = "<group>"; };
+		26BA7EF3165390C00094D030 /* WSBubbleTemplateTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WSBubbleTemplateTableViewCell.h; path = WSBubbleData/WSBubbleTemplateTableViewCell.h; sourceTree = "<group>"; };
+		26BA7EF4165390C00094D030 /* WSBubbleTemplateTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WSBubbleTemplateTableViewCell.m; path = WSBubbleData/WSBubbleTemplateTableViewCell.m; sourceTree = "<group>"; };
+		26BA7EF6165390D30094D030 /* WSBubbleRateTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WSBubbleRateTableViewCell.h; path = WSBubbleData/WSBubbleRateTableViewCell.h; sourceTree = "<group>"; };
+		26BA7EF7165390D30094D030 /* WSBubbleRateTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WSBubbleRateTableViewCell.m; path = WSBubbleData/WSBubbleRateTableViewCell.m; sourceTree = "<group>"; };
 		26C76E59162EB01200298865 /* barbutton_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "barbutton_bg@2x.png"; path = "Resources/barbutton_bg@2x.png"; sourceTree = "<group>"; };
 		26C76E63162EB4F400298865 /* UINavigationBar+Background.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UINavigationBar+Background.h"; path = "ViewControllers/ViewCategory/UINavigationBar+Background.h"; sourceTree = "<group>"; };
 		26C76E64162EB4F400298865 /* UINavigationBar+Background.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UINavigationBar+Background.m"; path = "ViewControllers/ViewCategory/UINavigationBar+Background.m"; sourceTree = "<group>"; };
@@ -926,6 +935,12 @@
 				269EB9CD16522811000048F7 /* WSBubbleSectionHeader.m */,
 				269EB9CF16522D80000048F7 /* WSBubbleTableViewCell.h */,
 				269EB9D016522D80000048F7 /* WSBubbleTableViewCell.m */,
+				26BA7EF01653908E0094D030 /* WSBubbleTextTableViewCell.h */,
+				26BA7EF11653908E0094D030 /* WSBubbleTextTableViewCell.m */,
+				26BA7EF3165390C00094D030 /* WSBubbleTemplateTableViewCell.h */,
+				26BA7EF4165390C00094D030 /* WSBubbleTemplateTableViewCell.m */,
+				26BA7EF6165390D30094D030 /* WSBubbleRateTableViewCell.h */,
+				26BA7EF7165390D30094D030 /* WSBubbleRateTableViewCell.m */,
 			);
 			name = WSBubbleData;
 			sourceTree = "<group>";
@@ -2340,6 +2355,9 @@
 				0436B478165136930081A6F7 /* WSBubbleTableView.m in Sources */,
 				269EB9CE16522811000048F7 /* WSBubbleSectionHeader.m in Sources */,
 				269EB9D116522D80000048F7 /* WSBubbleTableViewCell.m in Sources */,
+				26BA7EF21653908E0094D030 /* WSBubbleTextTableViewCell.m in Sources */,
+				26BA7EF5165390C00094D030 /* WSBubbleTemplateTableViewCell.m in Sources */,
+				26BA7EF8165390D30094D030 /* WSBubbleRateTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

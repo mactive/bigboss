@@ -24,11 +24,14 @@ typedef enum _WSBubbleType
 @property (readwrite, nonatomic) BOOL showAvatar;
 @property (readonly, nonatomic) NSString *content;
 @property (nonatomic, strong) UIImage *avatar;
-@property (nonatomic, readwrite) BOOL isDone;
 @property (nonatomic, readwrite) CGFloat cellHeight;
 @property (nonatomic, retain)Message * msg;
 @property (readonly, nonatomic) UIEdgeInsets insets;
 @property (strong, nonatomic) UIView *view;
+@property (strong, nonatomic) UILabel *textLabel;
+@property (strong, nonatomic) UIView *templateView;
+
+
 
 
 - (id)initWithText:(NSString *)text date:(NSDate *)date type:(WSBubbleType)type;

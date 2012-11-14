@@ -17,12 +17,12 @@
 @synthesize avatar = _avatar;
 @synthesize content = _content;
 @synthesize showAvatar = _showAvatar;
-@synthesize isDone = _isDone;
 @synthesize cellHeight = _cellHeight;
 @synthesize msg = _msg;
 @synthesize insets = _insets;
 @synthesize view = _view;
-
+@synthesize textLabel = _textLabel;
+@synthesize templateView = _templateView;
 
 const UIEdgeInsets textInsetsMine = {5, 10, 11, 17};
 const UIEdgeInsets textInsetsSomeone = {5, 15, 11, 10};
@@ -43,15 +43,15 @@ const UIEdgeInsets templateInsetsMine = {30, 30, 16, 22};
     UIFont *font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
     CGSize size = [(text ? text : @"") sizeWithFont:font constrainedToSize:CGSizeMake(MAX_WIDTH, 9999) lineBreakMode:UILineBreakModeWordWrap];
     
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
-    label.numberOfLines = 0;
-    label.lineBreakMode = UILineBreakModeWordWrap;
-    label.text = (text ? text : @"");
-    label.font = font;
-    label.backgroundColor = [UIColor clearColor];
+    self.textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
+    self.textLabel.numberOfLines = 0;
+    self.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+    self.textLabel.text = (text ? text : @"");
+    self.textLabel.font = font;
+    self.textLabel.backgroundColor = [UIColor clearColor];
 
     UIEdgeInsets insets = (type == BubbleTypeMine ? textInsetsMine : textInsetsSomeone);
-    return [self initWithView:label date:date content:text type:type insets:insets];
+    return [self initWithView:self.textLabel date:date content:text type:type insets:insets];
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -74,22 +74,21 @@ const UIEdgeInsets templateInsetsMine = {30, 30, 16, 22};
     UIFont *font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
     CGSize size = [(content ? content : @"") sizeWithFont:font constrainedToSize:CGSizeMake(220, 9999) lineBreakMode:UILineBreakModeWordWrap];
     
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
-    UIView *templateView = [[UIView alloc] init];
-    label.numberOfLines = 0;
-    label.lineBreakMode = UILineBreakModeWordWrap;
-    label.text = (content ? content : @"");
-    label.font = font;
+    self.textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
+    self.textLabel.numberOfLines = 0;
+    self.textLabel.lineBreakMode = UILineBreakModeWordWrap;
+    self.textLabel.text = (content ? content : @"");
+    self.textLabel.font = font;
 
-    
+    self.templateView = [[UIView alloc]init];
     if (image == nil || [image length] == 0) {
-        templateView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 275, label.frame.size.height + TEMPLATE_TITLE_HEIGHT)];
+        self.templateView.frame = CGRectMake(0, 0, 275, self.textLabel.frame.size.height + TEMPLATE_TITLE_HEIGHT);
     } else {
-        templateView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 275, TEMPLATE_IMAGE_HEIGHT+label.frame.size.height+TEMPLATE_TITLE_HEIGHT)];
+        self.templateView.frame = CGRectMake(0, 0, 275, TEMPLATE_IMAGE_HEIGHT+self.textLabel.frame.size.height+TEMPLATE_TITLE_HEIGHT);
     }
     
     UIEdgeInsets insets = templateInsetsMine;
-    return [self initWithView:templateView date:date content:urlString type:type insets:insets];
+    return [self initWithView:self.templateView date:date content:urlString type:type insets:insets];
     
 }
 
@@ -105,7 +104,6 @@ const UIEdgeInsets templateInsetsMine = {30, 30, 16, 22};
         _insets = insets;
         
         self.showAvatar = type != BubbleTypeTemplateview ? YES : NO ;
-        self.isDone = NO;
         self.cellHeight = view.frame.size.height;
         self.view = view;
     }
