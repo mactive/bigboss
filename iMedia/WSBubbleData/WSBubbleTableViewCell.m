@@ -8,9 +8,23 @@
 
 #import "WSBubbleTableViewCell.h"
 
+@interface WSBubbleTableViewCell()
+
+
+
+@end
+
 @implementation WSBubbleTableViewCell
 
+- (void)setupInternalData:(WSBubbleData *)cellData
+{
+    
+}
 
+- (void)setData:(WSBubbleData *)data
+{
+    [self setupInternalData:data];
+}
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {

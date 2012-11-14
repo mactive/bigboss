@@ -12,5 +12,6 @@
 @interface WSBubbleTableViewCell : UITableViewCell
 
 @property (nonatomic, strong) WSBubbleData *data;
+- (void)setupInternalData:(WSBubbleData *)cellData;
 
 @end

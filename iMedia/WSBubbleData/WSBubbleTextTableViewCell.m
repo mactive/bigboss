@@ -64,6 +64,7 @@
 }
 - (void) setupInternalData:(WSBubbleData *)cellData
 {
+    [super setupInternalData:cellData];
     // count size and x y
     WSBubbleType type = cellData.type;
     

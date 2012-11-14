@@ -66,18 +66,13 @@
     return self;
 }
 
-- (void)setData:(WSBubbleData *)data
-{
-    [self setupInternalData:data];
-}
-
 - (void) setupInternalData:(WSBubbleData *)cellData
 {
+    [super setupInternalData:cellData];
+
     WSBubbleType type = cellData.type;
     CGFloat width = cellData.view.frame.size.width;
     CGFloat height = cellData.view.frame.size.height;
-    CGFloat x = (type == BubbleTypeSomeoneElse) ? 0 : self.frame.size.width - width - cellData.insets.left - cellData.insets.right;
-    CGFloat y = 5;
     
     NSXMLElement *element = [[NSXMLElement alloc] initWithXMLString:cellData.content error:nil];
     

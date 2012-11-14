@@ -15,8 +15,6 @@
 @property (nonatomic, strong) UILabel *rateLabel;
 @property (nonatomic, strong) UIImageView *rateView;
 
-- (void) setupInternalData:(WSBubbleData *)cellData;
-
 @end
 
 
@@ -45,15 +43,12 @@
     return self;
 }
 
-- (void)setData:(WSBubbleData *)data
-{
-    [self setupInternalData:data];
-}
 
 - (void) setupInternalData:(WSBubbleData *)cellData;
+{
+    [super setupInternalData:cellData];
 
-{        
-    [self.rateView setImage:[UIImage imageNamed:@"welcome_btn.png"]];        
+    [self.rateView setImage:[UIImage imageNamed:@"welcome_btn.png"]];
     [self.rateLabel setText:T(@"评价客服")];
 }
 
