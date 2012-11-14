@@ -56,10 +56,8 @@
         for (int j = 0; j < [myarray count]; j++) {
             WSBubbleData *tmp = [myarray objectAtIndex:j];
             NSLog(@"%i - %i   %@", i,j, tmp.content);
-
         }
     }
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -90,11 +88,9 @@
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     WSBubbleSectionHeader *sectionView = [[WSBubbleSectionHeader alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width, SECTION_HEIGHT)];
-    
     WSBubbleData *firstRowData = [[self.bubbleSection objectAtIndex:section] objectAtIndex:0];
     
     sectionView.date = firstRowData.date;
-    
     return sectionView;
 }
 
@@ -105,11 +101,8 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     WSBubbleData *rowData = [[self.bubbleSection objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-    
     CGFloat cellHeight = MAX(rowData.insets.top + rowData.cellHeight + rowData.insets.bottom, self.showAvatars ? 55 : 0);
-    
     return  cellHeight;
-     
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -117,13 +110,12 @@
     static NSString *CellIdentifier = @"ContactCell";
     
     WSBubbleTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    
     WSBubbleData *rowData = [[self.bubbleSection objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
     
     if (cell == nil) {
         cell = [[WSBubbleTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-
     }
+    
     cell.data = rowData;    
     return cell;
 }
@@ -148,6 +140,10 @@
 {
     // Standard bubble
     WSBubbleData *data = [[self.bubbleSection objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+    
+    if (data.type == BubbleTypeMine || data.type == BubbleTypeSomeoneElse) {
+#warning TODO 点击去到那个人的profile页面
+    }
     
     if (data.type == BubbleTypeRateview) {
         RateViewController *rateViewController = [[RateViewController alloc]initWithNibName:nil bundle:nil];
@@ -174,17 +170,22 @@
 
 
 
-////////////////////////
-//Change Default Scrolling Behavior of UITableView Section Header
-// 如何让 UITableView 的 headerView跟随 cell一起滚动
+////////////////////////////////////////////////////////////////////////
+//  Change Default Scrolling Behavior of UITableView Section Header
+//  如何让 UITableView 的 headerView跟随 cell一起滚动
+////////////////////////////////////////////////////////////////////////
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     CGFloat sectionHeaderHeight = SECTION_HEIGHT;
-    if (scrollView.contentOffset.y<=sectionHeaderHeight&&scrollView.contentOffset.y>=0) {
-        scrollView.contentInset = UIEdgeInsetsMake(-scrollView.contentOffset.y, 0, 0, 0);
-    } else if (scrollView.contentOffset.y>=sectionHeaderHeight) {
-        scrollView.contentInset = UIEdgeInsetsMake(-sectionHeaderHeight, 0, 0, 0);
+    UIEdgeInsets insets = scrollView.contentInset;
+    if (scrollView.contentOffset.y <= sectionHeaderHeight && scrollView.contentOffset.y >= 0) {
+        scrollView.contentInset = UIEdgeInsetsMake(-scrollView.contentOffset.y, 0, insets.bottom, 0);
+    } else if (scrollView.contentOffset.y >= sectionHeaderHeight) {
+        scrollView.contentInset = UIEdgeInsetsMake(-sectionHeaderHeight, 0, insets.bottom, 0);
     }
 }
+
+
 
 - (AppDelegate *)appDelegate
 {

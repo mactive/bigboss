@@ -251,8 +251,7 @@
     [self.bubbleTable reloadData];
     
 #warning  -  this block end
-   
-    
+
     // setup self.title
     NSEnumerator *userEnumerator = [conversation.users objectEnumerator];
     
@@ -267,6 +266,8 @@
         self.conversation.unreadMessagesCount = 0;
         [[self appDelegate].conversationController contentChanged];
     }
+    
+    [self scrollToBottomAnimated:NO];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -319,7 +320,13 @@
         CGFloat viewHeight = [self.view convertRect:frameEnd fromView:nil].origin.y;
         UIView *messageInputBar = _textView.superview;
         UIViewSetFrameY(messageInputBar, viewHeight-messageInputBar.frame.size.height);
-        self.bubbleTable.contentInset = self.bubbleTable.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, self.view.frame.size.height-viewHeight, 0);
+        
+        if([self.bubbleTable contentOffset].y > 0) {
+            UIEdgeInsets insets = self.bubbleTable.contentInset;
+            insets.bottom = viewHeight + 20;
+            [self.bubbleTable setContentInset:insets];
+            [self.bubbleTable setScrollIndicatorInsets:insets];
+        }
         
         [self scrollToBottomAnimated:NO];
     } completion:nil];
@@ -341,21 +348,28 @@
         CGFloat viewHeight = [self.view convertRect:frameEnd fromView:nil].origin.y;
         UIView *messageInputBar = _textView.superview;
         UIViewSetFrameY(messageInputBar, self.view.frame.size.height - messageInputBar.frame.size.height);
-        self.bubbleTable.contentInset = self.bubbleTable.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 60, 0);
-//        self.bubbleTable.contentInset = self.bubbleTable.scrollIndicatorInsets = UIEdgeInsetsZero;
+//        self.bubbleTable.contentInset = self.bubbleTable.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 60, 0);
+        
+        if([self.bubbleTable contentOffset].y > 0) {
+            UIEdgeInsets insets = self.bubbleTable.contentInset;
+            insets.bottom = 0;
+            [self.bubbleTable setContentInset:insets];
+            [self.bubbleTable setScrollIndicatorInsets:insets];
+        }
+        
         [self scrollToBottomAnimated:NO];
     } completion:nil];
 }
 
 - (void)scrollToBottomAnimated:(BOOL)animated {
-//    NSInteger numberOfRows = 0;
-//    NSInteger numberOfSections = [self.bubbleTable numberOfSections];
-//    if (numberOfSections > 0) {
-//        numberOfRows = [self.bubbleTable tableView:self.bubbleTable numberOfRowsInSection:numberOfSections-1];
-//    }
-//    if (numberOfRows) {
-//        [self.bubbleTable scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:numberOfRows-1 inSection:numberOfSections-1] atScrollPosition:UITableViewScrollPositionBottom animated:animated];
-//    }
+    NSInteger numberOfRows = 0;
+    NSInteger numberOfSections = [self.bubbleTable numberOfSections];
+    if (numberOfSections > 0) {
+        numberOfRows = [self.bubbleTable tableView:self.bubbleTable numberOfRowsInSection:numberOfSections-1];
+    }
+    if (numberOfRows) {
+        [self.bubbleTable scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:numberOfRows-1 inSection:numberOfSections-1] atScrollPosition:UITableViewScrollPositionBottom animated:animated];
+    }
 }
 
 
@@ -420,6 +434,7 @@
     [self.textView resignFirstResponder];
     
     [[XMPPNetworkCenter sharedClient] sendMessage:message];
+    [self scrollToBottomAnimated:NO];
 }
 
 - (void)addMessage:(Message *)msg toBubbleData:(NSMutableArray *)data
