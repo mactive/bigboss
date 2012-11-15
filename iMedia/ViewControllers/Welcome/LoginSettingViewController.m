@@ -232,42 +232,7 @@
             [UIView commitAnimations];
         }
     }
-    /*
-    if ([string isEqualToString:@"\n"])
-    {
-        return YES;
-    }
-    NSString * toBeString = [textField.text stringByReplacingCharactersInRange:range withString:string];
     
-    if (self.displayNameField == textField)
-    {
-        NSLog(@"[toBeString length] %i",[toBeString length]);
-        if ([toBeString length] == 0) {
-            [self.welcomeButton setEnabled:NO];
-            [self.welcomeButton setAlpha:0.3];
-        }else{
-            if ([self.me.gender length] > 0) {
-                self.me.displayName = self.displayNameField.text;
-                [self.welcomeButton setEnabled:YES];
-                
-                if ([toBeString length] > NICKNAME_MAX_LENGTH) {
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:T(@"超过最大字数不能输入了") delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
-                    [alert show];
-                }
-                
-                if (self.welcomeButton.alpha != 1.0 ) {
-                    [self.welcomeButton setAlpha:0.3];
-                    [UIView beginAnimations:nil context:NULL];
-                    [UIView setAnimationDuration:0.5];
-                    [self.welcomeButton setAlpha:1];
-                    [self.welcomeButton addTarget:self action:@selector(welcomeAction) forControlEvents:UIControlEventTouchUpInside];
-                    [UIView commitAnimations];
-                }
-            }
-            
-        }
-    }
-     */
     return YES;
 }
 - (BOOL)textFieldShouldReturn:(UITextField *)textField

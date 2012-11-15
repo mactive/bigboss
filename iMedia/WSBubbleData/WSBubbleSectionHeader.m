@@ -1,29 +1,32 @@
 //
-//  UIBubbleHeaderTableViewCell.m
-//  UIBubbleTableViewExample
+//  WSBubbleHeaderTableViewCell.m
+//  WSBubbleTableViewExample
 //
 //  Created by Александр Баринов on 10/7/12.
 //  Copyright (c) 2012 Stex Group. All rights reserved.
 //
 
-#import "UIBubbleHeaderTableViewCell.h"
+#import "WSBubbleSectionHeader.h"
 
-@interface UIBubbleHeaderTableViewCell ()
+@interface WSBubbleSectionHeader ()
 
 @property (nonatomic, retain) UILabel *label;
 @property (nonatomic, retain) UIImageView *bgView;
 
 @end
 
-@implementation UIBubbleHeaderTableViewCell
+@implementation WSBubbleSectionHeader
 
 @synthesize label = _label;
 @synthesize date = _date;
 @synthesize bgView = _bgView;
 
-+ (CGFloat)height
-{
-    return 28.0;
+
+- (id)initWithFrame:(CGRect)frame {
+    if ((self = [super initWithFrame:frame])) {
+
+    }
+    return self;
 }
 
 - (void)setDate:(NSDate *)value
@@ -32,7 +35,6 @@
     [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
     [dateFormatter setTimeStyle:NSDateFormatterShortStyle];
     NSString *text = [dateFormatter stringFromDate:value];
-//    [dateFormatter release];
     
     if (self.label)
     {
@@ -40,8 +42,7 @@
         return;
     }
     
-    self.selectionStyle = UITableViewCellSelectionStyleNone;
-    self.label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, [UIBubbleHeaderTableViewCell height])];
+    self.label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
     self.label.text = text;
     self.label.font = [UIFont boldSystemFontOfSize:12];
     self.label.textAlignment = UITextAlignmentCenter;
@@ -51,7 +52,7 @@
     self.label.backgroundColor = [UIColor clearColor];
     
     self.bgView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"MessageBubbleSectionHeader.png"]];
-    [self.bgView setFrame:CGRectMake(0, 0, self.frame.size.width, [UIBubbleHeaderTableViewCell height] )];
+    [self.bgView setFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height )];
     
     [self addSubview:self.bgView];
     [self addSubview:self.label];

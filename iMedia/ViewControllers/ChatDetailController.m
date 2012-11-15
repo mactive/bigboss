@@ -7,8 +7,8 @@
 //
 
 #import "ChatDetailController.h"
-#import "UIBubbleTableView.h"
-#import "NSBubbleData.h"
+#import "WSBubbleTableView.h"
+#import "WSBubbleData.h"
 #import "User.h"
 #import "Me.h"
 #import "Message.h"
@@ -16,13 +16,13 @@
 #import "Conversation.h"
 #import "AppDefs.h"
 #import "AppDelegate.h"
-#import "UIBubbleTableViewDataSource.h"
 #import "ACPlaceholderTextView.h"
 #import <CocoaPlant/CocoaPlant.h>
 #import "UIImageView+AFNetworking.h"
 #import "AppNetworkAPIClient.h"
 #import "XMPPNetworkCenter.h"
 #import "ConversationsController.h"
+#import "NSDate-Utilities.h"
 
 // TODO: Rename to CHAT_BAR_HEIGHT_1, etc.
 #define kChatBarHeight1                      40
@@ -48,7 +48,7 @@
 [message.text sizeWithFont:font constrainedToSize:CGSizeMake(MESSAGE_TEXT_WIDTH_MAX, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap]
 
 
-@interface ChatDetailController () <UITextViewDelegate, UIBubbleTableViewDataSource>
+@interface ChatDetailController () <UITextViewDelegate>
 {
     NSMutableArray *_heightForRow;
     UIImage *_messageBubbleGray;
@@ -99,23 +99,15 @@
 {
     [super viewDidLoad];
     
-    bubbleTable = [[UIBubbleTableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-40)];
-    bubbleTable.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
-    bubbleTable.backgroundColor = RGBCOLOR(222, 224, 227);
-    bubbleTable.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.bubbleTable = [[WSBubbleTableView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height-40)];
+    self.bubbleTable.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+    self.bubbleTable.backgroundColor = RGBCOLOR(222, 224, 227);
+    self.bubbleTable.separatorStyle = UITableViewCellSeparatorStyleNone;
     
-    bubbleTable.bubbleDataSource = self;
-    bubbleTable.snapInterval = 100;
-    bubbleTable.typingBubble = NSBubbleTypingTypeNobody;
-    bubbleTable.showAvatars = YES;
-    
-    NSSet *messages = conversation.messages;
-    bubbleData = [[NSMutableArray alloc] initWithCapacity:[messages count]];
-    NSEnumerator *enumerator = [conversation.messages objectEnumerator];
-    Message* aMessage;
-    while (aMessage = [enumerator nextObject]) {
-        [self addMessage:aMessage toBubbleData:bubbleData];
-    }
+//    bubbleTable.dataSource = self;
+    self.bubbleTable.snapInterval = 120;
+    self.bubbleTable.showAvatars = YES;
+
     
     // Create messageInputBar to contain _textView, messageInputBarBackgroundImageView, & _sendButton.
     UIImageView *messageInputBar = [[UIImageView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height-kChatBarHeight1, self.view.frame.size.width, kChatBarHeight1)];
@@ -159,7 +151,7 @@
     [_sendButton addTarget:self action:@selector(sendMessage) forControlEvents:UIControlEventTouchUpInside];
     [messageInputBar addSubview:_sendButton];
     
-    [self.view addSubview:bubbleTable];
+    [self.view addSubview:self.bubbleTable];
     [self.view addSubview:messageInputBar];
     
     //  单点触控
@@ -174,6 +166,49 @@
     [self.textView resignFirstResponder];
 }
 
+/////////////////////////////////////////////////////
+#pragma mark - sort Bubble data make a section data
+/////////////////////////////////////////////////////
+
+- (NSMutableArray *)sortBubbleSection:(NSMutableArray *)unorderData
+{
+    if (unorderData != nil && [unorderData count] > 0)
+    {
+        int count = [unorderData count];
+        
+        NSMutableArray *bubbleSection = [[NSMutableArray alloc] init];
+        NSArray *resultData = [unorderData sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            WSBubbleData *bubbleData1 = (WSBubbleData *)obj1;
+            WSBubbleData *bubbleData2 = (WSBubbleData *)obj2;
+            
+            return [bubbleData1.date compare:bubbleData2.date];
+        }];
+        
+        NSDate *last = [NSDate dateWithTimeIntervalSince1970:0];
+        NSMutableArray *currentSection = nil;
+        
+        for (int i = 0; i < count; i++)
+        {
+            WSBubbleData *data = (WSBubbleData *)[resultData objectAtIndex:i];
+                    
+            if ([data.date timeIntervalSinceDate:last] > self.bubbleTable.snapInterval)
+            {
+
+                currentSection = [[NSMutableArray alloc] init];
+                [bubbleSection addObject:currentSection];
+            }
+            
+            [currentSection addObject:data];
+            last = data.date;
+        }
+        return bubbleSection;
+    }else{
+        return nil;
+    }
+    
+}
+
+
 /*
 - (void)viewDidUnload
 {
@@ -185,13 +220,16 @@
 - (void)refreshBubbleData
 {
     NSSet *messages = conversation.messages;
-    bubbleData = [[NSMutableArray alloc] initWithCapacity:[messages count]];
+    
+    self.bubbleData = [[NSMutableArray alloc] initWithCapacity:[messages count]];
     NSEnumerator *enumerator = [conversation.messages objectEnumerator];
     Message* aMessage;
     while (aMessage = [enumerator nextObject]) {
-        [self addMessage:aMessage toBubbleData:bubbleData];
+        [self addMessage:aMessage toBubbleData:self.bubbleData];
     }
-    [bubbleTable reloadData];
+    
+    self.bubbleTable.bubbleSection = [self sortBubbleSection:self.bubbleData];
+    [self.bubbleTable reloadData];
     [self scrollToBottomAnimated:NO];
 }
 
@@ -199,12 +237,25 @@
 {
     [super viewWillAppear:animated];
     
-    [self refreshBubbleData];
+#warning  -  this block may be in the viewdidiload
     
+    NSSet *messages = conversation.messages;
+    self.bubbleData = [[NSMutableArray alloc] initWithCapacity:[messages count]];
+    NSEnumerator *enumerator = [conversation.messages objectEnumerator];
+    Message* aMessage;
+    while (aMessage = [enumerator nextObject]) {
+        [self addMessage:aMessage toBubbleData:self.bubbleData];
+    }
+    
+    self.bubbleTable.bubbleSection = [self sortBubbleSection:self.bubbleData];
+    [self.bubbleTable reloadData];
+    
+#warning  -  this block end
+
     // setup self.title
-    NSEnumerator *enumerator = [conversation.users objectEnumerator];
+    NSEnumerator *userEnumerator = [conversation.users objectEnumerator];
     
-    User *anUser = [enumerator nextObject];
+    User *anUser = [userEnumerator nextObject];
     if (anUser == nil) {
         self.title = conversation.channel.displayName;
     } else {
@@ -215,6 +266,8 @@
         self.conversation.unreadMessagesCount = 0;
         [[self appDelegate].conversationController contentChanged];
     }
+    
+    [self scrollToBottomAnimated:NO];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -267,7 +320,13 @@
         CGFloat viewHeight = [self.view convertRect:frameEnd fromView:nil].origin.y;
         UIView *messageInputBar = _textView.superview;
         UIViewSetFrameY(messageInputBar, viewHeight-messageInputBar.frame.size.height);
-        self.bubbleTable.contentInset = self.bubbleTable.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, self.view.frame.size.height-viewHeight, 0);
+        
+        if([self.bubbleTable contentOffset].y > 0) {
+            UIEdgeInsets insets = self.bubbleTable.contentInset;
+            insets.bottom = viewHeight + 20;
+            [self.bubbleTable setContentInset:insets];
+            [self.bubbleTable setScrollIndicatorInsets:insets];
+        }
         
         [self scrollToBottomAnimated:NO];
     } completion:nil];
@@ -289,8 +348,15 @@
         CGFloat viewHeight = [self.view convertRect:frameEnd fromView:nil].origin.y;
         UIView *messageInputBar = _textView.superview;
         UIViewSetFrameY(messageInputBar, self.view.frame.size.height - messageInputBar.frame.size.height);
-        self.bubbleTable.contentInset = self.bubbleTable.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 60, 0);
-//        self.bubbleTable.contentInset = self.bubbleTable.scrollIndicatorInsets = UIEdgeInsetsZero;
+//        self.bubbleTable.contentInset = self.bubbleTable.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 60, 0);
+        
+        if([self.bubbleTable contentOffset].y > 0) {
+            UIEdgeInsets insets = self.bubbleTable.contentInset;
+            insets.bottom = 0;
+            [self.bubbleTable setContentInset:insets];
+            [self.bubbleTable setScrollIndicatorInsets:insets];
+        }
+        
         [self scrollToBottomAnimated:NO];
     } completion:nil];
 }
@@ -304,20 +370,6 @@
     if (numberOfRows) {
         [self.bubbleTable scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:numberOfRows-1 inSection:numberOfSections-1] atScrollPosition:UITableViewScrollPositionBottom animated:animated];
     }
-}
-
-
-////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark - UIBubbleTableViewDataSource implementation
-////////////////////////////////////////////////////////////////////////////////////////////
-- (NSInteger)rowsForBubbleTable:(UIBubbleTableView *)tableView
-{
-    return [bubbleData count];
-}
-
-- (NSBubbleData *)bubbleTableView:(UIBubbleTableView *)tableView dataForRow:(NSInteger)row
-{
-    return [bubbleData objectAtIndex:row];
 }
 
 
@@ -362,7 +414,6 @@
     [self.textView resignFirstResponder];
     
     Message *message = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:managedObjectContext];
-    
     message.from = [self appDelegate].me;
     message.sentDate = [NSDate date];
     message.text = self.textView.text;
@@ -372,27 +423,33 @@
     [self.conversation addMessagesObject:message];
     self.conversation.lastMessageSentDate = message.sentDate;
     self.conversation.lastMessageText = message.text;
-     
-    [self addMessage:message toBubbleData:bubbleData];
-    [bubbleTable reloadData];
+
 
     self.textView.text = nil;
     [self textViewDidChange:_textView];
     [self.textView resignFirstResponder];
-    
     [[XMPPNetworkCenter sharedClient] sendMessage:message];
+    
+//    [self refreshBubbleData];
+    
+    [self addMessage:message toBubbleData:self.bubbleData];
+    self.bubbleTable.bubbleSection = [self sortBubbleSection:self.bubbleData];
+    [self.bubbleTable reloadData];
+    
+    [self scrollToBottomAnimated:NO];
+    
 }
 
 - (void)addMessage:(Message *)msg toBubbleData:(NSMutableArray *)data
 {
-    NSBubbleType type = BubbleTypeMine; // 默认是自己的
+    WSBubbleType type = BubbleTypeMine; // 默认是自己的
     
     if (msg.from.ePostalID != [self appDelegate].me.ePostalID) {
         type = BubbleTypeSomeoneElse;   // 如果发送过来的 jid 不同就是别人的
     }
     if (msg.type == [NSNumber numberWithInt:MessageTypeChat])
     {
-        NSBubbleData *itemBubble = [NSBubbleData dataWithText:msg.text date:msg.sentDate type:type];
+        WSBubbleData *itemBubble = [WSBubbleData dataWithText:msg.text date:msg.sentDate type:type];
         
         itemBubble.avatar = msg.from.thumbnailImage;
         if (msg.from.thumbnailImage == nil) {
@@ -401,15 +458,16 @@
                 itemBubble.avatar = msg.from.thumbnailImage;
             }];
         }
-        [bubbleData addObject:itemBubble];
-        bubbleTable.showAvatars = YES;
-    } else if (msg.type == [NSNumber numberWithInt:MessageTypePublish]) {
-        [bubbleData addObject:[NSBubbleData dataWithWeb:msg.text date:msg.sentDate type:BubbleTypeTemplateview]];
+        [data addObject:itemBubble];
+        self.bubbleTable.showAvatars = YES;
+    }
+    else if (msg.type == [NSNumber numberWithInt:MessageTypePublish]) {
+        [data addObject:[WSBubbleData dataWithWeb:msg.text date:msg.sentDate type:BubbleTypeTemplateview]];
         bubbleTable.showAvatars = NO;
     } else if (msg.type == [NSNumber numberWithInt:MessageTypeRate]) {
-        NSBubbleData *rateData = [NSBubbleData dataWithWeb:msg.text date:msg.sentDate type:BubbleTypeRateview];
+        WSBubbleData *rateData = [WSBubbleData dataWithWeb:msg.text date:msg.sentDate type:BubbleTypeRateview];
         rateData.msg = msg;
-        [bubbleData addObject:rateData];
+        [data addObject:rateData];
         bubbleTable.showAvatars = NO; 
 
     }
