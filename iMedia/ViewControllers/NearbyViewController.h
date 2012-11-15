@@ -7,10 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-@class User;
+#import <CoreData/CoreData.h>
 
 @interface NearbyViewController : UIViewController
-
+{
+    NSFetchedResultsController *fetchedResultsController;
+}
 
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
