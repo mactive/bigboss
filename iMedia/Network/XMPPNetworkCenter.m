@@ -138,7 +138,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     
 	xmppRoster.autoFetchRoster = NO;
 	xmppRoster.autoAcceptKnownPresenceSubscriptionRequests = YES;
-    xmppRoster.allowRosterlessOperation = YES;
+    xmppRoster.allowRosterlessOperation = NO;
     
     // Setup XMPP PubSub
 #warning Pubsub needs to be moved to later stage where serviceJiD is available
@@ -558,7 +558,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 //helper function to determine roster user status:
 - (BOOL)isBuddy:(XMPPUserMemoryStorageObject *)user
 {
-    return ![user isPendingApproval];
+    return [user isBuddy];
 }
 //
 // everytime some poster change happened, local user db should be updated
