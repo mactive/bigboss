@@ -72,7 +72,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [self dismissModalViewControllerAnimated:YES];
     
     if (obj) {
-        [self.tabBarController setSelectedIndex:0];
+        [self.tabBarController setSelectedIndex:1];
         [[self appDelegate].conversationController chatWithIdentity:obj];
     }    
 

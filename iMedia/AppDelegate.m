@@ -151,7 +151,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
     self.nearbyViewController = [[NearbyViewController alloc]init];
     UINavigationController *navController1 = [[UINavigationController alloc] initWithRootViewController:self.nearbyViewController];
-    self.nearbyViewController.managedObjectContext = _managedObjectContext;
     self.nearbyViewController.title = T(@"附近");
     self.nearbyViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:T(@"附近") image:[UIImage imageNamed:@"tabbar_item_1.png"] tag:1001];
     

@@ -7,14 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <CoreData/CoreData.h>
 
 @interface NearbyViewController : UIViewController
-{
-    NSFetchedResultsController *fetchedResultsController;
-}
-
-@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
 
 @end
