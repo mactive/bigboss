@@ -16,7 +16,6 @@
 #import "ConversationsController.h"
 #import "AddFriendController.h"
 #import "AddFriendByIDController.h"
-#import "UINavigationBar+Background.h"
 #import <QuartzCore/QuartzCore.h>
 #import "pinyin.h"
 #import "POAPinyin.h"

@@ -21,7 +21,7 @@
 #import <CocoaPlant/NSManagedObject+CocoaPlant.h>
 #import "AFNetworkActivityIndicatorManager.h"
 #import "XMPPNetworkCenter.h"
-
+#import "NearbyViewController.h"
 #import "ConversationsController.h"
 #import "ContactListViewController.h"
 #import "FunctionListViewController.h"
@@ -62,6 +62,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 @synthesize window = _window;
 @synthesize tabController = _tabController;
+@synthesize nearbyViewController;
 @synthesize conversationController;
 @synthesize contactListController;
 @synthesize functionListController;
@@ -147,32 +148,37 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     //
     self.tabController = [[UITabBarController alloc] init];
     
+    
+    self.nearbyViewController = [[NearbyViewController alloc]init];
+    UINavigationController *navController1 = [[UINavigationController alloc] initWithRootViewController:self.nearbyViewController];
+    self.nearbyViewController.managedObjectContext = _managedObjectContext;
+    self.conversationController.title = T(@"附近");
+    self.conversationController.tabBarItem = [[UITabBarItem alloc] initWithTitle:T(@"附近") image:[UIImage imageNamed:@"tabbar_item_1.png"] tag:1001];
+    
     self.conversationController = [[ConversationsController alloc] init];
-    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:self.conversationController];
+    UINavigationController *navController2 = [[UINavigationController alloc] initWithRootViewController:self.conversationController];
     self.conversationController.managedObjectContext = _managedObjectContext;
     self.conversationController.title = T(@"消息");
-    self.conversationController.tabBarItem = [[UITabBarItem alloc] initWithTitle:T(@"消息") image:[UIImage imageNamed:@"tabbar_item_0.png"] tag:1000];
+    self.conversationController.tabBarItem = [[UITabBarItem alloc] initWithTitle:T(@"消息") image:[UIImage imageNamed:@"tabbar_item_2.png"] tag:1002];
     
     self.contactListController = [[ContactListViewController alloc] initWithStyle:UITableViewStylePlain andManagementContext:_managedObjectContext];
-    UINavigationController *navController2 = [[UINavigationController alloc] initWithRootViewController:self.contactListController];
+    UINavigationController *navController3 = [[UINavigationController alloc] initWithRootViewController:self.contactListController];
     self.contactListController.title = T(@"联系人");
-    self.contactListController.tabBarItem = [[UITabBarItem alloc] initWithTitle:T(@"联系人")  image:[UIImage imageNamed:@"tabbar_item_1.png"] tag:1001];
+    self.contactListController.tabBarItem = [[UITabBarItem alloc] initWithTitle:T(@"联系人")  image:[UIImage imageNamed:@"tabbar_item_3.png"] tag:1003];
     
     self.functionListController = [[FunctionListViewController alloc] init];
-    UINavigationController *navController3 = [[UINavigationController alloc] initWithRootViewController:self.functionListController];
+    UINavigationController *navController4 = [[UINavigationController alloc] initWithRootViewController:self.functionListController];
     self.functionListController.managedObjectContext = _managedObjectContext;
     self.functionListController.title = T(@"朋友们");
-    self.functionListController.tabBarItem = [[UITabBarItem alloc] initWithTitle:T(@"朋友们") image:[UIImage imageNamed:@"tabbar_item_2.png"] tag:1002];
+    self.functionListController.tabBarItem = [[UITabBarItem alloc] initWithTitle:T(@"朋友们") image:[UIImage imageNamed:@"tabbar_item_4.png"] tag:1004];
     
-    NSLog(@"---- %@",NSStringFromCGRect(navController3.view.frame));
-
     self.settingController = [[SettingViewController alloc] init];
     self.settingController.managedObjectContext = _managedObjectContext;
-    UINavigationController *navController4 = [[UINavigationController alloc] initWithRootViewController:self.settingController];
+    UINavigationController *navController5 = [[UINavigationController alloc] initWithRootViewController:self.settingController];
     self.settingController.title = T(@"设置");
-    self.settingController.tabBarItem = [[UITabBarItem alloc] initWithTitle:T(@"设置") image:[UIImage imageNamed:@"tabbar_item_3.png"] tag:1003];
+    self.settingController.tabBarItem = [[UITabBarItem alloc] initWithTitle:T(@"设置") image:[UIImage imageNamed:@"tabbar_item_5.png"] tag:1005];
     
-    NSArray* controllers = [NSArray arrayWithObjects:navController, navController2, navController3, navController4, nil];
+    NSArray* controllers = [NSArray arrayWithObjects:navController1, navController2, navController3, navController4, navController5, nil];
     self.tabController.viewControllers = controllers;
 
     // tabtar style
