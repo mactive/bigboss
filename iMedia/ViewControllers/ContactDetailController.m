@@ -696,14 +696,18 @@
         [[ModelHelper sharedInstance] populateIdentity:newUser withJSONData:jsonData];
         newUser.state = [NSNumber numberWithInt:IdentityStatePendingAddFriend];
         NSLog(@"userJid %@",userJid);
-    
-        [[XMPPNetworkCenter sharedClient] addBuddy:userJid withCallbackBlock:nil];
     }
+    
+    // send sub request anyway - idempotent requests all the way
+    [[XMPPNetworkCenter sharedClient] addBuddy:userJid withCallbackBlock:nil];
 }
 
 -(void)deleteUserButtonPushed:(id)sender
 {
-    self.user.state = [NSNumber numberWithInt:IdentityStatePendingRemoveFriend];
+    if (self.user.state.intValue != IdentityStateInactive) {
+        self.user.state = [NSNumber numberWithInt:IdentityStatePendingRemoveFriend];
+    }
+    
     HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     HUD.delegate = self;
     HUD.labelText = T(@"正在发送");

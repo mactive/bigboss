@@ -137,8 +137,8 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 	xmppRoster = [[XMPPRoster alloc] initWithRosterStorage:xmppRosterStorage];
     
 	xmppRoster.autoFetchRoster = NO;
-	xmppRoster.autoAcceptKnownPresenceSubscriptionRequests = NO;
-    xmppRoster.allowRosterlessOperation = YES;
+	xmppRoster.autoAcceptKnownPresenceSubscriptionRequests = YES;
+    xmppRoster.allowRosterlessOperation = NO;
     
     // Setup XMPP PubSub
 #warning Pubsub needs to be moved to later stage where serviceJiD is available
@@ -481,6 +481,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     
 }
 
+/*
 - (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence
 {
 	DDLogVerbose(@"%@: %@ - %@", THIS_FILE, THIS_METHOD, [presence fromStr]);
@@ -533,7 +534,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
             [self removeBuddy:ePostalID withCallbackBlock:nil];
         }
     }
-}
+}*/
 
 - (void)xmppStream:(XMPPStream *)sender didReceiveError:(id)error
 {
@@ -554,6 +555,11 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 #pragma mark XMPPRosterMemoryStoargeDelegate
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+//helper function to determine roster user status:
+- (BOOL)isBuddy:(XMPPUserMemoryStorageObject *)user
+{
+    return [user isBuddy];
+}
 //
 // everytime some poster change happened, local user db should be updated
 //
@@ -575,6 +581,10 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
         return;
     }
     
+    if (![self isBuddy:user]) {
+        return;
+    }
+    
     User* thisUser = [[ModelHelper sharedInstance] findUserWithEPostalID:ePostalID];
     
     // insert user if it doesn't exist
@@ -582,8 +592,8 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
         thisUser = [[ModelHelper sharedInstance] createNewUser];
     }
     
- 
-    if (thisUser.state.intValue != IdentityStateActive && thisUser.state.intValue != IdentityStatePendingAddFriend)
+    
+    if (thisUser.state.intValue != IdentityStateActive)
     {
         thisUser.ePostalID = [user.jid bare];
         thisUser.displayName = [thisUser.ePostalID substringToIndex:[thisUser.ePostalID rangeOfString: @"@"].location];
@@ -615,6 +625,10 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
         thisUser.state = [NSNumber numberWithInt:IdentityStateInactive];
 //        MOCSave(_managedObjectContext);
         [[self appDelegate].contactListController contentChanged];
+    } else if (thisUser.state.intValue == IdentityStatePendingAddFriend) {
+        thisUser.state = [NSNumber numberWithInt:IdentityStateInactive];
+        //        MOCSave(_managedObjectContext);
+        [[self appDelegate].contactListController contentChanged];
     }
 }
 
@@ -640,6 +654,10 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
         XMPPUserMemoryStorageObject *obj = [roster objectAtIndex:i];
         if ([[obj.jid bare] isEqualToString:meID]) {
             continue;
+        }
+        
+        if (![self isBuddy:obj]) {
+            return;
         }
         
         NSString* ePostalID = [obj.jid bare];
@@ -679,8 +697,11 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     MOCSave(_managedObjectContext);
 }
 
-/* 
- //Comment this out because it let a user to add another user without consent.
+
+//NEED TO CHECK THIS AGAIN TO SEE WHAT HAPPENS. this function should be called only when the user is already on
+//our roster. But we may, or may not be on the user's roster yet. Our state should only be active when we are on
+//the other's roster
+//Comment this out because it let a user to add another user without consent.
 - (void)xmppRoster:(XMPPRosterMemoryStorage *)sender didUpdateUser:(XMPPUserMemoryStorageObject *)user
 {
     DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
@@ -697,6 +718,10 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
         meID = [me.jid bare];
     }
     if ([ePostalID isEqualToString:meID]) {
+        return;
+    }
+    
+    if (![self isBuddy:user]) {
         return;
     }
     
@@ -718,12 +743,13 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     }
 
 }
- */
 
+/*
 - (void)xmppRosterDidChange:(XMPPRosterMemoryStorage *)sender
 {
     DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
 }
+ */
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark XMPPRosterDelegate
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

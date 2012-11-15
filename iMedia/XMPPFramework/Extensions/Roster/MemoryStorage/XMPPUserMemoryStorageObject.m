@@ -185,6 +185,18 @@
 	return (primaryResource != nil);
 }
 
+- (BOOL)isBuddy
+{
+    // use subscription status to tell whether it is already a buddy
+    NSString *subscription = [itemAttributes objectForKey:@"subscription"];
+	
+	if ([subscription isEqualToString:@"to"] || [subscription isEqualToString:@"both"])
+	{
+		return YES;
+	}
+	
+	return NO;
+}
 - (BOOL)isPendingApproval
 {
 	// Either of the following mean we're waiting to have our presence subscription approved:

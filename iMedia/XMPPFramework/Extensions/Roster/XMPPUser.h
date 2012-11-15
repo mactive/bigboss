@@ -12,6 +12,7 @@
 
 - (BOOL)isOnline;
 - (BOOL)isPendingApproval;
+- (BOOL)isBuddy;
 
 - (id <XMPPResource>)primaryResource;
 - (id <XMPPResource>)resourceForJID:(XMPPJID *)jid;
