@@ -190,12 +190,12 @@
     // use subscription status to tell whether it is already a buddy
     NSString *subscription = [itemAttributes objectForKey:@"subscription"];
 	
-	if ([subscription isEqualToString:@"none"] || [subscription isEqualToString:@"from"])
+	if ([subscription isEqualToString:@"to"] || [subscription isEqualToString:@"both"])
 	{
-		return NO;
+		return YES;
 	}
 	
-	return YES;
+	return NO;
 }
 - (BOOL)isPendingApproval
 {
