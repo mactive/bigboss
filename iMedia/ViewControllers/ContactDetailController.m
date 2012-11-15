@@ -696,9 +696,10 @@
         [[ModelHelper sharedInstance] populateIdentity:newUser withJSONData:jsonData];
         newUser.state = [NSNumber numberWithInt:IdentityStatePendingAddFriend];
         NSLog(@"userJid %@",userJid);
-    
-        [[XMPPNetworkCenter sharedClient] addBuddy:userJid withCallbackBlock:nil];
     }
+    
+    // send sub request anyway - idempotent requests all the way
+    [[XMPPNetworkCenter sharedClient] addBuddy:userJid withCallbackBlock:nil];
 }
 
 -(void)deleteUserButtonPushed:(id)sender
