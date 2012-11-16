@@ -733,6 +733,13 @@
 	XMPPJID *jidKey = [[presence from] bareJID];
 	
 	user = [roster objectForKey:jidKey];
+    
+    //
+    // WingedStone Change: If rosterless option is not enabled, then by definition the user should be nil
+    // and we should not create this user on our roster
+    if (user == nil && ![self.parent allowRosterlessOperation] ) {
+        return;
+    }
 	if (user == nil)
 	{
 		// Not a presence element from anyone in our roster (that we know of).
