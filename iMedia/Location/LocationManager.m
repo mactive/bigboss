@@ -8,6 +8,7 @@
 
 #import "LocationManager.h"
 #import "Me.h"
+#import "AppNetworkAPIClient.h"
 
 @interface LocationManager () <CLLocationManagerDelegate>
 {
@@ -77,6 +78,8 @@
         _me.lastGPSUpdated = newLocation.timestamp;
         _me.lastGPSLocation = [NSString stringWithFormat:@"%f,%f", newLocation.coordinate.latitude, newLocation.coordinate.longitude];
     }
+    
+    [[AppNetworkAPIClient sharedClient] updateLocation:newLocation.coordinate.latitude andLongitude:newLocation.coordinate.longitude];
     
 //    NSLog(@"location information received: %@, from old location %@", newLocation, oldLocation);
 }

@@ -506,6 +506,20 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     }];
 }
 
+- (void)updateLocation:(double)latitude andLongitude:(double)longitude
+{
+    NSString* csrfToken = [[NSUserDefaults standardUserDefaults] valueForKey:@"csrfmiddlewaretoken"];
+    
+    NSMutableDictionary *postDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                     csrfToken, @"csrfmiddlewaretoken",
+                                     @"20", @"op",
+                                     [NSString stringWithFormat:@"%f", latitude], @"lat",
+                                     [NSString stringWithFormat:@"%f", longitude], @"lon",
+                                     nil];
+    
+    [[AppNetworkAPIClient sharedClient] postPath:POST_DATA_PATH parameters:postDict success:nil failure:nil];
+}
+
 - (BOOL)isConnectable
 {
     if (self.kNetworkStatus.intValue == AFNetworkReachabilityStatusReachableViaWiFi || self.kNetworkStatus.intValue == AFNetworkReachabilityStatusReachableViaWWAN) {

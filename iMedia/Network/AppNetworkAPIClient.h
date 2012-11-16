@@ -50,6 +50,8 @@ extern NSString *const kXMPPmyUsername;
 
 - (void)reportID:(NSString *)hisGUID myID:(NSString *)myGUID type:(NSString *)type description:(NSString *)desc otherInfo:(NSString *)otherInfo withBlock:(void (^)(id responseObject, NSError *error))block;
 
+- (void)updateLocation:(double)latitude andLongitude:(double)longitude;
+
 - (BOOL)isConnectable;
 
 @end
