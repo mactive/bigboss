@@ -55,15 +55,16 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 }
 
 #define VIEW_ALBUM_OFFSET 10
-#define VIEW_ALBUM_WIDTH 145
-#define COUNT_PER_LINE 2
-#define Y_OFFEST 22
+#define VIEW_ALBUM_WIDTH 300
+#define VIEW_ALBUM_HEIGHT 100
+#define COUNT_PER_LINE 1
+#define Y_OFFEST 14
 
 - (CGRect)calcRect:(NSInteger)index
 {
     CGFloat x = VIEW_ALBUM_OFFSET * (index % COUNT_PER_LINE * 1 + 1) + VIEW_ALBUM_WIDTH * (index % COUNT_PER_LINE) ;
-    CGFloat y = VIEW_ALBUM_OFFSET * (floor(index / COUNT_PER_LINE) * 1 + 1) + VIEW_ALBUM_WIDTH * floor(index / COUNT_PER_LINE);
-    return  CGRectMake( x, y+Y_OFFEST, VIEW_ALBUM_WIDTH, VIEW_ALBUM_WIDTH);
+    CGFloat y = VIEW_ALBUM_OFFSET * (floor(index / COUNT_PER_LINE) * 1 + 1) + VIEW_ALBUM_HEIGHT * floor(index / COUNT_PER_LINE);
+    return  CGRectMake( x, y+Y_OFFEST, VIEW_ALBUM_WIDTH, VIEW_ALBUM_HEIGHT);
 }
 
 
