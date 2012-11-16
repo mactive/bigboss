@@ -77,7 +77,7 @@
     CGFloat y = 5;
     
     // avatar
-    [self.avatarImage setImage:(cellData.avatar ? cellData.avatar : [UIImage imageNamed:@"user_avatar_placeholder.png"])];
+    [self.avatarImage setImage:(cellData.avatar ? cellData.avatar : [UIImage imageNamed:@"placeholder_user.png"])];
     CGFloat avatarX = (type == BubbleTypeSomeoneElse) ? 2 : self.frame.size.width - 52;
     CGFloat avatarY = 0 ;// self.frame.size.height - 50;
     self.avatarImage.frame = CGRectMake(avatarX, avatarY, 50, 50);

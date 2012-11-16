@@ -123,9 +123,9 @@
         infoLabel.text = [ServerDataTransformer getSelfIntroductionFromServerJSON:jsonData];
         NSString *thumbnail = [ServerDataTransformer getThumbnailFromServerJSON:jsonData];
         if (StringHasValue(thumbnail)) {
-            [avatarImage setImageWithURL:[NSURL URLWithString:thumbnail] placeholderImage:[UIImage imageNamed:@"company_thumbnail_placeholder.png"]];
+            [avatarImage setImageWithURL:[NSURL URLWithString:thumbnail] placeholderImage:[UIImage imageNamed:@"placeholder_company.png"]];
         } else {
-            [avatarImage setImage:[UIImage imageNamed:@"company_thumbnail_placeholder.png"]];
+            [avatarImage setImage:[UIImage imageNamed:@"placeholder_company.png"]];
         }
         [self.confirmButton setTitle:T(@"订阅此频道") forState:UIControlStateNormal];
         [self.confirmButton addTarget:self action:@selector(subscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
@@ -143,7 +143,7 @@
                 self.channel.thumbnailImage = image;
             }];
         } else {
-            [avatarImage setImage:[UIImage imageNamed:@"company_thumbnail_placeholder.png"]];
+            [avatarImage setImage:[UIImage imageNamed:@"placeholder_company.png"]];
         }
         
         [self.confirmButton setTitle:T(@"发送信息") forState:UIControlStateNormal];

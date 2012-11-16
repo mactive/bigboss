@@ -503,7 +503,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
                     user.thumbnailImage = image;
                     [imageView setImage:user.thumbnailImage];
                 } else {
-                    [imageView setImage:[UIImage imageNamed:@"user_avatar_placeholder.png"]];
+                    [imageView setImage:[UIImage imageNamed:@"placeholder_user.png"]];
                 }
             }];
         }
@@ -516,7 +516,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
                     conv.channel.thumbnailImage = image;
                     [imageView setImage:conv.channel.thumbnailImage];
                 } else {
-                    [imageView setImage:[UIImage imageNamed:@"company_thumbnail_placeholder.png"]];
+                    [imageView setImage:[UIImage imageNamed:@"placeholder_company.png"]];
                 }
             }];
         }

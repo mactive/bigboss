@@ -363,11 +363,11 @@ NSInteger SortIndex(id char1, id char2, void* context)
         }];
     } else {
         if ([identity isKindOfClass:[Channel class]]) {
-            [imageView setImage:[UIImage imageNamed:@"company_thumbnail_placeholder.png"]];
+            [imageView setImage:[UIImage imageNamed:@"placeholder_company.png"]];
         } else if ([identity isKindOfClass:[User class]]) {
-            [imageView setImage:[UIImage imageNamed:@"user_avatar_placeholder.png"]];
+            [imageView setImage:[UIImage imageNamed:@"placeholder_user.png"]];
         } else {
-            [imageView setImage:[UIImage imageNamed:@"user_avatar_placeholder.png"]];
+            [imageView setImage:[UIImage imageNamed:@"placeholder_user.png"]];
         }
     }
     
