@@ -43,6 +43,11 @@
     return self;
 }
 
+- (void)setData:(WSBubbleData *)data
+{
+    [super setData:data];
+}
+
 
 - (void) setupInternalData:(WSBubbleData *)cellData;
 {

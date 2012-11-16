@@ -38,8 +38,8 @@
         // Initialization code
         self.selectionStyle = UITableViewCellSelectionStyleNone;
 
-        self.templateBackView = [[UIView alloc] initWithFrame:CGRectMake(10, 0, 300, 0)];
-        self.templateContent = [[UILabel alloc] initWithFrame:CGRectMake(12, 180, 275, 0)];
+        self.templateBackView = [[UIView alloc] initWithFrame:CGRectMake(10, 0, 300, 100)];
+        self.templateContent = [[UILabel alloc] initWithFrame:CGRectMake(12, 180, 275, 100)];
         self.templateTitle = [[UILabel alloc] initWithFrame:CGRectMake(12, 10, 275, 30)];
         self.templateImage = [[UIImageView alloc]initWithFrame:CGRectMake(12, 40, 275, TEMPLATE_IMAGE_HEIGHT)];
         
@@ -66,12 +66,16 @@
     return self;
 }
 
+- (void)setData:(WSBubbleData *)data
+{
+    [super setData:data];
+}
+
+
 - (void) setupInternalData:(WSBubbleData *)cellData
 {
     [super setupInternalData:cellData];
 
-    WSBubbleType type = cellData.type;
-    CGFloat width = cellData.view.frame.size.width;
     CGFloat height = cellData.view.frame.size.height;
     
     NSXMLElement *element = [[NSXMLElement alloc] initWithXMLString:cellData.content error:nil];
