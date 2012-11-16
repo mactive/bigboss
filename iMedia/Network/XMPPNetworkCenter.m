@@ -137,7 +137,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 	xmppRoster = [[XMPPRoster alloc] initWithRosterStorage:xmppRosterStorage];
     
 	xmppRoster.autoFetchRoster = NO;
-	xmppRoster.autoAcceptKnownPresenceSubscriptionRequests = YES;
+	xmppRoster.autoAcceptKnownPresenceSubscriptionRequests = NO;
     xmppRoster.allowRosterlessOperation = NO;
     
     // Setup XMPP PubSub
@@ -481,7 +481,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     
 }
 
-/*
+
 - (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence
 {
 	DDLogVerbose(@"%@: %@ - %@", THIS_FILE, THIS_METHOD, [presence fromStr]);
@@ -490,7 +490,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     NSString* ePostalID = [[presence from] bare];
     NSString* subscriptionResult = [presence attributeStringValueForName:@"type"];
     if (subscriptionResult != nil && [subscriptionResult isEqualToString:@"subscribed"]) {
-        
+/*
         User* thisUser = [[ModelHelper sharedInstance] findUserWithEPostalID:ePostalID];
         
         if (thisUser != nil &&  thisUser.state.intValue == IdentityStatePendingAddFriend)
@@ -502,7 +502,10 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
             
             [[AppNetworkAPIClient sharedClient] updateIdentity:thisUser withBlock:nil];
         }
+ */
+        [xmppStream sendElement:[XMPPPresence presenceWithType:@"subscribe" to:[[presence from] bareJID]]];
     } else if (subscriptionResult != nil && [subscriptionResult isEqualToString:@"unsubscribed"]) {
+        /*
         User* thisUser = [[ModelHelper sharedInstance] findUserWithEPostalID:ePostalID];
         
         if (thisUser != nil &&  thisUser.state.intValue == IdentityStatePendingAddFriend)
@@ -511,13 +514,18 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
             
             [self removeBuddy:ePostalID withCallbackBlock:nil];
         }
+         */
+        [xmppStream sendElement:[XMPPPresence presenceWithType:@"unsubscribe" to:[[presence from] bareJID]]];
     } else if (subscriptionResult != nil && [subscriptionResult isEqualToString:@"subscribe"]) {
+        XMPPUserMemoryStorageObject* user = [self.xmppRosterStorage userForJID:[presence from]];
         User* thisUser = [[ModelHelper sharedInstance] findUserWithEPostalID:ePostalID];
-        if (thisUser != nil &&  thisUser.state.intValue == IdentityStatePendingAddFriend)
-        {
-            thisUser.state = [NSNumber numberWithInt:IdentityStatePendingServerDataUpdate];
-            [[AppNetworkAPIClient sharedClient] updateIdentity:thisUser withBlock:nil];
-        } else if ((thisUser == nil ) || (thisUser != nil &&  thisUser.state.intValue == IdentityStateInactive)) {
+        if (user != nil && [user isBuddy]) {
+            if (thisUser != nil && thisUser.state.intValue == IdentityStateActive) {
+                [self acceptPresenceSubscriptionRequestFrom:ePostalID andAddToRoster:NO];
+            } else {
+                [self acceptPresenceSubscriptionRequestFrom:ePostalID andAddToRoster:YES];
+            }
+        } else if ((thisUser == nil ) || thisUser.state.intValue != IdentityStateActive) {
             NSNotification *myNotification =
             [NSNotification notificationWithName:NEW_FRIEND_NOTIFICATION object:[[presence from] bare]];
             [[NSNotificationQueue defaultQueue]
@@ -526,6 +534,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
              coalesceMask:NSNotificationNoCoalescing
              forModes:nil];
         }
+        
     } else if (subscriptionResult != nil && [subscriptionResult isEqualToString:@"unsubscribe"]) {
         User* thisUser = [[ModelHelper sharedInstance] findUserWithEPostalID:ePostalID];
         if (thisUser != nil &&  thisUser.state.intValue == IdentityStatePendingAddFriend)
@@ -534,7 +543,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
             [self removeBuddy:ePostalID withCallbackBlock:nil];
         }
     }
-}*/
+}
 
 - (void)xmppStream:(XMPPStream *)sender didReceiveError:(id)error
 {
@@ -757,7 +766,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 - (void)xmppRoster:(XMPPRoster *)sender didReceivePresenceSubscriptionRequest:(XMPPPresence *)presence
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-    
+/*
     NSString* ePostalID = [[presence from] bare];
         
     User* thisUser = [[ModelHelper sharedInstance] findUserWithEPostalID:ePostalID];
@@ -778,7 +787,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
         [[AppNetworkAPIClient sharedClient] updateIdentity:thisUser withBlock:nil];
         MOCSave(_managedObjectContext);
     }
-    
+ */   
 }
 
 - (void)acceptPresenceSubscriptionRequestFrom:(NSString *)jidStr andAddToRoster:(BOOL)flag
