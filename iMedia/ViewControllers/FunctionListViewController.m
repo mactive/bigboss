@@ -72,7 +72,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 {
     [super viewDidLoad];
     
-    self.settingTitleArray = [[NSArray alloc] initWithObjects:@"打招呼的人", @"摇一摇",@"插件库", nil];
+    self.settingTitleArray = [[NSArray alloc] initWithObjects:@"打招呼的人", @"摇一摇",@"频道列表", nil];
     
     [self.view addSubview:self.settingView];
     
@@ -82,10 +82,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         NSString *image = [NSString stringWithFormat:@"metro_icon_%d.png",(index+2)];
         [button initMetroButton:[UIImage imageNamed:image] andText:title andIndex:index];
         
-        if (index == 1) {
+        if (index == 0) {
             [button addTarget:self action:@selector(sayhiAction) forControlEvents:UIControlEventTouchUpInside];
         }
-        if (index == 2) {
+        if (index == 1) {
             [button addTarget:self action:@selector(shakeAction) forControlEvents:UIControlEventTouchUpInside];
         }
         [self.view addSubview:button];
