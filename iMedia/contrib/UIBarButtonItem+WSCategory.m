@@ -35,12 +35,12 @@
     return self;
 }
 
--(void)setEnabled:(BOOL)enabled {
-    if (self.customView) {
-        if ([[self.customView.subviews objectAtIndex:0] isKindOfClass:[UIButton class]]) {
-            ((UIButton*)[self.customView.subviews objectAtIndex:0]).enabled = enabled;
-        }
-    }
-}
+//-(void)setEnabled:(BOOL)enabled {
+//    if (self.customView) {
+//        if ([[self.customView.subviews objectAtIndex:0] isKindOfClass:[UIButton class]]) {
+//            ((UIButton*)[self.customView.subviews objectAtIndex:0]).enabled = enabled;
+//        }
+//    }
+//}
 
 @end
