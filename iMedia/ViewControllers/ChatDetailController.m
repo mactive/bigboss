@@ -450,7 +450,7 @@
     if (msg.type == [NSNumber numberWithInt:MessageTypeChat])
     {
         WSBubbleData *itemBubble = [WSBubbleData dataWithText:msg.text date:msg.sentDate type:type];
-        
+        itemBubble.msg = msg;
         itemBubble.avatar = msg.from.thumbnailImage;
         if (msg.from.thumbnailImage == nil) {
             [[AppNetworkAPIClient sharedClient] loadImage:msg.from.thumbnailURL withBlock:^(UIImage *image, NSError *error) {

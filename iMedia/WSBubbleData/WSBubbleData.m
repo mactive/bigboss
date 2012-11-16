@@ -102,7 +102,7 @@ const UIEdgeInsets templateInsetsMine = {30, 30, 16, 22};
         _type = type;
         _content = content;
         _insets = insets;
-        
+        self.msg = _msg;
         self.showAvatar = type != BubbleTypeTemplateview ? YES : NO ;
         self.cellHeight = view.frame.size.height;
         self.view = view;
