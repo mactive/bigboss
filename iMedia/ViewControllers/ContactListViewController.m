@@ -52,16 +52,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         self.managedObjectContext = context;
         self.title = T(@"Contacts");
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        
-//        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"ADD" style:UIBarButtonItemStyleDone target:self action:@selector(add:)];
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(add:)];
-        
-//        UIView *buttonView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 41, 29)];
-//        UIImageView *cellBgView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"barbutton_bg.png"]
-//                                    stretchableImageWithLeftCapWidth:8 topCapHeight:6]];
-//        [cellBgView setFrame:buttonView.frame];
-//        [buttonView addSubview:cellBgView];
-//        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:buttonView];
     }
     return self;
 }

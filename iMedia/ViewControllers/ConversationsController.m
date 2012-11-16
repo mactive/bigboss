@@ -410,14 +410,14 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 	// Create a label for the user name.
 	rect = CGRectMake(MIDDLE_COLUMN_OFFSET, (ROW_HEIGHT - IMAGE_SIDE) / 2.0, MIDDLE_COLUMN_WIDTH, LABEL_HEIGHT);
-	self.titleLabel = [[UILabel alloc] initWithFrame:rect];
-	self.titleLabel.tag = NAME_TAG;
-	self.titleLabel.font = [UIFont boldSystemFontOfSize:MAIN_FONT_SIZE];
-    self.titleLabel.highlighted = YES;
-	self.titleLabel.textAlignment = UITextAlignmentLeft;
-    self.titleLabel.textColor = RGBCOLOR(107, 107, 107);
-    self.titleLabel.backgroundColor = [UIColor clearColor];
-	[cell.contentView addSubview:self.titleLabel];
+	label = [[UILabel alloc] initWithFrame:rect];
+	label.tag = NAME_TAG;
+	label.font = [UIFont boldSystemFontOfSize:MAIN_FONT_SIZE];
+    label.highlighted = YES;
+	label.textAlignment = UITextAlignmentLeft;
+    label.textColor = RGBCOLOR(107, 107, 107);
+    label.backgroundColor = [UIColor clearColor];
+	[cell.contentView addSubview:label];
 
 	// Create a label for the message.
 	rect = CGRectMake(MIDDLE_COLUMN_OFFSET, ROW_HEIGHT - (IMAGE_SIDE / 2.0), MIDDLE_COLUMN_WIDTH, MESSAGE_LABEL_HEIGHT);
@@ -429,14 +429,13 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     label.backgroundColor = RGBCOLOR(234, 234, 234);
     [label.layer setMasksToBounds:YES];
     [label.layer setCornerRadius:3.0];
-	[cell.contentView addSubview:label];
     
 	// Create a icon for the rect.
     rect = CGRectMake(RIGHT_COLUMN_OFFSET, (ROW_HEIGHT - IMAGE_SIDE) / 2.0 + 5 , 15, 15);
     UIImageView *timeIconView = [[UIImageView alloc] initWithFrame:rect];
     timeIconView.image = [UIImage imageNamed:@"time_icon.png"];
     timeIconView.tag = TIME_ICON_TAG;
-    [cell.contentView addSubview:timeIconView];
+
 
     // Create a label for the time.
 	rect = CGRectMake(RIGHT_COLUMN_OFFSET + 18, (ROW_HEIGHT - IMAGE_SIDE) / 2.0 + 5, RIGHT_COLUMN_WIDTH, 15.0);
@@ -448,7 +447,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     label.backgroundColor = [UIColor clearColor];
     
     [cell.contentView addSubview:label];
-    
+    [cell.contentView addSubview:timeIconView];
+	[cell.contentView addSubview:label];
 	return cell;
 }
 
