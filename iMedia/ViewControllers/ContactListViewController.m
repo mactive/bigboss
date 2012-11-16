@@ -352,8 +352,24 @@ NSInteger SortIndex(id char1, id char2, void* context)
     
     //set avatar
     imageView = (UIImageView *)[cell viewWithTag:AVATAR_TAG];
-//    [imageView setImage:identity.thumbnailImage];
-    [imageView setImageWithURL:[NSURL URLWithString:identity.thumbnailURL] placeholderImage:nil];
+
+    if (identity.thumbnailImage != nil) {
+        [imageView setImage:identity.thumbnailImage];
+    } else if (StringHasValue(identity.thumbnailURL)){
+        [[AppNetworkAPIClient sharedClient] loadImage:identity.thumbnailURL withBlock:^(UIImage *image, NSError *error) {
+            if (image) {
+                identity.thumbnailImage = image;
+            }
+        }];
+    } else {
+        if ([identity isKindOfClass:[Channel class]]) {
+            [imageView setImage:[UIImage imageNamed:@"company_thumbnail_placeholder.png"]];
+        } else if ([identity isKindOfClass:[User class]]) {
+            [imageView setImage:[UIImage imageNamed:@"user_avatar_placeholder.png"]];
+        } else {
+            [imageView setImage:[UIImage imageNamed:@"user_avatar_placeholder.png"]];
+        }
+    }
     
     //set sns icon
     NSMutableArray *snsArray = [[NSMutableArray alloc] init];

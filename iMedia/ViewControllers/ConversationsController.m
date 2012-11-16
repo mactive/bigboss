@@ -498,28 +498,27 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         if (user.thumbnailImage) {
             [imageView setImage:user.thumbnailImage];
         } else {
-            AFImageRequestOperation *operation = [AFImageRequestOperation imageRequestOperationWithRequest:[[NSURLRequest alloc] initWithURL:[NSURL URLWithString:user.thumbnailURL]] imageProcessingBlock:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-                user.thumbnailImage = image;
-                [imageView setImage:user.thumbnailImage];
-            } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
-                [imageView setImage:[UIImage imageNamed:@"user_avatar_placeholder.png"]];
+            [[AppNetworkAPIClient sharedClient] loadImage:user.thumbnailURL withBlock:^(UIImage *image, NSError *error) {
+                if (image) {
+                    user.thumbnailImage = image;
+                    [imageView setImage:user.thumbnailImage];
+                } else {
+                    [imageView setImage:[UIImage imageNamed:@"user_avatar_placeholder.png"]];
+                }
             }];
-            
-            [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:operation];
         }
-    
     } else {
         if (conv.channel.thumbnailImage) {
             [imageView setImage:conv.channel.thumbnailImage];
         } else {
-            AFImageRequestOperation *operation = [AFImageRequestOperation imageRequestOperationWithRequest:[[NSURLRequest alloc] initWithURL:[NSURL URLWithString:conv.channel.thumbnailURL]] imageProcessingBlock:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-                conv.channel.thumbnailImage = image;
-                [imageView setImage:conv.channel.thumbnailImage];
-            } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
-                [imageView setImage:[UIImage imageNamed:@"company_thumbnail_placeholder.png"]];
+            [[AppNetworkAPIClient sharedClient] loadImage:conv.channel.thumbnailURL withBlock:^(UIImage *image, NSError *error) {
+                if (image) {
+                    conv.channel.thumbnailImage = image;
+                    [imageView setImage:conv.channel.thumbnailImage];
+                } else {
+                    [imageView setImage:[UIImage imageNamed:@"company_thumbnail_placeholder.png"]];
+                }
             }];
-            
-            [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:operation];
         }
     }
 }
