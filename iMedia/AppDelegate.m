@@ -107,12 +107,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         DDLogVerbose(@"%@: %@ multiple ME instance", THIS_FILE, THIS_METHOD);
     }
 
-        
     // Global UINavigationBar style 
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:NO];
     [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"navigationBar_bg.png"] forBarMetrics:UIBarMetricsDefault];
     [[UINavigationBar appearance] setTintColor:[UIColor colorWithRed:121/255 green:123/255 blue:126/255 alpha:1.0] ];
-//    [[UIBarButtonItem appearance]setStyle:UIBarButtonItemStyleBordered];
     [[UIBarButtonItem appearance] setTintColor:RGBACOLOR(55, 61, 70, 1)];
     
     self.window.backgroundColor = BGCOLOR;
