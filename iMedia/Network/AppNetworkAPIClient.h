@@ -52,6 +52,8 @@ extern NSString *const kXMPPmyUsername;
 
 - (void)updateLocation:(double)latitude andLongitude:(double)longitude;
 
+- (void)getNearestPeopleWithBlock:(void (^)(id responseObject, NSError *error))block;;
+
 - (BOOL)isConnectable;
 
 @end
