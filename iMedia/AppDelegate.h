@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+@class NearbyViewController;
 @class ContactListViewController;
 @class ConversationsController;
 @class FunctionListViewController;
@@ -19,6 +20,7 @@
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) UITabBarController *tabController;
+@property (strong, nonatomic) NearbyViewController *nearbyViewController;
 @property (strong, nonatomic) ConversationsController *conversationController;
 @property (strong, nonatomic) ContactListViewController *contactListController;
 @property (strong, nonatomic) FunctionListViewController *functionListController;

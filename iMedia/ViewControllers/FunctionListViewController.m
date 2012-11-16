@@ -71,14 +71,14 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 {
     [super viewDidLoad];
     
-    self.settingTitleArray = [[NSArray alloc] initWithObjects:@"附近的人", @"打招呼的人", @"摇一摇",@"百宝箱", nil];
+    self.settingTitleArray = [[NSArray alloc] initWithObjects:@"打招呼的人", @"摇一摇",@"插件库", nil];
     
     [self.view addSubview:self.settingView];
     
     for (int index = 0; index <[self.settingTitleArray count]; index++) {
         MetroButton *button = [[MetroButton alloc]initWithFrame:[self calcRect:index]];
         NSString *title = [self.settingTitleArray objectAtIndex:index];
-        NSString *image = [NSString stringWithFormat:@"metro_icon_%d.png",(index+1)];
+        NSString *image = [NSString stringWithFormat:@"metro_icon_%d.png",(index+2)];
         [button initMetroButton:[UIImage imageNamed:image] andText:title andIndex:index];
         
         if (index == 1) {

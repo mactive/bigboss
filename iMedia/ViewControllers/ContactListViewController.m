@@ -16,7 +16,6 @@
 #import "ConversationsController.h"
 #import "AddFriendController.h"
 #import "AddFriendByIDController.h"
-#import "UINavigationBar+Background.h"
 #import <QuartzCore/QuartzCore.h>
 #import "pinyin.h"
 #import "POAPinyin.h"
@@ -73,7 +72,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [self dismissModalViewControllerAnimated:YES];
     
     if (obj) {
-        [self.tabBarController setSelectedIndex:0];
+        [self.tabBarController setSelectedIndex:1];
         [[self appDelegate].conversationController chatWithIdentity:obj];
     }    
 
