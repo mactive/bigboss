@@ -520,6 +520,40 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     [[AppNetworkAPIClient sharedClient] postPath:POST_DATA_PATH parameters:postDict success:nil failure:nil];
 }
 
+
+- (void)getNearestPeopleWithBlock:(void (^)(id, NSError *))block
+{
+/*    NSDictionary * result = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"123456", @"fake", @"i am a good guy", "0.12894743","","2012-11-16 14:00:23", nil] forKeys:[NSArray arrayWithObjects:@"guid", @"nickname", @"signature", @"distance", "thumbnail","lastupdated", nil]]] forKeys:[NSArray arrayWithObjects:@"0", nil]];
+    
+  
+    return result;
+ */
+    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: @"10", @"op", "30", @"querysize", "0", @"start", nil];
+    
+    [[AppNetworkAPIClient sharedClient] getPath:GET_DATA_PATH parameters:getDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        DDLogVerbose(@"get nearest user data received: %@", responseObject);
+        
+        NSString* type = [responseObject valueForKey:@"type"];
+        
+        if (![@"error" isEqualToString:type]) {
+            if (block) {
+                block (responseObject, nil);
+            }
+        } else {
+            if (block) {
+                block (nil, nil);
+            }
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        //
+        if (block) {
+            block (nil, error);
+        }
+    }];
+    
+}
+
 - (BOOL)isConnectable
 {
     if (self.kNetworkStatus.intValue == AFNetworkReachabilityStatusReachableViaWiFi || self.kNetworkStatus.intValue == AFNetworkReachabilityStatusReachableViaWWAN) {
