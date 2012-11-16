@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "WSBubbleTableView.h"
+#import "User.h"
 
 @class Conversation;
 @class ACPlaceholderTextView;
@@ -25,7 +26,6 @@
 
 @property (nonatomic, strong) WSBubbleTableView *bubbleTable;
 @property (nonatomic, strong) NSMutableArray *bubbleData;
-
 
 
 @end

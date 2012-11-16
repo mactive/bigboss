@@ -28,11 +28,6 @@
 @synthesize avatarImage;
 @synthesize bubbleLabel;
 
-- (void)setData:(WSBubbleData *)data
-{
-    [self setupInternalData:data];
-}
-
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -62,6 +57,14 @@
     }
     return self;
 }
+
+
+- (void)setData:(WSBubbleData *)data
+{
+    [super setData:data];
+}
+
+
 - (void) setupInternalData:(WSBubbleData *)cellData
 {
     [super setupInternalData:cellData];

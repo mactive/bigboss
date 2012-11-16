@@ -27,11 +27,11 @@
                            RGBCOLOR(238, 175, 212),
                            RGBCOLOR(253, 152, 113),nil];
         
-        self.iconView  = [[UIImageView alloc]initWithFrame:CGRectMake((frame.size.width-75)/2, (frame.size.height-75)/3, 75, 75)];
+        self.iconView  = [[UIImageView alloc]initWithFrame:CGRectMake((frame.size.height-75)/2, (frame.size.height-75)/2, 75, 75)];
         
         self.titleLabel = [[UILabel alloc] init];
         [self.titleLabel setBackgroundColor:[UIColor clearColor]];
-        [self.titleLabel setFrame:CGRectMake(0, frame.size.height /4*3, frame.size.width, 20)];
+        [self.titleLabel setFrame:CGRectMake(120, (frame.size.height-20)/2 , frame.size.width /2, 20)];
         [self.titleLabel setTextAlignment:NSTextAlignmentCenter];
         [self.titleLabel setTextColor:[UIColor whiteColor]];
         [self.titleLabel setFont:[UIFont boldSystemFontOfSize:20.0f]];

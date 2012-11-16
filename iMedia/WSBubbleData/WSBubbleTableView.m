@@ -15,11 +15,14 @@
 #import "XMPPFramework.h"
 #import "ConversationsController.h"
 #import "Conversation.h"
+#import "Me.h"
 
 #import "WSBubbleTableViewCell.h"
 #import "WSBubbleTextTableViewCell.h"
 #import "WSBubbleTemplateTableViewCell.h"
 #import "WSBubbleRateTableViewCell.h"
+#import "ContactDetailController.h"
+#import "ProfileMeController.h"
 
 
 
@@ -34,6 +37,7 @@
 static NSString *CellText = @"CellText";
 static NSString *CellTemplate = @"CellTemplate";
 static NSString *CellRate = @"CellRate";
+
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -163,7 +167,15 @@ static NSString *CellRate = @"CellRate";
     WSBubbleData *data = [[self.bubbleSection objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
     
     if (data.type == BubbleTypeMine || data.type == BubbleTypeSomeoneElse) {
-#warning TODO 点击去到那个人的profile页面
+        if ( [data.msg.from.ePostalID isEqualToString:[self appDelegate].me.ePostalID]) {
+            ProfileMeController *controller = [[ProfileMeController alloc] initWithNibName:nil bundle:nil];
+            [[self appDelegate].conversationController.chatDetailController.navigationController pushViewController:controller animated:YES];
+        }else{
+            ContactDetailController *controller = [[ContactDetailController alloc]initWithNibName:nil bundle:nil];
+            controller.user = (User *)data.msg.from;
+            [[self appDelegate].conversationController.chatDetailController.navigationController pushViewController:controller animated:YES];
+        }
+        
     }
     
     if (data.type == BubbleTypeRateview) {
