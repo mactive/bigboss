@@ -489,34 +489,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     // where received subscribe success, add user to roster
     NSString* ePostalID = [[presence from] bare];
     NSString* subscriptionResult = [presence attributeStringValueForName:@"type"];
-    if (subscriptionResult != nil && [subscriptionResult isEqualToString:@"subscribed"]) {
-/*
-        User* thisUser = [[ModelHelper sharedInstance] findUserWithEPostalID:ePostalID];
-        
-        if (thisUser != nil &&  thisUser.state.intValue == IdentityStatePendingAddFriend)
-        {
-            thisUser.ePostalID = ePostalID;
-            thisUser.displayName = [thisUser.ePostalID substringToIndex:[thisUser.ePostalID rangeOfString: @"@"].location];
-            thisUser.type = [NSNumber numberWithInt:IdentityTypeUser];
-            thisUser.state = [NSNumber numberWithInt:IdentityStatePendingServerDataUpdate];
-            
-            [[AppNetworkAPIClient sharedClient] updateIdentity:thisUser withBlock:nil];
-        }
- */
-        [xmppStream sendElement:[XMPPPresence presenceWithType:@"subscribe" to:[[presence from] bareJID]]];
-    } else if (subscriptionResult != nil && [subscriptionResult isEqualToString:@"unsubscribed"]) {
-        /*
-        User* thisUser = [[ModelHelper sharedInstance] findUserWithEPostalID:ePostalID];
-        
-        if (thisUser != nil &&  thisUser.state.intValue == IdentityStatePendingAddFriend)
-        {
-            thisUser.state = [NSNumber numberWithInt:IdentityStateInactive];
-            
-            [self removeBuddy:ePostalID withCallbackBlock:nil];
-        }
-         */
-        [xmppStream sendElement:[XMPPPresence presenceWithType:@"unsubscribe" to:[[presence from] bareJID]]];
-    } else if (subscriptionResult != nil && [subscriptionResult isEqualToString:@"subscribe"]) {
+    if (subscriptionResult != nil && [subscriptionResult isEqualToString:@"subscribe"]) {
         XMPPUserMemoryStorageObject* user = [self.xmppRosterStorage userForJID:[presence from]];
         User* thisUser = [[ModelHelper sharedInstance] findUserWithEPostalID:ePostalID];
         if (user != nil && [user isBuddy]) {
@@ -533,6 +506,10 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
              postingStyle:NSPostWhenIdle
              coalesceMask:NSNotificationNoCoalescing
              forModes:nil];
+        } else if (thisUser.state.intValue == IdentityStateActive) {
+            // this is the case that the contact have removed user, and subscriptions are revoked both ways
+            thisUser.state = [NSNumber numberWithInt:IdentityStatePendingAddFriend];
+            [self acceptPresenceSubscriptionRequestFrom:ePostalID andAddToRoster:YES];
         }
         
     } else if (subscriptionResult != nil && [subscriptionResult isEqualToString:@"unsubscribe"]) {
@@ -606,7 +583,6 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     {
         thisUser.ePostalID = [user.jid bare];
         thisUser.displayName = [thisUser.ePostalID substringToIndex:[thisUser.ePostalID rangeOfString: @"@"].location];
-        thisUser.type = [NSNumber numberWithInt:IdentityTypeUser];
         thisUser.state = [NSNumber numberWithInt:IdentityStatePendingServerDataUpdate];
         
         [[AppNetworkAPIClient sharedClient] updateIdentity:thisUser withBlock:nil];
@@ -742,7 +718,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     }
     
     
-    if ( thisUser.state.intValue == IdentityStatePendingAddFriend || thisUser.state.intValue == IdentityStatePendingServerDataUpdate)
+    if ( thisUser.state.intValue != IdentityStateActive)
     {
         thisUser.ePostalID = [user.jid bare];
         thisUser.displayName = [thisUser.ePostalID substringToIndex:[thisUser.ePostalID rangeOfString: @"@"].location];
