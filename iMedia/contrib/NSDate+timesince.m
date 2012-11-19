@@ -15,6 +15,7 @@
 #define kDepth 1
 
 #import "NSDate+timesince.h"
+#import "NSDate-Utilities.h"
 
 @implementation NSDate (timesince)
 
@@ -35,25 +36,29 @@
 {
     NSString *result = [[NSString alloc]init];
     int delta = -(int)[self timeIntervalSinceNow];
-    BOOL isToday;
-    NSDateComponents *otherDay = [[NSCalendar currentCalendar] components:NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:self];
-    NSDateComponents *today = [[NSCalendar currentCalendar] components:NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:[NSDate date]];
-    if([today day] == [otherDay day] &&
-       [today month] == [otherDay month] &&
-       [today year] == [otherDay year] &&
-       [today era] == [otherDay era]) {
-        //do stuff
-        isToday = YES;
-    }else{
-        isToday = NO;
-    }
+    
+    
+//    BOOL isToday;
+//    BOOL isThisWeek;
+//    NSDateComponents *otherDay = [[NSCalendar currentCalendar] components:NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:self];
+//    NSDateComponents *today = [[NSCalendar currentCalendar] components:NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:[NSDate date]];
+//    if([today day] == [otherDay day] &&
+//       [today month] == [otherDay month] &&
+//       [today year] == [otherDay year] &&
+//       [today era] == [otherDay era]) {
+//        //do stuff
+//        isToday = YES;
+//    }else{
+//        isToday = NO;
+//    }
+
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
 
     
     if (delta <= A_DAY) {
         //22:10
-        if (isToday) {
+        if (self.isToday) {
             [dateFormatter setDateFormat:@"HH:mm"];
             result = [dateFormatter stringFromDate:self];
         }else{
@@ -63,13 +68,19 @@
     }else if( delta > A_DAY &&  delta <= A_DAY *2 ){
         //昨天
         result = T(@"昨天");
-    }else if( delta > A_DAY *2 && delta <= SIX_DAYS){
-        //星期X
-        NSArray *weekdayAry = [NSArray arrayWithObjects:T(@"星期天"),T(@"星期一"),T(@"星期二"),T(@"星期三"),T(@"星期四"),T(@"星期五"),T(@"星期六"),nil];
-        [dateFormatter setDateFormat:NSLocalizedString(@"eee", nil)];
-        // 此处更改显示的大写字母的星期几
-        [dateFormatter setShortWeekdaySymbols:weekdayAry];
-        result = [dateFormatter stringFromDate:self];
+    }else if( delta > A_DAY *2 && delta <= SIX_DAYS){        
+        if (self.isThisWeek) {
+            //星期X
+            NSArray *weekdayAry = [NSArray arrayWithObjects:T(@"星期天"),T(@"星期一"),T(@"星期二"),T(@"星期三"),T(@"星期四"),T(@"星期五"),T(@"星期六"),nil];
+            [dateFormatter setDateFormat:NSLocalizedString(@"eee", nil)];
+            // 此处更改显示的大写字母的星期几
+            [dateFormatter setShortWeekdaySymbols:weekdayAry];
+            result = [dateFormatter stringFromDate:self];
+        }else{
+            [dateFormatter setDateFormat:@"MM-dd"];
+            result = [dateFormatter stringFromDate:self];
+        }
+
     }else if( delta > SIX_DAYS ){
         // mm:dd
 		[dateFormatter setDateFormat:@"MM-dd"];
