@@ -239,6 +239,7 @@
 	[UIView commitAnimations];
 	
 	[self setState:EGOOPullRefreshNormal];
+
     
 }
 

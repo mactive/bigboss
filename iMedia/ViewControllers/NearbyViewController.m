@@ -12,17 +12,8 @@
 #import "NearbyTableViewCell.h"
 #import "EGORefreshTableHeaderView.h"
 
-@interface NearbyViewController ()<MBProgressHUDDelegate,EGORefreshTableHeaderDelegate>
-{
-    EGORefreshTableHeaderView* refreshHeaderView;
-    //  Reloading var should really be your tableviews datasource
-    //  Putting it here for demo purposes
-    BOOL _reloading;
-    MBProgressHUD *HUD;
-}
+@interface NearbyViewController ()
 
-- (void)reloadTableViewDataSource;
-- (void)doneLoadingTableViewData;
 
 @property (nonatomic, strong) NSArray* sourceData;
 @property (nonatomic, strong) UIView * headerView;
@@ -48,13 +39,17 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     
-    if (refreshHeaderView == nil) {
-        EGORefreshTableHeaderView* view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0, self.tableView.frame.size.height, 320.0f, 65.0)];
+    if (_refreshHeaderView == nil) {
+		EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -50, self.view.frame.size.width, 50)];
         view.delegate = self;
         [self.tableView addSubview:view];
-        refreshHeaderView = view;
+        _refreshHeaderView = view;
     }
-    [refreshHeaderView refreshLastUpdatedDate];
+    [_refreshHeaderView refreshLastUpdatedDate];
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+	return YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -102,8 +97,8 @@
 #pragma mark - tableview header and footer and fresh
 //////////////////////////////////////////////////////////////////////////////////////////
 
-
-#pragma mark - Data Source Loading / Reloading Methods
+#pragma mark -
+#pragma mark Data Source Loading / Reloading Methods
 
 - (void)reloadTableViewDataSource{
 	
@@ -117,27 +112,29 @@
 	
 	//  model should call this when its done loading
 	_reloading = NO;
-	[refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
+	[_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
 	
 }
 
 
-#pragma mark - UIScrollViewDelegate Methods
+#pragma mark -
+#pragma mark UIScrollViewDelegate Methods
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
 	
-	[refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+	[_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
     
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
 	
-	[refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
 	
 }
 
 
-#pragma mark - EGORefreshTableHeaderDelegate Methods
+#pragma mark -
+#pragma mark EGORefreshTableHeaderDelegate Methods
 
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
 	

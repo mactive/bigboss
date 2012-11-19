@@ -10,6 +10,7 @@
 #import "UIImageView+AFNetworking.h"
 #import <QuartzCore/QuartzCore.h>
 #import "NSDate+timesince.h"
+#import "LocationManager.h"
 
 @interface NearbyTableViewCell()
 
@@ -18,6 +19,7 @@
 @property(nonatomic, strong)UILabel *locationLabel;
 @property(nonatomic, strong)UILabel *signatureLabel;
 @property(nonatomic, strong)UIImageView *genderView;
+@property(nonatomic, strong)CLLocation *here_location;
 
 @end
 
@@ -109,6 +111,9 @@
         [self.contentView addSubview: self.locationLabel];
         [self.contentView addSubview:self.nameLabel];
         [self.contentView addSubview: self.signatureLabel];
+        
+        CLLocationManager *locationManager = [[CLLocationManager alloc] init];
+        self.here_location  = locationManager.location;
     }
     return self;
 }
@@ -126,22 +131,32 @@
         [self.genderView setImage:[UIImage imageNamed:@"male_icon.png"]];
     }
     
-    ////location && time 
-
+    //// location && time
+    
+    NSString *lon  = [data objectForKey:@"lon"];
+    NSString *lat  = [data objectForKey:@"lat"];
+    CLLocation *dataLocation = [[CLLocation alloc] initWithLatitude:[lat doubleValue]
+                                                          longitude:[lon doubleValue]];
+	CLLocationDistance dataDistance = -1.0f;
+	if (self.here_location != nil && dataLocation != nil)
+		dataDistance = [dataLocation distanceFromLocation:self.here_location];
+    
+    // time
     NSDateFormatter *dateFormater = [[NSDateFormatter alloc]init];
     [dateFormater setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
     NSDate *updateDate = [dateFormater dateFromString:[data objectForKey:@"last_updated"]];
-    self.locationLabel.text = [NSString stringWithFormat:@" %@ , %@ ",
-                               [self distanceDisplay:[data objectForKey:@"distance"]],
-                               [updateDate timesinceAgo] ];
     
+    // location , timeago
+    self.locationLabel.text = [NSString stringWithFormat:@" %@ , %@ ",
+                               [self distanceDisplay:dataDistance],
+                               [updateDate timesinceAgo] ];
 
     //// nickname
     if ([[data objectForKey:@"nickname"] length] != 0) {
         CGSize nameMaxSize = CGSizeMake(MIDDLE_COLUMN_WIDTH, LABEL_HEIGHT);
         CGSize nameSize = [[data objectForKey:@"nickname"] sizeWithFont:self.nameLabel.font constrainedToSize:nameMaxSize lineBreakMode: UILineBreakModeTailTruncation];
         self.nameLabel.text         = [data objectForKey:@"nickname"];
-        self.nameLabel.frame = CGRectMake(MIDDLE_COLUMN_OFFSET +3, 7 , nameSize.width + SUMMARY_PADDING, nameSize.height);
+        self.nameLabel.frame = CGRectMake(MIDDLE_COLUMN_OFFSET +3, 7, nameSize.width + SUMMARY_PADDING, nameSize.height);
         self.genderView.frame = CGRectMake(MIDDLE_COLUMN_OFFSET + nameSize.width +10, 10.5, 15, 15);
     }else{
         [self.nameLabel removeFromSuperview];
@@ -167,13 +182,38 @@
     }else{
         [self.signatureLabel removeFromSuperview];
     }
+    
+    
 }
 
 
-- (NSString *)distanceDisplay:(NSString *)disString
+#pragma distance function
+//- (CLLocation *)location
+//{
+//	return [[[CLLocation alloc] initWithLatitude:[self.latitude doubleValue]
+//                                       longitude:[self.longitude doubleValue]] autorelease];
+//}
+//
+//- (CLLocationDistance)distanceWithLocation:(CLLocation *)location
+//{
+//	CLLocation *item_location = [self location];
+//	CLLocationDistance distance = -1.0f;
+//	if (location != nil && item_location != nil)
+//		distance = [item_location distanceFromLocation:location];
+//	return distance;
+//}
+//
+//- (CLLocationDistance)distanceFromHere
+//{
+//	CLLocationManager *locationManager = [[[CLLocationManager alloc] init] autorelease];
+//	CLLocation *here_location  = locationManager.location;
+//	return [self distanceWithLocation:here_location];
+//}
+
+- (NSString *)distanceDisplay:(CLLocationDistance)_distance
 {
     
-    CGFloat distance = [disString doubleValue] * 1000;
+    CLLocationDistance distance = _distance;
     
     NSString *distanceString = @"";
     if ((int)floor(distance) == 0) {

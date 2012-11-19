@@ -7,7 +7,20 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MBProgressHUD.h"
+#import "NearbyTableViewCell.h"
+#import "EGORefreshTableHeaderView.h"
 
-@interface NearbyViewController : UITableViewController
 
+@interface NearbyViewController : UITableViewController<MBProgressHUDDelegate,EGORefreshTableHeaderDelegate>
+{
+	EGORefreshTableHeaderView *_refreshHeaderView;
+    //  Reloading var should really be your tableviews datasource
+    //  Putting it here for demo purposes
+    BOOL _reloading;
+    MBProgressHUD *HUD;
+}
+
+- (void)reloadTableViewDataSource;
+- (void)doneLoadingTableViewData;
 @end
