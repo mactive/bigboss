@@ -46,17 +46,7 @@
 
 - (void)pullToRefreshViewShouldRefresh:(PullToRefreshView *)view;
 {
-    [self reloadTableData];
-}
-
--(void) reloadTableData
-{
-    // call to reload your data
     [self populateData];
-    [pull setState:PullToRefreshViewStateLoading];
-    sleep(2);
-    [pull finishedLoading];
-
 }
 
 
@@ -74,6 +64,10 @@
 
     [[AppNetworkAPIClient sharedClient]getNearestPeopleWithBlock:^(id responseObject, NSError *error) {
         if (responseObject != nil) {
+            
+            // pull view hide
+            [pull finishedLoading];
+            
             NSDictionary *responseDict = responseObject;
             NSMutableArray *responseArray = [[NSMutableArray alloc]init];
             
@@ -85,6 +79,8 @@
             [self.tableView reloadData];
 
         }else{
+            [pull finishedLoading];
+
             HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             HUD.mode = MBProgressHUDModeText;
             HUD.delegate = self;
