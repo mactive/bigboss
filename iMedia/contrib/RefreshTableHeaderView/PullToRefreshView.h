@@ -1,11 +1,16 @@
 //
-//  EGORefreshTableHeaderView.h
-//  Demo
+//  PullToRefreshView.h
+//  Grant Paul (chpwn)
+//
+//  (based on EGORefreshTableHeaderView)
 //
 //  Created by Devin Doty on 10/14/09October14.
 //  Copyright 2009 enormego. All rights reserved.
 //
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
+// The MIT License (MIT)
+// Copyright © 2012 Sonny Parlin, http://sonnyparlin.com
+// 
+// //  Permission is hereby granted, free of charge, to any person obtaining a copy
 //  of this software and associated documentation files (the "Software"), to deal
 //  in the Software without restriction, including without limitation the rights
 //  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
@@ -27,38 +32,38 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 
-typedef enum{
-	EGOOPullRefreshPulling = 0,
-	EGOOPullRefreshNormal,
-	EGOOPullRefreshLoading,
-} EGOPullRefreshState;
+typedef enum {
+  PullToRefreshViewStateNormal = 0,
+	PullToRefreshViewStateReady,
+	PullToRefreshViewStateLoading
+} PullToRefreshViewState;
 
-@protocol EGORefreshTableHeaderDelegate;
-@interface EGORefreshTableHeaderView : UIView {
-	
-	id _delegate;
-	EGOPullRefreshState _state;
+@protocol PullToRefreshViewDelegate;
+
+@interface PullToRefreshView : UIView {
+	PullToRefreshViewState state;
     
-	UILabel *_lastUpdatedLabel;
-	UILabel *_statusLabel;
-	CALayer *_arrowImage;
-	UIActivityIndicatorView *_activityView;
-	
+	UILabel *lastUpdatedLabel;
+	UILabel *statusLabel;
+	CALayer *arrowImage;
+	UIActivityIndicatorView *activityView;
 }
 
-@property(nonatomic,assign) id <EGORefreshTableHeaderDelegate> delegate;
-
-- (id)initWithFrame:(CGRect)frame arrowImageName:(NSString *)arrow textColor:(UIColor *)textColor;
+@property (nonatomic, strong) UIScrollView *scrollView;
+@property (nonatomic, weak) id<PullToRefreshViewDelegate> delegate;
+@property (nonatomic, assign, getter = isEnabled) BOOL enabled;
 
 - (void)refreshLastUpdatedDate;
-- (void)egoRefreshScrollViewDidScroll:(UIScrollView *)scrollView;
-- (void)egoRefreshScrollViewDidEndDragging:(UIScrollView *)scrollView;
-- (void)egoRefreshScrollViewDataSourceDidFinishedLoading:(UIScrollView *)scrollView;
+- (void)finishedLoading;
+- (void)setState:(PullToRefreshViewState)state_;
+
+- (id)initWithScrollView:(UIScrollView *)scrollView;
 
 @end
-@protocol EGORefreshTableHeaderDelegate
-- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view;
-- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view;
+
+@protocol PullToRefreshViewDelegate <NSObject>
+
 @optional
-- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view;
+- (void)pullToRefreshViewShouldRefresh:(PullToRefreshView *)view;
+- (NSDate *)pullToRefreshViewLastUpdated:(PullToRefreshView *)view;
 @end

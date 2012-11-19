@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		042B51D8165A8CF900443796 /* PullToRefreshView.m in Sources */ = {isa = PBXBuildFile; fileRef = 042B51D7165A8CF900443796 /* PullToRefreshView.m */; };
 		0436B478165136930081A6F7 /* WSBubbleTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0436B477165136930081A6F7 /* WSBubbleTableView.m */; };
 		0450A5ED164649080002BA54 /* LoginSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0450A5EC164649080002BA54 /* LoginSettingViewController.m */; };
 		0489A3E816339FA400D122DF /* MessageBubbleSectionHeader@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0489A3E716339FA400D122DF /* MessageBubbleSectionHeader@2x.png */; };
@@ -130,7 +131,6 @@
 		26DE71E61654C7DE00672C4F /* tabbar_item_3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26DE71E11654C7DE00672C4F /* tabbar_item_3@2x.png */; };
 		26DE71E71654C7DE00672C4F /* tabbar_item_2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26DE71E21654C7DE00672C4F /* tabbar_item_2@2x.png */; };
 		26E5886A1659ED8200180A9D /* NearbyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 26E588691659ED8200180A9D /* NearbyTableViewCell.m */; };
-		26E58876165A2A2200180A9D /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 26E58875165A2A2200180A9D /* EGORefreshTableHeaderView.m */; };
 		26E58879165A2A6700180A9D /* blueArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 26E58877165A2A6700180A9D /* blueArrow.png */; };
 		26E5887A165A2A6700180A9D /* blueArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26E58878165A2A6700180A9D /* blueArrow@2x.png */; };
 		26E75AF1164A787200774755 /* navigationBar_bg_part@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26E75AF0164A787200774755 /* navigationBar_bg_part@2x.png */; };
@@ -372,6 +372,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		042B51D6165A8CF900443796 /* PullToRefreshView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PullToRefreshView.h; sourceTree = "<group>"; };
+		042B51D7165A8CF900443796 /* PullToRefreshView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PullToRefreshView.m; sourceTree = "<group>"; };
 		0436B476165136930081A6F7 /* WSBubbleTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WSBubbleTableView.h; path = WSBubbleData/WSBubbleTableView.h; sourceTree = "<group>"; };
 		0436B477165136930081A6F7 /* WSBubbleTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WSBubbleTableView.m; path = WSBubbleData/WSBubbleTableView.m; sourceTree = "<group>"; };
 		0450A5EB164649080002BA54 /* LoginSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginSettingViewController.h; path = ViewControllers/Welcome/LoginSettingViewController.h; sourceTree = "<group>"; };
@@ -523,8 +525,6 @@
 		26DE71E21654C7DE00672C4F /* tabbar_item_2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tabbar_item_2@2x.png"; path = "Resources/tabbar_item_2@2x.png"; sourceTree = "<group>"; };
 		26E588681659ED8200180A9D /* NearbyTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NearbyTableViewCell.h; path = ViewControllers/UITableViewCell/NearbyTableViewCell.h; sourceTree = "<group>"; };
 		26E588691659ED8200180A9D /* NearbyTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NearbyTableViewCell.m; path = ViewControllers/UITableViewCell/NearbyTableViewCell.m; sourceTree = "<group>"; };
-		26E58874165A2A2200180A9D /* EGORefreshTableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EGORefreshTableHeaderView.h; sourceTree = "<group>"; };
-		26E58875165A2A2200180A9D /* EGORefreshTableHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EGORefreshTableHeaderView.m; sourceTree = "<group>"; };
 		26E58877165A2A6700180A9D /* blueArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = blueArrow.png; path = Resources/blueArrow.png; sourceTree = "<group>"; };
 		26E58878165A2A6700180A9D /* blueArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "blueArrow@2x.png"; path = "Resources/blueArrow@2x.png"; sourceTree = "<group>"; };
 		26E75AF0164A787200774755 /* navigationBar_bg_part@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "navigationBar_bg_part@2x.png"; path = "Resources/navigationBar_bg_part@2x.png"; sourceTree = "<group>"; };
@@ -984,8 +984,8 @@
 		26E58873165A2A2200180A9D /* RefreshTableHeaderView */ = {
 			isa = PBXGroup;
 			children = (
-				26E58874165A2A2200180A9D /* EGORefreshTableHeaderView.h */,
-				26E58875165A2A2200180A9D /* EGORefreshTableHeaderView.m */,
+				042B51D6165A8CF900443796 /* PullToRefreshView.h */,
+				042B51D7165A8CF900443796 /* PullToRefreshView.m */,
 			);
 			name = RefreshTableHeaderView;
 			path = contrib/RefreshTableHeaderView;
@@ -2418,7 +2418,7 @@
 				26BA7EF8165390D30094D030 /* WSBubbleRateTableViewCell.m in Sources */,
 				26DE71D91654C1C400672C4F /* NearbyViewController.m in Sources */,
 				26E5886A1659ED8200180A9D /* NearbyTableViewCell.m in Sources */,
-				26E58876165A2A2200180A9D /* EGORefreshTableHeaderView.m in Sources */,
+				042B51D8165A8CF900443796 /* PullToRefreshView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

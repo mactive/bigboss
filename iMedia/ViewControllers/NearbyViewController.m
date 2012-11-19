@@ -10,7 +10,7 @@
 #import "AppNetworkAPIClient.h"
 #import "MBProgressHUD.h"
 #import "NearbyTableViewCell.h"
-#import "EGORefreshTableHeaderView.h"
+#import "PullToRefreshView.h"
 
 @interface NearbyViewController ()
 
@@ -34,23 +34,31 @@
     return self;
 }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
-    
-    if (_refreshHeaderView == nil) {
-		EGORefreshTableHeaderView *view = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, -50, self.view.frame.size.width, 50)];
-        view.delegate = self;
-        [self.tableView addSubview:view];
-        _refreshHeaderView = view;
-    }
-    [_refreshHeaderView refreshLastUpdatedDate];
+	
+	pull = [[PullToRefreshView alloc] initWithScrollView:(UIScrollView *) self.tableView];
+    [pull setDelegate:self];
+    [self.tableView addSubview:pull];
+	
+
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-	return YES;
+- (void)pullToRefreshViewShouldRefresh:(PullToRefreshView *)view;
+{
+    [self reloadTableData];
 }
+
+-(void) reloadTableData
+{
+    // call to reload your data
+    [self populateData];
+    [pull setState:PullToRefreshViewStateLoading];
+    sleep(2);
+    [pull finishedLoading];
+
+}
+
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -86,11 +94,6 @@
     }];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -98,75 +101,24 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 
 #pragma mark -
-#pragma mark Data Source Loading / Reloading Methods
+#pragma mark Memory Management
 
-- (void)reloadTableViewDataSource{
-	
-	//  should be calling your tableviews data source model to reload
-	//  put here just for demo
-	_reloading = YES;
-	
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
 }
-
-- (void)doneLoadingTableViewData{
-	
-	//  model should call this when its done loading
-	_reloading = NO;
-	[_refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
-	
-}
-
-
-#pragma mark -
-#pragma mark UIScrollViewDelegate Methods
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-	
-	[_refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
-    
-}
-
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
-	
-	[_refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
-	
-}
-
-
-#pragma mark -
-#pragma mark EGORefreshTableHeaderDelegate Methods
-
-- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
-	
-	[self reloadTableViewDataSource];
-	[self performSelector:@selector(doneLoadingTableViewData) withObject:nil afterDelay:3.0];
-	
-}
-
-- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
-	
-	return _reloading; // should return if data source model is reloading
-	
-}
-
-- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
-	
-	return [NSDate date]; // should return date data source was last changed
-	
-}
-
 
 //////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - tableview delegate
 //////////////////////////////////////////////////////////////////////////////////////////
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.sourceData count];
+//    return [self.sourceData count];
+    return 10;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    return 2;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -190,7 +142,7 @@
         cell = [[NearbyTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
-    cell.data = rowData;
+//    cell.data = rowData;
     return cell;
 }
 
