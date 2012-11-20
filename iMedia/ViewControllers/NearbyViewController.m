@@ -70,9 +70,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     [self.loadMoreButton.layer setBorderWidth:1.0f];
     [self.loadMoreButton.layer setCornerRadius:5.0f];
     [self.loadMoreButton addTarget:self action:@selector(populateData) forControlEvents:UIControlEventTouchUpInside];
-    
+    [self.loadMoreButton setHidden:YES];
     [self.tableView.tableFooterView addSubview:self.loadMoreButton];
-	
 
 }
 
@@ -108,6 +107,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
                 [responseArray insertObject:[responseObject objectForKey:[NSString stringWithFormat:@"%i",j]] atIndex:j];
             }
             self.sourceData = [[NSArray alloc] initWithArray:responseArray];
+            
+            if([self.sourceData count] > 5) {   [self.loadMoreButton setHidden:NO]; }
             
             [self.tableView reloadData];
 

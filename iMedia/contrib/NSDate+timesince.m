@@ -36,23 +36,7 @@
 {
     NSString *result = [[NSString alloc]init];
     int delta = -(int)[self timeIntervalSinceNow];
-    
-    
-//    BOOL isToday;
-//    BOOL isThisWeek;
-//    NSDateComponents *otherDay = [[NSCalendar currentCalendar] components:NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:self];
-//    NSDateComponents *today = [[NSCalendar currentCalendar] components:NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:[NSDate date]];
-//    if([today day] == [otherDay day] &&
-//       [today month] == [otherDay month] &&
-//       [today year] == [otherDay year] &&
-//       [today era] == [otherDay era]) {
-//        //do stuff
-//        isToday = YES;
-//    }else{
-//        isToday = NO;
-//    }
 
-    
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
 
     
@@ -173,8 +157,8 @@
 						   [NSNumber numberWithInt:3600], nil],
 						  [NSArray arrayWithObjects:T(@"分钟"),
 						   [NSNumber numberWithInt:60], nil],
-						  [NSArray arrayWithObjects:T(@"秒"), 
-						   [NSNumber numberWithInt:1], nil],
+//						  [NSArray arrayWithObjects:T(@"秒"), // 精确到秒 取消
+//						   [NSNumber numberWithInt:1], nil],
 						  nil];
 	NSString *delimiter = T(@", ");
 	NSString *combination = T(@"%@%i%@");
