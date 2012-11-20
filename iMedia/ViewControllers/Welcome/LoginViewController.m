@@ -148,7 +148,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             } else {
                 HUD.labelText = T(@"系统维护，请稍后重试或联系客服");
             }
-            [HUD hide:YES afterDelay:3];
+            [HUD hide:YES afterDelay:2];
         }
         
     }];

@@ -198,7 +198,7 @@
     
     ///// signature
     
-    NSString * signatureString = @"我们致力于提供优质的开发者技术支持服务";//[data objectForKey:@"signature"];
+    NSString * signatureString = [data objectForKey:@"signature"];
     
     if ([signatureString length] != 0 && signatureString != nil ) {
         CGSize summaryMaxSize = CGSizeMake(SUMMARY_WIDTH, LABEL_HEIGHT*2);

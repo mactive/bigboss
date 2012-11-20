@@ -8,11 +8,25 @@
 
 #import "NearbyViewController.h"
 #import "AppNetworkAPIClient.h"
+#import "DDLog.h"
 #import "MBProgressHUD.h"
 #import "NearbyTableViewCell.h"
 #import "PullToRefreshView.h"
+#import "ContactDetailController.h"
+#import "AppDelegate.h"
+#import "ConversationsController.h"
+#import "User.h"
 
-@interface NearbyViewController ()
+static const int ddLogLevel = LOG_LEVEL_VERBOSE;
+
+
+@interface NearbyViewController ()<MBProgressHUDDelegate,PullToRefreshViewDelegate,ChatWithIdentityDelegate>
+{
+	PullToRefreshView *pull;
+    //  Reloading var should really be your tableviews datasource
+    //  Putting it here for demo purposes
+    MBProgressHUD *HUD;
+}
 
 
 @property (nonatomic, strong) NSArray* sourceData;
@@ -160,6 +174,75 @@
     return cell;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    NSDictionary *rowData = [self.sourceData objectAtIndex:indexPath.row];
+    [self getDict:[rowData objectForKey:@"guid"]];
+    
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark Accessors & selectors
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (void)getDict:(NSString *)guidString
+{
+    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: guidString, @"guid", @"1", @"op", nil];
+    
+    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    HUD.delegate = self;
+    HUD.labelText = T(@"正在请求");
+    
+    [[AppNetworkAPIClient sharedClient] getPath:GET_DATA_PATH parameters:getDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        DDLogVerbose(@"get config JSON received: %@", responseObject);
+        
+        [HUD hide:YES];
+        NSString* type = [responseObject valueForKey:@"type"];
+        if ([type isEqualToString:@"user"]) {            
+            ContactDetailController *controller = [[ContactDetailController alloc] initWithNibName:nil bundle:nil];
+            controller.jsonData = responseObject;
+            controller.managedObjectContext = [self appDelegate].context;
+            
+            // Pass the selected object to the new view controller.
+            [controller setHidesBottomBarWhenPushed:YES];
+            [self.navigationController pushViewController:controller animated:YES];
+            
+        }
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        //
+        DDLogVerbose(@"error received: %@", error);
+        [HUD hide:YES];
+        
+        HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        HUD.mode = MBProgressHUDModeText;
+        HUD.delegate = self;
+        HUD.labelText = T(@"网络错误，无法获取用户数据");
+        [HUD hide:YES afterDelay:1];
+    }];
+    
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark Accessors & selectors
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+- (AppDelegate *)appDelegate
+{
+	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
+}
+
+- (void)viewController:(UIViewController *)viewController didChatIdentity:(id)obj
+{
+    [self dismissModalViewControllerAnimated:YES];
+    
+    if (obj) {
+        [self.tabBarController setSelectedIndex:1];
+        [[self appDelegate].conversationController chatWithIdentity:obj];
+    }
+    
+}
 
 
 @end

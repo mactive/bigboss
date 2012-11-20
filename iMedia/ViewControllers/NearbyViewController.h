@@ -10,14 +10,10 @@
 #import "MBProgressHUD.h"
 #import "NearbyTableViewCell.h"
 #import "PullToRefreshView.h"
+#import "ChatWithIdentity.h"
 
 
-@interface NearbyViewController : UITableViewController<MBProgressHUDDelegate,PullToRefreshViewDelegate, UITableViewDelegate, UITableViewDataSource>
-{
-	PullToRefreshView *pull;
-    //  Reloading var should really be your tableviews datasource
-    //  Putting it here for demo purposes
-    MBProgressHUD *HUD;
-}
+
+@interface NearbyViewController : UITableViewController
 
 @end
