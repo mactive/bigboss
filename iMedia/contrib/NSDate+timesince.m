@@ -15,6 +15,7 @@
 #define kDepth 1
 
 #import "NSDate+timesince.h"
+#import "NSDate-Utilities.h"
 
 @implementation NSDate (timesince)
 
@@ -35,25 +36,13 @@
 {
     NSString *result = [[NSString alloc]init];
     int delta = -(int)[self timeIntervalSinceNow];
-    BOOL isToday;
-    NSDateComponents *otherDay = [[NSCalendar currentCalendar] components:NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:self];
-    NSDateComponents *today = [[NSCalendar currentCalendar] components:NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:[NSDate date]];
-    if([today day] == [otherDay day] &&
-       [today month] == [otherDay month] &&
-       [today year] == [otherDay year] &&
-       [today era] == [otherDay era]) {
-        //do stuff
-        isToday = YES;
-    }else{
-        isToday = NO;
-    }
-    
+
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
 
     
     if (delta <= A_DAY) {
         //22:10
-        if (isToday) {
+        if (self.isToday) {
             [dateFormatter setDateFormat:@"HH:mm"];
             result = [dateFormatter stringFromDate:self];
         }else{
@@ -63,13 +52,19 @@
     }else if( delta > A_DAY &&  delta <= A_DAY *2 ){
         //昨天
         result = T(@"昨天");
-    }else if( delta > A_DAY *2 && delta <= SIX_DAYS){
-        //星期X
-        NSArray *weekdayAry = [NSArray arrayWithObjects:T(@"星期天"),T(@"星期一"),T(@"星期二"),T(@"星期三"),T(@"星期四"),T(@"星期五"),T(@"星期六"),nil];
-        [dateFormatter setDateFormat:NSLocalizedString(@"eee", nil)];
-        // 此处更改显示的大写字母的星期几
-        [dateFormatter setShortWeekdaySymbols:weekdayAry];
-        result = [dateFormatter stringFromDate:self];
+    }else if( delta > A_DAY *2 && delta <= SIX_DAYS){        
+        if (self.isThisWeek) {
+            //星期X
+            NSArray *weekdayAry = [NSArray arrayWithObjects:T(@"星期天"),T(@"星期一"),T(@"星期二"),T(@"星期三"),T(@"星期四"),T(@"星期五"),T(@"星期六"),nil];
+            [dateFormatter setDateFormat:NSLocalizedString(@"eee", nil)];
+            // 此处更改显示的大写字母的星期几
+            [dateFormatter setShortWeekdaySymbols:weekdayAry];
+            result = [dateFormatter stringFromDate:self];
+        }else{
+            [dateFormatter setDateFormat:@"MM-dd"];
+            result = [dateFormatter stringFromDate:self];
+        }
+
     }else if( delta > SIX_DAYS ){
         // mm:dd
 		[dateFormatter setDateFormat:@"MM-dd"];
@@ -150,25 +145,25 @@
 -(NSString *)timesinceWithDepth:(int)depth 
 {
 	NSArray *timeUnits = [NSArray arrayWithObjects:
-						  [NSArray arrayWithObjects:T(@"year"), 
+						  [NSArray arrayWithObjects:T(@"年"),
 						   [NSNumber numberWithInt:31556926], nil],
-						  [NSArray arrayWithObjects:T(@"month"), 
+						  [NSArray arrayWithObjects:T(@"月"),
 						   [NSNumber numberWithInt:2629744], nil],
-						  [NSArray arrayWithObjects:T(@"week"), 
+						  [NSArray arrayWithObjects:T(@"周"),
 						   [NSNumber numberWithInt:604800], nil],
-						  [NSArray arrayWithObjects:T(@"day"), 
+						  [NSArray arrayWithObjects:T(@"天"),
 						   [NSNumber numberWithInt:86400], nil],
-						  [NSArray arrayWithObjects:T(@"hour"), 
+						  [NSArray arrayWithObjects:T(@"小时"),
 						   [NSNumber numberWithInt:3600], nil],
-						  [NSArray arrayWithObjects:T(@"min"), 
+						  [NSArray arrayWithObjects:T(@"分钟"),
 						   [NSNumber numberWithInt:60], nil],
-						  [NSArray arrayWithObjects:T(@"sec"), 
-						   [NSNumber numberWithInt:1], nil],
+//						  [NSArray arrayWithObjects:T(@"秒"), // 精确到秒 取消
+//						   [NSNumber numberWithInt:1], nil],
 						  nil];
 	NSString *delimiter = T(@", ");
-	NSString *combination = T(@"%@%i %@");
-	NSString *plural_combination = T(@"%@%i %@s");
-	NSString *justNow = T(@"just now");
+	NSString *combination = T(@"%@%i%@");
+	NSString *plural_combination = T(@"%@%i%@");
+	NSString *justNow = T(@"就刚才");
 
 	int delta = -(int)[self timeIntervalSinceNow];
 	
@@ -199,7 +194,7 @@
 	if ([s length] == 0) {
 		s = justNow;
 	}else {
-        s = [NSString stringWithFormat:@"%@ %@", s, T(@"ago")];
+        s = [NSString stringWithFormat:@"%@%@", s, T(@"前")];
     }
 	
 	return s;

@@ -7,8 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MBProgressHUD.h"
+#import "NearbyTableViewCell.h"
+#import "PullToRefreshView.h"
+#import "ChatWithIdentity.h"
 
-@interface NearbyViewController : UIViewController
 
+
+@interface NearbyViewController : UITableViewController
 
 @end

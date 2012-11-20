@@ -42,6 +42,7 @@
 @property (strong, nonatomic) UIView *actionView;
 
 @property (strong, nonatomic) UILabel *sexLabel;
+@property (strong, nonatomic) UILabel *guidLabel;
 @property (strong, nonatomic) UILabel *horoscopeLabel;
 @property (strong, nonatomic) UILabel *timeLabel;
 @property (strong, nonatomic) UIButton *sendMsgButton;
@@ -96,6 +97,8 @@
 @synthesize sexLabel;
 @synthesize horoscopeLabel;
 @synthesize timeLabel;
+@synthesize guidLabel;
+@synthesize GUID;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -275,23 +278,29 @@
     [sexView addSubview:sexLabel];
     
     // horoscope
-    self.horoscopeLabel = [[UILabel alloc]initWithFrame:CGRectMake(60, 0, 100, 20)];
+    self.horoscopeLabel = [[UILabel alloc]initWithFrame:CGRectMake(55, 0, 100, 20)];
     [self.horoscopeLabel setBackgroundColor:[UIColor clearColor]];
     [self.horoscopeLabel setFont:[UIFont boldSystemFontOfSize:14.0]];
     [self.horoscopeLabel setShadowColor:[UIColor whiteColor]];
     [self.horoscopeLabel setShadowOffset:CGSizeMake(0, 1)];
     [self.horoscopeLabel setTextColor:RGBCOLOR(97, 97, 97)];
     
+    self.guidLabel = [[UILabel alloc]initWithFrame:CGRectMake(200, 0, 100, 20)];
+    [self.guidLabel setBackgroundColor:[UIColor clearColor]];
+    [self.guidLabel setFont:[UIFont boldSystemFontOfSize:14.0]];
+    [self.guidLabel setShadowColor:[UIColor whiteColor]];
+    [self.guidLabel setShadowOffset:CGSizeMake(0, 1)];
+    [self.guidLabel setTextColor:RGBCOLOR(97, 97, 97)];
     
     // Create a label icon for the time.
-    UIImageView *timeIconView = [[UIImageView alloc] initWithFrame:CGRectMake(210, 0 , 15, 15)];
-    timeIconView.image = [UIImage imageNamed:@"time_icon.png"];
-    
-    self.timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(228, 0 ,60, 20)];
-	self.timeLabel.font = [UIFont systemFontOfSize:12.0];
-	self.timeLabel.textAlignment = UITextAlignmentLeft;
-	self.timeLabel.textColor = RGBCOLOR(140, 140, 140);
-    self.timeLabel.backgroundColor = [UIColor clearColor];
+//    UIImageView *timeIconView = [[UIImageView alloc] initWithFrame:CGRectMake(120, 2 , 15, 15)];
+//    timeIconView.image = [UIImage imageNamed:@"time_icon.png"];
+//    
+//    self.timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(137, 2 ,60, 20)];
+//	self.timeLabel.font = [UIFont systemFontOfSize:12.0];
+//	self.timeLabel.textAlignment = UITextAlignmentLeft;
+//	self.timeLabel.textColor = RGBCOLOR(140, 140, 140);
+//    self.timeLabel.backgroundColor = [UIColor clearColor];
 
     
     // Create a label icon for the time.
@@ -311,34 +320,43 @@
     // add to the statusView
     [self.statusView addSubview:self.horoscopeLabel];
     [self.statusView addSubview:sexView];
-    [self.statusView addSubview:timeIconView];
-	[self.statusView addSubview:self.timeLabel];
-//    [self.statusView addSubview:locationIconView];
+//  [self.statusView addSubview:timeIconView];
+//	[self.statusView addSubview:self.timeLabel];
+//  [self.statusView addSubview:locationIconView];
 //	[self.statusView addSubview:locationLabel];
-    
+    [self.statusView addSubview:self.guidLabel];
+
     [self.contentView addSubview: self.statusView];
     [self refreshStatusView];
 }
 
-- (void)refreshStatusView
+- (void)refreshStatusView 
 {
-    
+    //time
+//    if (self.user == nil) {
+//        NSDate *tmp = [ServerDataTransformer getLastGPSUpdatedFromServerJSON:self.jsonData];
+//        if (tmp == nil) {
+//            timeLabel.text = T(@"未知");
+//        } else {
+//            self.timeLabel.text = [tmp timesinceAgo];
+//        }
+//    }else {
+//        if (self.user.lastGPSUpdated == nil) {
+//            self.timeLabel.text = T(@"未知");
+//        } else {
+//            self.timeLabel.text = [self.user.lastGPSUpdated timesinceAgo];
+//        }
+//    }
+//    [self.timeLabel sizeToFit];
+
+    // guid
     if (self.user == nil) {
-        NSDate *tmp = [ServerDataTransformer getLastGPSUpdatedFromServerJSON:self.jsonData];
-        if (tmp == nil) {
-            timeLabel.text = T(@"未知");
-        } else {
-            self.timeLabel.text = [tmp timesinceAgo];
-        }
-    }else {
-        if (self.user.lastGPSUpdated == nil) {
-            self.timeLabel.text = T(@"未知");
-        } else {
-            self.timeLabel.text = [self.user.lastGPSUpdated timesinceAgo];
-        }
+        self.guidLabel.text  = [ NSString stringWithFormat:@" %@: %@",T(@"ID"),self.GUID];
+    }else{
+        self.guidLabel.text  = [ NSString stringWithFormat:@" %@: %@",T(@"ID"),self.user.guid];
     }
-    [self.timeLabel sizeToFit];
     
+    // horoscope
     if (self.user == nil) {
         NSDateFormatter * dateFormater = [[NSDateFormatter alloc]init];
         [dateFormater setDateFormat:@"yyyy-MM-dd"];
@@ -348,7 +366,7 @@
         self.horoscopeLabel.text = [self.user.birthdate horoscope];
     }
     
-    
+    //age
     self.sexLabel.text  = [self getAgeStr];
     
 }

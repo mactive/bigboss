@@ -15,10 +15,11 @@
 #import "RateViewController.h"
 #import "FeedBackViewController.h"
 #import "AboutUsViewController.h"
+#import "ModelHelper.h"
 
+@interface SettingViewController ()<UIActionSheetDelegate>
 
-@interface SettingViewController () 
-
+@property(nonatomic, strong) UIActionSheet *logoutActionsheet;
 @property(nonatomic, strong) UITableView *settingTableView;
 @property(nonatomic, strong) UIButton *loginButton;
 
@@ -33,6 +34,7 @@
 
 @implementation SettingViewController
 
+@synthesize logoutActionsheet;
 @synthesize settingTableView;
 @synthesize loginButton;
 @synthesize settingTitleArray;
@@ -77,6 +79,7 @@
                               [[NSArray alloc] initWithObjects:@"个人设置",nil],
                               [[NSArray alloc] initWithObjects:@"App精品推荐", nil],
                               [[NSArray alloc] initWithObjects:@"去春水堂打个分吧",@"帮助与反馈",@"关于春水堂", nil],
+                              [[NSArray alloc] initWithObjects:@"退出登录", nil],
                               nil ];
     //,@"我的相册",@"新浪微博",@"微信朋友圈"
     
@@ -140,8 +143,6 @@
     
 	UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     
-    cell.backgroundView.backgroundColor = RGBCOLOR(86, 184, 225);
-    
     NSUInteger labelY = 12;
     
     if (indexPath.section == 0 && indexPath.row == 0) {
@@ -155,7 +156,7 @@
         labelY = 20;
     }
     
-    if (indexPath.section == 1 || (indexPath.section ==2 && indexPath.row == 0) ) {
+    if (indexPath.section == 1 || (indexPath.section ==2 && indexPath.row == 0) || (indexPath.section ==3 && indexPath.row == 0) ) {
         [cell setAccessoryType:UITableViewCellAccessoryNone];
     }else{
         [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
@@ -167,7 +168,15 @@
     titleLabel.font = [UIFont boldSystemFontOfSize:16.0];
     titleLabel.textColor = RGBCOLOR(77, 77, 77);
     titleLabel.backgroundColor = [UIColor clearColor];
+    
+    if (indexPath.row ==0 && indexPath.section == 3) {
+        cell.backgroundColor = RGBCOLOR(173, 0, 6);
+        titleLabel.textColor = RGBCOLOR(255, 255, 255);
+    }
+    
     [cell addSubview:titleLabel];
+    
+
     
     return cell;
 }
@@ -190,6 +199,39 @@
     if (indexPath.row == 2 && indexPath.section == 2 ) {
         AboutUsViewController *controller = [[AboutUsViewController alloc]initWithNibName:nil bundle:nil];
         [self.navigationController pushViewController:controller animated:YES];
+    }
+    
+    if (indexPath.row == 0 && indexPath.section == 3) {
+        [self logoutAction];
+    }
+
+}
+/////////////////////////////////////////////
+#pragma mark - logout
+////////////////////////////////////////////
+
+- (void)logoutAction
+{
+    self.logoutActionsheet = [[UIActionSheet alloc]
+                              initWithTitle:T(@"程序内所有数据都将被删除")
+                              delegate:self
+                              cancelButtonTitle:T(@"取消")
+                              destructiveButtonTitle:nil
+                              otherButtonTitles:T(@"退出登录"),nil];
+    self.logoutActionsheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+    [self.logoutActionsheet showFromTabBar:[[self tabBarController] tabBar]];
+}
+
+
+/////////////////////////////////////////////
+#pragma mark - uiactionsheet delegate 
+////////////////////////////////////////////
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 0 && [self.logoutActionsheet isEqual:actionSheet] ) {
+        [[ModelHelper sharedInstance] clearAllObjects];
+        [self appDelegate].me = nil;
+        [[self appDelegate] startIntroSession];
     }
 
 }

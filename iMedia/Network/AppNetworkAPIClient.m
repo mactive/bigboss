@@ -541,7 +541,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
   
     return result;
  */
-    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: @"10", @"op", "30", @"querysize", "0", @"start", nil];
+    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: @"10", @"op", @"30", @"querysize", @"0", @"start", nil];
     
     [[AppNetworkAPIClient sharedClient] getPath:GET_DATA_PATH parameters:getDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
         

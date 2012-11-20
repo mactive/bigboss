@@ -21,6 +21,7 @@
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic) User *user;
 @property (strong, nonatomic) id   jsonData;
+@property (strong, nonatomic) NSString * GUID;
 
 
 @property (strong, nonatomic) id <ChatWithIdentityDelegate> delegate;

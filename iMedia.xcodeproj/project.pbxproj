@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		042B51D8165A8CF900443796 /* PullToRefreshView.m in Sources */ = {isa = PBXBuildFile; fileRef = 042B51D7165A8CF900443796 /* PullToRefreshView.m */; };
 		0436B478165136930081A6F7 /* WSBubbleTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0436B477165136930081A6F7 /* WSBubbleTableView.m */; };
 		0450A5ED164649080002BA54 /* LoginSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0450A5EC164649080002BA54 /* LoginSettingViewController.m */; };
 		0489A3E816339FA400D122DF /* MessageBubbleSectionHeader@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0489A3E716339FA400D122DF /* MessageBubbleSectionHeader@2x.png */; };
@@ -129,6 +130,9 @@
 		26DE71E51654C7DE00672C4F /* tabbar_item_4@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26DE71E01654C7DE00672C4F /* tabbar_item_4@2x.png */; };
 		26DE71E61654C7DE00672C4F /* tabbar_item_3@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26DE71E11654C7DE00672C4F /* tabbar_item_3@2x.png */; };
 		26DE71E71654C7DE00672C4F /* tabbar_item_2@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26DE71E21654C7DE00672C4F /* tabbar_item_2@2x.png */; };
+		26E5886A1659ED8200180A9D /* NearbyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 26E588691659ED8200180A9D /* NearbyTableViewCell.m */; };
+		26E58879165A2A6700180A9D /* blueArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 26E58877165A2A6700180A9D /* blueArrow.png */; };
+		26E5887A165A2A6700180A9D /* blueArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26E58878165A2A6700180A9D /* blueArrow@2x.png */; };
 		26E75AF1164A787200774755 /* navigationBar_bg_part@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26E75AF0164A787200774755 /* navigationBar_bg_part@2x.png */; };
 		26F3BF1916428DDB00E2899C /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F3BF1816428DDB00E2899C /* MBProgressHUD.m */; };
 		26F3BF23164294AC00E2899C /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F3BF22164294AC00E2899C /* LoginViewController.m */; };
@@ -368,6 +372,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		042B51D6165A8CF900443796 /* PullToRefreshView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PullToRefreshView.h; sourceTree = "<group>"; };
+		042B51D7165A8CF900443796 /* PullToRefreshView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PullToRefreshView.m; sourceTree = "<group>"; };
 		0436B476165136930081A6F7 /* WSBubbleTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WSBubbleTableView.h; path = WSBubbleData/WSBubbleTableView.h; sourceTree = "<group>"; };
 		0436B477165136930081A6F7 /* WSBubbleTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WSBubbleTableView.m; path = WSBubbleData/WSBubbleTableView.m; sourceTree = "<group>"; };
 		0450A5EB164649080002BA54 /* LoginSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginSettingViewController.h; path = ViewControllers/Welcome/LoginSettingViewController.h; sourceTree = "<group>"; };
@@ -517,6 +523,10 @@
 		26DE71E01654C7DE00672C4F /* tabbar_item_4@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tabbar_item_4@2x.png"; path = "Resources/tabbar_item_4@2x.png"; sourceTree = "<group>"; };
 		26DE71E11654C7DE00672C4F /* tabbar_item_3@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tabbar_item_3@2x.png"; path = "Resources/tabbar_item_3@2x.png"; sourceTree = "<group>"; };
 		26DE71E21654C7DE00672C4F /* tabbar_item_2@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tabbar_item_2@2x.png"; path = "Resources/tabbar_item_2@2x.png"; sourceTree = "<group>"; };
+		26E588681659ED8200180A9D /* NearbyTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NearbyTableViewCell.h; path = ViewControllers/UITableViewCell/NearbyTableViewCell.h; sourceTree = "<group>"; };
+		26E588691659ED8200180A9D /* NearbyTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NearbyTableViewCell.m; path = ViewControllers/UITableViewCell/NearbyTableViewCell.m; sourceTree = "<group>"; };
+		26E58877165A2A6700180A9D /* blueArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = blueArrow.png; path = Resources/blueArrow.png; sourceTree = "<group>"; };
+		26E58878165A2A6700180A9D /* blueArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "blueArrow@2x.png"; path = "Resources/blueArrow@2x.png"; sourceTree = "<group>"; };
 		26E75AF0164A787200774755 /* navigationBar_bg_part@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "navigationBar_bg_part@2x.png"; path = "Resources/navigationBar_bg_part@2x.png"; sourceTree = "<group>"; };
 		26F3BF1716428DDB00E2899C /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBProgressHUD.h; path = contrib/MBProgressHUD.h; sourceTree = "<group>"; };
 		26F3BF1816428DDB00E2899C /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBProgressHUD.m; path = contrib/MBProgressHUD.m; sourceTree = "<group>"; };
@@ -905,6 +915,7 @@
 			isa = PBXGroup;
 			children = (
 				2674B850164A51950092D980 /* NSDate-Utilities.h */,
+				26E58873165A2A2200180A9D /* RefreshTableHeaderView */,
 				2674B851164A51950092D980 /* NSDate-Utilities.m */,
 				26F3BF1716428DDB00E2899C /* MBProgressHUD.h */,
 				26F3BF1816428DDB00E2899C /* MBProgressHUD.m */,
@@ -961,10 +972,31 @@
 			name = WSBubbleData;
 			sourceTree = "<group>";
 		};
+		26E588661659ED2F00180A9D /* UITableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				26E588681659ED8200180A9D /* NearbyTableViewCell.h */,
+				26E588691659ED8200180A9D /* NearbyTableViewCell.m */,
+			);
+			name = UITableViewCell;
+			sourceTree = "<group>";
+		};
+		26E58873165A2A2200180A9D /* RefreshTableHeaderView */ = {
+			isa = PBXGroup;
+			children = (
+				042B51D6165A8CF900443796 /* PullToRefreshView.h */,
+				042B51D7165A8CF900443796 /* PullToRefreshView.m */,
+			);
+			name = RefreshTableHeaderView;
+			path = contrib/RefreshTableHeaderView;
+			sourceTree = "<group>";
+		};
 		562DE706160AC3A300F782D2 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
 				266958311647DEA300A7106C /* login_intro_oyeah@2x.png */,
+				26E58877165A2A6700180A9D /* blueArrow.png */,
+				26E58878165A2A6700180A9D /* blueArrow@2x.png */,
 				26B91A0F1654EB1D009D0104 /* Default.png */,
 				26B91A101654EB1D009D0104 /* Default@2x.png */,
 				26B91A111654EB1D009D0104 /* Default-568h@2x.png */,
@@ -1810,6 +1842,7 @@
 		566E825F1609A61B00A333EA /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				26E588661659ED2F00180A9D /* UITableViewCell */,
 				566E82601609A77D00A333EA /* ContactListViewController.h */,
 				566E82611609A77D00A333EA /* ContactListViewController.m */,
 				26F759E2163CEF6F005E9FB4 /* ProfileMeController.h */,
@@ -2179,6 +2212,8 @@
 				2635E4BF165663DA00F522B1 /* placeholder_user@2x.png in Resources */,
 				2635E4C0165663DA00F522B1 /* placeholder_company@2x.png in Resources */,
 				2635E4C2165663E800F522B1 /* button_arrow_bg@2x copy.png in Resources */,
+				26E58879165A2A6700180A9D /* blueArrow.png in Resources */,
+				26E5887A165A2A6700180A9D /* blueArrow@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2382,6 +2417,8 @@
 				26BA7EF5165390C00094D030 /* WSBubbleTemplateTableViewCell.m in Sources */,
 				26BA7EF8165390D30094D030 /* WSBubbleRateTableViewCell.m in Sources */,
 				26DE71D91654C1C400672C4F /* NearbyViewController.m in Sources */,
+				26E5886A1659ED8200180A9D /* NearbyTableViewCell.m in Sources */,
+				042B51D8165A8CF900443796 /* PullToRefreshView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

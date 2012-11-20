@@ -276,17 +276,17 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:self.editingIndexPath];
     UILabel *label = [cell viewWithTag:TIME_TAG];
-    UIImageView *imageView = [cell viewWithTag:TIME_ICON_TAG];
+//    UIImageView *imageView = [cell viewWithTag:TIME_ICON_TAG];
     
     if (editing) {
         NSLog(@"editing");
         [label setHidden:YES];
-        [imageView setHidden:YES];
+//        [imageView setHidden:YES];
         
     } else {
         NSLog(@"end editing");
         [label setHidden:NO];
-        [imageView setHidden:NO];
+//        [imageView setHidden:NO];
     }
 }
 
@@ -447,7 +447,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     label.backgroundColor = [UIColor clearColor];
     
     [cell.contentView addSubview:label];
-    [cell.contentView addSubview:timeIconView];
+//    [cell.contentView addSubview:timeIconView];
 	[cell.contentView addSubview:label];
 	return cell;
 }
