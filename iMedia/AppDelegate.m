@@ -258,11 +258,11 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             // Now process all the channel stuff
             [channelsToSubscribe enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
                 Channel *aChannel = obj;
-                [[XMPPNetworkCenter sharedClient] subscribeToChannel:aChannel.node withCallbackBlock:nil];
+                aChannel.subrequestID = [[XMPPNetworkCenter sharedClient] subscribeToChannel:aChannel.node withCallbackBlock:nil];
             }];
             [channelsToUnsubscribe enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
                 Channel *aChannel = obj;
-                [[XMPPNetworkCenter sharedClient] unsubscribeToChannel:aChannel.node withCallbackBlock:nil];
+                aChannel.subrequestID = [[XMPPNetworkCenter sharedClient] unsubscribeToChannel:aChannel.node withCallbackBlock:nil];
             }];
             
             [[AppNetworkAPIClient sharedClient] updateMyPresetChannel:self.me withBlock:^(id responseObject, NSError *error) {
@@ -315,11 +315,11 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
                     // Now process all the channel stuff
                     [channelsToSubscribe enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
                         Channel *aChannel = obj;
-                        [[XMPPNetworkCenter sharedClient] subscribeToChannel:aChannel.node withCallbackBlock:nil];
+                        aChannel.subrequestID = [[XMPPNetworkCenter sharedClient] subscribeToChannel:aChannel.node withCallbackBlock:nil];
                     }];
                     [channelsToUnsubscribe enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
                         Channel *aChannel = obj;
-                        [[XMPPNetworkCenter sharedClient] unsubscribeToChannel:aChannel.node withCallbackBlock:nil];
+                        aChannel.subrequestID = [[XMPPNetworkCenter sharedClient] unsubscribeToChannel:aChannel.node withCallbackBlock:nil];
                     }];
                     
                     [self.contactListController contentChanged];
