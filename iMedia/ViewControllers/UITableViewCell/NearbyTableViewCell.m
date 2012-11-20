@@ -15,8 +15,11 @@
 @interface NearbyTableViewCell()
 
 @property(nonatomic, strong)UIImageView *avatarView;
+@property(nonatomic, strong)UIImageView *timeIconView;
+@property(nonatomic, strong)UIImageView *locationIconView;
 @property(nonatomic, strong)UILabel *nameLabel;
 @property(nonatomic, strong)UILabel *locationLabel;
+@property(nonatomic, strong)UILabel *timeLabel;
 @property(nonatomic, strong)UILabel *signatureLabel;
 @property(nonatomic, strong)UIImageView *genderView;
 @property(nonatomic, strong)CLLocation *here_location;
@@ -26,6 +29,14 @@
 @implementation NearbyTableViewCell
 @synthesize data = _data;
 @synthesize avatarView;
+@synthesize timeIconView;
+@synthesize locationIconView;
+@synthesize nameLabel;
+@synthesize locationLabel;
+@synthesize timeLabel;
+@synthesize signatureLabel;
+@synthesize genderView;
+@synthesize here_location;
 
 #define CELL_W      320.0f
 #define CELL_H      60.0f
@@ -38,7 +49,7 @@
 #define LEFT_COLUMN_OFFSET 10.0
 #define LEFT_COLUMN_WIDTH 36.0
 
-#define MIDDLE_COLUMN_OFFSET 70.0
+#define MIDDLE_COLUMN_OFFSET 65.0
 #define MIDDLE_COLUMN_WIDTH 100.0
 
 #define RIGHT_COLUMN_OFFSET 230.0
@@ -51,7 +62,7 @@
 
 #define IMAGE_SIDE 50.0
 #define SNS_SIDE 15.0
-#define SUMMARY_WIDTH_OFFEST 20.0
+#define SUMMARY_WIDTH_OFFEST 10.0
 #define SUMMARY_WIDTH 90.0
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
@@ -85,14 +96,33 @@
         self.nameLabel.textAlignment = UITextAlignmentLeft;
         self.nameLabel.textColor = RGBCOLOR(107, 107, 107);
         self.nameLabel.backgroundColor = [UIColor clearColor];
-
+        
+        // location icon
+        rect = CGRectMake(MIDDLE_COLUMN_OFFSET, 36 , 15, 15);
+        self.locationIconView = [[UIImageView alloc] initWithFrame:rect];
+        self.locationIconView.image = [UIImage imageNamed:@"location_icon.png"];
+        
         // location
-        rect = CGRectMake(MIDDLE_COLUMN_OFFSET , 33, MIDDLE_COLUMN_WIDTH*1.5, LABEL_HEIGHT);
+        rect = CGRectMake(MIDDLE_COLUMN_OFFSET+17 , 33, 50, LABEL_HEIGHT);
         self.locationLabel = [[UILabel alloc] initWithFrame:rect];
         self.locationLabel.font = [UIFont boldSystemFontOfSize:SUMMARY_FONT_SIZE];
         self.locationLabel.textAlignment = UITextAlignmentLeft;
         self.locationLabel.textColor = RGBCOLOR(187, 187, 187);
         self.locationLabel.backgroundColor = [UIColor clearColor];
+        
+        // time icon
+        rect = CGRectMake(MIDDLE_COLUMN_OFFSET+70, 36 , 15, 15);
+        self.timeIconView = [[UIImageView alloc] initWithFrame:rect];
+        self.timeIconView.image = [UIImage imageNamed:@"time_icon.png"];
+        
+        // time
+        rect = CGRectMake(MIDDLE_COLUMN_OFFSET+87 , 33, 50, LABEL_HEIGHT);
+        self.timeLabel = [[UILabel alloc] initWithFrame:rect];
+        self.timeLabel.font = [UIFont boldSystemFontOfSize:SUMMARY_FONT_SIZE];
+        self.timeLabel.textAlignment = UITextAlignmentLeft;
+        self.timeLabel.textColor = RGBCOLOR(187, 187, 187);
+        self.timeLabel.backgroundColor = [UIColor clearColor];
+
         
         // signature
         rect = CGRectMake(CELL_W - SUMMARY_WIDTH - SUMMARY_WIDTH_OFFEST , 12.5, SUMMARY_WIDTH, LABEL_HEIGHT);
@@ -107,8 +137,11 @@
         
         
         [self.contentView addSubview: self.avatarView];
+        [self.contentView addSubview: self.timeIconView];
+        [self.contentView addSubview: self.locationIconView];
         [self.contentView addSubview: self.genderView];
         [self.contentView addSubview: self.locationLabel];
+        [self.contentView addSubview: self.timeLabel];
         [self.contentView addSubview:self.nameLabel];
         [self.contentView addSubview: self.signatureLabel];
         
@@ -147,10 +180,9 @@
     NSDate *updateDate = [dateFormater dateFromString:[data objectForKey:@"last_updated"]];
     
     // location , timeago
-    self.locationLabel.text = [NSString stringWithFormat:@" %@ , %@ ",
-                               [self distanceDisplay:dataDistance],
-                               [updateDate timesinceAgo] ];
-
+    self.locationLabel.text = [self distanceDisplay:dataDistance];
+    self.timeLabel.text     = [updateDate timesinceAgo];
+                               
     //// nickname
     if ([[data objectForKey:@"nickname"] length] != 0) {
         CGSize nameMaxSize = CGSizeMake(MIDDLE_COLUMN_WIDTH, LABEL_HEIGHT);
@@ -166,7 +198,7 @@
     
     ///// signature
     
-    NSString * signatureString = [data objectForKey:@"signature"];
+    NSString * signatureString = @"我们致力于提供优质的开发者技术支持服务";//[data objectForKey:@"signature"];
     
     if ([signatureString length] != 0 && signatureString != nil ) {
         CGSize summaryMaxSize = CGSizeMake(SUMMARY_WIDTH, LABEL_HEIGHT*2);
@@ -178,37 +210,13 @@
             _labelHeight = 20.0;
         }
         self.signatureLabel.text = signatureString ;
-        self.signatureLabel.frame = CGRectMake(280 - signatureSize.width - SUMMARY_PADDING, _labelHeight, signatureSize.width + SUMMARY_PADDING, signatureSize.height+SUMMARY_PADDING);
+        self.signatureLabel.frame = CGRectMake(310 - signatureSize.width - SUMMARY_PADDING, _labelHeight, signatureSize.width + SUMMARY_PADDING, signatureSize.height+SUMMARY_PADDING);
     }else{
         [self.signatureLabel removeFromSuperview];
     }
     
     
 }
-
-
-#pragma distance function
-//- (CLLocation *)location
-//{
-//	return [[[CLLocation alloc] initWithLatitude:[self.latitude doubleValue]
-//                                       longitude:[self.longitude doubleValue]] autorelease];
-//}
-//
-//- (CLLocationDistance)distanceWithLocation:(CLLocation *)location
-//{
-//	CLLocation *item_location = [self location];
-//	CLLocationDistance distance = -1.0f;
-//	if (location != nil && item_location != nil)
-//		distance = [item_location distanceFromLocation:location];
-//	return distance;
-//}
-//
-//- (CLLocationDistance)distanceFromHere
-//{
-//	CLLocationManager *locationManager = [[[CLLocationManager alloc] init] autorelease];
-//	CLLocation *here_location  = locationManager.location;
-//	return [self distanceWithLocation:here_location];
-//}
 
 - (NSString *)distanceDisplay:(CLLocationDistance)_distance
 {
@@ -217,15 +225,15 @@
     
     NSString *distanceString = @"";
     if ((int)floor(distance) == 0) {
-        distanceString = T(@"here");
+        distanceString = T(@"就在这");
     } else if ((int)floor(distance) < 1000) {   // less than 1KM，count by m
-        distanceString = [NSString stringWithFormat:T(@"%.0f m"), distance];
-    } else if ((int)floor(distance) < 1000000) { // less than 1000KM，count by KM,show decimals
-        distanceString = [NSString stringWithFormat:T(@"%.1f km"), distance / 1000.0f];
-    } else if ((int)floor(distance) < 10000000) { // less than 10000KM，count by KM, NOT show decimals
-        distanceString = [NSString stringWithFormat:T(@"%.0f km"), distance / 1000.0f];
+        distanceString = [NSString stringWithFormat:T(@"%.0f米"), distance];
+    } else if ((int)floor(distance) < 50000) { // less than 50KM，count by KM,show decimals
+        distanceString = [NSString stringWithFormat:T(@"%.1f公里"), distance / 1000.0f];
+    } else if ((int)floor(distance) < 100000) { // less than 100KM，count by KM, NOT show decimals
+        distanceString = [NSString stringWithFormat:T(@"%.0f公里"), distance / 1000.0f];
     } else {
-        distanceString = T(@"too far"); // more than 1000KM，count by KM,too for
+        distanceString = T(@"太远了"); // more than 1000KM，count by KM,too for
     }
     
     return distanceString;

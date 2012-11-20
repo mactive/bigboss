@@ -161,25 +161,25 @@
 -(NSString *)timesinceWithDepth:(int)depth 
 {
 	NSArray *timeUnits = [NSArray arrayWithObjects:
-						  [NSArray arrayWithObjects:T(@"year"), 
+						  [NSArray arrayWithObjects:T(@"年"),
 						   [NSNumber numberWithInt:31556926], nil],
-						  [NSArray arrayWithObjects:T(@"month"), 
+						  [NSArray arrayWithObjects:T(@"月"),
 						   [NSNumber numberWithInt:2629744], nil],
-						  [NSArray arrayWithObjects:T(@"week"), 
+						  [NSArray arrayWithObjects:T(@"周"),
 						   [NSNumber numberWithInt:604800], nil],
-						  [NSArray arrayWithObjects:T(@"day"), 
+						  [NSArray arrayWithObjects:T(@"天"),
 						   [NSNumber numberWithInt:86400], nil],
-						  [NSArray arrayWithObjects:T(@"hour"), 
+						  [NSArray arrayWithObjects:T(@"小时"),
 						   [NSNumber numberWithInt:3600], nil],
-						  [NSArray arrayWithObjects:T(@"min"), 
+						  [NSArray arrayWithObjects:T(@"分钟"),
 						   [NSNumber numberWithInt:60], nil],
-						  [NSArray arrayWithObjects:T(@"sec"), 
+						  [NSArray arrayWithObjects:T(@"秒"), 
 						   [NSNumber numberWithInt:1], nil],
 						  nil];
 	NSString *delimiter = T(@", ");
-	NSString *combination = T(@"%@%i %@");
-	NSString *plural_combination = T(@"%@%i %@s");
-	NSString *justNow = T(@"just now");
+	NSString *combination = T(@"%@%i%@");
+	NSString *plural_combination = T(@"%@%i%@");
+	NSString *justNow = T(@"就刚才");
 
 	int delta = -(int)[self timeIntervalSinceNow];
 	
@@ -210,7 +210,7 @@
 	if ([s length] == 0) {
 		s = justNow;
 	}else {
-        s = [NSString stringWithFormat:@"%@ %@", s, T(@"ago")];
+        s = [NSString stringWithFormat:@"%@%@", s, T(@"前")];
     }
 	
 	return s;

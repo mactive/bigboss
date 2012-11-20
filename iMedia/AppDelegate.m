@@ -74,7 +74,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {    
 	[DDLog addLogger:[DDTTYLogger sharedInstance]];
-    
+    application.statusBarHidden = NO;
     // Set up Core Data stack.
     NSPersistentStoreCoordinator *persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[[NSManagedObjectModel alloc] initWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"iMedia" withExtension:@"momd"]]];
     NSError *error;
