@@ -156,7 +156,7 @@
         labelY = 20;
     }
     
-    if (indexPath.section == 1 || (indexPath.section ==2 && indexPath.row == 0) ) {
+    if (indexPath.section == 1 || (indexPath.section ==2 && indexPath.row == 0) || (indexPath.section ==3 && indexPath.row == 0) ) {
         [cell setAccessoryType:UITableViewCellAccessoryNone];
     }else{
         [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];

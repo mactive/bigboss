@@ -99,7 +99,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
             
             // pull view hide
             [pull finishedLoading];
-            
+            [self.loadMoreButton setTitle:T(@"点击加载更多") forState:UIControlStateNormal];
+
             NSDictionary *responseDict = responseObject;
             NSMutableArray *responseArray = [[NSMutableArray alloc]init];
             
@@ -114,6 +115,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
         }else{
             [pull finishedLoading];
+            [self.loadMoreButton setTitle:T(@"点击加载更多") forState:UIControlStateNormal];
 
             HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             HUD.mode = MBProgressHUDModeText;
@@ -202,6 +204,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
         if ([type isEqualToString:@"user"]) {            
             ContactDetailController *controller = [[ContactDetailController alloc] initWithNibName:nil bundle:nil];
             controller.jsonData = responseObject;
+            controller.GUID = guidString;
             controller.managedObjectContext = [self appDelegate].context;
             
             // Pass the selected object to the new view controller.
