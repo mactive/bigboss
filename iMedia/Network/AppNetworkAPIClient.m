@@ -32,9 +32,12 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 #import "ContactListViewController.h"
 #import "UIImage+Resize.h"
 #import "XMPPJID.h"
+//#import "UpYun.h"
 
-//static NSString * const kAppNetworkAPIBaseURLString = @"http://192.168.1.104:8000/";//
-static NSString * const kAppNetworkAPIBaseURLString = @"http://media.wingedstone.com:8000/";
+static NSString * const kAppNetworkAPIBaseURLString = @"http://192.168.1.104:8000/";//
+//static NSString * const kAppNetworkAPIBaseURLString = @"http://media.wingedstone.com:8000/";
+
+#define USE_UYUN_SERVICE
 
 NSString *const kXMPPmyJID = @"kXMPPmyJID";
 NSString *const kXMPPmyJIDPassword = @"kXMPPmyJIDPassword";
@@ -143,7 +146,16 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 }
 
 - (void)storeImage:(UIImage *)image thumbnail:(UIImage *)thumbnail forMe:(Me *)me andAvatar:(Avatar *)avatar withBlock:(void (^)(id, NSError *))block
-{    
+{
+
+#ifdef USE_UYUN_SERVICE
+    /*
+    UpYun *uy = [[UpYun alloc] init];
+    uy.delegate = self;
+    uy.expiresIn = 100;
+    uy.bucket = @"wstone";
+    */
+#else
     NSString* csrfToken = [[NSUserDefaults standardUserDefaults] valueForKey:@"csrfmiddlewaretoken"];
     NSDictionary *paramDict = [NSDictionary dictionaryWithObjectsAndKeys: csrfToken, @"csrfmiddlewaretoken", nil];
     NSMutableURLRequest *postRequest = [[AppNetworkAPIClient sharedClient] multipartFormRequestWithMethod:@"POST" path:IMAGE_SERVER_PATH parameters:paramDict constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
@@ -192,6 +204,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     
     [self.imageUploadOperationsInProgress setObject:operation forKey:avatar.sequence];
     [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:operation];
+#endif
     
 }
 

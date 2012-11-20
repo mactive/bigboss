@@ -28,8 +28,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 //#define BANDWIDTH_MONITOR
 
 
-//static NSString * const pubsubhost = @"pubsub.192.168.1.104";
-static NSString * const pubsubhost = @"pubsub.121.12.104.95";
+static NSString * const pubsubhost = @"pubsub.192.168.1.104";
+//static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 
 @interface XMPPNetworkCenter () <XMPPRosterDelegate, XMPPPubSubDelegate, XMPPRosterMemoryStorageDelegate>
 {
@@ -178,8 +178,8 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     
     
 	// You may need to alter these settings depending on the server you're connecting to
-	allowSelfSignedCertificates = NO;
-	allowSSLHostNameMismatch = NO;
+	allowSelfSignedCertificates = YES;
+	allowSSLHostNameMismatch = YES;
     
     return YES;
 }
