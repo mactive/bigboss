@@ -16,9 +16,7 @@
 
 
 @property (nonatomic, strong) NSArray* sourceData;
-@property (nonatomic, strong) UIView * headerView;
-@property (nonatomic, strong) UIView * footerView;
-
+@property (nonatomic, strong) UIButton *loadMoreButton;
 @end
 
 @implementation NearbyViewController
@@ -43,6 +41,23 @@
 	pull = [[PullToRefreshView alloc] initWithScrollView:(UIScrollView *) self.tableView];
     [pull setDelegate:self];
     [self.tableView addSubview:pull];
+    
+    // footerView
+    self.tableView.tableFooterView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 320, 60)];
+    
+    self.loadMoreButton  = [[UIButton alloc] initWithFrame:CGRectMake(40, 10, 240, 40)];
+    [self.loadMoreButton.titleLabel setFont:[UIFont boldSystemFontOfSize:14]];
+    [self.loadMoreButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+    [self.loadMoreButton setTitleColor:RGBCOLOR(143, 183, 225) forState:UIControlStateHighlighted];
+    [self.loadMoreButton.titleLabel setTextAlignment:UITextAlignmentCenter];
+    [self.loadMoreButton setTitle:T(@"点击加载更多") forState:UIControlStateNormal];
+    [self.loadMoreButton setBackgroundColor:RGBCOLOR(229, 240, 251)];
+    [self.loadMoreButton.layer setBorderColor:[RGBCOLOR(187, 217, 247) CGColor]];
+    [self.loadMoreButton.layer setBorderWidth:1.0f];
+    [self.loadMoreButton.layer setCornerRadius:5.0f];
+    [self.loadMoreButton addTarget:self action:@selector(populateData) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.tableView.tableFooterView addSubview:self.loadMoreButton];
 	
 
 }
@@ -64,6 +79,7 @@
 
 - (void)populateData
 {
+    [self.loadMoreButton setTitle:T(@"正在载入") forState:UIControlStateNormal];
 
     [[AppNetworkAPIClient sharedClient]getNearestPeopleWithBlock:^(id responseObject, NSError *error) {
         if (responseObject != nil) {
