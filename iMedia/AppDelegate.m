@@ -54,7 +54,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     SystemSoundID           _messageReceivedSystemSoundID;
     SystemSoundID           _messageSentSystemSoundID;
 }
--(void)startIntroSession;
 
 @end
 

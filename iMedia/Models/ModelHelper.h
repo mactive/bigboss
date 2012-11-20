@@ -31,4 +31,6 @@
 
 - (User *)createActiveUserWithFullServerJSONData:(id)jsonData;
 
+- (void)clearAllObjects;
+
 @end

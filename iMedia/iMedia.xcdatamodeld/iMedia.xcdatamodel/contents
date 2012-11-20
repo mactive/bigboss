@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1811" systemVersion="12C60" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1810" systemVersion="11G63b" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Channel" representedClassName="Channel" parentEntity="Identity" syncable="YES">
         <attribute name="csContactPostalID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isMandatory" optional="YES" attributeType="Boolean" syncable="YES"/>
@@ -94,13 +94,13 @@
     </entity>
     <elements>
         <element name="Channel" positionX="160" positionY="192" width="128" height="165"/>
-        <element name="Conversation" positionX="0" positionY="0" width="128" height="165"/>
-        <element name="FriendRequest" positionX="160" positionY="192" width="128" height="105"/>
-        <element name="Identity" positionX="160" positionY="192" width="128" height="225"/>
-        <element name="ImageLocal" positionX="160" positionY="192" width="128" height="150"/>
-        <element name="ImageRemote" positionX="160" positionY="192" width="128" height="120"/>
-        <element name="Me" positionX="0" positionY="0" width="128" height="270"/>
-        <element name="Message" positionX="0" positionY="0" width="128" height="150"/>
+        <element name="Conversation" positionX="-9" positionY="114" width="128" height="165"/>
+        <element name="FriendRequest" positionX="241" positionY="-9" width="128" height="105"/>
+        <element name="Identity" positionX="-92" positionY="-513" width="128" height="225"/>
+        <element name="ImageLocal" positionX="-83" positionY="318" width="128" height="150"/>
+        <element name="ImageRemote" positionX="394" positionY="51" width="128" height="120"/>
+        <element name="Me" positionX="-63" positionY="-171" width="128" height="270"/>
+        <element name="Message" positionX="-324" positionY="-78" width="128" height="150"/>
         <element name="User" positionX="-234" positionY="141" width="128" height="165"/>
     </elements>
 </model>
