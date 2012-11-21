@@ -16,6 +16,8 @@
 #import "AppDelegate.h"
 #import "ConversationsController.h"
 #import "User.h"
+#import <CoreLocation/CoreLocation.h>
+
 
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
@@ -28,7 +30,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     MBProgressHUD *HUD;
 }
 
-
+@property (nonatomic, strong) CLLocationManager *locManager;
 @property (nonatomic, strong) NSArray* sourceData;
 @property (nonatomic, strong) UIButton *loadMoreButton;
 @property (nonatomic, strong) UIActionSheet *filterActionSheet;
@@ -37,6 +39,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 @implementation NearbyViewController
 @synthesize sourceData;
 @synthesize filterActionSheet;
+@synthesize locManager;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -56,6 +59,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.locManager = [[CLLocationManager alloc] init];
+
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.backgroundColor = BGCOLOR;
 
@@ -91,6 +96,9 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    // updateLocation self
+    [[AppNetworkAPIClient sharedClient]updateLocation:self.locManager.location.coordinate.latitude
+                                         andLongitude:self.locManager.location.coordinate.longitude];
     
     if (self.sourceData == nil) {
         [self populateData];
@@ -216,7 +224,6 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     if (cell == nil) {
         cell = [[NearbyTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
-    
     cell.data = rowData;
     return cell;
 }
