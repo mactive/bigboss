@@ -16,7 +16,6 @@
 #import "AppDelegate.h"
 #import "ConversationsController.h"
 #import "User.h"
-#import <CoreLocation/CoreLocation.h>
 #import "LocationManager.h"
 
 
@@ -73,7 +72,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     
     self.locManager = [[CLLocationManager alloc] init];
 
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+//    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+//    self.tableView.separatorColor = [UIColor whiteColor];
     self.tableView.backgroundColor = BGCOLOR;
 
 	pull = [[PullToRefreshView alloc] initWithScrollView:(UIScrollView *) self.tableView];
