@@ -226,6 +226,8 @@
         [self.cancelButton setHidden:YES];
 
         return ;
+    } else if (newChannel.state.intValue == IdentityStatePendingAddSubscription){
+    
     } else {
         NSLog(@"CRITICAL ERROR: new channel STATE wrong (%@)", newChannel);
         return;

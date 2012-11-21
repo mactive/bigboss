@@ -24,6 +24,7 @@
 + (XMPPNetworkCenter *)sharedClient;
 
 @property (strong, nonatomic) NSManagedObjectContext* managedObjectContext;
+@property BOOL useSSL;
 
 -(BOOL)connectWithUsername:(NSString *)username andPassword:(NSString *)password;
 -(BOOL)setupWithHostname:(NSString *)hostname andPort:(int)port;

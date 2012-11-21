@@ -69,6 +69,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 @synthesize xmppPubsub;
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize xmppBandwidthMonitor;
+@synthesize useSSL;
 
 + (XMPPNetworkCenter *)sharedClient {
     static XMPPNetworkCenter *_sharedClient = nil;
@@ -178,8 +179,10 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     
     
 	// You may need to alter these settings depending on the server you're connecting to
-	allowSelfSignedCertificates = NO;
-	allowSSLHostNameMismatch = NO;
+	allowSelfSignedCertificates = YES;
+	allowSSLHostNameMismatch = YES;
+    
+    self.useSSL = YES;
     
     return YES;
 }
@@ -344,6 +347,10 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 - (void)xmppStream:(XMPPStream *)sender socketDidConnect:(GCDAsyncSocket *)socket
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+    
+    if (self.useSSL) {
+        [xmppStream secureConnection:nil];
+    }
 }
 
 - (void)xmppStream:(XMPPStream *)sender willSecureWithSettings:(NSMutableDictionary *)settings
@@ -846,6 +853,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     else
         channel = [[ModelHelper sharedInstance] findChannelWithNode:nodeStr];
     
+    
     NSString* csrftoken = [[NSUserDefaults standardUserDefaults] valueForKey:@"csrfmiddlewaretoken"];
     
     // notify server about the subscription 
@@ -865,9 +873,9 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
             //
             DDLogVerbose(@"login failed: %@", error);
         if (channel != nil) {
-            [self subscribeToChannel:channel.node withCallbackBlock:nil];
+            channel.subrequestID = [self subscribeToChannel:channel.node withCallbackBlock:nil];
         } else if (StringHasValue(nodeStr)) {
-            [self subscribeToChannel:nodeStr withCallbackBlock:nil];
+            channel.subrequestID = [self subscribeToChannel:nodeStr withCallbackBlock:nil];
         }
 
     }];
@@ -921,9 +929,9 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         //
         if (channel != nil) {
-            [self unsubscribeToChannel:channel.node withCallbackBlock:nil];
+            channel.subrequestID = [self unsubscribeToChannel:channel.node withCallbackBlock:nil];
         } else if (StringHasValue(nodeStr)) {
-            [self unsubscribeToChannel:nodeStr withCallbackBlock:nil];
+            channel.subrequestID = [self unsubscribeToChannel:nodeStr withCallbackBlock:nil];
         }
     }];
 }
