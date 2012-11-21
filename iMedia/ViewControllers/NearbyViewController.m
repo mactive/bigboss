@@ -17,6 +17,7 @@
 #import "ConversationsController.h"
 #import "User.h"
 #import <CoreLocation/CoreLocation.h>
+#import "LocationManager.h"
 
 
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
@@ -109,8 +110,10 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 {
     [super viewWillAppear:animated];
     // updateLocation self
-    [[AppNetworkAPIClient sharedClient]updateLocation:self.locManager.location.coordinate.latitude
-                                         andLongitude:self.locManager.location.coordinate.longitude];
+#warning 如没有location 欢一个背景图  sourcedata = nil
+    if ([LocationManager sharedInstance].isAllowed == NO) {
+        // do sth here
+    }
     
     if (self.sourceData == nil) {
         self.startInt = 0;
