@@ -117,9 +117,6 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 - (void)populateDataWithGender:(NSUInteger)gender andStart:(NSUInteger)start
 {
     [self.loadMoreButton setTitle:T(@"正在载入") forState:UIControlStateNormal];
-    
-    NSUInteger t1 = gender;
-    NSUInteger t2 = start;
 
     [[AppNetworkAPIClient sharedClient]getNearestPeopleWithGender:gender andStart:start andBlock:^(id responseObject, NSError *error) {
         if (responseObject != nil) {
@@ -138,7 +135,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
             
             // 重新设置start
             self.startInt = self.startInt + [self.sourceData count];
-
+            // 数量太少不出现 load more
             if([self.sourceData count] > 5) {   [self.loadMoreButton setHidden:NO]; }
             
             [self.tableView reloadData];
@@ -168,7 +165,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
                               destructiveButtonTitle:T(@"查看全部")
                               otherButtonTitles:T(@"只看女生"), T(@"只看男生"), nil];
     self.filterActionSheet.actionSheetStyle = UIActionSheetStyleAutomatic;
-    [self.filterActionSheet showFromTabBar:[[self tabBarController] tabBar]];
+    [self.filterActionSheet showFromBarButtonItem:self.navigationItem.leftBarButtonItem animated:YES];
 }
 
 
