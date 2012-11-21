@@ -89,6 +89,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     NSURLCache *URLCache = [[NSURLCache alloc] initWithMemoryCapacity:4 * 1024 * 1024 diskCapacity:20 * 1024 * 1024 diskPath:nil];
     [NSURLCache setSharedURLCache:URLCache];
 
+    //Start Location Service and needs to prompt user to turn it on if not
+    if ([LocationManager sharedInstance].isAllowed == NO) {
+        // do sth here
+    }
     
     // check whether first use
     NSArray *fetchedUsers = MOCFetchAll(_managedObjectContext, @"Me");
@@ -134,14 +138,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 - (void)startMainSession
 {
-    //Start Location Service and needs to prompt user to turn it on if not
-    if ([LocationManager sharedInstance].isAllowed == NO) {
-        // do sth here
-    }
-    [LocationManager sharedInstance].me = self.me;
     // Update local data with latest server info
-    [self updateMeWithBlock:nil];
-    
+    [self updateMeWithBlock:nil];    
     //
     // Creating all the initial controllers
     //

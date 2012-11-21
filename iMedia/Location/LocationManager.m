@@ -41,6 +41,8 @@
     if (lastLocation != nil) {
         _me.lastGPSUpdated = lastLocation.timestamp;
         _me.lastGPSLocation = [NSString stringWithFormat:@"%f,%f", lastLocation.coordinate.latitude, lastLocation.coordinate.longitude];
+        
+        [[AppNetworkAPIClient sharedClient] updateLocation:lastLocation.coordinate.latitude andLongitude:lastLocation.coordinate.longitude];
     } else {
         _me.lastGPSLocation = @"";
         _me.lastGPSUpdated = nil;
@@ -77,9 +79,10 @@
     if (_me != nil) {
         _me.lastGPSUpdated = newLocation.timestamp;
         _me.lastGPSLocation = [NSString stringWithFormat:@"%f,%f", newLocation.coordinate.latitude, newLocation.coordinate.longitude];
+         [[AppNetworkAPIClient sharedClient] updateLocation:newLocation.coordinate.latitude andLongitude:newLocation.coordinate.longitude];
     }
     
-    [[AppNetworkAPIClient sharedClient] updateLocation:newLocation.coordinate.latitude andLongitude:newLocation.coordinate.longitude];
+   
     
 //    NSLog(@"location information received: %@, from old location %@", newLocation, oldLocation);
 }

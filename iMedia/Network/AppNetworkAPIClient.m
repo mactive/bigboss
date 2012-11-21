@@ -46,11 +46,17 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 
 #ifdef USE_UYUN_SERVICE
 @interface AppNetworkAPIClient () <UpYunDelegate>
+{
+    NSLock *_imageQueueLock;
+    NSLock *_queuedOperationLock;
+    NSLock *_upYunLock;
+}
 
 @property (nonatomic, strong) NSMutableDictionary *imageUploadOperationsInProgress;
 @property (nonatomic) BOOL isLoggedIn;
 @property (nonatomic, strong) NSMutableArray *queuedOperations;
 @property (nonatomic, strong) NSMutableDictionary *upYunRequests;
+@property (nonatomic, strong) AFHTTPRequestOperation *updateLocationOperation;
 
 - (void)networkChangeReceived:(NSNotification *)notification;
 - (void)upYun:(UpYun *)upYun requestDidFailWithError:(NSError *)error;
@@ -64,6 +70,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 @property (nonatomic, strong) NSMutableDictionary *imageUploadOperationsInProgress;
 @property (nonatomic) BOOL isLoggedIn;
 @property (nonatomic, strong) NSMutableArray *queuedOperations;
+@property (nonatomic, strong) AFHTTPRequestOperation *updateLocationOperation;
 
 - (void)networkChangeReceived:(NSNotification *)notification;
 
@@ -76,6 +83,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 @synthesize imageUploadOperationsInProgress;
 @synthesize isLoggedIn = _isLoggedIn;
 @synthesize queuedOperations;
+@synthesize updateLocationOperation;
 #ifdef USE_UYUN_SERVICE
 @synthesize upYunRequests;
 #endif  
@@ -98,10 +106,14 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 -(void)setIsLoggedIn:(BOOL)isLoggedIn
 {
     _isLoggedIn = isLoggedIn;
+    
+    [_queuedOperationLock lock];
     if (isLoggedIn && [self.queuedOperations count] > 0) {
         [[AppNetworkAPIClient sharedClient] enqueueBatchOfHTTPRequestOperations:self.queuedOperations progressBlock:nil completionBlock:nil];
+    
         [self.queuedOperations removeAllObjects];
     }
+    [_queuedOperationLock unlock];
 }
 
 - (id)initWithBaseURL:(NSURL *)url {
@@ -110,9 +122,14 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
         return nil;
     }
     
-    self.imageUploadOperationsInProgress = [[NSMutableDictionary alloc] initWithCapacity:4];
+    self.imageUploadOperationsInProgress = [[NSMutableDictionary alloc] initWithCapacity:5];
     self.isLoggedIn = NO;
-    self.queuedOperations = [[NSMutableArray alloc] initWithCapacity:5];
+    self.queuedOperations = [[NSMutableArray alloc] initWithCapacity:5];;
+    self.updateLocationOperation = nil;
+    
+    _upYunLock = [[NSLock alloc] init];
+    _imageQueueLock = [[NSLock alloc] init];
+    _queuedOperationLock = [[NSLock alloc] init];
 
 #ifdef USE_UYUN_SERVICE
     self.upYunRequests = [[NSMutableDictionary alloc] initWithCapacity:5];
@@ -192,7 +209,10 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 {
     DDLogError(@"upload image failed: %@", error);
     
+    [_upYunLock lock];
     NSDictionary *savedObjects = [self.upYunRequests objectForKey:upYun.name];
+    [_upYunLock unlock];
+    
     void (^block)(id, NSError *) ;
     block = [savedObjects objectForKey:@"block"];
     if (block) {
@@ -204,7 +224,9 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 {
     DDLogInfo(@"upload image succeeded: %@", result);
     
+    [_upYunLock lock];
     NSDictionary *savedObjects = [self.upYunRequests objectForKey:upYun.name];
+    [_upYunLock unlock];
     
     // succeed, save all the objects
     Avatar *avatar = [savedObjects objectForKey:@"avatar"];
@@ -252,15 +274,18 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     uy.params = params;
     
     NSString *saveKey = [NSString stringWithFormat:@"/%@/%.0f.jpg", me.guid, [[NSDate date] timeIntervalSince1970]];
+    uy.name = saveKey;
+    
     [uy uploadImageData:UIImageJPEGRepresentation(image, 1.0) savekey:saveKey];
     
     //void (^handlerCopy)(id, NSError *) ;
     //handlerCopy = Block_copy(block);
     NSDictionary* results = [NSDictionary dictionaryWithObjectsAndKeys:image, @"image", me, @"me", thumbnail, @"thumbnail", avatar, @"avatar", saveKey, @"pathname", [block copy], @"block", nil];
     //Block_release(handlerCopy); // dict will -retain/-release, this balances the copy.
-    
-    uy.name = saveKey;
+  
+    [_upYunLock lock];
     [self.upYunRequests setObject:results forKey:uy.name];
+    [_upYunLock unlock];
     
     return;
 
@@ -286,7 +311,10 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
         NSString* url = [responseObject valueForKey:@"image"];
         NSString *thumbnailURL = [responseObject valueForKey:@"thumbnail"];
         
+        [_imageQueueLock lock];
         [self.imageUploadOperationsInProgress removeObjectForKey:avatar.sequence];
+        [_imageQueueLock unlock];
+        
         
         avatar.image = image;
         avatar.thumbnail = thumbnail;
@@ -304,19 +332,27 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         DDLogError(@"upload image failed: %@", error);
+        [_imageQueueLock lock];
         [self.imageUploadOperationsInProgress removeObjectForKey:avatar.sequence];
+        [_imageQueueLock unlock];
+        
         if (block) {
             block(nil, error);
         }
     }];
     
     DDLogInfo(@"http request: %@", operation);
-    
+    [_imageQueueLock lock];
     [self.imageUploadOperationsInProgress setObject:operation forKey:avatar.sequence];
+    [_imageQueueLock unlock];
+    
+    
     if (self.isLoggedIn) {
         [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:operation];
     } else {
+        [_queuedOperationLock lock];
         [self.queuedOperations addObject:operation];
+        [_queuedOperationLock unlock];
     }
    
 #endif
@@ -429,7 +465,9 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     if (self.isLoggedIn) {
         [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:getOperation];
     } else {
+        [_queuedOperationLock lock];
         [self.queuedOperations addObject:getOperation];
+        [_queuedOperationLock unlock];
     }
 
 }
@@ -497,15 +535,20 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     
     DDLogInfo(@"http request: %@", operation);
     
+    [_imageQueueLock lock];
     NSArray *imageUploadingOpers = [self.imageUploadOperationsInProgress allValues];
     for (int i = 0; i < [imageUploadOperationsInProgress count]; i++) {
         [operation addDependency:[imageUploadingOpers objectAtIndex:i]];
     }
+    [_imageQueueLock unlock];
     
+        
     if (self.isLoggedIn) {
         [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:operation];
     } else {
+        [_queuedOperationLock lock];
         [self.queuedOperations addObject:operation];
+        [_queuedOperationLock unlock];
     }
 
     
@@ -553,7 +596,9 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     if (self.isLoggedIn) {
         [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:getOperation];
     } else {
+        [_queuedOperationLock lock];
         [self.queuedOperations addObject:getOperation];
+        [_queuedOperationLock unlock];
     }
 }
 - (void)updateMyPresetChannel:(Me *)me withBlock:(void (^)(id, NSError *))block
@@ -584,7 +629,9 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     if (self.isLoggedIn) {
         [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:getOperation];
     } else {
+        [_queuedOperationLock lock];
         [self.queuedOperations addObject:getOperation];
+        [_queuedOperationLock unlock];
     }
     
 }
@@ -668,24 +715,24 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
                                      [NSString stringWithFormat:@"%f", longitude], @"lon",
                                      nil];
     
-    [[AppNetworkAPIClient sharedClient] postPath:POST_DATA_PATH parameters:postDict success:nil failure:nil];
+    NSMutableURLRequest *postRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"POST" path:POST_DATA_PATH parameters:postDict];
+    self.updateLocationOperation = [[AppNetworkAPIClient sharedClient] HTTPRequestOperationWithRequest:postRequest success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        self.updateLocationOperation = nil;
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        self.updateLocationOperation = nil;
+    }];
+    [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:self.updateLocationOperation];
 }
 
 - (void)getNearestPeopleWithGender:(NSUInteger)gender andStart:(NSUInteger)start andBlock:(void (^)(id, NSError *))block
-{
-/*    NSDictionary * result = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"123456", @"fake", @"i am a good guy", "0.12894743","","2012-11-16 14:00:23", nil] forKeys:[NSArray arrayWithObjects:@"guid", @"nickname", @"signature", @"distance", "thumbnail","lastupdated", nil]]] forKeys:[NSArray arrayWithObjects:@"0", nil]];
-    
-  
-    return result;
- */
-    
+{    
     NSString * genderString = [NSString stringWithFormat:@"%i",gender];
     NSString * startString = [NSString stringWithFormat:@"%i",start];
     
     NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: @"10", @"op", @"20", @"querysize", startString, @"start", genderString, @"gender", nil];
+    NSMutableURLRequest *getRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"GET" path:GET_DATA_PATH parameters:getDict];
     
-    [[AppNetworkAPIClient sharedClient] getPath:GET_DATA_PATH parameters:getDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        
+    AFHTTPRequestOperation *getOperation = [[AppNetworkAPIClient sharedClient] HTTPRequestOperationWithRequest:getRequest success:^(AFHTTPRequestOperation *operation, id responseObject) {
         DDLogVerbose(@"get nearest user data received: %@", responseObject);
         
         NSString* type = [responseObject valueForKey:@"type"];
@@ -706,6 +753,11 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
         }
     }];
     
+    if (self.updateLocationOperation != nil) {
+        [getOperation addDependency:self.updateLocationOperation];
+    }
+    
+    [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:getOperation];
 }
 
 - (BOOL)isConnectable
