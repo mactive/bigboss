@@ -36,6 +36,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 @property (nonatomic, strong) UIActionSheet *filterActionSheet;
 @property( nonatomic, readwrite) NSUInteger genderInt;
 @property( nonatomic, readwrite) NSUInteger startInt;
+@property (nonatomic, readwrite) BOOL isLOADMORE;
 @end
 
 @implementation NearbyViewController
@@ -44,6 +45,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 @synthesize locManager;
 @synthesize genderInt;
 @synthesize startInt;
+@synthesize isLOADMORE;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -66,6 +68,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     // 初始全部并且 
     self.genderInt = 0;
     self.startInt = 0;
+    self.isLOADMORE = NO;
     
     self.locManager = [[CLLocationManager alloc] init];
 
@@ -86,10 +89,10 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     [self.loadMoreButton.titleLabel setTextAlignment:UITextAlignmentCenter];
     [self.loadMoreButton setTitle:T(@"点击加载更多") forState:UIControlStateNormal];
     [self.loadMoreButton setBackgroundColor:RGBCOLOR(229, 240, 251)];
-    [self.loadMoreButton.layer setBorderColor:[RGBCOLOR(187, 217, 247) CGColor]];
-    [self.loadMoreButton.layer setBorderWidth:1.0f];
+//    [self.loadMoreButton.layer setBorderColor:[RGBCOLOR(187, 217, 247) CGColor]];
+//    [self.loadMoreButton.layer setBorderWidth:1.0f];
     [self.loadMoreButton.layer setCornerRadius:5.0f];
-    [self.loadMoreButton addTarget:self action:@selector(populateData) forControlEvents:UIControlEventTouchUpInside];
+    [self.loadMoreButton addTarget:self action:@selector(loadMoreAction) forControlEvents:UIControlEventTouchUpInside];
     [self.loadMoreButton setHidden:YES];
     [self.tableView.tableFooterView addSubview:self.loadMoreButton];
 
@@ -110,8 +113,15 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
                                          andLongitude:self.locManager.location.coordinate.longitude];
     
     if (self.sourceData == nil) {
+        self.startInt = 0;
         [self populateDataWithGender:self.genderInt andStart:self.startInt];
     }
+}
+
+-(void)loadMoreAction
+{
+    [self populateDataWithGender:self.genderInt andStart:self.startInt];
+    self.isLOADMORE = YES;
 }
 
 - (void)populateDataWithGender:(NSUInteger)gender andStart:(NSUInteger)start
@@ -123,23 +133,42 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
             
             // pull view hide
             [pull finishedLoading];
-            [self.loadMoreButton setTitle:T(@"点击加载更多") forState:UIControlStateNormal];
 
+            BOOL t1 = self.isLOADMORE;
+            NSInteger t2 = gender;
+            NSInteger t3 = start;
+            
+            
             NSDictionary *responseDict = responseObject;
             NSMutableArray *responseArray = [[NSMutableArray alloc]init];
-            
-            for (int j = 0; j < [responseDict count]; j++) {
-                [responseArray insertObject:[responseObject objectForKey:[NSString stringWithFormat:@"%i",j]] atIndex:j];
+            if ([responseDict count] > 0) {
+                [self.loadMoreButton setTitle:T(@"点击加载更多") forState:UIControlStateNormal];
+                if (self.isLOADMORE == YES) {
+                    self.isLOADMORE = NO;
+                    
+                    responseArray = [[NSMutableArray alloc]initWithArray:self.sourceData];
+                    NSUInteger sCount = [self.sourceData count];
+                    for (int j = sCount; j < [responseDict count]+sCount; j++) {
+                        [responseArray insertObject:[responseObject objectForKey:[NSString stringWithFormat:@"%i",j]] atIndex:j];
+                    }
+                }else{
+                    for (int j = 0; j < [responseDict count]; j++) {
+                        [responseArray insertObject:[responseObject objectForKey:[NSString stringWithFormat:@"%i",j]] atIndex:j];
+                    }
+                }
+                
+                self.sourceData = [[NSArray alloc] initWithArray:responseArray];
+                // 重新设置start
+                self.startInt = [self.sourceData count];
+                
+                // 数量太少不出现 load more
+                if([self.sourceData count] > 4) {   [self.loadMoreButton setHidden:NO]; }
+                
+                
+                [self.tableView reloadData];
+            }else{
+                [self.loadMoreButton setTitle:T(@"没有更多了") forState:UIControlStateNormal];
             }
-            self.sourceData = [[NSArray alloc] initWithArray:responseArray];
-            
-            // 重新设置start
-            self.startInt = self.startInt + [self.sourceData count];
-            // 数量太少不出现 load more
-            if([self.sourceData count] > 5) {   [self.loadMoreButton setHidden:NO]; }
-            
-            [self.tableView reloadData];
-
         }else{
             [pull finishedLoading];
             [self.loadMoreButton setTitle:T(@"点击加载更多") forState:UIControlStateNormal];

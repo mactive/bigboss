@@ -533,7 +533,6 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     [[AppNetworkAPIClient sharedClient] postPath:POST_DATA_PATH parameters:postDict success:nil failure:nil];
 }
 
-
 - (void)getNearestPeopleWithGender:(NSUInteger)gender andStart:(NSUInteger)start andBlock:(void (^)(id, NSError *))block
 {
 /*    NSDictionary * result = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObject:[NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:@"123456", @"fake", @"i am a good guy", "0.12894743","","2012-11-16 14:00:23", nil] forKeys:[NSArray arrayWithObjects:@"guid", @"nickname", @"signature", @"distance", "thumbnail","lastupdated", nil]]] forKeys:[NSArray arrayWithObjects:@"0", nil]];
@@ -545,7 +544,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     NSString * genderString = [NSString stringWithFormat:@"%i",gender];
     NSString * startString = [NSString stringWithFormat:@"%i",start];
     
-    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: @"10", @"op", @"30", @"querysize", startString, @"start", genderString, @"gender", nil];
+    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: @"10", @"op", @"20", @"querysize", startString, @"start", genderString, @"gender", nil];
     
     [[AppNetworkAPIClient sharedClient] getPath:GET_DATA_PATH parameters:getDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
