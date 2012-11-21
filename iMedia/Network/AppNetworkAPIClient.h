@@ -52,7 +52,7 @@ extern NSString *const kXMPPmyUsername;
 
 - (void)updateLocation:(double)latitude andLongitude:(double)longitude;
 
-- (void)getNearestPeopleWithBlock:(void (^)(id responseObject, NSError *error))block;;
+- (void)getNearestPeopleWithGender:(NSInteger)gender andStart:(NSInteger)start andBlock:(void (^)(id, NSError *))block;
 
 - (BOOL)isConnectable;
 

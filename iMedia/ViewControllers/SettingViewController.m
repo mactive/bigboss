@@ -163,15 +163,16 @@
     }
 
     
-    UILabel* titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, labelY, 140, 20)];
+    UILabel* titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, labelY, 280, 20)];
     titleLabel.text = [[self.settingTitleArray objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
     titleLabel.font = [UIFont boldSystemFontOfSize:16.0];
     titleLabel.textColor = RGBCOLOR(77, 77, 77);
     titleLabel.backgroundColor = [UIColor clearColor];
     
     if (indexPath.row ==0 && indexPath.section == 3) {
-        cell.backgroundColor = RGBCOLOR(173, 0, 6);
+        cell.backgroundColor = RGBCOLOR(160, 8, 8);
         titleLabel.textColor = RGBCOLOR(255, 255, 255);
+        [titleLabel setTextAlignment:NSTextAlignmentCenter];
     }
     
     [cell addSubview:titleLabel];
@@ -216,9 +217,9 @@
                               initWithTitle:T(@"程序内所有数据都将被删除")
                               delegate:self
                               cancelButtonTitle:T(@"取消")
-                              destructiveButtonTitle:nil
-                              otherButtonTitles:T(@"退出登录"),nil];
-    self.logoutActionsheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+                              destructiveButtonTitle:T(@"退出登录")
+                              otherButtonTitles:nil];
+    self.logoutActionsheet.actionSheetStyle = UIActionSheetStyleDefault;
     [self.logoutActionsheet showFromTabBar:[[self tabBarController] tabBar]];
 }
 

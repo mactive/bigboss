@@ -16,11 +16,13 @@
 #import "AppDelegate.h"
 #import "ConversationsController.h"
 #import "User.h"
+#import <CoreLocation/CoreLocation.h>
+
 
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 
-@interface NearbyViewController ()<MBProgressHUDDelegate,PullToRefreshViewDelegate,ChatWithIdentityDelegate>
+@interface NearbyViewController ()<MBProgressHUDDelegate,PullToRefreshViewDelegate,ChatWithIdentityDelegate,UIActionSheetDelegate>
 {
 	PullToRefreshView *pull;
     //  Reloading var should really be your tableviews datasource
@@ -28,20 +30,34 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     MBProgressHUD *HUD;
 }
 
-
+@property (nonatomic, strong) CLLocationManager *locManager;
 @property (nonatomic, strong) NSArray* sourceData;
 @property (nonatomic, strong) UIButton *loadMoreButton;
+@property (nonatomic, strong) UIActionSheet *filterActionSheet;
+@property( nonatomic, readwrite) NSUInteger genderInt;
+@property( nonatomic, readwrite) NSUInteger startInt;
+@property (nonatomic, readwrite) BOOL isLOADMORE;
 @end
 
 @implementation NearbyViewController
 @synthesize sourceData;
+@synthesize filterActionSheet;
+@synthesize locManager;
+@synthesize genderInt;
+@synthesize startInt;
+@synthesize isLOADMORE;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        UIButton *button1 = [[UIButton alloc] init];
+        button1.frame=CGRectMake(0, 0, 50, 30);
+        [button1 setBackgroundImage:[UIImage imageNamed: @"barbutton_gender.png"] forState:UIControlStateNormal];
+        [button1 addTarget:self action:@selector(filterAction) forControlEvents:UIControlEventTouchUpInside];
         
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:button1];
     }
     return self;
 }
@@ -49,9 +65,16 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    // 初始全部并且 
+    self.genderInt = 0;
+    self.startInt = 0;
+    self.isLOADMORE = NO;
+    
+    self.locManager = [[CLLocationManager alloc] init];
+
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.backgroundColor = BGCOLOR;
-	
+
 	pull = [[PullToRefreshView alloc] initWithScrollView:(UIScrollView *) self.tableView];
     [pull setDelegate:self];
     [self.tableView addSubview:pull];
@@ -66,10 +89,10 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     [self.loadMoreButton.titleLabel setTextAlignment:UITextAlignmentCenter];
     [self.loadMoreButton setTitle:T(@"点击加载更多") forState:UIControlStateNormal];
     [self.loadMoreButton setBackgroundColor:RGBCOLOR(229, 240, 251)];
-    [self.loadMoreButton.layer setBorderColor:[RGBCOLOR(187, 217, 247) CGColor]];
-    [self.loadMoreButton.layer setBorderWidth:1.0f];
+//    [self.loadMoreButton.layer setBorderColor:[RGBCOLOR(187, 217, 247) CGColor]];
+//    [self.loadMoreButton.layer setBorderWidth:1.0f];
     [self.loadMoreButton.layer setCornerRadius:5.0f];
-    [self.loadMoreButton addTarget:self action:@selector(populateData) forControlEvents:UIControlEventTouchUpInside];
+    [self.loadMoreButton addTarget:self action:@selector(loadMoreAction) forControlEvents:UIControlEventTouchUpInside];
     [self.loadMoreButton setHidden:YES];
     [self.tableView.tableFooterView addSubview:self.loadMoreButton];
 
@@ -77,42 +100,75 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 - (void)pullToRefreshViewShouldRefresh:(PullToRefreshView *)view;
 {
-    [self populateData];
+    self.startInt = 0;
+    [self populateDataWithGender:self.genderInt andStart:self.startInt];
 }
 
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    // updateLocation self
+    [[AppNetworkAPIClient sharedClient]updateLocation:self.locManager.location.coordinate.latitude
+                                         andLongitude:self.locManager.location.coordinate.longitude];
     
     if (self.sourceData == nil) {
-        [self populateData];
+        self.startInt = 0;
+        [self populateDataWithGender:self.genderInt andStart:self.startInt];
     }
 }
 
-- (void)populateData
+-(void)loadMoreAction
+{
+    [self populateDataWithGender:self.genderInt andStart:self.startInt];
+    self.isLOADMORE = YES;
+}
+
+- (void)populateDataWithGender:(NSUInteger)gender andStart:(NSUInteger)start
 {
     [self.loadMoreButton setTitle:T(@"正在载入") forState:UIControlStateNormal];
 
-    [[AppNetworkAPIClient sharedClient]getNearestPeopleWithBlock:^(id responseObject, NSError *error) {
+    [[AppNetworkAPIClient sharedClient]getNearestPeopleWithGender:gender andStart:start andBlock:^(id responseObject, NSError *error) {
         if (responseObject != nil) {
             
             // pull view hide
             [pull finishedLoading];
-            [self.loadMoreButton setTitle:T(@"点击加载更多") forState:UIControlStateNormal];
 
+            BOOL t1 = self.isLOADMORE;
+            NSInteger t2 = gender;
+            NSInteger t3 = start;
+            
+            
             NSDictionary *responseDict = responseObject;
             NSMutableArray *responseArray = [[NSMutableArray alloc]init];
-            
-            for (int j = 0; j < [responseDict count]; j++) {
-                [responseArray insertObject:[responseObject objectForKey:[NSString stringWithFormat:@"%i",j]] atIndex:j];
+            if ([responseDict count] > 0) {
+                [self.loadMoreButton setTitle:T(@"点击加载更多") forState:UIControlStateNormal];
+                if (self.isLOADMORE == YES) {
+                    self.isLOADMORE = NO;
+                    
+                    responseArray = [[NSMutableArray alloc]initWithArray:self.sourceData];
+                    NSUInteger sCount = [self.sourceData count];
+                    for (int j = sCount; j < [responseDict count]+sCount; j++) {
+                        [responseArray insertObject:[responseObject objectForKey:[NSString stringWithFormat:@"%i",j]] atIndex:j];
+                    }
+                }else{
+                    for (int j = 0; j < [responseDict count]; j++) {
+                        [responseArray insertObject:[responseObject objectForKey:[NSString stringWithFormat:@"%i",j]] atIndex:j];
+                    }
+                }
+                
+                self.sourceData = [[NSArray alloc] initWithArray:responseArray];
+                // 重新设置start
+                self.startInt = [self.sourceData count];
+                
+                // 数量太少不出现 load more
+                if([self.sourceData count] > 4) {   [self.loadMoreButton setHidden:NO]; }
+                
+                
+                [self.tableView reloadData];
+            }else{
+                [self.loadMoreButton setTitle:T(@"没有更多了") forState:UIControlStateNormal];
             }
-            self.sourceData = [[NSArray alloc] initWithArray:responseArray];
-            
-            if([self.sourceData count] > 5) {   [self.loadMoreButton setHidden:NO]; }
-            
-            [self.tableView reloadData];
-
         }else{
             [pull finishedLoading];
             [self.loadMoreButton setTitle:T(@"点击加载更多") forState:UIControlStateNormal];
@@ -126,6 +182,51 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     }];
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - action sheet
+//////////////////////////////////////////////////////////////////////////////////////////
+- (void)filterAction
+{
+    self.filterActionSheet = [[UIActionSheet alloc]
+                              initWithTitle:T(@"筛选附近的人")
+                              delegate:self
+                              cancelButtonTitle:T(@"取消")
+                              destructiveButtonTitle:T(@"查看全部")
+                              otherButtonTitles:T(@"只看女生"), T(@"只看男生"), nil];
+    self.filterActionSheet.actionSheetStyle = UIActionSheetStyleAutomatic;
+    [self.filterActionSheet showFromBarButtonItem:self.navigationItem.leftBarButtonItem animated:YES];
+}
+
+
+/////////////////////////////////////////////
+#pragma mark - uiactionsheet delegate
+////////////////////////////////////////////
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if ([self.filterActionSheet isEqual:actionSheet] ) {
+        
+        if (buttonIndex == 0) {
+            DDLogVerbose(@"查看全部");
+            self.genderInt = 0;
+            self.startInt  = 0;
+            self.title = T(@"附近");
+        } else if (buttonIndex == 1) {
+            self.genderInt = 2;
+            self.startInt  = 0;
+            DDLogVerbose(@"查看女生");
+            self.title = T(@"附近(女)");
+        } else if (buttonIndex == 2){
+            DDLogVerbose(@"查看男生");
+            self.genderInt = 1;
+            self.startInt  = 0;
+            self.title = T(@"附近(男)");
+        }
+        
+        [self populateDataWithGender:self.genderInt andStart:self.startInt];
+    
+    }
+    
+}
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -172,7 +273,6 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     if (cell == nil) {
         cell = [[NearbyTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
-    
     cell.data = rowData;
     return cell;
 }
