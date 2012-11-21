@@ -216,9 +216,9 @@
                               initWithTitle:T(@"程序内所有数据都将被删除")
                               delegate:self
                               cancelButtonTitle:T(@"取消")
-                              destructiveButtonTitle:nil
-                              otherButtonTitles:T(@"退出登录"),nil];
-    self.logoutActionsheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+                              destructiveButtonTitle:T(@"退出登录")
+                              otherButtonTitles:nil];
+    self.logoutActionsheet.actionSheetStyle = UIActionSheetStyleDefault;
     [self.logoutActionsheet showFromTabBar:[[self tabBarController] tabBar]];
 }
 

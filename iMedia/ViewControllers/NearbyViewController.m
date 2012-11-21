@@ -20,7 +20,7 @@
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 
-@interface NearbyViewController ()<MBProgressHUDDelegate,PullToRefreshViewDelegate,ChatWithIdentityDelegate>
+@interface NearbyViewController ()<MBProgressHUDDelegate,PullToRefreshViewDelegate,ChatWithIdentityDelegate,UIActionSheetDelegate>
 {
 	PullToRefreshView *pull;
     //  Reloading var should really be your tableviews datasource
@@ -31,17 +31,24 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 @property (nonatomic, strong) NSArray* sourceData;
 @property (nonatomic, strong) UIButton *loadMoreButton;
+@property (nonatomic, strong) UIActionSheet *filterActionSheet;
 @end
 
 @implementation NearbyViewController
 @synthesize sourceData;
+@synthesize filterActionSheet;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        UIButton *button1 = [[UIButton alloc] init];
+        button1.frame=CGRectMake(0, 0, 50, 30);
+        [button1 setBackgroundImage:[UIImage imageNamed: @"barbutton_gender.png"] forState:UIControlStateNormal];
+        [button1 addTarget:self action:@selector(filterAction) forControlEvents:UIControlEventTouchUpInside];
         
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:button1];
     }
     return self;
 }
@@ -51,7 +58,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.backgroundColor = BGCOLOR;
-	
+
 	pull = [[PullToRefreshView alloc] initWithScrollView:(UIScrollView *) self.tableView];
     [pull setDelegate:self];
     [self.tableView addSubview:pull];
@@ -126,6 +133,43 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     }];
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - action sheet
+//////////////////////////////////////////////////////////////////////////////////////////
+- (void)filterAction
+{
+    self.filterActionSheet = [[UIActionSheet alloc]
+                              initWithTitle:T(@"筛选附近的人")
+                              delegate:self
+                              cancelButtonTitle:T(@"取消")
+                              destructiveButtonTitle:T(@"查看全部")
+                              otherButtonTitles:T(@"只看女生"), T(@"只看男生"), nil];
+    self.filterActionSheet.actionSheetStyle = UIActionSheetStyleAutomatic;
+    [self.filterActionSheet showFromTabBar:[[self tabBarController] tabBar]];
+}
+
+
+/////////////////////////////////////////////
+#pragma mark - uiactionsheet delegate
+////////////////////////////////////////////
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if ([self.filterActionSheet isEqual:actionSheet] ) {
+        
+        if (buttonIndex == 0) {
+#warning all
+            DDLogVerbose(@"查看全部");
+        } else if (buttonIndex == 1) {
+#warning female
+            DDLogVerbose(@"查看女生");
+        } else if (buttonIndex == 2){
+#warning male
+            DDLogVerbose(@"查看男生");
+        }
+    
+    }
+    
+}
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
