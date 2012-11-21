@@ -162,6 +162,9 @@
 		5646FAFD160D4BC400175B78 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5646FAFC160D4BC400175B78 /* QuartzCore.framework */; };
 		5646FAFF160F1EBF00175B78 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5646FAFE160F1EBF00175B78 /* libicucore.dylib */; };
 		5646FB23160F246500175B78 /* libCocoaPlant.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5646FB1C160F243200175B78 /* libCocoaPlant.a */; };
+		5647D898165CAE7800D53B62 /* GTMBase64.m in Sources */ = {isa = PBXBuildFile; fileRef = 5647D876165CAE7800D53B62 /* GTMBase64.m */; };
+		5647D8A5165CAE7800D53B62 /* UpYun.m in Sources */ = {isa = PBXBuildFile; fileRef = 5647D893165CAE7800D53B62 /* UpYun.m */; };
+		5647D8A6165CAE7800D53B62 /* WBUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 5647D897165CAE7800D53B62 /* WBUtil.m */; };
 		564A6F2E164B6EFE00B04A00 /* Me.m in Sources */ = {isa = PBXBuildFile; fileRef = 564A6F2D164B6EFE00B04A00 /* Me.m */; };
 		564A6F34164BE78D00B04A00 /* Message.m in Sources */ = {isa = PBXBuildFile; fileRef = 564A6F33164BE78D00B04A00 /* Message.m */; };
 		5661561E163E90ED00199DB4 /* FunctionListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5661561D163E90EC00199DB4 /* FunctionListViewController.m */; };
@@ -565,6 +568,14 @@
 		5646FAFC160D4BC400175B78 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		5646FAFE160F1EBF00175B78 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
 		5646FB11160F243200175B78 /* CocoaPlant.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CocoaPlant.xcodeproj; path = CocoaPlant/CocoaPlant.xcodeproj; sourceTree = "<group>"; };
+		5647D875165CAE7800D53B62 /* GTMBase64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMBase64.h; sourceTree = "<group>"; };
+		5647D876165CAE7800D53B62 /* GTMBase64.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMBase64.m; sourceTree = "<group>"; };
+		5647D877165CAE7800D53B62 /* GTMDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMDefines.h; sourceTree = "<group>"; };
+		5647D892165CAE7800D53B62 /* UpYun.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpYun.h; sourceTree = "<group>"; };
+		5647D893165CAE7800D53B62 /* UpYun.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpYun.m; sourceTree = "<group>"; };
+		5647D894165CAE7800D53B62 /* UpYunSDK-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UpYunSDK-Prefix.pch"; sourceTree = "<group>"; };
+		5647D896165CAE7800D53B62 /* WBUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBUtil.h; sourceTree = "<group>"; };
+		5647D897165CAE7800D53B62 /* WBUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WBUtil.m; sourceTree = "<group>"; };
 		564A6F2C164B6EFE00B04A00 /* Me.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Me.h; path = Models/Me.h; sourceTree = "<group>"; };
 		564A6F2D164B6EFE00B04A00 /* Me.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Me.m; path = Models/Me.m; sourceTree = "<group>"; };
 		564A6F32164BE78D00B04A00 /* Message.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Message.h; path = Models/Message.h; sourceTree = "<group>"; };
@@ -1135,6 +1146,37 @@
 				5646FB20160F243200175B78 /* CocoaPlantSpecs.octest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		5647D873165CAE7800D53B62 /* UpYunSDK */ = {
+			isa = PBXGroup;
+			children = (
+				5647D874165CAE7800D53B62 /* CTMBase64 */,
+				5647D892165CAE7800D53B62 /* UpYun.h */,
+				5647D893165CAE7800D53B62 /* UpYun.m */,
+				5647D894165CAE7800D53B62 /* UpYunSDK-Prefix.pch */,
+				5647D895165CAE7800D53B62 /* Utils */,
+			);
+			path = UpYunSDK;
+			sourceTree = "<group>";
+		};
+		5647D874165CAE7800D53B62 /* CTMBase64 */ = {
+			isa = PBXGroup;
+			children = (
+				5647D875165CAE7800D53B62 /* GTMBase64.h */,
+				5647D876165CAE7800D53B62 /* GTMBase64.m */,
+				5647D877165CAE7800D53B62 /* GTMDefines.h */,
+			);
+			path = CTMBase64;
+			sourceTree = "<group>";
+		};
+		5647D895165CAE7800D53B62 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				5647D896165CAE7800D53B62 /* WBUtil.h */,
+				5647D897165CAE7800D53B62 /* WBUtil.m */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 		56615622163FB57700199DB4 /* Location */ = {
@@ -1914,6 +1956,7 @@
 		56B4CD0616267A2A00E046CC /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
+				5647D873165CAE7800D53B62 /* UpYunSDK */,
 				269DDE011650F17A00320B02 /* WSBubbleData */,
 				566743BE164129620043A29C /* Godzippa */,
 				26825BD416378F96008DA7CC /* GCPagedScrollView */,
@@ -2419,6 +2462,9 @@
 				26DE71D91654C1C400672C4F /* NearbyViewController.m in Sources */,
 				26E5886A1659ED8200180A9D /* NearbyTableViewCell.m in Sources */,
 				042B51D8165A8CF900443796 /* PullToRefreshView.m in Sources */,
+				5647D898165CAE7800D53B62 /* GTMBase64.m in Sources */,
+				5647D8A5165CAE7800D53B62 /* UpYun.m in Sources */,
+				5647D8A6165CAE7800D53B62 /* WBUtil.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
