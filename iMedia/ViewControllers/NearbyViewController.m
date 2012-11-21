@@ -34,12 +34,16 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 @property (nonatomic, strong) NSArray* sourceData;
 @property (nonatomic, strong) UIButton *loadMoreButton;
 @property (nonatomic, strong) UIActionSheet *filterActionSheet;
+@property( nonatomic, readwrite) NSUInteger genderInt;
+@property( nonatomic, readwrite) NSUInteger startInt;
 @end
 
 @implementation NearbyViewController
 @synthesize sourceData;
 @synthesize filterActionSheet;
 @synthesize locManager;
+@synthesize genderInt;
+@synthesize startInt;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -58,6 +62,10 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    // 初始全部并且 
+    self.genderInt = 0;
+    self.startInt = 0;
     
     self.locManager = [[CLLocationManager alloc] init];
 
@@ -89,7 +97,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 - (void)pullToRefreshViewShouldRefresh:(PullToRefreshView *)view;
 {
-    [self populateData];
+    self.startInt = 0;
+    [self populateDataWithGender:self.genderInt andStart:self.startInt];
 }
 
 
@@ -101,15 +110,18 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
                                          andLongitude:self.locManager.location.coordinate.longitude];
     
     if (self.sourceData == nil) {
-        [self populateData];
+        [self populateDataWithGender:self.genderInt andStart:self.startInt];
     }
 }
 
-- (void)populateData
+- (void)populateDataWithGender:(NSUInteger)gender andStart:(NSUInteger)start
 {
     [self.loadMoreButton setTitle:T(@"正在载入") forState:UIControlStateNormal];
+    
+    NSUInteger t1 = gender;
+    NSUInteger t2 = start;
 
-    [[AppNetworkAPIClient sharedClient]getNearestPeopleWithBlock:^(id responseObject, NSError *error) {
+    [[AppNetworkAPIClient sharedClient]getNearestPeopleWithGender:gender andStart:start andBlock:^(id responseObject, NSError *error) {
         if (responseObject != nil) {
             
             // pull view hide
@@ -124,6 +136,9 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
             }
             self.sourceData = [[NSArray alloc] initWithArray:responseArray];
             
+            // 重新设置start
+            self.startInt = self.startInt + [self.sourceData count];
+
             if([self.sourceData count] > 5) {   [self.loadMoreButton setHidden:NO]; }
             
             [self.tableView reloadData];
@@ -165,15 +180,23 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     if ([self.filterActionSheet isEqual:actionSheet] ) {
         
         if (buttonIndex == 0) {
-#warning all
             DDLogVerbose(@"查看全部");
+            self.genderInt = 0;
+            self.startInt  = 0;
+            self.title = T(@"附近");
         } else if (buttonIndex == 1) {
-#warning female
+            self.genderInt = 2;
+            self.startInt  = 0;
             DDLogVerbose(@"查看女生");
+            self.title = T(@"附近(女)");
         } else if (buttonIndex == 2){
-#warning male
             DDLogVerbose(@"查看男生");
+            self.genderInt = 1;
+            self.startInt  = 0;
+            self.title = T(@"附近(男)");
         }
+        
+        [self populateDataWithGender:self.genderInt andStart:self.startInt];
     
     }
     
