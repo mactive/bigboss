@@ -411,6 +411,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         DDLogVerbose(@"%@: %@ cannot connect to XMPP server", THIS_FILE, THIS_METHOD);
         return NO;
     }
+    [[AppNetworkAPIClient sharedClient]loginWithUsername:self.me.username andPassword:self.me.password withBlock:nil];
     return YES;
 }
 
@@ -432,7 +433,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     _messagesSending = [NSMutableDictionary dictionary];
-    [[AppNetworkAPIClient sharedClient]loginWithUsername:self.me.username andPassword:self.me.password withBlock:nil];
     [self connect];
 }
 

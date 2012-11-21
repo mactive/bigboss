@@ -32,7 +32,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 #import "ContactListViewController.h"
 #import "UIImage+Resize.h"
 #import "XMPPJID.h"
-//#import "UpYun.h"
+#import "UpYun.h"
 
 //static NSString * const kAppNetworkAPIBaseURLString = @"http://192.168.1.104:8000/";//
 static NSString * const kAppNetworkAPIBaseURLString = @"http://media.wingedstone.com:8000/";
@@ -44,18 +44,41 @@ NSString *const kXMPPmyJIDPassword = @"kXMPPmyJIDPassword";
 NSString *const kXMPPmyPassword = @"kXMPPmyPassword";
 NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 
+#ifdef USE_UYUN_SERVICE
+@interface AppNetworkAPIClient () <UpYunDelegate>
+
+@property (nonatomic, strong) NSMutableDictionary *imageUploadOperationsInProgress;
+@property (nonatomic) BOOL isLoggedIn;
+@property (nonatomic, strong) NSMutableArray *queuedOperations;
+@property (nonatomic, strong) NSMutableDictionary *upYunRequests;
+
+- (void)networkChangeReceived:(NSNotification *)notification;
+- (void)upYun:(UpYun *)upYun requestDidFailWithError:(NSError *)error;
+- (void)upYun:(UpYun *)upYun requestDidSucceedWithResult:(id)result;
+
+@end
+
+#else
 @interface AppNetworkAPIClient ()
 
 @property (nonatomic, strong) NSMutableDictionary *imageUploadOperationsInProgress;
+@property (nonatomic) BOOL isLoggedIn;
+@property (nonatomic, strong) NSMutableArray *queuedOperations;
 
 - (void)networkChangeReceived:(NSNotification *)notification;
 
 @end
+#endif
 
 @implementation AppNetworkAPIClient
 
 @synthesize kNetworkStatus;
 @synthesize imageUploadOperationsInProgress;
+@synthesize isLoggedIn = _isLoggedIn;
+@synthesize queuedOperations;
+#ifdef USE_UYUN_SERVICE
+@synthesize upYunRequests;
+#endif  
 
 + (AppNetworkAPIClient *)sharedClient {
     static AppNetworkAPIClient *_sharedClient = nil;
@@ -72,6 +95,15 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
+-(void)setIsLoggedIn:(BOOL)isLoggedIn
+{
+    _isLoggedIn = isLoggedIn;
+    if (isLoggedIn && [self.queuedOperations count] > 0) {
+        [[AppNetworkAPIClient sharedClient] enqueueBatchOfHTTPRequestOperations:self.queuedOperations progressBlock:nil completionBlock:nil];
+        [self.queuedOperations removeAllObjects];
+    }
+}
+
 - (id)initWithBaseURL:(NSURL *)url {
     self = [super initWithBaseURL:url];
     if (!self) {
@@ -79,6 +111,12 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     }
     
     self.imageUploadOperationsInProgress = [[NSMutableDictionary alloc] initWithCapacity:4];
+    self.isLoggedIn = NO;
+    self.queuedOperations = [[NSMutableArray alloc] initWithCapacity:5];
+
+#ifdef USE_UYUN_SERVICE
+    self.upYunRequests = [[NSMutableDictionary alloc] initWithCapacity:5];
+#endif
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(networkChangeReceived:)
@@ -93,23 +131,25 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 
 -(void)loginWithUsername:(NSString *)username andPassword:(NSString *)passwd withBlock:(void (^)(id responseObject, NSError *))block
 {
-    [[AppNetworkAPIClient sharedClient] getPath:GET_CONFIG_PATH parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    self.isLoggedIn = NO;
+    
+    NSMutableURLRequest *loginRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"GET" path:GET_CONFIG_PATH parameters:nil];
+    AFJSONRequestOperation * loginOperation = [AFJSONRequestOperation JSONRequestOperationWithRequest:loginRequest success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
         
-        DDLogVerbose(@"get config JSON received: %@", responseObject);
-        [[NSUserDefaults standardUserDefaults] setObject:[responseObject valueForKey:@"logintypes"] forKey:@"logintypes"];
-        [[NSUserDefaults standardUserDefaults] setObject:[responseObject valueForKey:@"csrfmiddlewaretoken"] forKey:@"csrfmiddlewaretoken"];
+        DDLogVerbose(@"get config JSON received: %@", JSON);
+        [[NSUserDefaults standardUserDefaults] setObject:[JSON valueForKey:@"logintypes"] forKey:@"logintypes"];
+        [[NSUserDefaults standardUserDefaults] setObject:[JSON valueForKey:@"csrfmiddlewaretoken"] forKey:@"csrfmiddlewaretoken"];
         
-        // now is to login
-        NSDictionary *loginDict = [NSDictionary dictionaryWithObjectsAndKeys: username, @"username", passwd, @"password", [responseObject valueForKey:@"csrfmiddlewaretoken"], @"csrfmiddlewaretoken", nil];
-        
-        [[AppNetworkAPIClient sharedClient] postPath:LOGIN_PATH parameters:loginDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
-            DDLogVerbose(@"login JSON received: %@", responseObject);
+        NSDictionary *loginDict = [NSDictionary dictionaryWithObjectsAndKeys: username, @"username", passwd, @"password", [JSON valueForKey:@"csrfmiddlewaretoken"], @"csrfmiddlewaretoken", nil];
+        NSMutableURLRequest *postRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"POST" path:LOGIN_PATH parameters:loginDict];
+        AFJSONRequestOperation *loginOperation = [AFJSONRequestOperation JSONRequestOperationWithRequest:postRequest success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+            DDLogVerbose(@"login JSON received: %@", JSON);
             
-            NSString* status = [responseObject valueForKey:@"status"];
+            NSString* status = [JSON valueForKey:@"status"];
             if ([status isEqualToString:@"success"]) {
                 
-                NSString* jid = [responseObject valueForKey:@"jid"];
-                NSString *jPassword = [responseObject valueForKey:@"jpass"];
+                NSString* jid = [JSON valueForKey:@"jid"];
+                NSString *jPassword = [JSON valueForKey:@"jpass"];
                 
                 [[NSUserDefaults standardUserDefaults] setObject:jid forKey:kXMPPmyJID];
                 [[NSUserDefaults standardUserDefaults] setObject:jPassword forKey:kXMPPmyJIDPassword];
@@ -117,44 +157,114 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
                 [[NSUserDefaults standardUserDefaults] setObject:passwd forKey:kXMPPmyPassword];
                 
                 if (block ) {
-                    block(responseObject, nil);
+                    block(JSON, nil);
                 }
+                
+                self.isLoggedIn = YES;
             } else {
                 NSError *error = [[NSError alloc] initWithDomain:@"wingedstone.com" code:403 userInfo:nil];
                 if (block) {
-                    block(responseObject, error);
+                    block(JSON, error);
                 }
             }
-            
-            
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            //
+        } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
             DDLogVerbose(@"login failed: %@", error);
             if (block) {
                 block(nil, error);
             }
+
         }];
-        
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        //
-        DDLogVerbose(@"error received: %@", error);
+        [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:loginOperation];
+            
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        DDLogVerbose(@"get config failed: %@", error);
         if (block) {
-            block (nil, error);
+            block(nil, error);
         }
+
     }];
     
+    [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:loginOperation];
 }
+
+#ifdef USE_UYUN_SERVICE
+- (void)upYun:(UpYun *)upYun requestDidFailWithError:(NSError *)error
+{
+    DDLogError(@"upload image failed: %@", error);
+    
+    NSDictionary *savedObjects = [self.upYunRequests objectForKey:upYun.name];
+    void (^block)(id, NSError *) ;
+    block = [savedObjects objectForKey:@"block"];
+    if (block) {
+        block(nil, error);
+    }
+}
+
+- (void)upYun:(UpYun *)upYun requestDidSucceedWithResult:(id)result
+{
+    DDLogInfo(@"upload image succeeded: %@", result);
+    
+    NSDictionary *savedObjects = [self.upYunRequests objectForKey:upYun.name];
+    
+    // succeed, save all the objects
+    Avatar *avatar = [savedObjects objectForKey:@"avatar"];
+    Me*  me = [savedObjects objectForKey:@"me"];
+    void (^block)(id, NSError *) ;
+    block = [savedObjects objectForKey:@"block"];
+    
+    UIImage *image = [savedObjects objectForKey:@"image"];
+    UIImage *thumbnail = [savedObjects objectForKey:@"thumbnail"];
+    
+    NSString *url = [NSString stringWithFormat:@"http://wstone.b0.upaiyun.com%@", upYun.name];
+    NSString *thumbnailURL = [NSString stringWithFormat:@"%@!tm", url];
+    
+    avatar.image = image;
+    avatar.thumbnail = thumbnail;
+    avatar.imageRemoteThumbnailURL = thumbnailURL;
+    avatar.imageRemoteURL = url;
+    
+    if (avatar.sequence.intValue == 1) {
+        me.avatarURL = url;
+        me.thumbnailURL = thumbnailURL;
+        me.thumbnailImage = avatar.thumbnail;
+    }
+    
+    if (block) {
+        block(result, nil);
+    }
+
+}
+#endif
 
 - (void)storeImage:(UIImage *)image thumbnail:(UIImage *)thumbnail forMe:(Me *)me andAvatar:(Avatar *)avatar withBlock:(void (^)(id, NSError *))block
 {
 
 #ifdef USE_UYUN_SERVICE
-    /*
+    
     UpYun *uy = [[UpYun alloc] init];
     uy.delegate = self;
     uy.expiresIn = 100;
     uy.bucket = @"wstone";
-    */
+    uy.passcode = @"MIovWfblZEf/dLP2y9SsNUu3uig=";
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    //    [params setObject:@"0,1000" forKey:@"content-length-range"];
+    //    [params setObject:@"png" forKey:@"allow-file-type"];
+    uy.params = params;
+    
+    NSString *saveKey = [NSString stringWithFormat:@"/%@/%.0f.jpg", me.guid, [[NSDate date] timeIntervalSince1970]];
+    [uy uploadImageData:UIImageJPEGRepresentation(image, 1.0) savekey:saveKey];
+    
+    //void (^handlerCopy)(id, NSError *) ;
+    //handlerCopy = Block_copy(block);
+    NSDictionary* results = [NSDictionary dictionaryWithObjectsAndKeys:image, @"image", me, @"me", thumbnail, @"thumbnail", avatar, @"avatar", saveKey, @"pathname", [block copy], @"block", nil];
+    //Block_release(handlerCopy); // dict will -retain/-release, this balances the copy.
+    
+    uy.name = saveKey;
+    [self.upYunRequests setObject:results forKey:uy.name];
+    
+    return;
+
+    
 #else
     NSString* csrfToken = [[NSUserDefaults standardUserDefaults] valueForKey:@"csrfmiddlewaretoken"];
     NSDictionary *paramDict = [NSDictionary dictionaryWithObjectsAndKeys: csrfToken, @"csrfmiddlewaretoken", nil];
@@ -203,7 +313,12 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     DDLogInfo(@"http request: %@", operation);
     
     [self.imageUploadOperationsInProgress setObject:operation forKey:avatar.sequence];
-    [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:operation];
+    if (self.isLoggedIn) {
+        [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:operation];
+    } else {
+        [self.queuedOperations addObject:operation];
+    }
+   
 #endif
     
 }
@@ -225,31 +340,33 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
         getDict = [NSDictionary dictionaryWithObjectsAndKeys:identity.ePostalID , @"jid", @"2", @"op", nil];
     }
     
-    [[AppNetworkAPIClient sharedClient] getPath:GET_DATA_PATH parameters:getDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        DDLogVerbose(@"get user %@ data received: %@", identity, responseObject);
+    NSMutableURLRequest *getRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"GET" path:GET_DATA_PATH parameters:getDict];
+    AFJSONRequestOperation *getOperation = [AFJSONRequestOperation JSONRequestOperationWithRequest:getRequest success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
         
-        NSString* type = [responseObject valueForKey:@"type"];
+        DDLogVerbose(@"get user %@ data received: %@", identity, JSON);
+        
+        NSString* type = [JSON valueForKey:@"type"];
         
         if ([type isEqualToString:@"user"] || [type isEqualToString:@"channel"]) {
             // compare the incoming new user data with old user data. if thumbnailURL is the same
             // then don't load the image
-            NSString *thumbnailURL = [ServerDataTransformer getThumbnailFromServerJSON:responseObject];
+            NSString *thumbnailURL = [ServerDataTransformer getThumbnailFromServerJSON:JSON];
             if (thumbnailURL == nil || [thumbnailURL isEqualToString:@""]) {
                 identity.thumbnailImage = nil;
 #warning TODO: set to the global placeholder
             } else if (thumbnailURL != identity.thumbnailURL) {
                 NSURL *url = [NSURL URLWithString:thumbnailURL];
-
+                
                 // Try twice to load the image
                 AFImageRequestOperation *imageOper = [AFImageRequestOperation imageRequestOperationWithRequest:[NSURLRequest requestWithURL:url] imageProcessingBlock:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                     identity.thumbnailImage = image;
                 } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
-                    DDLogError(@"Failed to get thumbnail at first time url: %@, response :%@, tryting again", thumbnailURL, responseObject);
+                    DDLogError(@"Failed to get thumbnail at first time url: %@, response :%@, tryting again", thumbnailURL, JSON);
                     AFImageRequestOperation  *imageOperAgain = [AFImageRequestOperation imageRequestOperationWithRequest:[NSURLRequest requestWithURL:url] imageProcessingBlock:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                         identity.thumbnailImage = image;
                         
                     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
-                        DDLogError(@"ERROR: Failed again to get thumbnail at first time url: %@, response :%@", thumbnailURL, responseObject);
+                        DDLogError(@"ERROR: Failed again to get thumbnail at first time url: %@, response :%@", thumbnailURL, JSON);
                     }];
                     
                     [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:imageOperAgain];
@@ -257,9 +374,9 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
                 
                 [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:imageOper];
             }
-
             
-            [[ModelHelper sharedInstance] populateIdentity:identity withJSONData:responseObject];
+            
+            [[ModelHelper sharedInstance] populateIdentity:identity withJSONData:JSON];
             
             // Fix some inconsistent issues if it exists
             
@@ -273,7 +390,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
                     // only update image if not exist
                     if (avatar.image == nil && avatar.imageRemoteURL != nil && ![avatar.imageRemoteURL isEqualToString:@""] ) {
                         AFImageRequestOperation *oper = [AFImageRequestOperation imageRequestOperationWithRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:avatar.imageRemoteURL]] success:^(UIImage *image) {
-                            DDLogInfo(@"load me thumbnail image received response: %@", responseObject);
+                            DDLogInfo(@"load me thumbnail image received response: %@", JSON);
                             avatar.image = image;
                             avatar.thumbnail= [image resizedImageToSize:CGSizeMake(75, 75)];
                         }];
@@ -290,23 +407,30 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
             identity.last_serverupdate_on = [NSDate date];
             
             if (block) {
-                block (responseObject, nil);
+                block (JSON, nil);
             }
-
+            
         } else {
             if (block) {
                 block(nil, nil);
             }
         }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
         //
         DDLogVerbose(@"error received: %@", error);
         
-       
         if (block) {
             block(nil, error);
         }
+
     }];
+    
+    if (self.isLoggedIn) {
+        [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:getOperation];
+    } else {
+        [self.queuedOperations addObject:getOperation];
+    }
 
 }
 
@@ -378,7 +502,12 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
         [operation addDependency:[imageUploadingOpers objectAtIndex:i]];
     }
     
-    [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:operation];
+    if (self.isLoggedIn) {
+        [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:operation];
+    } else {
+        [self.queuedOperations addObject:operation];
+    }
+
     
 }
 
@@ -400,55 +529,64 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 {
     // proceed to make server updates
     NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: me.guid, @"guid", @"8", @"op", nil];
-    
-    [[AppNetworkAPIClient sharedClient] getPath:GET_DATA_PATH parameters:getDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    NSMutableURLRequest *getRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"GET" path:GET_DATA_PATH parameters:getDict];
+    AFJSONRequestOperation *getOperation = [AFJSONRequestOperation JSONRequestOperationWithRequest:getRequest success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        DDLogVerbose(@"get channel %@ data received: %@", me, JSON);
         
-        DDLogVerbose(@"get channel %@ data received: %@", me, responseObject);
-        
-        NSString* type = [responseObject valueForKey:@"type"];
+        NSString* type = [JSON valueForKey:@"type"];
         
         if (![@"error" isEqualToString:type]) {
             if (block) {
-                block (responseObject, nil);
+                block (JSON, nil);
             }
         } else {
             if (block) {
                 block (nil, nil);
             }
         }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        //
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
         if (block) {
             block (nil, error);
         }
     }];
+    
+    if (self.isLoggedIn) {
+        [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:getOperation];
+    } else {
+        [self.queuedOperations addObject:getOperation];
+    }
 }
 - (void)updateMyPresetChannel:(Me *)me withBlock:(void (^)(id, NSError *))block
 {
     // proceed to make server updates
     NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: @"9", @"op", nil];
-    
-    [[AppNetworkAPIClient sharedClient] getPath:GET_DATA_PATH parameters:getDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    NSMutableURLRequest *getRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"GET" path:GET_DATA_PATH parameters:getDict];
+    AFJSONRequestOperation *getOperation = [AFJSONRequestOperation JSONRequestOperationWithRequest:getRequest success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        DDLogVerbose(@"get preset channel %@ data received: %@", me, JSON);
         
-        DDLogVerbose(@"get channel %@ data received: %@", me, responseObject);
-        
-        NSString* type = [responseObject valueForKey:@"type"];
+        NSString* type = [JSON valueForKey:@"type"];
         
         if (![@"error" isEqualToString:type]) {
             if (block) {
-                block (responseObject, nil);
+                block (JSON, nil);
             }
         } else {
             if (block) {
                 block (nil, nil);
             }
         }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        //
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
         if (block) {
             block (nil, error);
         }
     }];
+    
+    if (self.isLoggedIn) {
+        [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:getOperation];
+    } else {
+        [self.queuedOperations addObject:getOperation];
+    }
+    
 }
 
 - (void)uploadRating:(NSString *)rateKey rate:(NSString *)rating andComment:(NSString *)comment withBlock:(void (^)(id, NSError *))block

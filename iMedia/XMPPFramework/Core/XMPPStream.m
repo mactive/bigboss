@@ -2879,8 +2879,9 @@ enum XMPPStreamConfig
 	
 	if (f_starttls)
 	{
-		if ([f_starttls elementForName:@"required"])
-		{
+        // WINGEDSTONE: change the client behavior to use ssl when possible
+		//if ([f_starttls elementForName:@"required"])
+		//{
 			// TLS is required for this connection
 			
 			// Update state
@@ -2895,7 +2896,7 @@ enum XMPPStreamConfig
 			
 			// We're already listening for the response...
 			return;
-		}
+		//}
 	}
 	
 	// Check to see if resource binding is required

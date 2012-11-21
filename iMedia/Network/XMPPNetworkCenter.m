@@ -347,10 +347,6 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 - (void)xmppStream:(XMPPStream *)sender socketDidConnect:(GCDAsyncSocket *)socket
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-    
-    if (self.useSSL) {
-        [xmppStream secureConnection:nil];
-    }
 }
 
 - (void)xmppStream:(XMPPStream *)sender willSecureWithSettings:(NSMutableDictionary *)settings
@@ -422,11 +418,18 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 	{
 		DDLogError(@"Error authenticating: %@", error);
 	}
+    
+
 }
 
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender
 {
 	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+
+    /* secureConnection doesn't work due to server send 2nd feature list which doesn't include starttls
+    if (self.useSSL) {
+        [[self xmppStream] secureConnection:nil];
+    }*/
     
 	[self goOnline];
     
