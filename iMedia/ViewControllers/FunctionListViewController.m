@@ -7,7 +7,7 @@
 //
 
 #import "FunctionListViewController.h"
-#import "ShakeViewController.h"
+#import "ShakeDashboardViewController.h"
 #import "XMPPNetworkCenter.h"
 #import "AppNetworkAPIClient.h"
 #import "AppDelegate.h" 
@@ -140,9 +140,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 - (void)shakeAction
 {
-    ShakeViewController *shakeViewController = [[ShakeViewController alloc] initWithNibName:nil bundle:nil];
-    [self.navigationController setHidesBottomBarWhenPushed:YES];
-    [self.navigationController pushViewController:shakeViewController animated:YES];
+    ShakeDashboardViewController *shakeDashboardViewController = [[ShakeDashboardViewController alloc] initWithNibName:nil bundle:nil];
+//    [self.navigationController setHidesBottomBarWhenPushed:YES];
+    [self.navigationController pushViewController:shakeDashboardViewController animated:YES];
 }
 
 
