@@ -58,6 +58,7 @@
         _manager.delegate = self;
         _manager.desiredAccuracy = kCLLocationAccuracyHundredMeters;
         _manager.distanceFilter = 100;
+        self.lastLocation = _manager.location;
         
         [_manager startUpdatingLocation];
         
