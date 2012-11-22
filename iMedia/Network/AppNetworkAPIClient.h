@@ -53,6 +53,7 @@ extern NSString *const kXMPPmyUsername;
 - (void)updateLocation:(double)latitude andLongitude:(double)longitude;
 
 - (void)getNearestPeopleWithGender:(NSUInteger)gender andStart:(NSUInteger)start andBlock:(void (^)(id, NSError *))block;
+- (void)getShakeDashboardInfoWithBlock:(void (^)(id, NSError *))block;
 
 - (BOOL)isConnectable;
 

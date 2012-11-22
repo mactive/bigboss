@@ -785,6 +785,40 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     
 }
 
+- (void)getShakeDashboardInfoWithBlock:(void (^)(id, NSError *))block
+{
+
+    NSMutableURLRequest *getRequest = [[AppNetworkAPIClient sharedClient] fakeRequestWithMethod:@"GET" path:@"http://127.0.0.1/wingedstone/json.php" parameters:nil];
+    
+    AFHTTPRequestOperation *getOperation = [[AppNetworkAPIClient sharedClient] HTTPRequestOperationWithRequest:getRequest success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        DDLogVerbose(@"getShakeDashboardInfoWithBlock: %@", responseObject);
+        
+        NSString* type = [responseObject valueForKey:@"type"];
+        
+        if (![@"error" isEqualToString:type]) {
+            if (block) {
+                block (responseObject, nil);
+            }
+        } else {
+            if (block) {
+                block (nil, nil);
+            }
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        //
+        if (block) {
+            block (nil, error);
+        }
+    }];
+    
+    if (self.updateLocationOperation != nil) {
+        [getOperation addDependency:self.updateLocationOperation];
+    }
+    
+    [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:getOperation];
+}
+
+
 - (BOOL)isConnectable
 {
     if (self.kNetworkStatus.intValue == AFNetworkReachabilityStatusReachableViaWiFi || self.kNetworkStatus.intValue == AFNetworkReachabilityStatusReachableViaWWAN) {

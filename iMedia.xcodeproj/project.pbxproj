@@ -26,6 +26,10 @@
 		2635E4C2165663E800F522B1 /* button_arrow_bg@2x copy.png in Resources */ = {isa = PBXBuildFile; fileRef = 2635E4C1165663E800F522B1 /* button_arrow_bg@2x copy.png */; };
 		2640031F1642B45E00A1B779 /* WelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2640031E1642B45E00A1B779 /* WelcomeViewController.m */; };
 		264003211642B87200A1B779 /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 264003201642B87200A1B779 /* logo@2x.png */; };
+		264A389C165DF75200FA0123 /* ShakeDashboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 264A389B165DF75200FA0123 /* ShakeDashboardViewController.m */; };
+		264A389F165DF8D800FA0123 /* TrapezoidLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 264A389E165DF8D800FA0123 /* TrapezoidLabel.m */; };
+		264A38A6165E062600FA0123 /* shake_test_thumbnail@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 264A38A4165E062600FA0123 /* shake_test_thumbnail@2x.png */; };
+		264A38A7165E062600FA0123 /* shake_test_image@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 264A38A5165E062600FA0123 /* shake_test_image@2x.png */; };
 		264AA538163E534A00607861 /* RequestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 264AA537163E534A00607861 /* RequestViewController.m */; };
 		264AA53E163E673300607861 /* contact_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 264AA539163E673300607861 /* contact_icon@2x.png */; };
 		264AA53F163E673300607861 /* right_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 264AA53A163E673300607861 /* right_icon@2x.png */; };
@@ -401,6 +405,12 @@
 		2640031D1642B45E00A1B779 /* WelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WelcomeViewController.h; path = ViewControllers/Welcome/WelcomeViewController.h; sourceTree = "<group>"; };
 		2640031E1642B45E00A1B779 /* WelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WelcomeViewController.m; path = ViewControllers/Welcome/WelcomeViewController.m; sourceTree = "<group>"; };
 		264003201642B87200A1B779 /* logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "logo@2x.png"; path = "Resources/logo@2x.png"; sourceTree = "<group>"; };
+		264A389A165DF75200FA0123 /* ShakeDashboardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShakeDashboardViewController.h; path = ViewControllers/ShakeView/ShakeDashboardViewController.h; sourceTree = "<group>"; };
+		264A389B165DF75200FA0123 /* ShakeDashboardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShakeDashboardViewController.m; path = ViewControllers/ShakeView/ShakeDashboardViewController.m; sourceTree = "<group>"; };
+		264A389D165DF8D800FA0123 /* TrapezoidLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrapezoidLabel.h; path = ViewControllers/ShakeView/TrapezoidLabel.h; sourceTree = "<group>"; };
+		264A389E165DF8D800FA0123 /* TrapezoidLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TrapezoidLabel.m; path = ViewControllers/ShakeView/TrapezoidLabel.m; sourceTree = "<group>"; };
+		264A38A4165E062600FA0123 /* shake_test_thumbnail@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "shake_test_thumbnail@2x.png"; path = "Resources/shake_test_thumbnail@2x.png"; sourceTree = "<group>"; };
+		264A38A5165E062600FA0123 /* shake_test_image@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "shake_test_image@2x.png"; path = "Resources/shake_test_image@2x.png"; sourceTree = "<group>"; };
 		264AA536163E534A00607861 /* RequestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RequestViewController.h; path = ViewControllers/RequestViewController.h; sourceTree = "<group>"; };
 		264AA537163E534A00607861 /* RequestViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RequestViewController.m; path = ViewControllers/RequestViewController.m; sourceTree = "<group>"; };
 		264AA539163E673300607861 /* contact_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "contact_icon@2x.png"; path = "Resources/contact_icon@2x.png"; sourceTree = "<group>"; };
@@ -945,6 +955,19 @@
 			name = contrib;
 			sourceTree = "<group>";
 		};
+		264A3899165DF6FA00FA0123 /* ShakeView */ = {
+			isa = PBXGroup;
+			children = (
+				264A389A165DF75200FA0123 /* ShakeDashboardViewController.h */,
+				264A389B165DF75200FA0123 /* ShakeDashboardViewController.m */,
+				264A389D165DF8D800FA0123 /* TrapezoidLabel.h */,
+				264A389E165DF8D800FA0123 /* TrapezoidLabel.m */,
+				266A1A6D162E5AF2008EF1D5 /* ShakeViewController.h */,
+				266A1A6E162E5AF2008EF1D5 /* ShakeViewController.m */,
+			);
+			name = ShakeView;
+			sourceTree = "<group>";
+		};
 		26825BD416378F96008DA7CC /* GCPagedScrollView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1009,6 +1032,8 @@
 			isa = PBXGroup;
 			children = (
 				266958311647DEA300A7106C /* login_intro_oyeah@2x.png */,
+				264A38A4165E062600FA0123 /* shake_test_thumbnail@2x.png */,
+				264A38A5165E062600FA0123 /* shake_test_image@2x.png */,
 				26615A40165C832B00D1F8A7 /* barbutton_gender@2x.png */,
 				26615A3E165C830700D1F8A7 /* barbutton_more@2x.png */,
 				26E58877165A2A6700180A9D /* blueArrow.png */,
@@ -1890,6 +1915,7 @@
 			children = (
 				26E588661659ED2F00180A9D /* UITableViewCell */,
 				566E82601609A77D00A333EA /* ContactListViewController.h */,
+				264A3899165DF6FA00FA0123 /* ShakeView */,
 				566E82611609A77D00A333EA /* ContactListViewController.m */,
 				26F759E2163CEF6F005E9FB4 /* ProfileMeController.h */,
 				26F759E3163CEF6F005E9FB4 /* ProfileMeController.m */,
@@ -1903,8 +1929,6 @@
 				562DE704160ABFA100F782D2 /* ChatDetailController.m */,
 				26825BD816378FC7008DA7CC /* AlbumViewController.h */,
 				26825BD916378FC7008DA7CC /* AlbumViewController.m */,
-				266A1A6D162E5AF2008EF1D5 /* ShakeViewController.h */,
-				266A1A6E162E5AF2008EF1D5 /* ShakeViewController.m */,
 				5661561C163E90EC00199DB4 /* FunctionListViewController.h */,
 				5661561D163E90EC00199DB4 /* FunctionListViewController.m */,
 				266A1A70162E5B0F008EF1D5 /* SettingViewController.h */,
@@ -2263,6 +2287,8 @@
 				26E5887A165A2A6700180A9D /* blueArrow@2x.png in Resources */,
 				26615A3F165C830700D1F8A7 /* barbutton_more@2x.png in Resources */,
 				26615A41165C832B00D1F8A7 /* barbutton_gender@2x.png in Resources */,
+				264A38A6165E062600FA0123 /* shake_test_thumbnail@2x.png in Resources */,
+				264A38A7165E062600FA0123 /* shake_test_image@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2471,6 +2497,8 @@
 				5647D898165CAE7800D53B62 /* GTMBase64.m in Sources */,
 				5647D8A5165CAE7800D53B62 /* UpYun.m in Sources */,
 				5647D8A6165CAE7800D53B62 /* WBUtil.m in Sources */,
+				264A389C165DF75200FA0123 /* ShakeDashboardViewController.m in Sources */,
+				264A389F165DF8D800FA0123 /* TrapezoidLabel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
