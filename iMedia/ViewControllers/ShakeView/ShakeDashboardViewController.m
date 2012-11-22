@@ -11,8 +11,12 @@
 #import <QuartzCore/QuartzCore.h>
 #import "TrapezoidLabel.h"
 #import "UIImageView+AFNetworking.h"
+#import "MBProgressHUD.h"
 
-@interface ShakeDashboardViewController ()
+@interface ShakeDashboardViewController ()<MBProgressHUDDelegate>
+{
+    MBProgressHUD *HUD;
+}
 
 @property(nonatomic, strong) TrapezoidLabel *inprogressLabel;
 @property(nonatomic, strong) TrapezoidLabel *waitingLabel;
@@ -92,7 +96,7 @@
     [self.inprogressButton addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
     
     // checkinView
-    self.checkinView = [[UIView alloc]initWithFrame:CGRectMake(0, LARGE_BUTTON_HEIGHT, 320, 42)];
+    self.checkinView = [[UIView alloc]initWithFrame:CGRectMake(0, LARGE_BUTTON_HEIGHT, 320, 44)];
     self.checkinView.backgroundColor = RGBCOLOR(237, 223, 214);
     // checklabel
     self.checkinLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 12, 200, 20)];
@@ -134,8 +138,13 @@
 
 - (void)populateData
 {
+    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    HUD.delegate = self;
+    HUD.labelText = T(@"正在加载信息");
+    
     [[AppNetworkAPIClient sharedClient]getShakeDashboardInfoWithBlock:^(id responseObject, NSError *error) {
         if (responseObject != nil) {
+            [HUD hide:YES];
             NSDictionary *responseDict = responseObject;
             NSDictionary *inprogressDict = [responseDict objectForKey:@"inprogress"];
             NSDictionary *waitingDict = [responseDict objectForKey:@"waiting"];
@@ -170,6 +179,14 @@
                 }
             }
      
+        }else{
+            [HUD hide:YES];
+            
+            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            HUD.mode = MBProgressHUDModeText;
+            HUD.delegate = self;
+            HUD.labelText = T(@"网络错误，无法获取信息");
+            [HUD hide:YES afterDelay:1];
         }
         
         

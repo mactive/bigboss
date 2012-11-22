@@ -448,7 +448,8 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
             
         } else {
             if (block) {
-                block(nil, nil);
+                NSError *error = [[NSError alloc] initWithDomain:@"wingedstone.com" code:403 userInfo:nil];
+                block (nil, error);
             }
         }
 
@@ -523,7 +524,8 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
         }
         else {
             if (block) {
-                block (nil, nil);
+                NSError *error = [[NSError alloc] initWithDomain:@"wingedstone.com" code:403 userInfo:nil];
+                block (nil, error);
             }
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -584,7 +586,8 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
             }
         } else {
             if (block) {
-                block (nil, nil);
+                NSError *error = [[NSError alloc] initWithDomain:@"wingedstone.com" code:403 userInfo:nil];
+                block (nil, error);
             }
         }
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
@@ -617,7 +620,8 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
             }
         } else {
             if (block) {
-                block (nil, nil);
+                NSError *error = [[NSError alloc] initWithDomain:@"wingedstone.com" code:403 userInfo:nil];
+                block (nil, error);
             }
         }
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
@@ -658,7 +662,8 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
         }
         else {
             if (block) {
-                block (nil, nil);
+                NSError *error = [[NSError alloc] initWithDomain:@"wingedstone.com" code:403 userInfo:nil];
+                block (nil, error);
             }
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -693,7 +698,8 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
         }
         else {
             if (block) {
-                block (nil, nil);
+                NSError *error = [[NSError alloc] initWithDomain:@"wingedstone.com" code:403 userInfo:nil];
+                block (nil, error);
             }
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -743,7 +749,8 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
             }
         } else {
             if (block) {
-                block (nil, nil);
+                NSError *error = [[NSError alloc] initWithDomain:@"wingedstone.com" code:403 userInfo:nil];
+                block (nil, error);
             }
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -763,7 +770,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 - (void)getShakeDashboardInfoWithBlock:(void (^)(id, NSError *))block
 {
 
-    NSMutableURLRequest *getRequest = [[AppNetworkAPIClient sharedClient] fakeRequestWithMethod:@"GET" path:@"http://127.0.0.1/wingedstone/json.php" parameters:nil];
+    NSMutableURLRequest *getRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"GET" path:@"/base/getfakedata/" parameters:nil];
     
     AFHTTPRequestOperation *getOperation = [[AppNetworkAPIClient sharedClient] HTTPRequestOperationWithRequest:getRequest success:^(AFHTTPRequestOperation *operation, id responseObject) {
         DDLogVerbose(@"getShakeDashboardInfoWithBlock: %@", responseObject);
@@ -776,7 +783,8 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
             }
         } else {
             if (block) {
-                block (nil, nil);
+                NSError *error = [[NSError alloc] initWithDomain:@"wingedstone.com" code:403 userInfo:nil];
+                block (nil, error);
             }
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -785,10 +793,6 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
             block (nil, error);
         }
     }];
-    
-    if (self.updateLocationOperation != nil) {
-        [getOperation addDependency:self.updateLocationOperation];
-    }
     
     [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:getOperation];
 }
