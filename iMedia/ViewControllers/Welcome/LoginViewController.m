@@ -67,7 +67,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     if ([passwordField isEqual:textField]) {
         [self loginAction:nil];
         return [textField resignFirstResponder];
-        
     }
 }
 
@@ -104,7 +103,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	HUD.labelText = T(@"登录中");
     
     [[AppNetworkAPIClient sharedClient] loginWithUsername:self.usernameField.text andPassword:passwordField.text withBlock:^(id responseObject, NSError *error) {
-        if (error == nil) {
+        if (responseObject!= nil &&  error == nil) {
 
             [HUD hide:YES];
             
