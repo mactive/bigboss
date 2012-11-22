@@ -34,6 +34,7 @@
 #import "NSObject+SBJson.h"
 #import "XMPPJID.h"
 #import <QuartzCore/QuartzCore.h>
+#import <Foundation/NSTimer.h>
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -44,8 +45,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 #define NAVIGATION_CONTROLLER() ((UINavigationController *)_window.rootViewController)
 
-#define CHANNEL_UPDATE_REQUEST_EVENT   @"Channel_Update_Request_Event"
-
 @interface AppDelegate()
 {
     NSManagedObjectContext *_managedObjectContext;
@@ -53,7 +52,12 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     NSMutableDictionary     *_messagesSending;
     SystemSoundID           _messageReceivedSystemSoundID;
     SystemSoundID           _messageSentSystemSoundID;
+    NSUInteger              _updateChannelRetryCount;
+    NSUInteger              _loginRetryCount;
 }
+
+@property (nonatomic, strong) NSTimer* updateChannelTimer;
+@property (nonatomic, strong) NSTimer* loginTimer;
 
 @end
 
@@ -67,6 +71,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 @synthesize contactListController;
 @synthesize functionListController;
 @synthesize settingController;
+@synthesize updateChannelTimer;
+@synthesize loginTimer;
 
 @synthesize me = _me;
 
@@ -116,10 +122,15 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
     application.applicationSupportsShakeToEdit = YES;
     
-    // Add notification to enable keeping trying update channel data
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(updateMyChannelInformation:)
-                                                 name:CHANNEL_UPDATE_REQUEST_EVENT object:nil];
+    //retry logic here
+    //
+    _updateChannelRetryCount = 0 ;
+    _loginRetryCount = 0;
+    self.updateChannelTimer = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow:2000] interval:5 target:self selector:@selector(updateMyChannelInformation:) userInfo:nil repeats:YES];
+    self.loginTimer = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow:2000] interval:5 target:self selector:@selector(reLogin:) userInfo:nil repeats:YES];
+    [[NSRunLoop currentRunLoop] addTimer:self.updateChannelTimer forMode:NSDefaultRunLoopMode];
+    [[NSRunLoop currentRunLoop] addTimer:self.loginTimer forMode:NSDefaultRunLoopMode];
+    
     return YES;
 }
 
@@ -191,6 +202,33 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [self.window setRootViewController:self.tabController];
 
     [self.window makeKeyAndVisible];
+}
+
+- (void)reLogin:(NSNotification *)notification
+{
+    [[AppNetworkAPIClient sharedClient]loginWithUsername:self.me.username andPassword:self.me.password withBlock:^(id responseObject, NSError *error) {
+        //
+        // login only succeeded with non-nil responseObject and nil error
+        if (responseObject != nil && error == nil) {
+            [self.loginTimer invalidate];
+        } else if (responseObject != nil && error != nil) {
+            // we did receive server response, but the login failed for other reason
+            // this should never happen since we already logged in the past
+            // unless the password is changed for some other reason
+#warning TODO - handle password changes
+            [self.loginTimer invalidate];
+        } else {
+            // well, we need keep our timer going
+            _loginRetryCount += 1;
+            NSTimeInterval seconds = 0;
+            if (_updateChannelRetryCount > 3) {
+                seconds = 60;
+            } else {
+                seconds = _updateChannelRetryCount * 2;
+            }
+            [self.updateChannelTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:seconds]];
+        }
+    }];
 }
 
 - (void)updateMyChannelInformation:(NSNotification *)notification
@@ -321,14 +359,17 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
                     }];
                     
                     [self.contactListController contentChanged];
+                    
+                    [self.updateChannelTimer invalidate];
                 } else {
-                    NSNotification *myNotification =
-                    [NSNotification notificationWithName:CHANNEL_UPDATE_REQUEST_EVENT object:nil];
-                    [[NSNotificationQueue defaultQueue]
-                     enqueueNotification:myNotification
-                     postingStyle:NSPostWhenIdle
-                     coalesceMask:NSNotificationNoCoalescing
-                     forModes:nil];
+                    _updateChannelRetryCount += 1;
+                    NSTimeInterval seconds = 0;
+                    if (_updateChannelRetryCount > 3) {
+                        seconds = 60;
+                    } else {
+                        seconds = _updateChannelRetryCount * 2;
+                    }
+                    [self.updateChannelTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:seconds]];
                 }
             }];
             
@@ -336,13 +377,14 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             
             
         } else {
-            NSNotification *myNotification =
-            [NSNotification notificationWithName:CHANNEL_UPDATE_REQUEST_EVENT object:nil];
-            [[NSNotificationQueue defaultQueue]
-             enqueueNotification:myNotification
-             postingStyle:NSPostWhenIdle
-             coalesceMask:NSNotificationNoCoalescing
-             forModes:nil];
+            _updateChannelRetryCount += 1;
+            NSTimeInterval seconds = 0;
+            if (_updateChannelRetryCount > 3) {
+                seconds = 60;
+            } else {
+                seconds = _updateChannelRetryCount * 2;
+            }
+            [self.updateChannelTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:seconds]];
         }
     }];
 }
@@ -409,7 +451,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         DDLogVerbose(@"%@: %@ cannot connect to XMPP server", THIS_FILE, THIS_METHOD);
         return NO;
     }
-    [[AppNetworkAPIClient sharedClient]loginWithUsername:self.me.username andPassword:self.me.password withBlock:nil];
+    [self reLogin:nil];
     return YES;
 }
 

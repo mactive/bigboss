@@ -31,7 +31,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 //static NSString * const pubsubhost = @"pubsub.192.168.1.104";
 static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 
-@interface XMPPNetworkCenter () <XMPPRosterDelegate, XMPPPubSubDelegate, XMPPRosterMemoryStorageDelegate>
+@interface XMPPNetworkCenter () <XMPPRosterDelegate, XMPPPubSubDelegate, XMPPRosterMemoryStorageDelegate, XMPPPrivacyDelegate>
 {
     
     NSString *password;
@@ -56,6 +56,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 @property (nonatomic, strong, readonly) XMPPPubSub *xmppPubsub;
 //@property (nonatomic, strong) XMPPMessageArchivingCoreDataStorage *xmppMessageArchivingStorage;
 //@property (nonatomic, strong) XMPPMessageArchiving *xmppMessageArchiving;
+@property (nonatomic, strong, readonly) XMPPPrivacy *xmppPrivacy;
 
 
 @end
@@ -70,6 +71,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize xmppBandwidthMonitor;
 @synthesize useSSL;
+@synthesize xmppPrivacy;
 
 + (XMPPNetworkCenter *)sharedClient {
     static XMPPNetworkCenter *_sharedClient = nil;
@@ -151,16 +153,24 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     [xmppBandwidthMonitor  activate:xmppStream];
     [xmppBandwidthMonitor addDelegate:self delegateQueue:dispatch_get_current_queue()];
 #endif
+    
+    //XMPP privacy
+    xmppPrivacy = [[XMPPPrivacy alloc] initWithDispatchQueue:dispatch_get_main_queue()];
+    xmppPrivacy.autoClearPrivacyListInfo = NO;
+    xmppPrivacy.autoRetrievePrivacyListItems = NO;
+    
 	// Activate xmpp modules
     
 	[xmppReconnect         activate:xmppStream];
 	[xmppRoster            activate:xmppStream];
     [xmppPubsub            activate:xmppStream];
+    [xmppPrivacy           activate:xmppStream];
     
 	// Add ourself as a delegate to anything we may be interested in    
 	[xmppStream addDelegate:self delegateQueue:dispatch_get_main_queue()];
 	[xmppRoster addDelegate:self delegateQueue:dispatch_get_main_queue()];
     [xmppPubsub addDelegate:self delegateQueue:dispatch_get_main_queue()];
+    [xmppPrivacy addDelegate:self delegateQueue:dispatch_get_main_queue()];
     
     
 	// Optional:
@@ -192,10 +202,12 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 	[xmppStream removeDelegate:self];
 	[xmppRoster removeDelegate:self];
     [xmppPubsub removeDelegate:self];
+    [xmppPrivacy removeDelegate:self];
     
 	[xmppReconnect         deactivate];
 	[xmppRoster            deactivate];
     [xmppPubsub            deactivate];
+    [xmppPrivacy           deactivate];
     
 	[xmppStream disconnect];
     
@@ -204,6 +216,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     xmppRoster = nil;
 	xmppRosterStorage = nil;
     xmppPubsub = nil;
+    xmppPrivacy = nil;
 }
 
 -(BOOL)isConnected
@@ -545,6 +558,37 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 	{
 		DDLogError(@"Unable to connect to server. Check xmppStream.hostName");
 	}
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark XMPPPrivacyDelegate
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (void)xmppPrivacy:(XMPPPrivacy *)sender didReceiveListNames:(NSArray *)listNames
+{
+    DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+ /*  // if ([xmppPrivacy defaultListName] == nil) {
+        NSXMLElement *allow1 = [XMPPPrivacy privacyItemWithType:@"subscription" value:@"both" action:@"allow" order:1];
+        NSXMLElement *allow2 = [XMPPPrivacy privacyItemWithType:@"subscription" value:@"to" action:@"allow" order:2];
+        
+        NSXMLElement *deny = [XMPPPrivacy privacyItemWithType:@"jid" value:[xmppStream.myJID domain] action:@"deny" order:3];
+        [XMPPPrivacy blockMessages:deny];
+        NSXMLElement *global = [XMPPPrivacy privacyItemWithAction:@"allow" order:100];
+        
+        NSArray *defaultList = [NSArray arrayWithObjects:allow1, allow2, deny, global, nil];
+        
+        [xmppPrivacy setListWithName:@"default" items:defaultList];
+        [xmppPrivacy setDefaultListName:@"default"];
+   // }*/
+}
+
+- (void)xmppPrivacy:(XMPPPrivacy *)sender didSetDefaultListName:(NSString *)name
+{
+    DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD); 
+}
+
+- (void)xmppPrivacy:(XMPPPrivacy *)sender didNotSetDefaultListName:(NSString *)name error:(id)error
+{
+    DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);    
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

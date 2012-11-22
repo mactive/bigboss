@@ -32,12 +32,16 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 #import "ContactListViewController.h"
 #import "UIImage+Resize.h"
 #import "XMPPJID.h"
+
+#define USE_UYUN_SERVICE YES
+#ifdef USE_UYUN_SERVICE
 #import "UpYun.h"
+#endif
 
 //static NSString * const kAppNetworkAPIBaseURLString = @"http://192.168.1.104:8000/";//
 static NSString * const kAppNetworkAPIBaseURLString = @"http://media.wingedstone.com:8000/";
 
-#define USE_UYUN_SERVICE
+
 
 NSString *const kXMPPmyJID = @"kXMPPmyJID";
 NSString *const kXMPPmyJIDPassword = @"kXMPPmyJIDPassword";
@@ -237,8 +241,8 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     UIImage *image = [savedObjects objectForKey:@"image"];
     UIImage *thumbnail = [savedObjects objectForKey:@"thumbnail"];
     
-    NSString *url = [NSString stringWithFormat:@"http://wstone.b0.upaiyun.com%@", upYun.name];
-    NSString *thumbnailURL = [NSString stringWithFormat:@"%@!tm", url];
+    NSString *url = [NSString stringWithFormat:@"http://wstone.b0.upaiyun.com%@?%.0f", upYun.name, [[NSDate date] timeIntervalSince1970]];
+    NSString *thumbnailURL = [NSString stringWithFormat:@"http://wstone.b0.upaiyun.com%@!tm?%.0f", upYun.name, [[NSDate date] timeIntervalSince1970]];
     
     avatar.image = image;
     avatar.thumbnail = thumbnail;
@@ -273,7 +277,13 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     //    [params setObject:@"png" forKey:@"allow-file-type"];
     uy.params = params;
     
-    NSString *saveKey = [NSString stringWithFormat:@"/%@/%.0f.jpg", me.guid, [[NSDate date] timeIntervalSince1970]];
+    NSString *saveKey = nil;
+    if (StringHasValue(avatar.imageRemoteURL)) {
+        NSURL *url = [NSURL URLWithString:avatar.imageRemoteURL];
+        saveKey = [url path];
+    } else {
+        saveKey = [NSString stringWithFormat:@"/%@/%.0f.jpg", me.guid, [[NSDate date] timeIntervalSince1970]];
+    }
     uy.name = saveKey;
     
     [uy uploadImageData:UIImageJPEGRepresentation(image, 1.0) savekey:saveKey];
@@ -727,7 +737,14 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         self.updateLocationOperation = nil;
     }];
-    [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:self.updateLocationOperation];
+    
+    if (self.isLoggedIn) {
+        [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:self.updateLocationOperation];
+    } else {
+        [_queuedOperationLock lock];
+        [self.queuedOperations addObject:self.updateLocationOperation   ];
+        [_queuedOperationLock unlock];
+    }
 }
 
 - (void)getNearestPeopleWithGender:(NSUInteger)gender andStart:(NSUInteger)start andBlock:(void (^)(id, NSError *))block
@@ -764,7 +781,15 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
         [getOperation addDependency:self.updateLocationOperation];
     }
     
-    [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:getOperation];
+    if (self.isLoggedIn) {
+        [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:getOperation];
+    } else {
+        [_queuedOperationLock lock];
+        [self.queuedOperations addObject:getOperation];
+        [_queuedOperationLock unlock];
+    }
+
+    
 }
 
 - (void)getShakeDashboardInfoWithBlock:(void (^)(id, NSError *))block
