@@ -297,7 +297,6 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     
     HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     HUD.delegate = self;
-    HUD.labelText = T(@"正在请求");
     
     [[AppNetworkAPIClient sharedClient] getPath:GET_DATA_PATH parameters:getDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
         DDLogVerbose(@"get config JSON received: %@", responseObject);
