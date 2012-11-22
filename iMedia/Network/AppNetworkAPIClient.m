@@ -273,7 +273,13 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     //    [params setObject:@"png" forKey:@"allow-file-type"];
     uy.params = params;
     
-    NSString *saveKey = [NSString stringWithFormat:@"/%@/%.0f.jpg", me.guid, [[NSDate date] timeIntervalSince1970]];
+    NSString *saveKey = nil;
+    if (StringHasValue(avatar.imageRemoteURL)) {
+        NSURL *url = [NSURL URLWithString:avatar.imageRemoteURL];
+        saveKey = [url path];
+    } else {
+        saveKey = [NSString stringWithFormat:@"/%@/%.0f.jpg", me.guid, [[NSDate date] timeIntervalSince1970]];
+    }
     uy.name = saveKey;
     
     [uy uploadImageData:UIImageJPEGRepresentation(image, 1.0) savekey:saveKey];
