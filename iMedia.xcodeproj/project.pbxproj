@@ -577,7 +577,6 @@
 		5647D877165CAE7800D53B62 /* GTMDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMDefines.h; sourceTree = "<group>"; };
 		5647D892165CAE7800D53B62 /* UpYun.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpYun.h; sourceTree = "<group>"; };
 		5647D893165CAE7800D53B62 /* UpYun.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpYun.m; sourceTree = "<group>"; };
-		5647D894165CAE7800D53B62 /* UpYunSDK-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UpYunSDK-Prefix.pch"; sourceTree = "<group>"; };
 		5647D896165CAE7800D53B62 /* WBUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBUtil.h; sourceTree = "<group>"; };
 		5647D897165CAE7800D53B62 /* WBUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WBUtil.m; sourceTree = "<group>"; };
 		564A6F2C164B6EFE00B04A00 /* Me.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Me.h; path = Models/Me.h; sourceTree = "<group>"; };
@@ -1160,7 +1159,6 @@
 				5647D874165CAE7800D53B62 /* CTMBase64 */,
 				5647D892165CAE7800D53B62 /* UpYun.h */,
 				5647D893165CAE7800D53B62 /* UpYun.m */,
-				5647D894165CAE7800D53B62 /* UpYunSDK-Prefix.pch */,
 				5647D895165CAE7800D53B62 /* Utils */,
 			);
 			path = UpYunSDK;
