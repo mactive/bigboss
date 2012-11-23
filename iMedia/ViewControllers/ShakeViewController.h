@@ -10,14 +10,7 @@
 #import <AudioToolbox/AudioToolbox.h>
 
 @interface ShakeViewController : UIViewController
-{
-    SystemSoundID completeSound;
-}
 
-@property(nonatomic, strong) UIImageView *shakeImageView;
-@property(nonatomic, strong) UIView *afterView;
-
-
-
+@property(nonatomic, strong)NSDictionary *shakeData;
 
 @end

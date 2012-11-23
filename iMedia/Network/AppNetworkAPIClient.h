@@ -54,6 +54,7 @@ extern NSString *const kXMPPmyUsername;
 
 - (void)getNearestPeopleWithGender:(NSUInteger)gender andStart:(NSUInteger)start andBlock:(void (^)(id, NSError *))block;
 - (void)getShakeDashboardInfoWithBlock:(void (^)(id, NSError *))block;
+- (void)getCheckinInfoWithBlock:(void (^)(id, NSError *))block;
 
 - (BOOL)isConnectable;
 

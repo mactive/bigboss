@@ -46,6 +46,7 @@
 		2659A0A0163940FF0090EADB /* message_3.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2659A09E163940FF0090EADB /* message_3.wav */; };
 		2659A0A1163940FF0090EADB /* message_2.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2659A09F163940FF0090EADB /* message_2.wav */; };
 		2659A0A3163941050090EADB /* message_1.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2659A0A2163941050090EADB /* message_1.wav */; };
+		26605588165F29AA003B8737 /* CheckinNoteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 26605587165F29AA003B8737 /* CheckinNoteViewController.m */; };
 		26615A3F165C830700D1F8A7 /* barbutton_more@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26615A3E165C830700D1F8A7 /* barbutton_more@2x.png */; };
 		26615A41165C832B00D1F8A7 /* barbutton_gender@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26615A40165C832B00D1F8A7 /* barbutton_gender@2x.png */; };
 		266958271647BA1800A7106C /* login_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 266958231647BA1800A7106C /* login_bg@2x.png */; };
@@ -428,6 +429,8 @@
 		2659A09E163940FF0090EADB /* message_3.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = message_3.wav; path = Resources/message_3.wav; sourceTree = "<group>"; };
 		2659A09F163940FF0090EADB /* message_2.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = message_2.wav; path = Resources/message_2.wav; sourceTree = "<group>"; };
 		2659A0A2163941050090EADB /* message_1.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = message_1.wav; path = Resources/message_1.wav; sourceTree = "<group>"; };
+		26605586165F29AA003B8737 /* CheckinNoteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CheckinNoteViewController.h; path = ViewControllers/ShakeView/CheckinNoteViewController.h; sourceTree = "<group>"; };
+		26605587165F29AA003B8737 /* CheckinNoteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CheckinNoteViewController.m; path = ViewControllers/ShakeView/CheckinNoteViewController.m; sourceTree = "<group>"; };
 		26615A3E165C830700D1F8A7 /* barbutton_more@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "barbutton_more@2x.png"; path = "Resources/barbutton_more@2x.png"; sourceTree = "<group>"; };
 		26615A40165C832B00D1F8A7 /* barbutton_gender@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "barbutton_gender@2x.png"; path = "Resources/barbutton_gender@2x.png"; sourceTree = "<group>"; };
 		266958231647BA1800A7106C /* login_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "login_bg@2x.png"; path = "Resources/login_bg@2x.png"; sourceTree = "<group>"; };
@@ -964,6 +967,8 @@
 				264A389E165DF8D800FA0123 /* TrapezoidLabel.m */,
 				266A1A6D162E5AF2008EF1D5 /* ShakeViewController.h */,
 				266A1A6E162E5AF2008EF1D5 /* ShakeViewController.m */,
+				26605586165F29AA003B8737 /* CheckinNoteViewController.h */,
+				26605587165F29AA003B8737 /* CheckinNoteViewController.m */,
 			);
 			name = ShakeView;
 			sourceTree = "<group>";
@@ -2499,6 +2504,7 @@
 				5647D8A6165CAE7800D53B62 /* WBUtil.m in Sources */,
 				264A389C165DF75200FA0123 /* ShakeDashboardViewController.m in Sources */,
 				264A389F165DF8D800FA0123 /* TrapezoidLabel.m in Sources */,
+				26605588165F29AA003B8737 /* CheckinNoteViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

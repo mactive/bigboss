@@ -7,14 +7,23 @@
 //
 
 #import "ShakeViewController.h"
+#import "UIImageView+AFNetworking.h"
+#import "MBProgressHUD.h"
 
-@interface ShakeViewController ()
+@interface ShakeViewController ()<MBProgressHUDDelegate>
+{
+    SystemSoundID completeSound;
+    MBProgressHUD *HUD;
+}
 
+@property(nonatomic, strong) UIImageView *shakeImageView;
+@property(nonatomic, strong) UIView *afterView;
 @end
 
 @implementation ShakeViewController
 @synthesize shakeImageView;
 @synthesize afterView;
+@synthesize shakeData;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -29,9 +38,21 @@
 {
     [super viewDidLoad];
     
-    self.view.backgroundColor = RGBCOLOR(69, 74, 82);
-    self.shakeImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"shake_view.png"]];
-    [self.shakeImageView setFrame:CGRectMake(30, 30, 260, 320)];
+    NSURL * url = [NSURL URLWithString:[self.shakeData objectForKey:@"image"]];
+    NSURLRequest *urlRequest = [[NSURLRequest alloc]initWithURL:url];
+    self.shakeImageView = [[UIImageView alloc] initWithFrame:self.view.bounds];
+    
+    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    HUD.delegate = self;
+    HUD.labelText = T(@"正在加载");
+    
+    [self.shakeImageView setImageWithURLRequest:urlRequest placeholderImage:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+        [self.shakeImageView setImage:image];
+        [HUD hide:YES afterDelay:2];
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+        // 
+    }];
+    [self.shakeImageView setFrame:self.view.bounds];
     
     
     self.afterView = [[UIView alloc] initWithFrame:CGRectMake(30, 30, 260, 320)];

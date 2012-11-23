@@ -12,6 +12,8 @@
 #import "TrapezoidLabel.h"
 #import "UIImageView+AFNetworking.h"
 #import "MBProgressHUD.h"
+#import "ShakeViewController.h"
+#import "CheckinNoteViewController.h"
 
 @interface ShakeDashboardViewController ()<MBProgressHUDDelegate>
 {
@@ -23,6 +25,7 @@
 @property(nonatomic, strong) UIView *checkinView;
 @property(nonatomic, strong) UILabel *checkinLabel;
 @property(nonatomic, strong) UIButton *checkinButton;
+@property(nonatomic, strong) NSMutableArray *urlArray;
 
 
 @property(nonatomic, strong)UIButton *inprogressButton;
@@ -37,6 +40,7 @@
 @synthesize checkinLabel;
 @synthesize checkinView;
 @synthesize checkinButton;
+@synthesize urlArray;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -53,7 +57,7 @@
 
 #define BUTTON_WIDTH 160
 #define BUTTON_HEIGHT 80
-#define FIRST_TAG 1000
+#define FIRST_TAG 0
 #define BUTTON_OFFEST 1
 
 #define VIEW_ALBUM_OFFSET 1
@@ -93,7 +97,6 @@
     self.inprogressButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.inprogressButton.frame = CGRectMake(0, 0, LARGE_BUTTON_WIDTH, LARGE_BUTTON_HEIGHT);
     self.inprogressButton.tag = FIRST_TAG;
-    [self.inprogressButton addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
     
     // checkinView
     self.checkinView = [[UIView alloc]initWithFrame:CGRectMake(0, LARGE_BUTTON_HEIGHT, 320, 44)];
@@ -117,16 +120,19 @@
     [self.checkinButton addTarget:self action:@selector(checkinAction) forControlEvents:UIControlEventTouchUpInside];
     [self.checkinView addSubview:self.checkinButton];
     
-    
+    self.urlArray = [[NSMutableArray alloc]init];
     
     [self.view addSubview:self.checkinView];
     [self.view addSubview:self.inprogressButton];
+    
+    // did load populate
+    [self populateData];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self populateData];
     
 }
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -134,14 +140,17 @@
 //////////////////////////////////////////////////////////////////////////////////////////
 - (void)checkinAction
 {
-    
+    CheckinNoteViewController *controller = [[CheckinNoteViewController alloc]initWithNibName:nil bundle:nil];
+    [controller setHidesBottomBarWhenPushed:YES];
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 - (void)buttonAction:(UIButton *)sender
 {
-    if (sender.tag == 1000) {
-        // jump
-    }
+    ShakeViewController *controller = [[ShakeViewController alloc]initWithNibName:nil bundle:nil];
+    controller.shakeData = [self.urlArray objectAtIndex:sender.tag];
+    [controller setHidesBottomBarWhenPushed:YES];
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 - (void)populateData
@@ -163,6 +172,10 @@
                 [buttonImageView setImageWithURL:url placeholderImage:[UIImage imageNamed:@"shake_test_image.png"]];
                 [self.inprogressButton addSubview:buttonImageView];
                 [self.inprogressButton addSubview:self.inprogressLabel];
+                
+                [self.urlArray insertObject:inprogressDict atIndex:self.inprogressButton.tag];
+                
+                [self.inprogressButton addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
 
             }
             
@@ -177,6 +190,9 @@
                     NSURL *url = [[NSURL alloc]initWithString:[waitingItem objectForKey:@"thumbnail"]];
                     [imageView setImageWithURL:url placeholderImage:[UIImage imageNamed:@"shake_test_thumbnail.png"]];
                     waitingButton.tag = FIRST_TAG+j+1;
+                    
+                    [self.urlArray insertObject:waitingItem atIndex:waitingButton.tag];
+                    
                     [waitingButton addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
 
                     [waitingButton addSubview:imageView];

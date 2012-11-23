@@ -752,7 +752,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     NSString * genderString = [NSString stringWithFormat:@"%i",gender];
     NSString * startString = [NSString stringWithFormat:@"%i",start];
     
-    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: @"10", @"op", @"20", @"querysize", startString, @"start", genderString, @"gender", nil];
+    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: @"10", @"op", @"5", @"querysize", startString, @"start", genderString, @"gender", nil];
     NSMutableURLRequest *getRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"GET" path:GET_DATA_PATH parameters:getDict];
     
     AFHTTPRequestOperation *getOperation = [[AppNetworkAPIClient sharedClient] HTTPRequestOperationWithRequest:getRequest success:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -821,6 +821,41 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     
     [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:getOperation];
 }
+
+- (void)getCheckinInfoWithBlock:(void (^)(id, NSError *))block
+{
+    AFHTTPClient *client = [[AFHTTPClient alloc] initWithBaseURL:[NSURL URLWithString:@"http://127.0.0.1"]];
+    
+    NSMutableURLRequest *getRequest = [client requestWithMethod:@"GET" path:@"/wingedstone/json2.php" parameters:nil];
+    
+//    NSMutableURLRequest *getRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"GET" path:@"/base/getfakedata/" parameters:nil];
+    
+    AFJSONRequestOperation *getOperation = [AFJSONRequestOperation JSONRequestOperationWithRequest:getRequest success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        DDLogVerbose(@"getCheckinInfoWithBlock: %@", JSON);
+        
+        NSString* type = [JSON valueForKey:@"type"];
+        
+        if (![@"error" isEqualToString:type]) {
+            if (block) {
+                block (JSON, nil);
+            }
+        } else {
+            if (block) {
+                NSError *error = [[NSError alloc] initWithDomain:@"wingedstone.com" code:403 userInfo:nil];
+                block (nil, error);
+            }
+        }
+
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        //
+        if (block) {
+            block (nil, error);
+        }
+    }];
+    
+    [client enqueueHTTPRequestOperation:getOperation];
+}
+
 
 
 - (BOOL)isConnectable
