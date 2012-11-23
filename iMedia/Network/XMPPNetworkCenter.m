@@ -474,32 +474,31 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 		NSString *body = [[message elementForName:@"body"] stringValue];
 		NSString *displayName = [user displayName];
         
-		if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive)
+		if ([[UIApplication sharedApplication] applicationState] != UIApplicationStateActive)
 		{
-            Message *msg = [NetMessageConverter newMessageFromXMPPMessage:message inContext:_managedObjectContext];
-            
-            if (msg == nil) {
-                return;
-            }
-            // MyNotificationName defined globally
-            NSNotification *myNotification =
-            [NSNotification notificationWithName:NEW_MESSAGE_NOTIFICATION object:msg.conversation];
-            [[NSNotificationQueue defaultQueue]
-             enqueueNotification:myNotification
-             postingStyle:NSPostWhenIdle
-             coalesceMask:NSNotificationNoCoalescing
-             forModes:nil];
-
-		}
-		else
-		{
-			// We are not active, so use a local notification instead
+            // We are not active, so use a local notification instead
 			UILocalNotification *localNotification = [[UILocalNotification alloc] init];
 			localNotification.alertAction = @"Ok";
 			localNotification.alertBody = [NSString stringWithFormat:@"From: %@\n\n%@",displayName,body];
             
 			[[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
-		}
+
+        }
+        
+        Message *msg = [NetMessageConverter newMessageFromXMPPMessage:message inContext:_managedObjectContext];
+        
+        if (msg == nil) {
+            return;
+        }
+        // MyNotificationName defined globally
+        NSNotification *myNotification =
+        [NSNotification notificationWithName:NEW_MESSAGE_NOTIFICATION object:msg.conversation];
+        [[NSNotificationQueue defaultQueue]
+         enqueueNotification:myNotification
+         postingStyle:NSPostWhenIdle
+         coalesceMask:NSNotificationNoCoalescing
+         forModes:nil];
+
 	}
     
 }
@@ -566,19 +565,20 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 - (void)xmppPrivacy:(XMPPPrivacy *)sender didReceiveListNames:(NSArray *)listNames
 {
     DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
- /*  // if ([xmppPrivacy defaultListName] == nil) {
-        NSXMLElement *allow1 = [XMPPPrivacy privacyItemWithType:@"subscription" value:@"both" action:@"allow" order:1];
-        NSXMLElement *allow2 = [XMPPPrivacy privacyItemWithType:@"subscription" value:@"to" action:@"allow" order:2];
+   if ([xmppPrivacy defaultListName] == nil) {
+        NSXMLElement *deny1 = [XMPPPrivacy privacyItemWithAction:@"deny" order:10];
+        [XMPPPrivacy blockPresenceIn:deny1];
+        [XMPPPrivacy blockPresenceOut:deny1];
+        NSXMLElement *deny2 = [XMPPPrivacy privacyItemWithType:@"subscription" value:@"none" action:@"deny" order:11];
+        [XMPPPrivacy blockMessages:deny2];
         
-        NSXMLElement *deny = [XMPPPrivacy privacyItemWithType:@"jid" value:[xmppStream.myJID domain] action:@"deny" order:3];
-        [XMPPPrivacy blockMessages:deny];
         NSXMLElement *global = [XMPPPrivacy privacyItemWithAction:@"allow" order:100];
         
-        NSArray *defaultList = [NSArray arrayWithObjects:allow1, allow2, deny, global, nil];
+        NSArray *defaultList = [NSArray arrayWithObjects:deny1, deny2, global, nil];
         
         [xmppPrivacy setListWithName:@"default" items:defaultList];
         [xmppPrivacy setDefaultListName:@"default"];
-   // }*/
+}
 }
 
 - (void)xmppPrivacy:(XMPPPrivacy *)sender didSetDefaultListName:(NSString *)name
@@ -760,25 +760,32 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
         return;
     }
     
-    if (![self isBuddy:user]) {
-        return;
-    }
-    
     User* thisUser = [[ModelHelper sharedInstance] findUserWithEPostalID:ePostalID];
     
-    // insert user if it doesn't exist
-    if (thisUser == nil) {
-        thisUser = [[ModelHelper sharedInstance] createNewUser];
-    }
-    
-    
-    if ( thisUser.state.intValue != IdentityStateActive)
-    {
-        thisUser.ePostalID = [user.jid bare];
-        thisUser.displayName = [thisUser.ePostalID substringToIndex:[thisUser.ePostalID rangeOfString: @"@"].location];
-        thisUser.state = [NSNumber numberWithInt:IdentityStatePendingServerDataUpdate];
+    if (![self isBuddy:user]) {
+        // if the user is marked active in our contact list, we will remove it
+        if (thisUser == nil) {
+            // weird - log an error
+            DDLogError(@"user have to exist! ERROR NEED CHECK: %@", user);
+        } else if (thisUser.state.intValue == IdentityStateActive || thisUser.state.intValue == IdentityStatePendingRemoveFriend) {
+            thisUser.state = [NSNumber numberWithInt:IdentityStateInactive];
+            [[self appDelegate].contactListController contentChanged];
+        }
+    } else {
+        // insert user if it doesn't exist
+        if (thisUser == nil) {
+            thisUser = [[ModelHelper sharedInstance] createNewUser];
+        }
         
-        [[AppNetworkAPIClient sharedClient] updateIdentity:thisUser withBlock:nil];
+        
+        if ( thisUser.state.intValue != IdentityStateActive)
+        {
+            thisUser.ePostalID = [user.jid bare];
+            thisUser.displayName = [thisUser.ePostalID substringToIndex:[thisUser.ePostalID rangeOfString: @"@"].location];
+            thisUser.state = [NSNumber numberWithInt:IdentityStatePendingServerDataUpdate];
+            
+            [[AppNetworkAPIClient sharedClient] updateIdentity:thisUser withBlock:nil];
+        }
     }
 
 }
@@ -789,36 +796,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
 }
  */
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark XMPPRosterDelegate
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-- (void)xmppRoster:(XMPPRoster *)sender didReceivePresenceSubscriptionRequest:(XMPPPresence *)presence
-{
-	DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-/*
-    NSString* ePostalID = [[presence from] bare];
-        
-    User* thisUser = [[ModelHelper sharedInstance] findUserWithEPostalID:ePostalID];
-    
-    // if user doesn't exist - it is a new subscription request - send notificatio and wait for process
-    // if not, it is a reply for a previous add friend request. allow it to proceed
-    if (thisUser == nil || thisUser.state.intValue == IdentityStateInactive) {
-        // MyNotificationName defined globally
-        NSNotification *myNotification =
-        [NSNotification notificationWithName:NEW_FRIEND_NOTIFICATION object:[[presence from] bare]];
-        [[NSNotificationQueue defaultQueue]
-         enqueueNotification:myNotification
-         postingStyle:NSPostWhenIdle
-         coalesceMask:NSNotificationNoCoalescing
-         forModes:nil];
-    } else if (thisUser.state.intValue == IdentityStatePendingAddFriend || thisUser.state.intValue == IdentityStatePendingServerDataUpdate) {
-        thisUser.state = [NSNumber numberWithInt:IdentityStatePendingServerDataUpdate];
-        [[AppNetworkAPIClient sharedClient] updateIdentity:thisUser withBlock:nil];
-        MOCSave(_managedObjectContext);
-    }
- */   
-}
 
 - (void)acceptPresenceSubscriptionRequestFrom:(NSString *)jidStr andAddToRoster:(BOOL)flag
 {
@@ -845,34 +823,32 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
         return;
     }
     
-    if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive)
+    if ([[UIApplication sharedApplication] applicationState] != UIApplicationStateActive)
     {
-        Message *msg = [NetMessageConverter newMessageFromXMPPPubsubMessage:message inContext:_managedObjectContext];
-        
-        if (msg == nil) {
-            return;
-        }
-        
-        if (msg) {
-            // MyNotificationName defined globally
-            NSNotification *myNotification =
-            [NSNotification notificationWithName:NEW_MESSAGE_NOTIFICATION object:msg.conversation];
-            [[NSNotificationQueue defaultQueue]
-             enqueueNotification:myNotification
-             postingStyle:NSPostWhenIdle
-             coalesceMask:NSNotificationNoCoalescing
-             forModes:nil];
-        }
-                
-    }else{
         // We are not active, so use a local notification instead
         UILocalNotification *localNotification = [[UILocalNotification alloc] init];
         localNotification.alertAction = @"Ok";
         localNotification.alertBody = [NSString stringWithFormat:@"From: "];
-     
+        
         [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
-     }
+    }
     
+    Message *msg = [NetMessageConverter newMessageFromXMPPPubsubMessage:message inContext:_managedObjectContext];
+    
+    if (msg == nil) {
+        return;
+    }
+    
+    if (msg) {
+        // MyNotificationName defined globally
+        NSNotification *myNotification =
+        [NSNotification notificationWithName:NEW_MESSAGE_NOTIFICATION object:msg.conversation];
+        [[NSNotificationQueue defaultQueue]
+         enqueueNotification:myNotification
+         postingStyle:NSPostWhenIdle
+         coalesceMask:NSNotificationNoCoalescing
+         forModes:nil];
+    }
     
 }
 
