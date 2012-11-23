@@ -760,25 +760,32 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
         return;
     }
     
-    if (![self isBuddy:user]) {
-        return;
-    }
-    
     User* thisUser = [[ModelHelper sharedInstance] findUserWithEPostalID:ePostalID];
     
-    // insert user if it doesn't exist
-    if (thisUser == nil) {
-        thisUser = [[ModelHelper sharedInstance] createNewUser];
-    }
-    
-    
-    if ( thisUser.state.intValue != IdentityStateActive)
-    {
-        thisUser.ePostalID = [user.jid bare];
-        thisUser.displayName = [thisUser.ePostalID substringToIndex:[thisUser.ePostalID rangeOfString: @"@"].location];
-        thisUser.state = [NSNumber numberWithInt:IdentityStatePendingServerDataUpdate];
+    if (![self isBuddy:user]) {
+        // if the user is marked active in our contact list, we will remove it
+        if (thisUser == nil) {
+            // weird - log an error
+            DDLogError(@"user have to exist! ERROR NEED CHECK: %@", user);
+        } else if (thisUser.state.intValue == IdentityStateActive || thisUser.state.intValue == IdentityStatePendingRemoveFriend) {
+            thisUser.state = [NSNumber numberWithInt:IdentityStateInactive];
+            [[self appDelegate].contactListController contentChanged];
+        }
+    } else {
+        // insert user if it doesn't exist
+        if (thisUser == nil) {
+            thisUser = [[ModelHelper sharedInstance] createNewUser];
+        }
         
-        [[AppNetworkAPIClient sharedClient] updateIdentity:thisUser withBlock:nil];
+        
+        if ( thisUser.state.intValue != IdentityStateActive)
+        {
+            thisUser.ePostalID = [user.jid bare];
+            thisUser.displayName = [thisUser.ePostalID substringToIndex:[thisUser.ePostalID rangeOfString: @"@"].location];
+            thisUser.state = [NSNumber numberWithInt:IdentityStatePendingServerDataUpdate];
+            
+            [[AppNetworkAPIClient sharedClient] updateIdentity:thisUser withBlock:nil];
+        }
     }
 
 }
