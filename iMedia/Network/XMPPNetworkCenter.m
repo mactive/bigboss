@@ -565,20 +565,29 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 - (void)xmppPrivacy:(XMPPPrivacy *)sender didReceiveListNames:(NSArray *)listNames
 {
     DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-   if ([xmppPrivacy defaultListName] == nil) {
-        NSXMLElement *deny1 = [XMPPPrivacy privacyItemWithAction:@"deny" order:10];
+ //  if ([xmppPrivacy defaultListName] == nil) {
+        
+        NSXMLElement *deny1 = [XMPPPrivacy privacyItemWithAction:@"deny" order:1];
         [XMPPPrivacy blockPresenceIn:deny1];
         [XMPPPrivacy blockPresenceOut:deny1];
-        NSXMLElement *deny2 = [XMPPPrivacy privacyItemWithType:@"subscription" value:@"none" action:@"deny" order:11];
+    
+        NSXMLElement *allow1 = [XMPPPrivacy privacyItemWithType:@"subscription" value:@"both" action:@"allow" order:5];
+    
+        NSXMLElement *deny2 = [XMPPPrivacy privacyItemWithType:@"jid" value:[xmppStream.myJID domain] action:@"deny" order:11];
         [XMPPPrivacy blockMessages:deny2];
         
         NSXMLElement *global = [XMPPPrivacy privacyItemWithAction:@"allow" order:100];
         
-        NSArray *defaultList = [NSArray arrayWithObjects:deny1, deny2, global, nil];
-        
+        NSArray *defaultList = [NSArray arrayWithObjects:deny1, allow1, deny2, global, nil];
+    
+    if ([pubsubhost isEqualToString:@"pubsub.192.168.1.104"]) {
+        [xmppPrivacy setListWithName:@"default" items:[NSArray arrayWithObjects:global, nil]];
+    } else {
         [xmppPrivacy setListWithName:@"default" items:defaultList];
+    }
+    
         [xmppPrivacy setDefaultListName:@"default"];
-}
+  // }
 }
 
 - (void)xmppPrivacy:(XMPPPrivacy *)sender didSetDefaultListName:(NSString *)name
