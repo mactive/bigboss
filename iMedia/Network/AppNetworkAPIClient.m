@@ -822,22 +822,22 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:getOperation];
 }
 
+
 - (void)getCheckinInfoWithBlock:(void (^)(id, NSError *))block
 {
-    AFHTTPClient *client = [[AFHTTPClient alloc] initWithBaseURL:[NSURL URLWithString:@"http://127.0.0.1"]];
+    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: @"14", @"op", nil];
+    // 11 是频道列表
+    NSMutableURLRequest *getRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"GET" path:GET_DATA_PATH parameters:getDict];
     
-    NSMutableURLRequest *getRequest = [client requestWithMethod:@"GET" path:@"/wingedstone/json2.php" parameters:nil];
     
-//    NSMutableURLRequest *getRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"GET" path:@"/base/getfakedata/" parameters:nil];
-    
-    AFJSONRequestOperation *getOperation = [AFJSONRequestOperation JSONRequestOperationWithRequest:getRequest success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-        DDLogVerbose(@"getCheckinInfoWithBlock: %@", JSON);
+    AFHTTPRequestOperation *getOperation = [[AppNetworkAPIClient sharedClient] HTTPRequestOperationWithRequest:getRequest success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        DDLogVerbose(@"getShakeDashboardInfoWithBlock: %@", responseObject);
         
-        NSString* type = [JSON valueForKey:@"type"];
+        NSString* type = [responseObject valueForKey:@"type"];
         
         if (![@"error" isEqualToString:type]) {
             if (block) {
-                block (JSON, nil);
+                block (responseObject, nil);
             }
         } else {
             if (block) {
@@ -845,17 +845,15 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
                 block (nil, error);
             }
         }
-
-    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         //
         if (block) {
             block (nil, error);
         }
     }];
     
-    [client enqueueHTTPRequestOperation:getOperation];
+    [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:getOperation];
 }
-
 
 
 - (BOOL)isConnectable

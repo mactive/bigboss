@@ -145,7 +145,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [self.navigationController pushViewController:shakeDashboardViewController animated:YES];
 }
 
-
 - (void)friendRequestReceived:(NSNotification *)notification
 {
     NSString* fromJid = [notification object];

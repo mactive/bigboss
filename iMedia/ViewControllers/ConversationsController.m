@@ -275,7 +275,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [super setEditing:editing animated:animated];
     
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:self.editingIndexPath];
-    UILabel *label = [cell viewWithTag:TIME_TAG];
+    UILabel *label = (UILabel *)[cell viewWithTag:TIME_TAG];
 //    UIImageView *imageView = [cell viewWithTag:TIME_ICON_TAG];
     
     if (editing) {
@@ -429,6 +429,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     label.backgroundColor = RGBCOLOR(234, 234, 234);
     [label.layer setMasksToBounds:YES];
     [label.layer setCornerRadius:3.0];
+    [cell.contentView addSubview:label];
+
     
 	// Create a icon for the rect.
     rect = CGRectMake(RIGHT_COLUMN_OFFSET, (ROW_HEIGHT - IMAGE_SIDE) / 2.0 + 5 , 15, 15);

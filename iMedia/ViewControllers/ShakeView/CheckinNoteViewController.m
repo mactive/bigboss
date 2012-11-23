@@ -8,6 +8,7 @@
 
 #import "CheckinNoteViewController.h"
 #import "AppNetworkAPIClient.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface CheckinNoteViewController ()
 @property(nonatomic, strong)NSArray *dataArray;
@@ -17,6 +18,7 @@
 @implementation CheckinNoteViewController
 @synthesize dataArray;
 
+#define DESC_TAG 10
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -60,11 +62,11 @@ NSInteger intSort(id num1, id num2, void *context)
             for (int j = 0;  j< [keyArray count]; j++) {
                 NSString * KEY = [keyArray objectAtIndex:j];
                 item = [[NSDictionary alloc]initWithObjectsAndKeys:KEY,@"day",[responseDict objectForKey:KEY] ,@"reward", nil];
-                [tempArray insertObject:item atIndex:j];
+                [tempArray addObject:item];
             }
             self.dataArray  = tempArray;
+            [self.tableView reloadData];
         }
-        [self.tableView reloadData];
     }];
 }
 
@@ -76,7 +78,7 @@ NSInteger intSort(id num1, id num2, void *context)
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 60;
+    return 50;
 }
 
 #pragma mark - Table view data source
@@ -101,21 +103,65 @@ NSInteger intSort(id num1, id num2, void *context)
     
     // Configure the cell...
     if (cell == nil) {
-        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        UIImageView *cellBgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell_bg.png"]];
-        cell.backgroundView = cellBgView;
-        NSDictionary *data = [self.dataArray objectAtIndex:indexPath.row];
-        cell.textLabel.text = [NSString stringWithFormat:@"第 %@ 天 - %@" ,[data objectForKey:@"day"],[data objectForKey:@"reward"]];
-        cell.textLabel.font = [UIFont systemFontOfSize:14];
-        cell.textLabel.textColor = [UIColor grayColor];
-        cell.textLabel.backgroundColor = [UIColor clearColor];
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-
+        cell = [self tableViewCellWithReuseIdentifier:CellIdentifier withIndexPath:indexPath];
     }
+    
+    [self configureCell:cell forIndexPath:indexPath];
 
     
     return cell;
 }
+
+- (UITableViewCell *)tableViewCellWithReuseIdentifier:(NSString *)identifier withIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+    
+    UIImageView *cellBgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell_bg.png"]];
+    cell.backgroundView = cellBgView;
+    cell.textLabel.font = [UIFont systemFontOfSize:18];
+    cell.textLabel.textColor = RGBCOLOR(195, 70, 21);
+    cell.textLabel.backgroundColor = [UIColor clearColor];
+    cell.textLabel.layer.cornerRadius = 5.0f;
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
+    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(100, 15, 200, 20)];
+    label.tag = DESC_TAG;
+    label.numberOfLines = 0;
+    label.font = [UIFont systemFontOfSize:14];
+    label.textColor = [UIColor grayColor];
+    label.backgroundColor = [UIColor clearColor];
+    
+    [cell.contentView addSubview:label];
+    
+    return  cell;
+}
+#define SUMMARY_WIDTH 200.0
+#define LABEL_HEIGHT 20.0
+
+
+
+- (void)configureCell:(UITableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath {
+    NSDictionary *data = [self.dataArray objectAtIndex:indexPath.row];
+    cell.textLabel.text = [NSString stringWithFormat:@"第 %@ 天" ,[data objectForKey:@"day"]];
+    
+    UILabel *signatureLabel = (UILabel *)[cell viewWithTag:DESC_TAG];
+    CGFloat _labelHeight;
+
+    
+    CGSize summaryMaxSize = CGSizeMake(SUMMARY_WIDTH, LABEL_HEIGHT*2);
+
+    CGSize signatureSize = [[data objectForKey:@"reward"] sizeWithFont:signatureLabel.font constrainedToSize:summaryMaxSize lineBreakMode: UILineBreakModeTailTruncation];
+    if (signatureSize.height > LABEL_HEIGHT) {
+        _labelHeight = 5.0;
+    }else {
+        _labelHeight = 15.0;
+    }
+    signatureLabel.text = [data objectForKey:@"reward"];
+    signatureLabel.frame = CGRectMake(100 , _labelHeight, signatureSize.width, signatureSize.height);
+    
+}
+
+
 
 #pragma mark - Table view delegate
 
