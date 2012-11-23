@@ -31,6 +31,8 @@
 @synthesize templateContent = _templateContent;
 @synthesize data = _data;
 
+#define OFFSET_CONTENT 20
+
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -41,6 +43,7 @@
         self.templateBackView = [[UIView alloc] initWithFrame:CGRectMake(10, 0, 300, 100)];
         self.templateContent = [[UILabel alloc] initWithFrame:CGRectMake(12, 180, 275, 100)];
         self.templateTitle = [[UILabel alloc] initWithFrame:CGRectMake(12, 10, 275, 30)];
+        self.templateTitle.numberOfLines = 0;
         self.templateImage = [[UIImageView alloc]initWithFrame:CGRectMake(12, 40, 275, TEMPLATE_IMAGE_HEIGHT)];
         
         self.templateTitle.backgroundColor = [UIColor clearColor];
@@ -90,14 +93,15 @@
     
     self.templateImage.contentMode = UIViewContentModeScaleAspectFit;
     
-    CGSize titleSize = [(titleString ? titleString : @"") sizeWithFont:self.templateContent.font constrainedToSize:CGSizeMake(275, 9999) lineBreakMode:UILineBreakModeWordWrap];
-    CGSize contentSize = [(contentString ? contentString : @"") sizeWithFont:self.templateTitle.font constrainedToSize:CGSizeMake(275, 9999) lineBreakMode:UILineBreakModeWordWrap];
+    CGSize titleSize = [(titleString ? titleString : @"") sizeWithFont:self.templateTitle.font constrainedToSize:CGSizeMake(275, 9999) lineBreakMode:UILineBreakModeWordWrap];
+    CGSize contentSize = [(contentString ? contentString : @"") sizeWithFont:self.templateContent.font constrainedToSize:CGSizeMake(275, 9999) lineBreakMode:UILineBreakModeWordWrap];
     
     [self.templateTitle setFrame:CGRectMake(12, 10, 275, titleSize.height)];
+    
     if (imageString == nil || [imageString length] == 0) {
-        [self.templateContent setFrame:CGRectMake(12, 40, 275, contentSize.height)];
+        [self.templateContent setFrame:CGRectMake(12, titleSize.height + OFFSET_CONTENT, 275, contentSize.height)];
     }else{
-        [self.templateContent setFrame:CGRectMake(12, 180, 275, contentSize.height) ];
+        [self.templateContent setFrame:CGRectMake(12, titleSize.height + OFFSET_CONTENT + TEMPLATE_IMAGE_HEIGHT, 275, contentSize.height) ];
         [self.templateImage setImageWithURL:[NSURL URLWithString:imageString] placeholderImage:[UIImage imageNamed:@"template_placeholder.png"]];
     }
     
