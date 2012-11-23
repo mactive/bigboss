@@ -84,22 +84,24 @@
     [self.templateContent setFrame:CGRectMake(12, 180, 275, height)];
     [self.templateImage setFrame:CGRectMake(12, 40, 275, TEMPLATE_IMAGE_HEIGHT)];
     
-    
+    NSString* titleString = [[element elementForName:@"title9"] stringValue];
     NSString* imageString = [[element elementForName:@"image9"] stringValue];
     NSString* contentString = [[element elementForName:@"content9"] stringValue];
-    NSString* titleString = [[element elementForName:@"title9"] stringValue];
     
     self.templateImage.contentMode = UIViewContentModeScaleAspectFit;
     
+    CGSize titleSize = [(titleString ? titleString : @"") sizeWithFont:self.templateContent.font constrainedToSize:CGSizeMake(275, 9999) lineBreakMode:UILineBreakModeWordWrap];
+    CGSize contentSize = [(contentString ? contentString : @"") sizeWithFont:self.templateTitle.font constrainedToSize:CGSizeMake(275, 9999) lineBreakMode:UILineBreakModeWordWrap];
+    
+    [self.templateTitle setFrame:CGRectMake(12, 10, 275, titleSize.height)];
     if (imageString == nil || [imageString length] == 0) {
-        [self.templateContent setFrame:CGRectMake(12, 40, 275, height )];
+        [self.templateContent setFrame:CGRectMake(12, 40, 275, contentSize.height)];
     }else{
-        [self.templateContent setFrame:CGRectMake(12, 180, 275, height - TEMPLATE_IMAGE_HEIGHT)];
+        [self.templateContent setFrame:CGRectMake(12, 180, 275, contentSize.height) ];
+        [self.templateImage setImageWithURL:[NSURL URLWithString:imageString] placeholderImage:[UIImage imageNamed:@"template_placeholder.png"]];
     }
     
-    
     self.templateContent.text = contentString;
-    [self.templateImage setImageWithURL:[NSURL URLWithString:imageString] placeholderImage:[UIImage imageNamed:@"template_placeholder.png"]];
     self.templateTitle.text = titleString;
 }
 

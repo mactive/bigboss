@@ -26,7 +26,7 @@
 
 const UIEdgeInsets textInsetsMine = {5, 10, 11, 17};
 const UIEdgeInsets textInsetsSomeone = {5, 15, 11, 10};
-const UIEdgeInsets templateInsetsMine = {30, 30, 16, 22};
+const UIEdgeInsets templateInsetsMine = {20, 20, 20, 20};
 
 #define MAX_WIDTH 220
 
@@ -58,33 +58,31 @@ const UIEdgeInsets templateInsetsMine = {30, 30, 16, 22};
 #pragma mark - web bubble
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-+ (id)dataWithWeb:(NSString *)urlString date:(NSDate *)date type:(WSBubbleType)type
++ (id)dataWithTemplate:(NSString *)urlString date:(NSDate *)date type:(WSBubbleType)type
 {
-    return [[WSBubbleData alloc] initWithWeb:urlString date:date type:type];
+    return [[WSBubbleData alloc] initWithTemplate:urlString date:date type:type];
 }
 
-- (id)initWithWeb:(NSString *)urlString date:(NSDate *)date type:(WSBubbleType)type
+- (id)initWithTemplate:(NSString *)urlString date:(NSDate *)date type:(WSBubbleType)type
 {
     NSXMLElement *element =[[NSXMLElement alloc] initWithXMLString:urlString error:nil];
     
+    NSString *title = [[element elementForName:@"title9"] stringValue];
     NSString *image = [[element elementForName:@"image9"] stringValue];
     NSString *content = [[element elementForName:@"content9"] stringValue];
     
     
     UIFont *font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
-    CGSize size = [(content ? content : @"") sizeWithFont:font constrainedToSize:CGSizeMake(220, 9999) lineBreakMode:UILineBreakModeWordWrap];
-    
-    self.textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, size.width, size.height)];
-    self.textLabel.numberOfLines = 0;
-    self.textLabel.lineBreakMode = UILineBreakModeWordWrap;
-    self.textLabel.text = (content ? content : @"");
-    self.textLabel.font = font;
+    UIFont *titleFont = [UIFont boldSystemFontOfSize:18];
+
+    CGSize size = [(content ? content : @"") sizeWithFont:font constrainedToSize:CGSizeMake(275, 9999) lineBreakMode:UILineBreakModeWordWrap];
+    CGSize titleSize = [(title ? title : @"") sizeWithFont:titleFont constrainedToSize:CGSizeMake(275, 9999) lineBreakMode:UILineBreakModeWordWrap];
 
     self.templateView = [[UIView alloc]init];
     if (image == nil || [image length] == 0) {
-        self.templateView.frame = CGRectMake(0, 0, 275, self.textLabel.frame.size.height + TEMPLATE_TITLE_HEIGHT);
+        self.templateView.frame = CGRectMake(0, 0, 275,  size.height + titleSize.height);
     } else {
-        self.templateView.frame = CGRectMake(0, 0, 275, TEMPLATE_IMAGE_HEIGHT+self.textLabel.frame.size.height+TEMPLATE_TITLE_HEIGHT);
+        self.templateView.frame = CGRectMake(0, 0, 275, TEMPLATE_IMAGE_HEIGHT+ size.height + titleSize.height);
     }
     
     UIEdgeInsets insets = templateInsetsMine;

@@ -462,10 +462,10 @@
         self.bubbleTable.showAvatars = YES;
     }
     else if (msg.type == [NSNumber numberWithInt:MessageTypePublish]) {
-        [data addObject:[WSBubbleData dataWithWeb:msg.text date:msg.sentDate type:BubbleTypeTemplateview]];
+        [data addObject:[WSBubbleData dataWithTemplate:msg.text date:msg.sentDate type:BubbleTypeTemplateview]];
         bubbleTable.showAvatars = NO;
     } else if (msg.type == [NSNumber numberWithInt:MessageTypeRate]) {
-        WSBubbleData *rateData = [WSBubbleData dataWithWeb:msg.text date:msg.sentDate type:BubbleTypeRateview];
+        WSBubbleData *rateData = [WSBubbleData dataWithTemplate:msg.text date:msg.sentDate type:BubbleTypeRateview];
         rateData.msg = msg;
         [data addObject:rateData];
         bubbleTable.showAvatars = NO; 
