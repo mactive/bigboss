@@ -747,12 +747,13 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     }
 }
 
-- (void)getNearestPeopleWithGender:(NSUInteger)gender andStart:(NSUInteger)start andBlock:(void (^)(id, NSError *))block
+- (void)getNearestPeopleWithGender:(NSUInteger)gender start:(NSUInteger)start querysize:(NSUInteger)querySize andBlock:(void (^)(id, NSError *))block
 {    
     NSString * genderString = [NSString stringWithFormat:@"%i",gender];
     NSString * startString = [NSString stringWithFormat:@"%i",start];
+    NSString * querySizeStr = [NSString stringWithFormat:@"%i", querySize];
     
-    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: @"10", @"op", @"5", @"querysize", startString, @"start", genderString, @"gender", nil];
+    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: @"10", @"op", querySizeStr, @"querysize", startString, @"start", genderString, @"gender", nil];
     NSMutableURLRequest *getRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"GET" path:GET_DATA_PATH parameters:getDict];
     
     AFHTTPRequestOperation *getOperation = [[AppNetworkAPIClient sharedClient] HTTPRequestOperationWithRequest:getRequest success:^(AFHTTPRequestOperation *operation, id responseObject) {
