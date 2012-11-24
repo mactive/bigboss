@@ -75,6 +75,34 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     }
 }
 
+- (User *)findUserWithGUID:(NSString *)guid
+{
+    NSManagedObjectContext *moc = self.managedObjectContext;
+    NSEntityDescription *entityDescription = [NSEntityDescription
+                                              entityForName:@"User" inManagedObjectContext:moc];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDescription];
+    
+    // Set example predicate and sort orderings...
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:
+                              @"(guid = %@)", guid];
+    [request setPredicate:predicate];
+    
+    NSError *error = nil;
+    NSArray *array = [moc executeFetchRequest:request error:&error];
+    
+    if ([array count] == 0)
+    {
+        DDLogError(@"User doesn't exist: %@", error);
+        return nil;
+    } else {
+        if ([array count] > 1) {
+            DDLogError(@"More than one user object with same guid: %@", guid);
+        }
+        return [array objectAtIndex:0];
+    }
+}
+
 - (Channel *)findChannelWithNode:(NSString *)node
 {
     NSManagedObjectContext *moc = self.managedObjectContext;

@@ -20,6 +20,7 @@
 + (ModelHelper *)sharedInstance;
 
 - (User *)findUserWithEPostalID:(NSString *)ePostalID;
+- (User *)findUserWithGUID:(NSString *)guid;
 - (Channel *)findChannelWithNode:(NSString *)node;
 - (Channel *)findChannelWithSubrequestID:(NSString *)subID;
 

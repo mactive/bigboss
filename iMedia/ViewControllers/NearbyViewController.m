@@ -16,6 +16,7 @@
 #import "AppDelegate.h"
 #import "ConversationsController.h"
 #import "User.h"
+#import "ModelHelper.h"
 #import "LocationManager.h"
 
 
@@ -297,40 +298,56 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 - (void)getDict:(NSString *)guidString
 {
-    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: guidString, @"guid", @"1", @"op", nil];
+    // if the user already exist - then show the user
+    User* aUser = [[ModelHelper sharedInstance] findUserWithGUID:guidString];
     
-    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    HUD.delegate = self;
-    
-    [[AppNetworkAPIClient sharedClient] getPath:GET_DATA_PATH parameters:getDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        DDLogVerbose(@"get config JSON received: %@", responseObject);
+    if (aUser != nil && aUser.state.intValue == IdentityStateActive) {
+        // it is a buddy on our contact list
+        ContactDetailController *controller = [[ContactDetailController alloc] initWithNibName:nil bundle:nil];
+        controller.user = aUser;
+        controller.GUID = guidString;
+        controller.managedObjectContext = [self appDelegate].context;
         
-        [HUD hide:YES];
-        NSString* type = [responseObject valueForKey:@"type"];
-        if ([type isEqualToString:@"user"]) {            
-            ContactDetailController *controller = [[ContactDetailController alloc] initWithNibName:nil bundle:nil];
-            controller.jsonData = responseObject;
-            controller.GUID = guidString;
-            controller.managedObjectContext = [self appDelegate].context;
-            
-            // Pass the selected object to the new view controller.
-            [controller setHidesBottomBarWhenPushed:YES];
-            [self.navigationController pushViewController:controller animated:YES];
-            
-        }
-        
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        //
-        DDLogVerbose(@"error received: %@", error);
-        [HUD hide:YES];
+        // Pass the selected object to the new view controller.
+        [controller setHidesBottomBarWhenPushed:YES];
+        [self.navigationController pushViewController:controller animated:YES];
+    } else {
+        // get user info from web and display as if it is searched
+        NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: guidString, @"guid", @"1", @"op", nil];
         
         HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        HUD.mode = MBProgressHUDModeText;
         HUD.delegate = self;
-        HUD.labelText = T(@"网络错误，无法获取用户数据");
-        [HUD hide:YES afterDelay:1];
-    }];
-    
+        
+        [[AppNetworkAPIClient sharedClient] getPath:GET_DATA_PATH parameters:getDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            DDLogVerbose(@"get config JSON received: %@", responseObject);
+            
+            [HUD hide:YES];
+            NSString* type = [responseObject valueForKey:@"type"];
+            if ([type isEqualToString:@"user"]) {
+                ContactDetailController *controller = [[ContactDetailController alloc] initWithNibName:nil bundle:nil];
+                controller.jsonData = responseObject;
+                controller.GUID = guidString;
+                controller.managedObjectContext = [self appDelegate].context;
+                
+                // Pass the selected object to the new view controller.
+                [controller setHidesBottomBarWhenPushed:YES];
+                [self.navigationController pushViewController:controller animated:YES];
+                
+            }
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            //
+            DDLogVerbose(@"error received: %@", error);
+            [HUD hide:YES];
+            
+            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            HUD.mode = MBProgressHUDModeText;
+            HUD.delegate = self;
+            HUD.labelText = T(@"网络错误，无法获取用户数据");
+            [HUD hide:YES afterDelay:1];
+        }];
+        
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
