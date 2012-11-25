@@ -52,7 +52,7 @@ extern NSString *const kXMPPmyUsername;
 
 - (void)updateLocation:(double)latitude andLongitude:(double)longitude;
 
-- (void)getNearestPeopleWithGender:(NSUInteger)gender andStart:(NSUInteger)start andBlock:(void (^)(id, NSError *))block;
+- (void)getNearestPeopleWithGender:(NSUInteger)gender start:(NSUInteger)start querysize:(NSUInteger)querySize andBlock:(void (^)(id, NSError *))block;
 - (void)getShakeDashboardInfoWithBlock:(void (^)(id, NSError *))block;
 - (void)getCheckinInfoWithBlock:(void (^)(id, NSError *))block;
 - (void)getChannelListWithBlock:(void (^)(id, NSError *))block;

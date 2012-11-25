@@ -16,6 +16,7 @@
 #import "AppDelegate.h"
 #import "ConversationsController.h"
 #import "User.h"
+#import "ModelHelper.h"
 #import "LocationManager.h"
 
 
@@ -123,57 +124,55 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 -(void)loadMoreAction
 {
-    [self populateDataWithGender:self.genderInt andStart:self.startInt];
     self.isLOADMORE = YES;
+    [self populateDataWithGender:self.genderInt andStart:self.startInt];
+    
 }
 
 - (void)populateDataWithGender:(NSUInteger)gender andStart:(NSUInteger)start
 {
     [self.loadMoreButton setTitle:T(@"正在载入") forState:UIControlStateNormal];
+    [self.loadMoreButton setEnabled:NO];
+    pull.enabled = NO;
+    
+    NSUInteger querySize = 5;
 
-    [[AppNetworkAPIClient sharedClient]getNearestPeopleWithGender:gender andStart:start andBlock:^(id responseObject, NSError *error) {
+    [[AppNetworkAPIClient sharedClient]getNearestPeopleWithGender:gender start:start querysize:querySize andBlock:^(id responseObject, NSError *error) {
         if (responseObject != nil) {
-            
-            // pull view hide
-            [pull finishedLoading];
 
             BOOL t1 = self.isLOADMORE;
             NSInteger t2 = gender;
             NSInteger t3 = start;
             
-            
             NSDictionary *responseDict = responseObject;
-            NSMutableArray *responseArray = [[NSMutableArray alloc]init];
-            if ([responseDict count] > 0) {
-                [self.loadMoreButton setTitle:T(@"点击加载更多") forState:UIControlStateNormal];
-                if (self.isLOADMORE == YES) {
-                    self.isLOADMORE = NO;
-                    
-                    responseArray = [[NSMutableArray alloc]initWithArray:self.sourceData];
-                    NSUInteger sCount = [self.sourceData count];
-                    for (int j = sCount; j < [responseDict count]+sCount; j++) {
-                        [responseArray insertObject:[responseObject objectForKey:[NSString stringWithFormat:@"%i",j]] atIndex:j];
-                    }
-                }else{
-                    for (int j = 0; j < [responseDict count]; j++) {
-                        [responseArray insertObject:[responseObject objectForKey:[NSString stringWithFormat:@"%i",j]] atIndex:j];
-                    }
+            
+            int loadedObjectCount = [responseDict count];
+            if (loadedObjectCount > 0) {
+                NSMutableArray *responseArray = [[NSMutableArray alloc] initWithCapacity:loadedObjectCount];
+                for (int j = 0; j < loadedObjectCount; j++) {
+                    [responseArray insertObject:[responseObject objectForKey:[NSString stringWithFormat:@"%i",start + j]] atIndex:j];
                 }
-                
-                self.sourceData = [[NSArray alloc] initWithArray:responseArray];
-                // 重新设置start
-                self.startInt = [self.sourceData count];
-                
-                // 数量太少不出现 load more
-                if([self.sourceData count] > 4) {   [self.loadMoreButton setHidden:NO]; }
-                
-                
-                [self.tableView reloadData];
-            }else{
-                [self.loadMoreButton setTitle:T(@"没有更多了") forState:UIControlStateNormal];
+                if (self.isLOADMORE == YES) {
+                    // append result to source Data                
+                    self.sourceData = [self.sourceData arrayByAddingObjectsFromArray:responseArray];
+                } else {
+                    self.sourceData = [NSArray arrayWithArray:responseArray];
+                }
             }
+            
+            // 重新设置start
+            self.startInt = [self.sourceData count];
+            
+            // 数量太少不出现 load more
+            if(loadedObjectCount < querySize) {
+                [self.loadMoreButton setTitle:T(@"没有更多了") forState:UIControlStateNormal];
+            } else {
+                [self.loadMoreButton setTitle:T(@"点击加载更多") forState:UIControlStateNormal];
+            }
+            [self.tableView reloadData];
+            
         }else{
-            [pull finishedLoading];
+            
             [self.loadMoreButton setTitle:T(@"点击加载更多") forState:UIControlStateNormal];
 
             HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -182,6 +181,12 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
             HUD.labelText = T(@"网络错误 暂时无法刷新");
             [HUD hide:YES afterDelay:1];
         }
+        
+        [self.loadMoreButton setEnabled:YES];
+        [self.loadMoreButton setHidden:NO];
+        pull.enabled = YES;
+        self.isLOADMORE = NO;
+        [pull finishedLoading];
     }];
 }
 
@@ -293,40 +298,56 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 - (void)getDict:(NSString *)guidString
 {
-    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: guidString, @"guid", @"1", @"op", nil];
+    // if the user already exist - then show the user
+    User* aUser = [[ModelHelper sharedInstance] findUserWithGUID:guidString];
     
-    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    HUD.delegate = self;
-    
-    [[AppNetworkAPIClient sharedClient] getPath:GET_DATA_PATH parameters:getDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        DDLogVerbose(@"get config JSON received: %@", responseObject);
+    if (aUser != nil && aUser.state.intValue == IdentityStateActive) {
+        // it is a buddy on our contact list
+        ContactDetailController *controller = [[ContactDetailController alloc] initWithNibName:nil bundle:nil];
+        controller.user = aUser;
+        controller.GUID = guidString;
+        controller.managedObjectContext = [self appDelegate].context;
         
-        [HUD hide:YES];
-        NSString* type = [responseObject valueForKey:@"type"];
-        if ([type isEqualToString:@"user"]) {            
-            ContactDetailController *controller = [[ContactDetailController alloc] initWithNibName:nil bundle:nil];
-            controller.jsonData = responseObject;
-            controller.GUID = guidString;
-            controller.managedObjectContext = [self appDelegate].context;
-            
-            // Pass the selected object to the new view controller.
-            [controller setHidesBottomBarWhenPushed:YES];
-            [self.navigationController pushViewController:controller animated:YES];
-            
-        }
-        
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        //
-        DDLogVerbose(@"error received: %@", error);
-        [HUD hide:YES];
+        // Pass the selected object to the new view controller.
+        [controller setHidesBottomBarWhenPushed:YES];
+        [self.navigationController pushViewController:controller animated:YES];
+    } else {
+        // get user info from web and display as if it is searched
+        NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: guidString, @"guid", @"1", @"op", nil];
         
         HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        HUD.mode = MBProgressHUDModeText;
         HUD.delegate = self;
-        HUD.labelText = T(@"网络错误，无法获取用户数据");
-        [HUD hide:YES afterDelay:1];
-    }];
-    
+        
+        [[AppNetworkAPIClient sharedClient] getPath:GET_DATA_PATH parameters:getDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            DDLogVerbose(@"get config JSON received: %@", responseObject);
+            
+            [HUD hide:YES];
+            NSString* type = [responseObject valueForKey:@"type"];
+            if ([type isEqualToString:@"user"]) {
+                ContactDetailController *controller = [[ContactDetailController alloc] initWithNibName:nil bundle:nil];
+                controller.jsonData = responseObject;
+                controller.GUID = guidString;
+                controller.managedObjectContext = [self appDelegate].context;
+                
+                // Pass the selected object to the new view controller.
+                [controller setHidesBottomBarWhenPushed:YES];
+                [self.navigationController pushViewController:controller animated:YES];
+                
+            }
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            //
+            DDLogVerbose(@"error received: %@", error);
+            [HUD hide:YES];
+            
+            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            HUD.mode = MBProgressHUDModeText;
+            HUD.delegate = self;
+            HUD.labelText = T(@"网络错误，无法获取用户数据");
+            [HUD hide:YES afterDelay:1];
+        }];
+        
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
