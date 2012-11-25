@@ -103,20 +103,25 @@
     self.checkinView.backgroundColor = RGBCOLOR(237, 223, 214);
     // checklabel
     self.checkinLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 12, 200, 20)];
-    self.checkinLabel.text = T(@"连续摇7天可以获得精美礼品");
+    self.checkinLabel.text = T(@"连续签到7天可以获得精美礼品");
     self.checkinLabel.font = [UIFont systemFontOfSize:12];
     self.checkinLabel.textAlignment = NSTextAlignmentLeft;
     self.checkinLabel.textColor = RGBCOLOR(195, 70, 21);
     self.checkinLabel.backgroundColor = [UIColor clearColor];
     [self.checkinView addSubview:self.checkinLabel];
     // checkButton
+    UIImageView *checkinButtonImage = [[ UIImageView alloc]initWithFrame:CGRectMake(3, 3, 24, 24)];
+    [checkinButtonImage setImage:[UIImage imageNamed:@"metro_icon_3.png"]];
+    
     self.checkinButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.checkinButton setTitle:T(@"了解更多") forState:UIControlStateNormal];
-    [self.checkinButton setTitleColor:RGBCOLOR(215, 122, 84) forState:UIControlStateNormal];
-    [self.checkinButton setFont:[UIFont systemFontOfSize:12]];
-    self.checkinButton.backgroundColor = RGBCOLOR(232, 216, 206);
+    [self.checkinButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 25, 0, 0)];
+    [self.checkinButton addSubview:checkinButtonImage];
+    [self.checkinButton setTitle:T(@"摇一摇签到") forState:UIControlStateNormal];
+    [self.checkinButton setTitleColor:RGBCOLOR(255, 255, 255) forState:UIControlStateNormal];
+    self.checkinButton.backgroundColor = RGBCOLOR(233, 163, 136);
+    self.checkinButton.titleLabel.font = [UIFont systemFontOfSize:12];
     self.checkinButton.layer.cornerRadius = 5.0f;
-    self.checkinButton.frame = CGRectMake(230, 6, 70, 30);
+    self.checkinButton.frame = CGRectMake(210, 7, 102, 30);
     [self.checkinButton addTarget:self action:@selector(checkinAction) forControlEvents:UIControlEventTouchUpInside];
     [self.checkinView addSubview:self.checkinButton];
     

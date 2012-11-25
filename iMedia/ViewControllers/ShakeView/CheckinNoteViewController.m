@@ -11,16 +11,26 @@
 #import <QuartzCore/QuartzCore.h>
 #import "MBProgressHUD.h"
 
+#define ROW_HEIGHT 50
+
 @interface CheckinNoteViewController ()<MBProgressHUDDelegate>
 {
     MBProgressHUD * HUD;
 }
 @property(nonatomic, strong)NSArray *dataArray;
+@property(nonatomic, strong)UIView *noticeView;
+@property(nonatomic, strong)UILabel *noticeLabel;
+@property(nonatomic, readwrite)NSInteger checkinDays;
+@property(nonatomic, readwrite)BOOL isTodayChecked;
 
 @end
 
 @implementation CheckinNoteViewController
 @synthesize dataArray;
+@synthesize noticeView;
+@synthesize noticeLabel;
+@synthesize checkinDays;
+@synthesize isTodayChecked;
 
 #define DESC_TAG 10
 - (id)initWithStyle:(UITableViewStyle)style
@@ -55,6 +65,8 @@ NSInteger intSort(id num1, id num2, void *context)
     self.title = T(@"连续签到奖励");
     [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     [self.view setBackgroundColor:BGCOLOR];
+    [self initNoticeView];
+    
     HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     HUD.delegate = self;
     HUD.labelText = T(@"正在加载信息");
@@ -75,6 +87,12 @@ NSInteger intSort(id num1, id num2, void *context)
                 [tempArray addObject:item];
             }
             self.dataArray  = tempArray;
+#warning get from json
+            self.checkinDays = 1;
+            self.isTodayChecked = NO;
+            
+            [self refreshNoticeView];
+            
             [self.tableView reloadData];
         }else{
             [HUD hide:YES];
@@ -88,6 +106,80 @@ NSInteger intSort(id num1, id num2, void *context)
     }];
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - init and refresh notice view
+//////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)initNoticeView
+{
+    self.noticeView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 320, ROW_HEIGHT)];
+    
+    self.noticeView.backgroundColor = RGBCOLOR(233, 163, 136);
+    
+    UIImageView *checkinButtonImage = [[ UIImageView alloc]initWithFrame:CGRectMake(6, 6, 36, 36)];
+    [checkinButtonImage setImage:[UIImage imageNamed:@"metro_icon_3.png"]];
+    
+    self.noticeLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 5, 260, 40)];
+    self.noticeLabel.numberOfLines = 0;
+    self.noticeLabel.textColor = RGBCOLOR(255, 255, 255);
+    self.noticeLabel.backgroundColor = [UIColor clearColor];
+    self.noticeLabel.font = [ UIFont systemFontOfSize:14.0f];
+    self.noticeLabel.textAlignment = NSTextAlignmentCenter;
+    
+    [self.noticeView addSubview:checkinButtonImage];
+    [self.noticeView addSubview:self.noticeLabel];
+
+    
+    self.tableView.tableHeaderView = self.noticeView;
+}
+
+- (void)refreshNoticeView
+{
+    
+    NSString * noticeString = @"";
+    if (self.isTodayChecked == NO) {
+        noticeString = T(@"你今天还没签到呢");
+    }else{
+        noticeString = T(@"你今天已经签到过了");
+    }
+    
+
+    if (self.checkinDays == 0) {
+        noticeString = T(@"还没签到过,摇动手机签到");
+    }else{
+        noticeString = [NSString stringWithFormat:T(@"你已经连续签到 %i 天,看看你都能获得那些奖品吧"), self.checkinDays ];
+    }
+
+    
+    self.noticeLabel.text = noticeString;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - shake view
+//////////////////////////////////////////////////////////////////////////////////////////////////
+-(BOOL)canBecomeFirstResponder {
+    return YES;
+}
+
+-(void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self becomeFirstResponder];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [self resignFirstResponder];
+    [super viewWillDisappear:animated];
+}
+
+- (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
+{
+    if (motion == UIEventSubtypeMotionShake)
+    {
+        self.isTodayChecked = YES;
+        [self refreshNoticeView];
+    }
+}
+
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -96,7 +188,7 @@ NSInteger intSort(id num1, id num2, void *context)
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 50;
+    return ROW_HEIGHT;
 }
 
 #pragma mark - Table view data source
