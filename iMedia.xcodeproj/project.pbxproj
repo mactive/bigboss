@@ -141,6 +141,7 @@
 		26E58879165A2A6700180A9D /* blueArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 26E58877165A2A6700180A9D /* blueArrow.png */; };
 		26E5887A165A2A6700180A9D /* blueArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26E58878165A2A6700180A9D /* blueArrow@2x.png */; };
 		26E75AF1164A787200774755 /* navigationBar_bg_part@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26E75AF0164A787200774755 /* navigationBar_bg_part@2x.png */; };
+		26E7C4E31661F1C700366B0C /* ChannelListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 26E7C4E21661F1C700366B0C /* ChannelListViewController.m */; };
 		26F3BF1916428DDB00E2899C /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F3BF1816428DDB00E2899C /* MBProgressHUD.m */; };
 		26F3BF23164294AC00E2899C /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F3BF22164294AC00E2899C /* LoginViewController.m */; };
 		26F759E4163CEF70005E9FB4 /* ProfileMeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F759E3163CEF6F005E9FB4 /* ProfileMeController.m */; };
@@ -548,6 +549,8 @@
 		26E58877165A2A6700180A9D /* blueArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = blueArrow.png; path = Resources/blueArrow.png; sourceTree = "<group>"; };
 		26E58878165A2A6700180A9D /* blueArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "blueArrow@2x.png"; path = "Resources/blueArrow@2x.png"; sourceTree = "<group>"; };
 		26E75AF0164A787200774755 /* navigationBar_bg_part@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "navigationBar_bg_part@2x.png"; path = "Resources/navigationBar_bg_part@2x.png"; sourceTree = "<group>"; };
+		26E7C4E11661F1C700366B0C /* ChannelListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChannelListViewController.h; path = ViewControllers/ShakeView/ChannelListViewController.h; sourceTree = "<group>"; };
+		26E7C4E21661F1C700366B0C /* ChannelListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ChannelListViewController.m; path = ViewControllers/ShakeView/ChannelListViewController.m; sourceTree = "<group>"; };
 		26F3BF1716428DDB00E2899C /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBProgressHUD.h; path = contrib/MBProgressHUD.h; sourceTree = "<group>"; };
 		26F3BF1816428DDB00E2899C /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBProgressHUD.m; path = contrib/MBProgressHUD.m; sourceTree = "<group>"; };
 		26F3BF21164294AC00E2899C /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginViewController.h; path = ViewControllers/Welcome/LoginViewController.h; sourceTree = "<group>"; };
@@ -969,6 +972,8 @@
 				266A1A6E162E5AF2008EF1D5 /* ShakeViewController.m */,
 				26605586165F29AA003B8737 /* CheckinNoteViewController.h */,
 				26605587165F29AA003B8737 /* CheckinNoteViewController.m */,
+				26E7C4E11661F1C700366B0C /* ChannelListViewController.h */,
+				26E7C4E21661F1C700366B0C /* ChannelListViewController.m */,
 			);
 			name = ShakeView;
 			sourceTree = "<group>";
@@ -2505,6 +2510,7 @@
 				264A389C165DF75200FA0123 /* ShakeDashboardViewController.m in Sources */,
 				264A389F165DF8D800FA0123 /* TrapezoidLabel.m in Sources */,
 				26605588165F29AA003B8737 /* CheckinNoteViewController.m in Sources */,
+				26E7C4E31661F1C700366B0C /* ChannelListViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -209,7 +209,7 @@
             HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             HUD.mode = MBProgressHUDModeText;
             HUD.delegate = self;
-            HUD.labelText = T(@"网络错误，无法获取信息");
+            HUD.labelText = T(@"网络错误,无法获取信息");
             [HUD hide:YES afterDelay:1];
         }
         

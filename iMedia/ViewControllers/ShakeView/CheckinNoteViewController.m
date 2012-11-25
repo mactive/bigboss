@@ -9,8 +9,12 @@
 #import "CheckinNoteViewController.h"
 #import "AppNetworkAPIClient.h"
 #import <QuartzCore/QuartzCore.h>
+#import "MBProgressHUD.h"
 
-@interface CheckinNoteViewController ()
+@interface CheckinNoteViewController ()<MBProgressHUDDelegate>
+{
+    MBProgressHUD * HUD;
+}
 @property(nonatomic, strong)NSArray *dataArray;
 
 @end
@@ -49,11 +53,17 @@ NSInteger intSort(id num1, id num2, void *context)
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     self.title = T(@"连续签到奖励");
+    [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+    [self.view setBackgroundColor:BGCOLOR];
+    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    HUD.delegate = self;
+    HUD.labelText = T(@"正在加载信息");
 
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     [[AppNetworkAPIClient sharedClient]getCheckinInfoWithBlock:^(id responseObject, NSError *error) {
         if (responseObject) {
+            [HUD hide:YES];
             NSDictionary *responseDict = responseObject;
             NSDictionary *item = [[NSDictionary alloc]init];
             NSMutableArray *tempArray = [[NSMutableArray alloc]init];
@@ -66,6 +76,14 @@ NSInteger intSort(id num1, id num2, void *context)
             }
             self.dataArray  = tempArray;
             [self.tableView reloadData];
+        }else{
+            [HUD hide:YES];
+            
+            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            HUD.mode = MBProgressHUDModeText;
+            HUD.delegate = self;
+            HUD.labelText = T(@"网络错误,无法获取信息");
+            [HUD hide:YES afterDelay:1];
         }
     }];
 }
@@ -103,7 +121,7 @@ NSInteger intSort(id num1, id num2, void *context)
     
     // Configure the cell...
     if (cell == nil) {
-        cell = [self tableViewCellWithReuseIdentifier:CellIdentifier withIndexPath:indexPath];
+        cell = [self tableViewCellWithReuseIdentifier:CellIdentifier];
     }
     
     [self configureCell:cell forIndexPath:indexPath];
@@ -112,7 +130,7 @@ NSInteger intSort(id num1, id num2, void *context)
     return cell;
 }
 
-- (UITableViewCell *)tableViewCellWithReuseIdentifier:(NSString *)identifier withIndexPath:(NSIndexPath *)indexPath
+- (UITableViewCell *)tableViewCellWithReuseIdentifier:(NSString *)identifier
 {
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     

@@ -16,6 +16,7 @@
 #import "FriendRequest.h"
 #import "ModelHelper.h"
 #import "MetroButton.h"
+#import "ChannelListViewController.h"
 
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
@@ -88,6 +89,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         if (index == 1) {
             [button addTarget:self action:@selector(shakeAction) forControlEvents:UIControlEventTouchUpInside];
         }
+        if (index == 2) {
+            [button addTarget:self action:@selector(channelListAction) forControlEvents:UIControlEventTouchUpInside];
+        }
         [self.view addSubview:button];
     }
 }
@@ -144,6 +148,14 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 //    [self.navigationController setHidesBottomBarWhenPushed:YES];
     [self.navigationController pushViewController:shakeDashboardViewController animated:YES];
 }
+
+- (void)channelListAction
+{
+    ChannelListViewController *controller = [[ChannelListViewController alloc] initWithNibName:nil bundle:nil];
+    [self.navigationController setHidesBottomBarWhenPushed:YES];
+    [self.navigationController pushViewController:controller animated:YES];
+}
+
 
 - (void)friendRequestReceived:(NSNotification *)notification
 {
