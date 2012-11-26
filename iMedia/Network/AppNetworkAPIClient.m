@@ -795,8 +795,9 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 
 - (void)getShakeDashboardInfoWithBlock:(void (^)(id, NSError *))block
 {
+    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: @"15", @"op", nil];
 
-    NSMutableURLRequest *getRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"GET" path:@"/base/getfakedata/" parameters:nil];
+    NSMutableURLRequest *getRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"GET" path:GET_DATA_PATH parameters:getDict];
     
     AFHTTPRequestOperation *getOperation = [[AppNetworkAPIClient sharedClient] HTTPRequestOperationWithRequest:getRequest success:^(AFHTTPRequestOperation *operation, id responseObject) {
         DDLogVerbose(@"getShakeDashboardInfoWithBlock: %@", responseObject);

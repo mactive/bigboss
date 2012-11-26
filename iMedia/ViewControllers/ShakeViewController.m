@@ -51,12 +51,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = [self.shakeData objectForKey:@"promotion_name"];
+    self.title = [self.shakeData objectForKey:@"name"];
     
 
         
     self.shakeTimesDict = [[NSMutableDictionary alloc]initWithDictionary:(NSDictionary *)[[NSUserDefaults standardUserDefaults] objectForKey:@"shakeTimesDict"]];
-    self.shakeTimes = [[self.shakeTimesDict objectForKey:[self.shakeData objectForKey:@"promotion_id"]] intValue];
+    self.shakeTimes = [[self.shakeTimesDict objectForKey:[self.shakeData objectForKey:@"id"]] intValue];
 
     
     // get Big Image
@@ -122,8 +122,8 @@
     self.shakeTimesLabel.text = [NSString stringWithFormat:@"%i 次",self.shakeTimes];
     
     NSString *tmp = [NSString stringWithFormat:@"%i", self.shakeTimes];
-    NSString *ttt = [self.shakeData objectForKey:@"promotion_id"];
-    [self.shakeTimesDict setObject:tmp forKey:[self.shakeData objectForKey:@"promotion_id"]];
+    NSString *ttt = [self.shakeData objectForKey:@"id"];
+    [self.shakeTimesDict setObject:tmp forKey:[self.shakeData objectForKey:@"id"]];
   
 }
 

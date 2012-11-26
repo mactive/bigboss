@@ -33,8 +33,8 @@
 
 #define IMAGE_SIDE 50.0
 #define SNS_SIDE 15.0
-#define SUMMARY_WIDTH_OFFEST 20.0
-#define SUMMARY_WIDTH 130.0
+#define SUMMARY_WIDTH_OFFEST 10.0
+#define SUMMARY_WIDTH 100.0
 #define ROW_HEIGHT  60.0
 
 
@@ -228,7 +228,7 @@ NSInteger intSort2(id num1, id num2, void *context)
     // set the avatar
     UIImageView *imageView;
     NSString *_nameString = [data objectForKey:@"nickname"];
-    NSString *_signatureString = [NSString stringWithFormat:@"ID:%@-%@ ",[data objectForKey:@"guid"],[data objectForKey:@"self_introduction"]];
+    NSString *_signatureString = [NSString stringWithFormat:@"%@ ",[data objectForKey:@"self_introduction"]];
     CGFloat _labelHeight;
     
     //set avatar
@@ -258,7 +258,7 @@ NSInteger intSort2(id num1, id num2, void *context)
         _labelHeight = 20.0;
     }
     signatureLabel.text = _signatureString;
-    signatureLabel.frame = CGRectMake(280 - signatureSize.width - SUMMARY_PADDING, _labelHeight, signatureSize.width + SUMMARY_PADDING, signatureSize.height+SUMMARY_PADDING);
+    signatureLabel.frame = CGRectMake(300 - signatureSize.width - SUMMARY_PADDING, _labelHeight, signatureSize.width + SUMMARY_PADDING, signatureSize.height+SUMMARY_PADDING);
     
     if ([_signatureString length] == 0 || _signatureString == nil ) {
         [signatureLabel removeFromSuperview];

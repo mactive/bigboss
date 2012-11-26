@@ -187,7 +187,7 @@
                 [self.inprogressButton addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
                 
                 // set shaketime user default
-                NSString *key = [inprogressDict objectForKey:@"promotion_id"];
+                NSString *key = [inprogressDict objectForKey:@"id"];
                 if ([[self.shakeTimesDict objectForKey:key] length] == 0) {
                     [self.shakeTimesDict setObject:@"" forKey:key];
                 }
@@ -217,7 +217,7 @@
                     [self.view addSubview:waitingButton];
                     
                     // set shaketime user default
-                    NSString *key = [waitingItem objectForKey:@"promotion_id"];
+                    NSString *key = [waitingItem objectForKey:@"id"];
                     if ([[self.shakeTimesDict objectForKey:key] length] == 0) {
                         [self.shakeTimesDict setObject:@"" forKey:key];
                     }
