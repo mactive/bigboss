@@ -26,6 +26,7 @@
 @property(nonatomic, strong) UILabel *checkinLabel;
 @property(nonatomic, strong) UIButton *checkinButton;
 @property(nonatomic, strong) NSMutableArray *urlArray;
+@property(nonatomic, strong) NSMutableDictionary *shakeTimesDict;
 
 
 @property(nonatomic, strong)UIButton *inprogressButton;
@@ -41,6 +42,7 @@
 @synthesize checkinView;
 @synthesize checkinButton;
 @synthesize urlArray;
+@synthesize shakeTimesDict;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -164,6 +166,8 @@
     HUD.delegate = self;
     HUD.labelText = T(@"正在加载信息");
     
+    self.shakeTimesDict = [[NSMutableDictionary alloc]init];
+    
     [[AppNetworkAPIClient sharedClient]getShakeDashboardInfoWithBlock:^(id responseObject, NSError *error) {
         if (responseObject != nil) {
             [HUD hide:YES];
@@ -181,7 +185,13 @@
                 [self.urlArray insertObject:inprogressDict atIndex:self.inprogressButton.tag];
                 
                 [self.inprogressButton addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
-
+                
+                // set shaketime user default
+                NSString *key = [inprogressDict objectForKey:@"promotion_id"];
+                if ([[self.shakeTimesDict objectForKey:key] length] == 0) {
+                    [self.shakeTimesDict setObject:@"" forKey:key];
+                }
+                
             }
             
             if (waitingDict) {
@@ -205,8 +215,20 @@
                         [waitingButton addSubview:self.waitingLabel];
                     }
                     [self.view addSubview:waitingButton];
+                    
+                    // set shaketime user default
+                    NSString *key = [waitingItem objectForKey:@"promotion_id"];
+                    if ([[self.shakeTimesDict objectForKey:key] length] == 0) {
+                        [self.shakeTimesDict setObject:@"" forKey:key];
+                    }
                 }
             }
+            
+            NSDictionary *tmp_dict = [[NSDictionary alloc]initWithDictionary:self.shakeTimesDict];
+            [[NSUserDefaults standardUserDefaults] setObject:tmp_dict forKey:@"shakeTimesDict"];
+            
+
+
      
         }else{
             [HUD hide:YES];
