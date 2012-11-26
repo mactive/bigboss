@@ -146,6 +146,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 {
     ShakeDashboardViewController *shakeDashboardViewController = [[ShakeDashboardViewController alloc] initWithNibName:nil bundle:nil];
 //    [self.navigationController setHidesBottomBarWhenPushed:YES];
+    shakeDashboardViewController.managedObjectContext = self.managedObjectContext;
     [self.navigationController pushViewController:shakeDashboardViewController animated:YES];
 }
 

@@ -14,10 +14,12 @@
 #import "MBProgressHUD.h"
 #import "ShakeViewController.h"
 #import "CheckinNoteViewController.h"
+#import "ShakeInfo.h"
 
 @interface ShakeDashboardViewController ()<MBProgressHUDDelegate>
 {
     MBProgressHUD *HUD;
+    ShakeInfo     *_shakeInfo;
 }
 
 @property(nonatomic, strong) TrapezoidLabel *inprogressLabel;
@@ -48,6 +50,7 @@
     if (self) {
         // Custom initialization
         self.title = T(@"摇一摇");
+        _shakeInfo = nil;
     }
     return self;
 }
@@ -74,10 +77,32 @@
     return  CGRectMake( x + X_OFFEST, y+Y_OFFEST, VIEW_ALBUM_WIDTH, VIEW_ALBUM_HEIGHT);
 }
 
+- (void) initShakeData
+{
+    if (_shakeInfo == nil) {
+        NSManagedObjectContext *moc = self.managedObjectContext;
+        NSEntityDescription *entityDescription = [NSEntityDescription
+                                                  entityForName:@"ShakeInfo" inManagedObjectContext:moc];
+        NSFetchRequest *request = [[NSFetchRequest alloc] init];
+        [request setEntity:entityDescription];
+        
+        NSError *error = nil;
+        NSArray *array = [moc executeFetchRequest:request error:&error];
+        
+        if ([array count] == 0)
+        {
+            _shakeInfo = [NSEntityDescription insertNewObjectForEntityForName:@"ShakeInfo" inManagedObjectContext:self.managedObjectContext];
+        } else {
+            _shakeInfo = [array objectAtIndex:0];
+        }
+    }
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+ 
+    [self initShakeData];
     
     // green title 
     self.inprogressLabel = [[TrapezoidLabel alloc] initWithFrame:CGRectMake(0, 0, 87, 15)];
