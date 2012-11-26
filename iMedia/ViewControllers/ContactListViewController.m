@@ -51,7 +51,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     if (self) {
         self.managedObjectContext = context;
         self.title = T(@"Contacts");
-        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+        self.tableView.separatorColor = RGBCOLOR(200, 200, 200);
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(add:)];
     }
     return self;
@@ -270,11 +271,11 @@ NSInteger SortIndex(id char1, id char2, void* context)
 - (UITableViewCell *)tableViewCellWithReuseIdentifier:(NSString *)identifier{
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];    
     
-    UIImageView *cellBgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell_bg.png"]];
-    cell.backgroundView = cellBgView;
-    
-    UIImageView *cellBgSelectedView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell_bg_highlighted.png"]];
-    cell.selectedBackgroundView =  cellBgSelectedView;
+//    UIImageView *cellBgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell_bg.png"]];
+//    cell.backgroundView = cellBgView;
+//    
+//    UIImageView *cellBgSelectedView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell_bg_highlighted.png"]];
+//    cell.selectedBackgroundView =  cellBgSelectedView;
     
     UILabel *label;
     CGRect rect;
@@ -302,18 +303,18 @@ NSInteger SortIndex(id char1, id char2, void* context)
     label.backgroundColor = [UIColor clearColor];
     [cell.contentView addSubview:label];
     
-    // set avatar
-    NSMutableArray *snsArray = [[NSMutableArray alloc] init];
-    UIImageView *snsImage;
-    
-    for(int i=0;i<[snsArray count];i++)  
-    {  
-        snsRect = CGRectMake(MIDDLE_COLUMN_OFFSET + MIDDLE_COLUMN_WIDTH + (SNS_SIDE + 3)* i, (ROW_HEIGHT - SNS_SIDE) / 2.0, SNS_SIDE, SNS_SIDE);
-        snsImage = [[UIImageView alloc] initWithFrame:snsRect];
-        snsImage.tag = SNS_TAG + i;
-
-        [cell.contentView addSubview:snsImage];
-    }
+//    // set avatar
+//    NSMutableArray *snsArray = [[NSMutableArray alloc] init];
+//    UIImageView *snsImage;
+//    
+//    for(int i=0;i<[snsArray count];i++)  
+//    {  
+//        snsRect = CGRectMake(MIDDLE_COLUMN_OFFSET + MIDDLE_COLUMN_WIDTH + (SNS_SIDE + 3)* i, (ROW_HEIGHT - SNS_SIDE) / 2.0, SNS_SIDE, SNS_SIDE);
+//        snsImage = [[UIImageView alloc] initWithFrame:snsRect];
+//        snsImage.tag = SNS_TAG + i;
+//
+//        [cell.contentView addSubview:snsImage];
+//    }
     
     
     // Create a label for the summary
@@ -372,24 +373,24 @@ NSInteger SortIndex(id char1, id char2, void* context)
     }
     
     //set sns icon
-    NSMutableArray *snsArray = [[NSMutableArray alloc] init];
-    for (int i =0; i< [snsArray count]; i++) {
-        imageView = (UIImageView *)[cell viewWithTag:SNS_TAG + i];
-    
-        if ([[snsArray objectAtIndex:i] isEqual:@"weibo"]) {
-            imageView.image = [UIImage imageNamed:@"sns_icon_weibo.png"];
-        }else if([[snsArray objectAtIndex:i] isEqual:@"douban"]){
-            imageView.image = [UIImage imageNamed:@"sns_icon_douban.png"];
-        }else if([[snsArray objectAtIndex:i] isEqual:@"wechat"]){
-            imageView.image = [UIImage imageNamed:@"sns_icon_wechat.png"];
-        }else if([[snsArray objectAtIndex:i] isEqual:@"kaixin"]){
-            imageView.image = [UIImage imageNamed:@"sns_icon_kaixin.png"];
-        }else if([[snsArray objectAtIndex:i] isEqual:@"renren"]){
-            imageView.image = [UIImage imageNamed:@"sns_icon_renren.png"];
-        }else if([[snsArray objectAtIndex:i] isEqual:@"tmweibo"]){
-            imageView.image = [UIImage imageNamed:@"sns_icon_tmweibo.png"];
-        }
-    }
+//    NSMutableArray *snsArray = [[NSMutableArray alloc] init];
+//    for (int i =0; i< [snsArray count]; i++) {
+//        imageView = (UIImageView *)[cell viewWithTag:SNS_TAG + i];
+//    
+//        if ([[snsArray objectAtIndex:i] isEqual:@"weibo"]) {
+//            imageView.image = [UIImage imageNamed:@"sns_icon_weibo.png"];
+//        }else if([[snsArray objectAtIndex:i] isEqual:@"douban"]){
+//            imageView.image = [UIImage imageNamed:@"sns_icon_douban.png"];
+//        }else if([[snsArray objectAtIndex:i] isEqual:@"wechat"]){
+//            imageView.image = [UIImage imageNamed:@"sns_icon_wechat.png"];
+//        }else if([[snsArray objectAtIndex:i] isEqual:@"kaixin"]){
+//            imageView.image = [UIImage imageNamed:@"sns_icon_kaixin.png"];
+//        }else if([[snsArray objectAtIndex:i] isEqual:@"renren"]){
+//            imageView.image = [UIImage imageNamed:@"sns_icon_renren.png"];
+//        }else if([[snsArray objectAtIndex:i] isEqual:@"tmweibo"]){
+//            imageView.image = [UIImage imageNamed:@"sns_icon_tmweibo.png"];
+//        }
+//    }
 
     // set the name text
     UILabel *nameLabel = (UILabel *)[cell viewWithTag:NAME_TAG];
