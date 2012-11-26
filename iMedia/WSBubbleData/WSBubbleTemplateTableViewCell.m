@@ -100,8 +100,10 @@
     
     if (imageString == nil || [imageString length] == 0) {
         [self.templateContent setFrame:CGRectMake(12, titleSize.height + OFFSET_CONTENT, 275, contentSize.height)];
+        [self.templateImage setHidden:YES];
     }else{
         [self.templateContent setFrame:CGRectMake(12, titleSize.height + OFFSET_CONTENT + TEMPLATE_IMAGE_HEIGHT, 275, contentSize.height) ];
+        [self.templateImage setHidden:NO];
         [self.templateImage setImageWithURL:[NSURL URLWithString:imageString] placeholderImage:[UIImage imageNamed:@"template_placeholder.png"]];
     }
     
