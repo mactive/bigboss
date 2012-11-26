@@ -11,6 +11,8 @@
 #import <QuartzCore/QuartzCore.h>
 #import "UIImageView+AFNetworking.h"
 #import "MBProgressHUD.h"
+#import "Channel.h"
+#import "ModelHelper.h"
 
 #define NAME_TAG 1
 #define SNS_TAG 20
@@ -33,8 +35,8 @@
 
 #define IMAGE_SIDE 50.0
 #define SNS_SIDE 15.0
-#define SUMMARY_WIDTH_OFFEST 20.0
-#define SUMMARY_WIDTH 130.0
+#define SUMMARY_WIDTH_OFFEST 10.0
+#define SUMMARY_WIDTH 100.0
 #define ROW_HEIGHT  60.0
 
 
@@ -228,7 +230,7 @@ NSInteger intSort2(id num1, id num2, void *context)
     // set the avatar
     UIImageView *imageView;
     NSString *_nameString = [data objectForKey:@"nickname"];
-    NSString *_signatureString = [NSString stringWithFormat:@"ID:%@-%@ ",[data objectForKey:@"guid"],[data objectForKey:@"self_introduction"]];
+    NSString *_signatureString = [NSString stringWithFormat:@"%@ ",[data objectForKey:@"self_introduction"]];
     CGFloat _labelHeight;
     
     //set avatar
@@ -258,7 +260,7 @@ NSInteger intSort2(id num1, id num2, void *context)
         _labelHeight = 20.0;
     }
     signatureLabel.text = _signatureString;
-    signatureLabel.frame = CGRectMake(280 - signatureSize.width - SUMMARY_PADDING, _labelHeight, signatureSize.width + SUMMARY_PADDING, signatureSize.height+SUMMARY_PADDING);
+    signatureLabel.frame = CGRectMake(300 - signatureSize.width - SUMMARY_PADDING, _labelHeight, signatureSize.width + SUMMARY_PADDING, signatureSize.height+SUMMARY_PADDING);
     
     if ([_signatureString length] == 0 || _signatureString == nil ) {
         [signatureLabel removeFromSuperview];
@@ -268,15 +270,72 @@ NSInteger intSort2(id num1, id num2, void *context)
 
 #pragma mark - Table view delegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    NSDictionary *rowData = [self.dataArray objectAtIndex:indexPath.row];
+//    [self getDict:[rowData objectForKey:@"node_address"]];
+    
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark Accessors & selectors
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+- (void)getDict:(NSString *)nodeString
+{
+    Channel *aChannel = [[ModelHelper sharedInstance]findChannelWithNode:nodeString];
+    // if the user already exist - then show the user
+//    User* aUser = [[ModelHelper sharedInstance] findUserWithGUID:guidString];
+    
+    if (aUser != nil && aUser.state.intValue == IdentityStateActive) {
+        // it is a buddy on our contact list
+        ContactDetailController *controller = [[ContactDetailController alloc] initWithNibName:nil bundle:nil];
+        controller.user = aUser;
+        controller.GUID = guidString;
+        controller.managedObjectContext = [self appDelegate].context;
+        
+        // Pass the selected object to the new view controller.
+        [controller setHidesBottomBarWhenPushed:YES];
+        [self.navigationController pushViewController:controller animated:YES];
+    } else {
+        // get user info from web and display as if it is searched
+        NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: guidString, @"guid", @"1", @"op", nil];
+        
+        HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        HUD.delegate = self;
+        
+        [[AppNetworkAPIClient sharedClient] getPath:GET_DATA_PATH parameters:getDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            DDLogVerbose(@"get config JSON received: %@", responseObject);
+            
+            [HUD hide:YES];
+            NSString* type = [responseObject valueForKey:@"type"];
+            if ([type isEqualToString:@"user"]) {
+                ContactDetailController *controller = [[ContactDetailController alloc] initWithNibName:nil bundle:nil];
+                controller.jsonData = responseObject;
+                controller.GUID = guidString;
+                controller.managedObjectContext = [self appDelegate].context;
+                
+                // Pass the selected object to the new view controller.
+                [controller setHidesBottomBarWhenPushed:YES];
+                [self.navigationController pushViewController:controller animated:YES];
+                
+            }
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            //
+            DDLogVerbose(@"error received: %@", error);
+            [HUD hide:YES];
+            
+            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            HUD.mode = MBProgressHUDModeText;
+            HUD.delegate = self;
+            HUD.labelText = T(@"网络错误，无法获取用户数据");
+            [HUD hide:YES afterDelay:1];
+        }];
+        
+    }
+}
+ */
+
 
 @end
