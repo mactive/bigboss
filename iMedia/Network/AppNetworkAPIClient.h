@@ -60,6 +60,9 @@ extern NSString *const kXMPPmyUsername;
 - (void)getCheckinInfoWithBlock:(void (^)(id, NSError *))block;
 - (void)sendCheckinMessageWithBlock:(void (^)(id, NSError *))block;
 
+// 连续中奖天数
+- (void)getShakeInfoWithBlock:(void (^)(id, NSError *))block;
+
 - (BOOL)isConnectable;
 
 @end

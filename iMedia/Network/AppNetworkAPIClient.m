@@ -38,8 +38,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 #import "UpYun.h"
 #endif
 
-//static NSString * const kAppNetworkAPIBaseURLString = @"http://192.168.1.104:8000/";//
-static NSString * const kAppNetworkAPIBaseURLString = @"http://media.wingedstone.com:8000/";
+static NSString * const kAppNetworkAPIBaseURLString = @"http://192.168.1.104:8000/";//
+//static NSString * const kAppNetworkAPIBaseURLString = @"http://media.wingedstone.com:8000/";
 
 
 
@@ -900,7 +900,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     
     
     AFHTTPRequestOperation *getOperation = [[AppNetworkAPIClient sharedClient] HTTPRequestOperationWithRequest:getRequest success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        DDLogVerbose(@"getShakeDashboardInfoWithBlock: %@", responseObject);
+        DDLogVerbose(@"getChannelListWithBlock: %@", responseObject);
         
         NSString* type = [responseObject valueForKey:@"type"];
         
@@ -923,6 +923,40 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     
     [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:getOperation];
 }
+
+// 频道列表
+- (void)getShakeInfoWithBlock:(void (^)(id, NSError *))block
+{
+    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: @"13", @"op", nil];
+    // 11 是频道列表
+    NSMutableURLRequest *getRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"GET" path:GET_DATA_PATH parameters:getDict];
+    
+    
+    AFHTTPRequestOperation *getOperation = [[AppNetworkAPIClient sharedClient] HTTPRequestOperationWithRequest:getRequest success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        DDLogVerbose(@"getShakeInfoWithBlock: %@", responseObject);
+        
+        NSString* type = [responseObject valueForKey:@"type"];
+        
+        if (![@"error" isEqualToString:type]) {
+            if (block) {
+                block (responseObject, nil);
+            }
+        } else {
+            if (block) {
+                NSError *error = [[NSError alloc] initWithDomain:@"wingedstone.com" code:403 userInfo:nil];
+                block (nil, error);
+            }
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        //
+        if (block) {
+            block (nil, error);
+        }
+    }];
+    
+    [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:getOperation];
+}
+
 
 
 

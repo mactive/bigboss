@@ -174,6 +174,7 @@
 {
     CheckinNoteViewController *controller = [[CheckinNoteViewController alloc]initWithNibName:nil bundle:nil];
     [controller setHidesBottomBarWhenPushed:YES];
+    controller.shakeInfo = _shakeInfo;
     [self.navigationController pushViewController:controller animated:YES];
 }
 
