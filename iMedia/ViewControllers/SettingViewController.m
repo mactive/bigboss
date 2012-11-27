@@ -16,6 +16,8 @@
 #import "FeedBackViewController.h"
 #import "AboutUsViewController.h"
 #import "ModelHelper.h"
+#import "ShakeCodeViewController.h"
+#import "ShakeEntityViewController.h"
 
 @interface SettingViewController ()<UIActionSheetDelegate>
 
@@ -192,10 +194,12 @@
         [self.navigationController pushViewController:profileMeController animated:YES];
     }
     
-//    if (indexPath.row == 1 && indexPath.section == 2 ) {
-//        FeedBackViewController *controller = [[FeedBackViewController alloc]initWithNibName:nil bundle:nil];
-//        [self.navigationController pushViewController:controller animated:YES];
-//    }
+    // for test
+    if (indexPath.row == 0 && indexPath.section == 1 ) {
+        ShakeEntityViewController *controller = [[ShakeEntityViewController alloc]initWithNibName:nil bundle:nil];
+        [controller setHidesBottomBarWhenPushed:YES];
+        [self.navigationController pushViewController:controller animated:YES];
+    }
     
     if (indexPath.row == 2 && indexPath.section == 2 ) {
         AboutUsViewController *controller = [[AboutUsViewController alloc]initWithNibName:nil bundle:nil];
