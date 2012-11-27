@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1810" systemVersion="11G63b" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1811" systemVersion="12C60" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Channel" representedClassName="Channel" parentEntity="Identity" syncable="YES">
         <attribute name="csContactPostalID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isMandatory" optional="YES" attributeType="Boolean" syncable="YES"/>
@@ -56,6 +56,12 @@
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="owner" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Identity" inverseName="images" inverseEntity="Identity" syncable="YES"/>
     </entity>
+    <entity name="Information" representedClassName="Information" syncable="YES">
+        <attribute name="createdOn" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <entity name="Me" representedClassName="Me" parentEntity="Identity" syncable="YES">
         <attribute name="birthdate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="career" optional="YES" attributeType="String" defaultValueString="@&quot;&quot;" syncable="YES"/>
@@ -82,6 +88,10 @@
         <relationship name="conversation" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Conversation" inverseName="messages" inverseEntity="Conversation" syncable="YES"/>
         <relationship name="from" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Identity" syncable="YES"/>
     </entity>
+    <entity name="ShakeInfo" representedClassName="ShakeInfo" syncable="YES">
+        <attribute name="daysContinued" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="lastShakeDate" optional="YES" attributeType="Date" syncable="YES"/>
+    </entity>
     <entity name="User" representedClassName="User" parentEntity="Identity" syncable="YES">
         <attribute name="birthdate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="career" optional="YES" attributeType="String" syncable="YES"/>
@@ -102,5 +112,7 @@
         <element name="Me" positionX="-63" positionY="-171" width="128" height="270"/>
         <element name="Message" positionX="-324" positionY="-78" width="128" height="150"/>
         <element name="User" positionX="-234" positionY="141" width="128" height="165"/>
+        <element name="ShakeInfo" positionX="160" positionY="192" width="128" height="75"/>
+        <element name="Information" positionX="160" positionY="192" width="128" height="105"/>
     </elements>
 </model>

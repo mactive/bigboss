@@ -146,6 +146,8 @@
 		26F3BF23164294AC00E2899C /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F3BF22164294AC00E2899C /* LoginViewController.m */; };
 		26F759E4163CEF70005E9FB4 /* ProfileMeController.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F759E3163CEF6F005E9FB4 /* ProfileMeController.m */; };
 		26F759E7163D14F1005E9FB4 /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F759E6163D14F1005E9FB4 /* UIImage+Resize.m */; };
+		56039E7C1663865300BC8065 /* ShakeInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 56039E7B1663865300BC8065 /* ShakeInfo.m */; };
+		56039E7F166389C700BC8065 /* Information.m in Sources */ = {isa = PBXBuildFile; fileRef = 56039E7E166389C700BC8065 /* Information.m */; };
 		56202F46162AA32F00F6306F /* AddFriendByIDController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56202F45162AA32F00F6306F /* AddFriendByIDController.m */; };
 		56202F49162AE85B00F6306F /* ChannelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56202F48162AE85A00F6306F /* ChannelViewController.m */; };
 		562DE705160ABFA100F782D2 /* ChatDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 562DE704160ABFA100F782D2 /* ChatDetailController.m */; };
@@ -559,6 +561,10 @@
 		26F759E3163CEF6F005E9FB4 /* ProfileMeController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ProfileMeController.m; path = ViewControllers/ProfileMeController.m; sourceTree = "<group>"; };
 		26F759E5163D14F1005E9FB4 /* UIImage+Resize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+Resize.h"; path = "contrib/UIImage+Resize.h"; sourceTree = "<group>"; };
 		26F759E6163D14F1005E9FB4 /* UIImage+Resize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+Resize.m"; path = "contrib/UIImage+Resize.m"; sourceTree = "<group>"; };
+		56039E7A1663865300BC8065 /* ShakeInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShakeInfo.h; path = Models/ShakeInfo.h; sourceTree = "<group>"; };
+		56039E7B1663865300BC8065 /* ShakeInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShakeInfo.m; path = Models/ShakeInfo.m; sourceTree = "<group>"; };
+		56039E7D166389C700BC8065 /* Information.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Information.h; path = Models/Information.h; sourceTree = "<group>"; };
+		56039E7E166389C700BC8065 /* Information.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Information.m; path = Models/Information.m; sourceTree = "<group>"; };
 		56202F44162AA32F00F6306F /* AddFriendByIDController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AddFriendByIDController.h; path = ViewControllers/AddFriendByIDController.h; sourceTree = "<group>"; };
 		56202F45162AA32F00F6306F /* AddFriendByIDController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AddFriendByIDController.m; path = ViewControllers/AddFriendByIDController.m; sourceTree = "<group>"; };
 		56202F47162AE85A00F6306F /* ChannelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChannelViewController.h; path = ViewControllers/ChannelViewController.h; sourceTree = "<group>"; };
@@ -1894,6 +1900,10 @@
 			isa = PBXGroup;
 			children = (
 				566E80B51609A24C00A333EA /* iMedia.xcdatamodeld */,
+				56039E7D166389C700BC8065 /* Information.h */,
+				56039E7E166389C700BC8065 /* Information.m */,
+				56039E7A1663865300BC8065 /* ShakeInfo.h */,
+				56039E7B1663865300BC8065 /* ShakeInfo.m */,
 				56EDEFCA164C06EB003B0E9D /* Channel.h */,
 				56EDEFCB164C06EB003B0E9D /* Channel.m */,
 				564A6F32164BE78D00B04A00 /* Message.h */,
@@ -2511,6 +2521,8 @@
 				264A389F165DF8D800FA0123 /* TrapezoidLabel.m in Sources */,
 				26605588165F29AA003B8737 /* CheckinNoteViewController.m in Sources */,
 				26E7C4E31661F1C700366B0C /* ChannelListViewController.m in Sources */,
+				56039E7C1663865300BC8065 /* ShakeInfo.m in Sources */,
+				56039E7F166389C700BC8065 /* Information.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
