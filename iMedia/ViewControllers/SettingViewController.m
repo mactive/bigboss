@@ -18,6 +18,7 @@
 #import "ModelHelper.h"
 #import "ShakeCodeViewController.h"
 #import "ShakeEntityViewController.h"
+#import "ShakeAddressViewController.h"
 
 @interface SettingViewController ()<UIActionSheetDelegate>
 
@@ -196,7 +197,7 @@
     
     // for test
     if (indexPath.row == 0 && indexPath.section == 1 ) {
-        ShakeEntityViewController *controller = [[ShakeEntityViewController alloc]initWithNibName:nil bundle:nil];
+        ShakeAddressViewController *controller = [[ShakeAddressViewController alloc]initWithNibName:nil bundle:nil];
         [controller setHidesBottomBarWhenPushed:YES];
         [self.navigationController pushViewController:controller animated:YES];
     }
