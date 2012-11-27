@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ShakeInfo.h"
 
 @interface CheckinNoteViewController : UITableViewController
+@property(nonatomic, strong)ShakeInfo *shakeInfo;
+
 
 @end

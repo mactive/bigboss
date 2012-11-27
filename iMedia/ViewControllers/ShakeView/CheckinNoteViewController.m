@@ -10,6 +10,7 @@
 #import "AppNetworkAPIClient.h"
 #import <QuartzCore/QuartzCore.h>
 #import "MBProgressHUD.h"
+#import "NSDate-Utilities.h"
 
 #define ROW_HEIGHT 50
 
@@ -31,6 +32,7 @@
 @synthesize noticeLabel;
 @synthesize checkinDays;
 @synthesize isTodayChecked;
+@synthesize shakeInfo;
 
 #define DESC_TAG 10
 - (id)initWithStyle:(UITableViewStyle)style
@@ -87,9 +89,6 @@ NSInteger intSort(id num1, id num2, void *context)
                 [tempArray addObject:item];
             }
             self.dataArray  = tempArray;
-#warning get from json
-            self.checkinDays = 1;
-            self.isTodayChecked = NO;
             
             [self refreshNoticeView];
             
@@ -104,7 +103,74 @@ NSInteger intSort(id num1, id num2, void *context)
             [HUD hide:YES afterDelay:1];
         }
     }];
+    
+    // get from parent info 
+
 }
+
+
+- (void)refreshNoticeView
+{
+    self.checkinDays = [self.shakeInfo.daysContinued integerValue];
+    if ([self.shakeInfo.lastShakeDate isToday]) {
+        self.isTodayChecked = YES;
+    }else{
+        self.isTodayChecked = NO;
+    }
+    
+    
+    NSString * noticeString = @"";
+    if (self.isTodayChecked == NO) {
+        noticeString = T(@"你今天还没签到呢");
+    }else{
+        noticeString = T(@"你今天已经签到过了");
+    }
+
+    if (self.checkinDays == 0) {
+        noticeString = T(@"还没签到过,摇动手机签到");
+    }else{
+        noticeString = [NSString stringWithFormat:T(@"你已经连续签到 %i 天,看看都能获得那些奖品吧"), self.checkinDays ];
+    }
+    
+    
+    self.noticeLabel.text = noticeString;
+}
+
+
+- (void)setShakeInfo
+{
+    // get op 13
+//    then set
+//    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//    HUD.delegate = self;
+//    HUD.labelText = T(@"正在加载信息");
+    
+    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
+    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    [[AppNetworkAPIClient sharedClient]getShakeInfoWithBlock:^(id responseObject, NSError *error) {
+        if (responseObject) {
+//            [HUD hide:YES];
+            NSDictionary *responseDict = responseObject;
+            
+            // update database
+            self.shakeInfo.daysContinued = [NSNumber numberWithInt:[[responseDict objectForKey:@"days"] intValue]];
+            self.shakeInfo.lastShakeDate = [[NSDate alloc] initWithTimeIntervalSinceNow:0];
+            
+            [self refreshNoticeView];
+            
+        }else{
+            [HUD hide:YES];
+            
+            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            HUD.mode = MBProgressHUDModeText;
+            HUD.delegate = self;
+            HUD.labelText = T(@"网络错误,无法获取信息");
+            [HUD hide:YES afterDelay:1];
+        }
+    }];
+
+}
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - init and refresh notice view
@@ -118,7 +184,7 @@ NSInteger intSort(id num1, id num2, void *context)
     UIImageView *checkinButtonImage = [[ UIImageView alloc]initWithFrame:CGRectMake(6, 6, 36, 36)];
     [checkinButtonImage setImage:[UIImage imageNamed:@"metro_icon_3.png"]];
     
-    self.noticeLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 5, 260, 40)];
+    self.noticeLabel = [[UILabel alloc]initWithFrame:CGRectMake(100, 5, 200, 40)];
     self.noticeLabel.numberOfLines = 0;
     self.noticeLabel.textColor = RGBCOLOR(255, 255, 255);
     self.noticeLabel.backgroundColor = [UIColor clearColor];
@@ -132,26 +198,6 @@ NSInteger intSort(id num1, id num2, void *context)
     self.tableView.tableHeaderView = self.noticeView;
 }
 
-- (void)refreshNoticeView
-{
-    
-    NSString * noticeString = @"";
-    if (self.isTodayChecked == NO) {
-        noticeString = T(@"你今天还没签到呢");
-    }else{
-        noticeString = T(@"你今天已经签到过了");
-    }
-    
-
-    if (self.checkinDays == 0) {
-        noticeString = T(@"还没签到过,摇动手机签到");
-    }else{
-        noticeString = [NSString stringWithFormat:T(@"你已经连续签到 %i 天,看看你都能获得那些奖品吧"), self.checkinDays ];
-    }
-
-    
-    self.noticeLabel.text = noticeString;
-}
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - shake view
@@ -169,15 +215,33 @@ NSInteger intSort(id num1, id num2, void *context)
     [self resignFirstResponder];
     [super viewWillDisappear:animated];
 }
+//////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - shake and checkin
+//////////////////////////////////////////////////////////////////////////////////////////////////
 
 - (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
 {
     if (motion == UIEventSubtypeMotionShake)
     {
         self.isTodayChecked = YES;
+        [self setShakeInfo];
         [self refreshNoticeView];
+        [self MBPShow:T(@"今天签到了")];
     }
 }
+
+- (void)MBPShow:(NSString *)_string
+{
+    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    UIImageView *custom =  [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"metro_icon_3.png"]];
+    [custom setFrame:CGRectMake(0, 0, 50, 50)];
+    HUD.customView = custom;
+    HUD.mode = MBProgressHUDModeCustomView;
+    HUD.delegate = self;
+    HUD.labelText = _string;
+    [HUD hide:YES afterDelay:1];
+}
+
 
 
 - (void)didReceiveMemoryWarning

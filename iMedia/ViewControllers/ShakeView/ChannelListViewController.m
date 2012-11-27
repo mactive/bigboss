@@ -7,12 +7,22 @@
 //
 
 #import "ChannelListViewController.h"
+#import "AppDelegate.h"
 #import "AppNetworkAPIClient.h"
 #import <QuartzCore/QuartzCore.h>
 #import "UIImageView+AFNetworking.h"
 #import "MBProgressHUD.h"
 #import "Channel.h"
 #import "ModelHelper.h"
+#import "ChannelViewController.h"
+#import "ContactListViewController.h"
+#import "DDLog.h"
+
+#if DEBUG
+static const int ddLogLevel = LOG_LEVEL_VERBOSE;
+#else
+static const int ddLogLevel = LOG_LEVEL_INFO;
+#endif
 
 #define NAME_TAG 1
 #define SNS_TAG 20
@@ -273,27 +283,26 @@ NSInteger intSort2(id num1, id num2, void *context)
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
     NSDictionary *rowData = [self.dataArray objectAtIndex:indexPath.row];
-//    [self getDict:[rowData objectForKey:@"node_address"]];
+    [self getDict:[rowData objectForKey:@"node_address"] andGuid:[rowData objectForKey:@"guid"]];
     
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Accessors & selectors
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*
-- (void)getDict:(NSString *)nodeString
+
+- (void)getDict:(NSString *)nodeString andGuid:(NSString *)guidString
 {
     Channel *aChannel = [[ModelHelper sharedInstance]findChannelWithNode:nodeString];
     // if the user already exist - then show the user
-//    User* aUser = [[ModelHelper sharedInstance] findUserWithGUID:guidString];
     
-    if (aUser != nil && aUser.state.intValue == IdentityStateActive) {
+    if (aChannel != nil && aChannel.state.intValue == IdentityStateActive) {
         // it is a buddy on our contact list
-        ContactDetailController *controller = [[ContactDetailController alloc] initWithNibName:nil bundle:nil];
-        controller.user = aUser;
-        controller.GUID = guidString;
-        controller.managedObjectContext = [self appDelegate].context;
         
+        ChannelViewController *controller = [[ChannelViewController alloc] initWithNibName:nil bundle:nil];
+        controller.delegate = [self appDelegate].contactListController;
+        controller.managedObjectContext = [self appDelegate].context;
+        controller.channel = aChannel;
         // Pass the selected object to the new view controller.
         [controller setHidesBottomBarWhenPushed:YES];
         [self.navigationController pushViewController:controller animated:YES];
@@ -309,10 +318,10 @@ NSInteger intSort2(id num1, id num2, void *context)
             
             [HUD hide:YES];
             NSString* type = [responseObject valueForKey:@"type"];
-            if ([type isEqualToString:@"user"]) {
-                ContactDetailController *controller = [[ContactDetailController alloc] initWithNibName:nil bundle:nil];
+            if ([type isEqualToString:@"channel"]) {
+                ChannelViewController *controller = [[ChannelViewController alloc] initWithNibName:nil bundle:nil];
                 controller.jsonData = responseObject;
-                controller.GUID = guidString;
+                controller.delegate = [self appDelegate].contactListController;
                 controller.managedObjectContext = [self appDelegate].context;
                 
                 // Pass the selected object to the new view controller.
@@ -335,7 +344,11 @@ NSInteger intSort2(id num1, id num2, void *context)
         
     }
 }
- */
+
+- (AppDelegate *)appDelegate
+{
+	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
+}
 
 
 @end
