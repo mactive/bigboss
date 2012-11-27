@@ -148,6 +148,7 @@
 		26F759E7163D14F1005E9FB4 /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = 26F759E6163D14F1005E9FB4 /* UIImage+Resize.m */; };
 		56039E7C1663865300BC8065 /* ShakeInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 56039E7B1663865300BC8065 /* ShakeInfo.m */; };
 		56039E7F166389C700BC8065 /* Information.m in Sources */ = {isa = PBXBuildFile; fileRef = 56039E7E166389C700BC8065 /* Information.m */; };
+		56039E851664C18000BC8065 /* ConfigSetting.m in Sources */ = {isa = PBXBuildFile; fileRef = 56039E841664C17F00BC8065 /* ConfigSetting.m */; };
 		56202F46162AA32F00F6306F /* AddFriendByIDController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56202F45162AA32F00F6306F /* AddFriendByIDController.m */; };
 		56202F49162AE85B00F6306F /* ChannelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 56202F48162AE85A00F6306F /* ChannelViewController.m */; };
 		562DE705160ABFA100F782D2 /* ChatDetailController.m in Sources */ = {isa = PBXBuildFile; fileRef = 562DE704160ABFA100F782D2 /* ChatDetailController.m */; };
@@ -565,6 +566,8 @@
 		56039E7B1663865300BC8065 /* ShakeInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShakeInfo.m; path = Models/ShakeInfo.m; sourceTree = "<group>"; };
 		56039E7D166389C700BC8065 /* Information.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Information.h; path = Models/Information.h; sourceTree = "<group>"; };
 		56039E7E166389C700BC8065 /* Information.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Information.m; path = Models/Information.m; sourceTree = "<group>"; };
+		56039E831664C17F00BC8065 /* ConfigSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConfigSetting.h; path = contrib/ConfigSetting.h; sourceTree = "<group>"; };
+		56039E841664C17F00BC8065 /* ConfigSetting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ConfigSetting.m; path = contrib/ConfigSetting.m; sourceTree = "<group>"; };
 		56202F44162AA32F00F6306F /* AddFriendByIDController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AddFriendByIDController.h; path = ViewControllers/AddFriendByIDController.h; sourceTree = "<group>"; };
 		56202F45162AA32F00F6306F /* AddFriendByIDController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AddFriendByIDController.m; path = ViewControllers/AddFriendByIDController.m; sourceTree = "<group>"; };
 		56202F47162AE85A00F6306F /* ChannelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ChannelViewController.h; path = ViewControllers/ChannelViewController.h; sourceTree = "<group>"; };
@@ -950,8 +953,8 @@
 		2631C5271631301E004DE7FB /* contrib */ = {
 			isa = PBXGroup;
 			children = (
-				2674B850164A51950092D980 /* NSDate-Utilities.h */,
 				26E58873165A2A2200180A9D /* RefreshTableHeaderView */,
+				2674B850164A51950092D980 /* NSDate-Utilities.h */,
 				2674B851164A51950092D980 /* NSDate-Utilities.m */,
 				26F3BF1716428DDB00E2899C /* MBProgressHUD.h */,
 				26F3BF1816428DDB00E2899C /* MBProgressHUD.m */,
@@ -963,6 +966,8 @@
 				2631C52916313033004DE7FB /* NSDate+timesince.m */,
 				26F759E5163D14F1005E9FB4 /* UIImage+Resize.h */,
 				26F759E6163D14F1005E9FB4 /* UIImage+Resize.m */,
+				56039E831664C17F00BC8065 /* ConfigSetting.h */,
+				56039E841664C17F00BC8065 /* ConfigSetting.m */,
 			);
 			name = contrib;
 			sourceTree = "<group>";
@@ -1934,8 +1939,8 @@
 			isa = PBXGroup;
 			children = (
 				26E588661659ED2F00180A9D /* UITableViewCell */,
-				566E82601609A77D00A333EA /* ContactListViewController.h */,
 				264A3899165DF6FA00FA0123 /* ShakeView */,
+				566E82601609A77D00A333EA /* ContactListViewController.h */,
 				566E82611609A77D00A333EA /* ContactListViewController.m */,
 				26F759E2163CEF6F005E9FB4 /* ProfileMeController.h */,
 				26F759E3163CEF6F005E9FB4 /* ProfileMeController.m */,
@@ -2523,6 +2528,7 @@
 				26E7C4E31661F1C700366B0C /* ChannelListViewController.m in Sources */,
 				56039E7C1663865300BC8065 /* ShakeInfo.m in Sources */,
 				56039E7F166389C700BC8065 /* Information.m in Sources */,
+				56039E851664C18000BC8065 /* ConfigSetting.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

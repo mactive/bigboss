@@ -15,6 +15,7 @@
         <attribute name="lastMessageSentDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="lastMessageText" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="messagesLength" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="Integer 16" defaultValueString="0" indexed="YES" syncable="YES"/>
         <attribute name="unreadMessagesCount" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <relationship name="channel" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Channel" inverseName="conversation" inverseEntity="Channel" syncable="YES"/>
         <relationship name="messages" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Message" inverseName="conversation" inverseEntity="Message" syncable="YES"/>
@@ -66,6 +67,7 @@
         <attribute name="birthdate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="career" optional="YES" attributeType="String" defaultValueString="@&quot;&quot;" syncable="YES"/>
         <attribute name="cell" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="config" optional="YES" attributeType="Integer 64" syncable="YES"/>
         <attribute name="ePostalPassword" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="fullEPostalID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="gender" optional="YES" attributeType="String" syncable="YES"/>
@@ -88,6 +90,7 @@
         <relationship name="conversation" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Conversation" inverseName="messages" inverseEntity="Conversation" syncable="YES"/>
         <relationship name="from" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Identity" syncable="YES"/>
     </entity>
+    <entity name="Pluggin" parentEntity="Identity" syncable="YES"/>
     <entity name="ShakeInfo" representedClassName="ShakeInfo" syncable="YES">
         <attribute name="daysContinued" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="lastShakeDate" optional="YES" attributeType="Date" syncable="YES"/>
@@ -104,15 +107,16 @@
     </entity>
     <elements>
         <element name="Channel" positionX="160" positionY="192" width="128" height="165"/>
-        <element name="Conversation" positionX="-9" positionY="114" width="128" height="165"/>
+        <element name="Conversation" positionX="-9" positionY="114" width="128" height="180"/>
         <element name="FriendRequest" positionX="241" positionY="-9" width="128" height="105"/>
         <element name="Identity" positionX="-92" positionY="-513" width="128" height="225"/>
         <element name="ImageLocal" positionX="-83" positionY="318" width="128" height="150"/>
         <element name="ImageRemote" positionX="394" positionY="51" width="128" height="120"/>
-        <element name="Me" positionX="-63" positionY="-171" width="128" height="270"/>
+        <element name="Me" positionX="-63" positionY="-171" width="128" height="285"/>
         <element name="Message" positionX="-324" positionY="-78" width="128" height="150"/>
         <element name="User" positionX="-234" positionY="141" width="128" height="165"/>
         <element name="ShakeInfo" positionX="160" positionY="192" width="128" height="75"/>
         <element name="Information" positionX="160" positionY="192" width="128" height="105"/>
+        <element name="Pluggin" positionX="160" positionY="192" width="128" height="45"/>
     </elements>
 </model>

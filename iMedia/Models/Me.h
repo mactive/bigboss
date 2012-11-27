@@ -29,6 +29,7 @@
 @property (nonatomic, retain) NSString * fullEPostalID;
 @property (nonatomic, retain) NSSet *avatars;
 @property (nonatomic, retain) NSSet *channels;
+@property (nonatomic, retain) NSNumber *config;
 
 -(NSArray *)getOrderedAvatars;
 

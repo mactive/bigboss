@@ -107,6 +107,7 @@ typedef enum _IdentityState
     IdentityStatePendingRemoveSubscription  = 4,
     IdentityStatePendingRemoveFriend    =5,
     IdentityStatePendingServerDataUpdate = 6,
+    IdentityStateIsPluggin    = 10,
     IdentityStateInactive   = 100
 } IdentityState;
 

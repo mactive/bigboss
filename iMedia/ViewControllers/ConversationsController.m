@@ -450,7 +450,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
     [cell.contentView addSubview:label];
 //    [cell.contentView addSubview:timeIconView];
-	[cell.contentView addSubview:label];
 	return cell;
 }
 

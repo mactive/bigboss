@@ -35,6 +35,7 @@
 #import "XMPPJID.h"
 #import <QuartzCore/QuartzCore.h>
 #import <Foundation/NSTimer.h>
+#import "ConfigSetting.h"
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -427,6 +428,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         self.me.selfIntroduction = @"";
         self.me.signature = @"";
         self.me.career = @"";
+        self.me.config = [NSNumber numberWithUnsignedLongLong:[ConfigSetting getDefaultConfig]];
         
         [self updateMeWithBlock:block];
         
