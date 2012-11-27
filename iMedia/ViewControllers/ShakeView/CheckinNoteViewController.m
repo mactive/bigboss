@@ -125,12 +125,11 @@ NSInteger intSort(id num1, id num2, void *context)
     }else{
         noticeString = T(@"你今天已经签到过了");
     }
-    
-    
+
     if (self.checkinDays == 0) {
         noticeString = T(@"还没签到过,摇动手机签到");
     }else{
-        noticeString = [NSString stringWithFormat:T(@"你已经连续签到 %i 天,看看你都能获得那些奖品吧"), self.checkinDays ];
+        noticeString = [NSString stringWithFormat:T(@"你已经连续签到 %i 天,看看都能获得那些奖品吧"), self.checkinDays ];
     }
     
     
@@ -142,30 +141,23 @@ NSInteger intSort(id num1, id num2, void *context)
 {
     // get op 13
 //    then set
-    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    HUD.delegate = self;
-    HUD.labelText = T(@"正在加载信息");
+//    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//    HUD.delegate = self;
+//    HUD.labelText = T(@"正在加载信息");
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     [[AppNetworkAPIClient sharedClient]getShakeInfoWithBlock:^(id responseObject, NSError *error) {
         if (responseObject) {
-            [HUD hide:YES];
+//            [HUD hide:YES];
             NSDictionary *responseDict = responseObject;
-            NSDictionary *item = [[NSDictionary alloc]init];
-            NSMutableArray *tempArray = [[NSMutableArray alloc]init];
-            NSArray *keyArray = [[responseDict allKeys] sortedArrayUsingFunction:intSort context:NULL];
             
-//            for (int j = 0;  j< [keyArray count]; j++) {
-//                NSString * KEY = [keyArray objectAtIndex:j];
-//                item = [[NSDictionary alloc]initWithObjectsAndKeys:KEY,@"day",[responseDict objectForKey:KEY] ,@"reward", nil];
-//                [tempArray addObject:item];
-//            }
-            self.dataArray  = tempArray;
+            // update database
+            self.shakeInfo.daysContinued = [NSNumber numberWithInt:[[responseDict objectForKey:@"days"] intValue]];
+            self.shakeInfo.lastShakeDate = [[NSDate alloc] initWithTimeIntervalSinceNow:0];
             
             [self refreshNoticeView];
             
-            [self.tableView reloadData];
         }else{
             [HUD hide:YES];
             
@@ -192,7 +184,7 @@ NSInteger intSort(id num1, id num2, void *context)
     UIImageView *checkinButtonImage = [[ UIImageView alloc]initWithFrame:CGRectMake(6, 6, 36, 36)];
     [checkinButtonImage setImage:[UIImage imageNamed:@"metro_icon_3.png"]];
     
-    self.noticeLabel = [[UILabel alloc]initWithFrame:CGRectMake(50, 5, 260, 40)];
+    self.noticeLabel = [[UILabel alloc]initWithFrame:CGRectMake(100, 5, 200, 40)];
     self.noticeLabel.numberOfLines = 0;
     self.noticeLabel.textColor = RGBCOLOR(255, 255, 255);
     self.noticeLabel.backgroundColor = [UIColor clearColor];
