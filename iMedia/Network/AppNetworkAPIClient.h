@@ -54,8 +54,11 @@ extern NSString *const kXMPPmyUsername;
 
 - (void)getNearestPeopleWithGender:(NSUInteger)gender start:(NSUInteger)start querysize:(NSUInteger)querySize andBlock:(void (^)(id, NSError *))block;
 - (void)getShakeDashboardInfoWithBlock:(void (^)(id, NSError *))block;
-- (void)getCheckinInfoWithBlock:(void (^)(id, NSError *))block;
 - (void)getChannelListWithBlock:(void (^)(id, NSError *))block;
+
+//摇一摇列表和签到
+- (void)getCheckinInfoWithBlock:(void (^)(id, NSError *))block;
+- (void)sendCheckinMessageWithBlock:(void (^)(id, NSError *))block;
 
 - (BOOL)isConnectable;
 

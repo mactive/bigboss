@@ -169,6 +169,9 @@ NSInteger intSort(id num1, id num2, void *context)
     [self resignFirstResponder];
     [super viewWillDisappear:animated];
 }
+//////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - shake and checkin
+//////////////////////////////////////////////////////////////////////////////////////////////////
 
 - (void)motionEnded:(UIEventSubtype)motion withEvent:(UIEvent *)event
 {
@@ -176,8 +179,22 @@ NSInteger intSort(id num1, id num2, void *context)
     {
         self.isTodayChecked = YES;
         [self refreshNoticeView];
+        [self MBPShow:T(@"今天签到了")];
     }
 }
+
+- (void)MBPShow:(NSString *)_string
+{
+    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    UIImageView *custom =  [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"metro_icon_3.png"]];
+    [custom setFrame:CGRectMake(0, 0, 50, 50)];
+    HUD.customView = custom;
+    HUD.mode = MBProgressHUDModeCustomView;
+    HUD.delegate = self;
+    HUD.labelText = _string;
+    [HUD hide:YES afterDelay:1];
+}
+
 
 
 - (void)didReceiveMemoryWarning

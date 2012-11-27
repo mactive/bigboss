@@ -833,7 +833,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     
     
     AFHTTPRequestOperation *getOperation = [[AppNetworkAPIClient sharedClient] HTTPRequestOperationWithRequest:getRequest success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        DDLogVerbose(@"getShakeDashboardInfoWithBlock: %@", responseObject);
+        DDLogVerbose(@"getCheckinInfoWithBlock: %@", responseObject);
         
         NSString* type = [responseObject valueForKey:@"type"];
         
@@ -856,6 +856,40 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     
     [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:getOperation];
 }
+
+// 签到奖励列表
+- (void)sendCheckinMessageWithBlock:(void (^)(id, NSError *))block
+{
+    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: @"13", @"op", nil];
+    // 11 是频道列表
+    NSMutableURLRequest *getRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"GET" path:GET_DATA_PATH parameters:getDict];
+    
+    
+    AFHTTPRequestOperation *getOperation = [[AppNetworkAPIClient sharedClient] HTTPRequestOperationWithRequest:getRequest success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        DDLogVerbose(@"sendCheckinMessageWithBlock: %@", responseObject);
+        
+        NSString* type = [responseObject valueForKey:@"type"];
+        
+        if (![@"error" isEqualToString:type]) {
+            if (block) {
+                block (responseObject, nil);
+            }
+        } else {
+            if (block) {
+                NSError *error = [[NSError alloc] initWithDomain:@"wingedstone.com" code:403 userInfo:nil];
+                block (nil, error);
+            }
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        //
+        if (block) {
+            block (nil, error);
+        }
+    }];
+    
+    [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:getOperation];
+}
+
 
 // 频道列表
 - (void)getChannelListWithBlock:(void (^)(id, NSError *))block

@@ -49,7 +49,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        self.title = T(@"摇一摇");
+        self.title = T(@"摇一摇首页");
     }
     return self;
 }
