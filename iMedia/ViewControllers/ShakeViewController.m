@@ -22,25 +22,35 @@
 }
 
 @property(nonatomic, strong) UIImageView *shakeImageView;
+@property(nonatomic, strong) UILabel *beginEndTimeLabel;
 @property(nonatomic, strong) UIView *afterView;
 @property(nonatomic, readwrite) NSUInteger shakeTimes;
-@property(nonatomic, readwrite) NSInteger passedMins;
-@property(nonatomic, readwrite) BOOL isBegan;
+@property(nonatomic, readwrite) NSInteger startedMins;
+@property(nonatomic, readwrite) NSInteger endedMins;
 @property(nonatomic, strong) UIView *shakeTimesView;
 @property(nonatomic, strong) UILabel *shakeTimesLabel;
 @property(nonatomic, strong) NSMutableDictionary* shakeTimesDict;
+
+@property(nonatomic, readwrite)BOOL canShake; // 可不可以shake
+@property(nonatomic, readwrite)BOOL isShaking;
+@property(nonatomic, readwrite)BOOL noChance;
+
 @end
 
 @implementation ShakeViewController
 @synthesize shakeImageView;
+@synthesize beginEndTimeLabel;
 @synthesize afterView;
 @synthesize shakeData;
 @synthesize shakeTimes;
-@synthesize passedMins;
-@synthesize isBegan;
+@synthesize startedMins;
+@synthesize endedMins;
 @synthesize shakeTimesView;
 @synthesize shakeTimesLabel;
 @synthesize shakeTimesDict;
+@synthesize canShake;
+@synthesize isShaking;
+@synthesize noChance;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -55,7 +65,7 @@
 {
     [super viewDidLoad];
     self.title = [self.shakeData objectForKey:@"name"];
-    
+    self.isShaking = NO;
         
     self.shakeTimesDict = [[NSMutableDictionary alloc]initWithDictionary:(NSDictionary *)[[NSUserDefaults standardUserDefaults] objectForKey:@"shakeTimesDict"]];
     self.shakeTimes = [[self.shakeTimesDict objectForKey:[self.shakeData objectForKey:@"id"]] intValue];
@@ -115,6 +125,15 @@
     
     [self.shakeTimesView addSubview:self.shakeTimesLabel];
     
+    //
+    self.beginEndTimeLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 180, 40)];
+    self.beginEndTimeLabel.textAlignment = NSTextAlignmentCenter;
+    self.beginEndTimeLabel.font = [UIFont systemFontOfSize:12.0f];
+    self.beginEndTimeLabel.textColor = [UIColor whiteColor];
+    self.beginEndTimeLabel.numberOfLines = 2;
+    self.beginEndTimeLabel.backgroundColor = RGBACOLOR(47, 47, 47, 0.5);
+
+    [self.view addSubview:self.beginEndTimeLabel];
     [self.view addSubview:self.shakeTimesView];
 }
 
@@ -132,18 +151,29 @@
 {
     [super viewWillAppear:animated];
     
+    self.beginEndTimeLabel.text = [NSString stringWithFormat:T(@"开始时间:%@  结束时间:%@"),
+                                   [self.shakeData objectForKey:@"begin_time"],
+                                   [self.shakeData objectForKey:@"end_time"]];
+    
     NSDateFormatter *dateFormatter  = [[NSDateFormatter alloc]init];
     [dateFormatter setDateFormat: @"yyyy-MM-dd HH:mm:ss"];
-    NSDate *updateDate = [dateFormatter dateFromString:[self.shakeData objectForKey:@"start_time"]];
+    NSDate *beginDate = [dateFormatter dateFromString:[self.shakeData objectForKey:@"begin_time"]];
+    NSDate *endDate = [dateFormatter dateFromString:[self.shakeData objectForKey:@"end_time"]];
 
     NSDate *now = [[NSDate alloc]initWithTimeIntervalSinceNow:0];
-    self.passedMins = (NSInteger )[now minutesBeforeDate:updateDate];
-    if (self.passedMins > 0) {
+    self.startedMins = (NSInteger )[now minutesBeforeDate:beginDate];
+    self.endedMins = (NSInteger )[now minutesAfterDate:endDate];
+    
+    if (self.startedMins > 0) {
         [self MBPShow:T(@"活动还没开始! ")];
-        self.isBegan = NO;
-    }else{
+        self.canShake = NO;
+    }else if(self.endedMins > 0){
+        [self MBPShow:T(@"活动还没结束了! ")];
+        self.canShake = NO;
+    }
+    else{
         [self MBPShow:T(@"想得到么, 摇一摇! ")];
-        self.isBegan = YES;
+        self.canShake = YES;
     }
     
 }
@@ -157,9 +187,8 @@
     HUD.mode = MBProgressHUDModeCustomView;
     HUD.delegate = self;
     HUD.labelText = _string;
-    [HUD hide:YES afterDelay:2];
-    
-    
+    [HUD hide:YES afterDelay:1];
+
 }
 
 
@@ -192,49 +221,88 @@
 {
     if (motion == UIEventSubtypeMotionShake)
     {
-        // your code
-        NSURL *audioPath = [[NSBundle mainBundle] URLForResource:@"message_3" withExtension:@"wav"];
-        AudioServicesCreateSystemSoundID((__bridge CFURLRef)audioPath, &completeSound);
-        AudioServicesPlaySystemSound (completeSound);
+ 
+        // request server
+        if (self.isShaking == NO && self.canShake == YES) {
+            // your code
+            NSURL *audioPath = [[NSBundle mainBundle] URLForResource:@"message_3" withExtension:@"wav"];
+            AudioServicesCreateSystemSoundID((__bridge CFURLRef)audioPath, &completeSound);
+            AudioServicesPlaySystemSound (completeSound);
+            
+            if (self.noChance == YES){
+                [self MBPShow:T(@"没有机会了")];
+                NSLog(@"没有机会了");
+            }else{
+                [self getShakeInfoFromServer];
+            }
+            
+        }else{
+            [self MBPShow:T(@"活动未开始或者没有已经结束了")];
+        }
         
-        [self getShakeInfoFromServer];
-        /*
-        
-        [UIView animateWithDuration:0.7f animations:^
-         {
-             [self.shakeImageView setAlpha:0];
-         }
-                         completion:^(BOOL finished)
-         {
-             [self.shakeImageView removeFromSuperview];
-             [self.view addSubview:self.afterView];
-
-         }
-        ];
-         */
-                
     }
 }
 
 -(void)getShakeInfoFromServer
 {
+    self.isShaking = YES;
     [[AppNetworkAPIClient sharedClient]getShakeInfoWithBlock:^(id responseObject, NSError *error) {
         if (responseObject) {
-            //            [HUD hide:YES];
+            self.isShaking = NO;
+
             NSDictionary *responseDict = responseObject;
             BOOL lucky = [[responseDict objectForKey:@"lucky"] boolValue];
             NSInteger bait_type = [[responseDict objectForKey:@"bait_type"] integerValue];
+            BOOL nochance = [[responseDict objectForKey:@"nochance"] boolValue];
             
-            if (lucky) {
-                [self MBPShow:T(@"恭喜你摇中了! ")];
+            if (nochance == YES) {
+                self.noChance = YES;
+            }
             
+            if (lucky && self.noChance == NO) {
                 
-                if ( bait_type == BaitTypeCode) {
-                    ShakeCodeViewController *controller = [[ShakeCodeViewController alloc]initWithNibName:nil bundle:nil];
-                    controller.codeString = [responseDict objectForKey:@"code"];
-                    [controller setHidesBottomBarWhenPushed:YES];
-                    [self.navigationController pushViewController:controller animated:YES];
-                }
+                // 正在跳转页面
+                HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                HUD.mode = MBProgressHUDModeText;
+                HUD.delegate = self;
+                HUD.labelText = T(@"恭喜你摇中了,正在跳转页面.");
+                [HUD showAnimated:YES whileExecutingBlock:^{
+                    //
+                } completionBlock:^{
+                    sleep(2);
+                    [HUD hide:YES];
+                    
+                    // block begin ==========================
+                    
+                    if ( bait_type == BaitTypeCode) {
+                        ShakeCodeViewController *controller = [[ShakeCodeViewController alloc]initWithNibName:nil bundle:nil];
+                        controller.codeString = [responseDict objectForKey:@"code"];
+                        [controller setHidesBottomBarWhenPushed:YES];
+                        [self.navigationController pushViewController:controller animated:YES];
+                        
+                    }
+                    if ( bait_type == BaitTypeFree || bait_type == BaitTypeDiscount) {
+                        ShakeEntityViewController *controller = [[ShakeEntityViewController alloc]initWithNibName:nil bundle:nil];
+                        controller.promotionImage = self.shakeImageView.image;
+                        controller.description = [responseDict objectForKey:@"description"];
+                        controller.merchandise_name = [responseDict objectForKey:@"merchandise_name"];
+                        controller.merchandise_sn = [responseDict objectForKey:@"merchandise_sn"];
+                        controller.original_price = [responseDict objectForKey:@"original_price"];
+                        
+                        if ([[responseDict objectForKey:@"discount_price"] length]> 0) {
+                            controller.discount_price = [responseDict objectForKey:@"discount_price"];
+                        }
+                        
+                        
+                        [controller setHidesBottomBarWhenPushed:YES];
+                        [self.navigationController pushViewController:controller animated:YES];
+                        
+                    }
+                    
+                    // block end==========================
+                    
+                }];
+                                
                 
                 
                 
@@ -246,6 +314,7 @@
             
             
         }else{
+            self.isShaking = NO;
             [self MBPShow:T(@"网络错误,无法获取信息")];
         }
     }];

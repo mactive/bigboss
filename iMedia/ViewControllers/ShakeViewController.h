@@ -20,6 +20,4 @@ typedef enum _BaitType
 
 @property(nonatomic, strong)NSDictionary *shakeData;
 
-
-
 @end

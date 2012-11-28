@@ -10,7 +10,7 @@
 #import "MBProgressHUD.h"
 #import <QuartzCore/QuartzCore.h>
 
-@interface ShakeAddressViewController ()<UITextFieldDelegate>
+@interface ShakeAddressViewController ()<UITextFieldDelegate,UIActionSheetDelegate>
 
 @property(nonatomic, strong) UIScrollView *baseView;
 @property(nonatomic,strong)UILabel *noticeLabel;
@@ -131,7 +131,9 @@
     
     
     self.baseView = [[UIScrollView alloc]initWithFrame:self.view.bounds];
-    self.baseView.scrollEnabled = YES;
+    [self.baseView setContentSize:CGSizeMake(self.view.frame.size.width, 300)];
+    [self.baseView setScrollEnabled:YES];
+    
     [self.baseView addSubview:self.noticeLabel];
     [self.baseView addSubview:self.nameField];
     [self.baseView addSubview:self.telField];
@@ -151,6 +153,7 @@
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
+//    [self.baseView setFrame:CGRectMake(0, 0, 320, 150)];  
     if ([textField isEqual:self.addressField]) {
         [self.baseView setContentOffset:CGPointMake(0, 200) animated:YES];
     }
@@ -158,7 +161,10 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
+//    [self.baseView setFrame:self.view.bounds];
     [self.baseView setContentOffset:CGPointMake(0, 0) animated:YES];
+
+
     return [textField resignFirstResponder];
 }
 
