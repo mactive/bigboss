@@ -237,6 +237,8 @@
     if (buttonIndex == 0 && [self.logoutActionsheet isEqual:actionSheet] ) {
         [[ModelHelper sharedInstance] clearAllObjects];
         [self appDelegate].me = nil;
+        [[self appDelegate] clearSession];
+        
         [[self appDelegate] startIntroSession];
     }
 
