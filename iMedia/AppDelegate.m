@@ -533,5 +533,15 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     }
 }
 
+- (void)clearSession
+{
+    [[XMPPNetworkCenter sharedClient] disconnect];
+    self.contactListController = nil;
+    self.conversationController = nil;
+    self.nearbyViewController = nil;
+    self.settingController = nil;
+    self.functionListController = nil;
+}
+
 
 @end

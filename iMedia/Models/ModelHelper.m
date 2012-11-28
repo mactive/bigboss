@@ -387,12 +387,17 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     NSManagedObjectContext *moc = self.managedObjectContext;
     
     NSArray *dbArray = [[NSArray alloc]initWithObjects:
-                        @"Identity",
+                        @"Me",
+                        @"User",
+                        @"Channel",
+                        @"Pluggin",
                         @"Conversation",
                         @"FriendRequest",
                         @"ImageLocal",
                         @"ImageRemote",
                         @"Message",
+                        @"Information",
+                        @"ShakeInfo",
                         nil];
     
     // Common
