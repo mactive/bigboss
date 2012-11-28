@@ -2544,17 +2544,14 @@
 				26E7C4E31661F1C700366B0C /* ChannelListViewController.m in Sources */,
 				56039E7C1663865300BC8065 /* ShakeInfo.m in Sources */,
 				56039E7F166389C700BC8065 /* Information.m in Sources */,
-<<<<<<< HEAD
 				56039E851664C18000BC8065 /* ConfigSetting.m in Sources */,
 				56039E8B1664E4FB00BC8065 /* Pluggin.m in Sources */,
 				56039E8E1665AC1700BC8065 /* Conversation.m in Sources */,
 				56039E911665AC2B00BC8065 /* User.m in Sources */,
 				56039E941665AC4900BC8065 /* Identity.m in Sources */,
-=======
 				04D9B836166517E1009DB832 /* ShakeCodeViewController.m in Sources */,
 				04D9B83916651824009DB832 /* ShakeEntityViewController.m in Sources */,
 				04D9B83C16652BD4009DB832 /* ShakeAddressViewController.m in Sources */,
->>>>>>> d2173bb07e592f6dda6a9dadda45bdf58d9d6b0a
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
