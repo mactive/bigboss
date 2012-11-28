@@ -51,8 +51,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     if (self) {
         self.managedObjectContext = context;
         self.title = T(@"Contacts");
-        self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-        self.tableView.separatorColor = RGBCOLOR(200, 200, 200);
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(add:)];
     }
     return self;
@@ -88,11 +86,20 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 #pragma mark View Life Cycles
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+- (void)loadView
+{
+    [self initializeData];
+    
+    [super loadView];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 
-    [self initializeData];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    self.tableView.separatorColor = RGBCOLOR(200, 200, 200);
+
 }
 
 - (void) initializeData
@@ -281,7 +288,6 @@ NSInteger SortIndex(id char1, id char2, void* context)
     CGRect rect;
     // Create an image view for the quarter image.
 	CGRect imageRect = CGRectMake(LEFT_COLUMN_OFFSET, (ROW_HEIGHT - IMAGE_SIDE) / 2.0, IMAGE_SIDE, IMAGE_SIDE);
-	CGRect snsRect;
     
     UIImageView *avatarImage = [[UIImageView alloc] initWithFrame:imageRect];
     avatarImage.tag = AVATAR_TAG;

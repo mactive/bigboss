@@ -188,7 +188,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     user.thumbnailURL = [ServerDataTransformer getThumbnailFromServerJSON:json];
     user.cell = [ServerDataTransformer getCellFromServerJSON:json];
     user.name = [ServerDataTransformer getNicknameFromServerJSON:json];
-    user.type = [NSNumber numberWithInt:IdentityTypeMe];
+    user.type = IdentityTypeMe;
     
     NSMutableDictionary *imageURLDict = [[NSMutableDictionary alloc] initWithCapacity:8];
     for (int i = 1; i <=8; i++) {
@@ -349,7 +349,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
     if (newUser.state != IdentityStateActive) {
         [self populateIdentity:newUser withJSONData:jsonData];
-        newUser.state = [NSNumber numberWithInt:IdentityStateActive];
+        newUser.state = IdentityStateActive;
         
         NSString *thumbnailURL = [ServerDataTransformer getThumbnailFromServerJSON:jsonData];
         if (thumbnailURL == nil || [thumbnailURL isEqualToString:@""]) {

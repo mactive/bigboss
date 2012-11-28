@@ -56,7 +56,6 @@
     [super viewDidLoad];
     self.title = [self.shakeData objectForKey:@"name"];
     
-
         
     self.shakeTimesDict = [[NSMutableDictionary alloc]initWithDictionary:(NSDictionary *)[[NSUserDefaults standardUserDefaults] objectForKey:@"shakeTimesDict"]];
     self.shakeTimes = [[self.shakeTimesDict objectForKey:[self.shakeData objectForKey:@"id"]] intValue];
@@ -67,13 +66,12 @@
     NSURLRequest *urlRequest = [[NSURLRequest alloc]initWithURL:url];
     self.shakeImageView = [[UIImageView alloc] initWithFrame:self.view.bounds];
     
-    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    HUD.delegate = self;
-    HUD.labelText = T(@"正在加载");
+    MBProgressHUD *HUD_t = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    HUD_t.delegate = self;
+    HUD_t.labelText = T(@"正在加载");
     
     [self.shakeImageView setImageWithURLRequest:urlRequest placeholderImage:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-        [self.shakeImageView setImage:image];
-        [HUD hide:YES afterDelay:2];
+        [HUD_t hide:YES afterDelay:2];
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
         // 
     }];

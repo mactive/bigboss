@@ -204,9 +204,9 @@
         newChannel = [NSEntityDescription insertNewObjectForEntityForName:@"Channel" inManagedObjectContext:self.managedObjectContext];
         newChannel.owner = [self appDelegate].me;
         [[ModelHelper sharedInstance] populateIdentity:newChannel withJSONData:jsonData];
-        newChannel.state = [NSNumber numberWithInt:IdentityStatePendingAddSubscription];
+        newChannel.state = IdentityStatePendingAddSubscription;
     } else if (newChannel.state == IdentityStateInactive) {
-        newChannel.state = [NSNumber numberWithInt:IdentityStatePendingAddSubscription];
+        newChannel.state = IdentityStatePendingAddSubscription;
     } else if (newChannel.state == IdentityStatePendingRemoveSubscription) {
         HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
@@ -284,7 +284,7 @@
         [self.view addSubview:HUD];
         HUD.labelText = T(@"退定中");
         
-        channel.state = [NSNumber numberWithInt:IdentityStatePendingRemoveSubscription];
+        channel.state = IdentityStatePendingRemoveSubscription;
         [[self appDelegate].contactListController contentChanged];
 
         [HUD showAnimated:YES whileExecutingBlock:^{

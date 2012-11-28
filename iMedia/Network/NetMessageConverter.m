@@ -106,7 +106,7 @@
     } else {
         Channel *channel = [[ModelHelper sharedInstance] findChannelWithNode:node];
         message.from = channel;
-        conv = channel.conversation;
+        conv = [channel.ownedConversations anyObject];
         
         if (StringHasValue(rateKey)) {
             [[self threadToReceiverJidMap] removeObjectForKey:node];
@@ -150,11 +150,14 @@
         //Channel hasn't been setup
         return nil;
     }
-    if (channel.conversation == nil){
-        channel.conversation = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:context];
-        channel.conversation.type = ConversationTypeMediaChannel;
+    if ([channel.ownedConversations count] == 0){
+        Conversation *conv = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:context];
+        conv.type = ConversationTypeMediaChannel;
+        [channel addOwnedConversationsObject:conv];
     }
-    NSSet *messages = channel.conversation.messages;
+    
+    Conversation *conv = [channel.ownedConversations anyObject];
+    NSSet *messages = conv.messages;
     BOOL isDuplicate = NO;
     NSEnumerator *enumerator = [messages objectEnumerator];
     id obj;
@@ -175,9 +178,9 @@
     msg.type = [NSNumber numberWithInt:MessageTypePublish];
     msg.transportID = itemID;
     
-    channel.conversation.lastMessageSentDate = msg.sentDate;
-    channel.conversation.lastMessageText = summary;
-    [channel.conversation addMessagesObject:msg];
+    conv.lastMessageSentDate = msg.sentDate;
+    conv.lastMessageText = summary;
+    [conv addMessagesObject:msg];
     
     return msg;
 }
