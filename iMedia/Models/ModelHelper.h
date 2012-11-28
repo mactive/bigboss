@@ -11,6 +11,7 @@
 @class User;
 @class Channel;
 @class Identity;
+@class Pluggin;
 @class FriendRequest;
 
 @interface ModelHelper : NSObject

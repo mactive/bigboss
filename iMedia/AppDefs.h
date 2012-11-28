@@ -96,7 +96,8 @@ typedef enum _IdentityType
 {
     IdentityTypeUser = 1,
     IdentityTypeMe      = 2,
-    IdentityTypeChannel = 3
+    IdentityTypeChannel = 3,
+    IdentityTypePlugginFriendRequest = 10
 } IdentityType;
 
 typedef enum _IdentityState
@@ -107,7 +108,8 @@ typedef enum _IdentityState
     IdentityStatePendingRemoveSubscription  = 4,
     IdentityStatePendingRemoveFriend    =5,
     IdentityStatePendingServerDataUpdate = 6,
-    IdentityStateIsPluggin    = 10,
+    IdentityStatePlugginIsEnabled    = 10,
+    IdentityStatePlugginIsDisabled   = 11,
     IdentityStateInactive   = 100
 } IdentityState;
 

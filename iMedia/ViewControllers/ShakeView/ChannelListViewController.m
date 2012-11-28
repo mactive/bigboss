@@ -296,7 +296,7 @@ NSInteger intSort2(id num1, id num2, void *context)
     Channel *aChannel = [[ModelHelper sharedInstance]findChannelWithNode:nodeString];
     // if the user already exist - then show the user
     
-    if (aChannel != nil && aChannel.state.intValue == IdentityStateActive) {
+    if (aChannel != nil && aChannel.state == IdentityStateActive) {
         // it is a buddy on our contact list
         
         ChannelViewController *controller = [[ChannelViewController alloc] initWithNibName:nil bundle:nil];

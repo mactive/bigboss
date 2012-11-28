@@ -301,7 +301,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     // if the user already exist - then show the user
     User* aUser = [[ModelHelper sharedInstance] findUserWithGUID:guidString];
     
-    if (aUser != nil && aUser.state.intValue == IdentityStateActive) {
+    if (aUser != nil && aUser.state == IdentityStateActive) {
         // it is a buddy on our contact list
         ContactDetailController *controller = [[ContactDetailController alloc] initWithNibName:nil bundle:nil];
         controller.user = aUser;

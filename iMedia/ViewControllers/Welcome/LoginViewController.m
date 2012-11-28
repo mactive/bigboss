@@ -116,7 +116,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             {
                 DDLogVerbose(@"%@: %@ cannot connect to XMPP server", THIS_FILE, THIS_METHOD);
             }            
-            [[self appDelegate] createMeWithUsername:usernameField.text password:passwordField.text jid:fulljid jidPasswd:jPassword andGUID:guid withBlock:^(id responseObject, NSError *error) {
+            [[self appDelegate] createMeAndOtherOneTimeObjectsWithUsername:usernameField.text password:passwordField.text jid:fulljid jidPasswd:jPassword andGUID:guid withBlock:^(id responseObject, NSError *error) {
                 
                 [HUD hide:YES];
                 

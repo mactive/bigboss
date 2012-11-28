@@ -205,16 +205,16 @@
         newChannel.owner = [self appDelegate].me;
         [[ModelHelper sharedInstance] populateIdentity:newChannel withJSONData:jsonData];
         newChannel.state = [NSNumber numberWithInt:IdentityStatePendingAddSubscription];
-    } else if (newChannel.state.intValue == IdentityStateInactive) {
+    } else if (newChannel.state == IdentityStateInactive) {
         newChannel.state = [NSNumber numberWithInt:IdentityStatePendingAddSubscription];
-    } else if (newChannel.state.intValue == IdentityStatePendingRemoveSubscription) {
+    } else if (newChannel.state == IdentityStatePendingRemoveSubscription) {
         HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
         HUD.mode = MBProgressHUDModeCustomView;
         HUD.labelText = T(@"网络错误，请稍候重试");
         [HUD hide:YES afterDelay:2];
         return;
-    } else if (newChannel.state.intValue == IdentityStateActive) {
+    } else if (newChannel.state == IdentityStateActive) {
         HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
         HUD.mode = MBProgressHUDModeCustomView;
@@ -226,7 +226,7 @@
         [self.cancelButton setHidden:YES];
 
         return ;
-    } else if (newChannel.state.intValue == IdentityStatePendingAddSubscription){
+    } else if (newChannel.state == IdentityStatePendingAddSubscription){
     
     } else {
         NSLog(@"CRITICAL ERROR: new channel STATE wrong (%@)", newChannel);
@@ -269,7 +269,7 @@
         return;
     }
     
-    if (self.channel.state.intValue != IdentityStateActive && self.channel.state.intValue != IdentityStatePendingRemoveSubscription) {
+    if (self.channel.state != IdentityStateActive && self.channel.state != IdentityStatePendingRemoveSubscription) {
         HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
         HUD.mode = MBProgressHUDModeCustomView;

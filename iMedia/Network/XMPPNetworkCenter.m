@@ -515,12 +515,12 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
         XMPPUserMemoryStorageObject* user = [self.xmppRosterStorage userForJID:[presence from]];
         User* thisUser = [[ModelHelper sharedInstance] findUserWithEPostalID:ePostalID];
         if (user != nil && [user isBuddy]) {
-            if (thisUser != nil && thisUser.state.intValue == IdentityStateActive) {
+            if (thisUser != nil && thisUser.state == IdentityStateActive) {
                 [self acceptPresenceSubscriptionRequestFrom:ePostalID andAddToRoster:NO];
             } else {
                 [self acceptPresenceSubscriptionRequestFrom:ePostalID andAddToRoster:YES];
             }
-        } else if ((thisUser == nil ) || thisUser.state.intValue != IdentityStateActive) {
+        } else if ((thisUser == nil ) || thisUser.state != IdentityStateActive) {
             NSNotification *myNotification =
             [NSNotification notificationWithName:NEW_FRIEND_NOTIFICATION object:[[presence from] bare]];
             [[NSNotificationQueue defaultQueue]
@@ -528,7 +528,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
              postingStyle:NSPostWhenIdle
              coalesceMask:NSNotificationNoCoalescing
              forModes:nil];
-        } else if (thisUser.state.intValue == IdentityStateActive) {
+        } else if (thisUser.state == IdentityStateActive) {
             // this is the case that the contact have removed user, and subscriptions are revoked both ways
             thisUser.state = [NSNumber numberWithInt:IdentityStatePendingAddFriend];
             [self acceptPresenceSubscriptionRequestFrom:ePostalID andAddToRoster:YES];
@@ -536,7 +536,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
         
     } else if (subscriptionResult != nil && [subscriptionResult isEqualToString:@"unsubscribe"]) {
         User* thisUser = [[ModelHelper sharedInstance] findUserWithEPostalID:ePostalID];
-        if (thisUser != nil &&  thisUser.state.intValue == IdentityStatePendingAddFriend)
+        if (thisUser != nil &&  thisUser.state == IdentityStatePendingAddFriend)
         {
             thisUser.state = [NSNumber numberWithInt:IdentityStateInactive];
             [self removeBuddy:ePostalID withCallbackBlock:nil];
@@ -642,7 +642,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     }
     
     
-    if (thisUser.state.intValue != IdentityStateActive)
+    if (thisUser.state != IdentityStateActive)
     {
         thisUser.ePostalID = [user.jid bare];
         thisUser.displayName = [thisUser.ePostalID substringToIndex:[thisUser.ePostalID rangeOfString: @"@"].location];
@@ -669,11 +669,11 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     if (thisUser == nil) {
         // weird - log an error
         DDLogError(@"user have to exist! ERROR NEED CHECK: %@", user);
-    } else if (thisUser.state.intValue == IdentityStateActive || thisUser.state.intValue == IdentityStatePendingRemoveFriend) {
+    } else if (thisUser.state == IdentityStateActive || thisUser.state == IdentityStatePendingRemoveFriend) {
         thisUser.state = [NSNumber numberWithInt:IdentityStateInactive];
 //        MOCSave(_managedObjectContext);
         [[self appDelegate].contactListController contentChanged];
-    } else if (thisUser.state.intValue == IdentityStatePendingAddFriend) {
+    } else if (thisUser.state == IdentityStatePendingAddFriend) {
         thisUser.state = [NSNumber numberWithInt:IdentityStateInactive];
         //        MOCSave(_managedObjectContext);
         [[self appDelegate].contactListController contentChanged];
@@ -736,7 +736,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
             [[AppNetworkAPIClient sharedClient] updateIdentity:userNS withBlock:nil];
         } else if ([array count] == 1) {
             User *user = [array objectAtIndex:0];
-            if (user.state.intValue == IdentityStatePendingServerDataUpdate) {
+            if (user.state == IdentityStatePendingServerDataUpdate) {
                 [[AppNetworkAPIClient sharedClient] updateIdentity:user withBlock:nil];
             }
         }
@@ -776,7 +776,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
         if (thisUser == nil) {
             // weird - log an error
             DDLogError(@"user have to exist! ERROR NEED CHECK: %@", user);
-        } else if (thisUser.state.intValue == IdentityStateActive || thisUser.state.intValue == IdentityStatePendingRemoveFriend) {
+        } else if (thisUser.state == IdentityStateActive || thisUser.state == IdentityStatePendingRemoveFriend) {
             thisUser.state = [NSNumber numberWithInt:IdentityStateInactive];
             [[self appDelegate].contactListController contentChanged];
         }
@@ -787,7 +787,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
         }
         
         
-        if ( thisUser.state.intValue != IdentityStateActive)
+        if ( thisUser.state != IdentityStateActive)
         {
             thisUser.ePostalID = [user.jid bare];
             thisUser.displayName = [thisUser.ePostalID substringToIndex:[thisUser.ePostalID rangeOfString: @"@"].location];
@@ -894,7 +894,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     [[AppNetworkAPIClient sharedClient] postPath:POST_DATA_PATH parameters:postDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
             DDLogVerbose(@"set subscription succeeded: %@", responseObject);
         
-        if (channel && channel.state.intValue != IdentityStateActive) {
+        if (channel && channel.state != IdentityStateActive) {
             channel.state = [NSNumber numberWithInt:IdentityStateActive];
             channel.subID = subID;
             [[self appDelegate].contactListController contentChanged];
@@ -937,7 +937,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     else
         channel = [[ModelHelper sharedInstance] findChannelWithNode:nodeStr];
     
-    if (!channel || channel.state.intValue == IdentityStateInactive) {
+    if (!channel || channel.state == IdentityStateInactive) {
         return;
     }
 
@@ -950,7 +950,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
         DDLogVerbose(@"remove subscription succeeded: %@", responseObject);
         
         //unsubscribe this channel
-        if (channel && channel.state.intValue != IdentityStateInactive) {
+        if (channel && channel.state != IdentityStateInactive) {
             channel.state = [NSNumber numberWithInt:IdentityStateInactive];
             channel.subID = subID;
             [[self appDelegate].contactListController contentChanged];

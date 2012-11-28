@@ -19,6 +19,11 @@
 #import "UIImageView+AFNetworking.h"
 #import "XMPPNetworkCenter.h"
 #import "AppNetworkAPIClient.h"
+#import "FriendRequest.h"
+#import "ModelHelper.h"
+#import "Pluggin.h"
+#import "ServerDataTransformer.h"
+#import "FriendRequestListViewController.h"
 
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
@@ -71,6 +76,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 @synthesize editingIndexPath;
 @synthesize unreadMessageCount;
 @synthesize chatDetailController = _detailController;
+@synthesize friendRequestArray;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -83,6 +89,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(newMessageReceived:)
                                                      name:NEW_MESSAGE_NOTIFICATION object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(friendRequestReceived:)
+                                                     name:NEW_FRIEND_NOTIFICATION object:nil];
+
     }
     return self;
 }
@@ -119,6 +129,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
+
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark NSFetchedResultsController
@@ -328,23 +340,32 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    _detailController.conversation = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-    _detailController.managedObjectContext = self.managedObjectContext;
-    [_detailController setHidesBottomBarWhenPushed:YES];
-    [self.navigationController pushViewController:_detailController animated:YES];
-  
+    Conversation* conv = [[self fetchedResultsController] objectAtIndexPath:indexPath];
+    if (conv.type == IdentityTypePlugginFriendRequest) {
+        FriendRequestListViewController *controller = [[FriendRequestListViewController alloc] initWithNibName:nil bundle:nil];
+        controller.friendRequestArray = self.friendRequestArray;
+        [self.navigationController pushViewController:controller animated:YES];
+        conv.unreadMessagesCount = 0;
+
+    } else {
+        _detailController.conversation = conv;
+        _detailController.managedObjectContext = self.managedObjectContext;
+        [_detailController setHidesBottomBarWhenPushed:YES];
+        [self.navigationController pushViewController:_detailController animated:YES];
+
+    }
 }
 
 - (void)chatWithIdentity:(id)obj
 {
     if ([obj isKindOfClass:[User class]]) {
         User* user = obj;
-        NSSet *convs = user.conversations;
+        NSSet *convs = user.inConversations;
         NSEnumerator *enumerator = [convs objectEnumerator];
         Conversation *obj ;
         BOOL conversationFound = NO;
         while (obj = [enumerator nextObject]) {
-            if ([obj.users count] == 1) {
+            if ([obj.attendees count] == 1) {
                 _detailController.conversation = obj;
                 conversationFound = YES;
                 break;
@@ -353,12 +374,14 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
         if (conversationFound == NO) {
             _detailController.conversation = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:self.managedObjectContext];
-            [_detailController.conversation addUsersObject:user];
+            [_detailController.conversation addAttendeesObject:user];
+            _detailController.conversation.type = ConversationTypeSingleUserChat;
         }
     } else if ([obj isKindOfClass:[Channel class]]) {
         Channel *channel = obj;
         if (channel.conversation == nil) {
             channel.conversation = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:self.managedObjectContext];
+            channel.conversation.type = ConversationTypeMediaChannel;
         }
         _detailController.conversation = channel.conversation;
 
@@ -472,15 +495,17 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	// Set the conv name.
 	label = (UILabel *)[cell viewWithTag:NAME_TAG];
     label.text = @"";
-    if (conv.channel != nil) {
-        label.text = conv.channel.displayName;
+    if (conv.type == ConversationTypePlugginFriendRequest) {
+        label.text = conv.ownerEntity.displayName;
+    } else if (conv.type == ConversationTypeMediaChannel) {
+        label.text = conv.ownerEntity.displayName;
+    } else if (conv.type == ConversationTypeSingleUserChat) {
+        User* anUser = [conv.attendees anyObject];
+        label.text = [label.text stringByAppendingFormat:@"%@ ", anUser.displayName];
     } else {
-        NSEnumerator *enumerator = [conv.users objectEnumerator];
-        User* anUser;
-        while (anUser = [enumerator nextObject]) {
-            label.text = [label.text stringByAppendingFormat:@"%@ ", anUser.displayName];
-        }
+        DDLogError(@"FIX: unhandled conversation type");
     }
+    
     // set the last msg text
     label = (UILabel *)[cell viewWithTag:SUMMARY_TAG];
     label.text = conv.lastMessageText;
@@ -494,8 +519,23 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	
 	// Set the image.
 	UIImageView *imageView = (UIImageView *)[cell viewWithTag:IMAGE_TAG];
-    if (conv.channel == nil) {
-        User *user = [conv.users anyObject];
+    if (conv.type == ConversationTypePlugginFriendRequest) {
+        [imageView setImage:conv.ownerEntity.thumbnailImage];
+    } else if (conv.type == ConversationTypeMediaChannel) {
+        if (conv.ownerEntity.thumbnailImage) {
+            [imageView setImage:conv.ownerEntity.thumbnailImage];
+        } else {
+            [[AppNetworkAPIClient sharedClient] loadImage:conv.ownerEntity.thumbnailURL withBlock:^(UIImage *image, NSError *error) {
+                if (image) {
+                    conv.ownerEntity.thumbnailImage = image;
+                    [imageView setImage:conv.ownerEntity.thumbnailImage];
+                } else {
+                    [imageView setImage:[UIImage imageNamed:@"placeholder_company.png"]];
+                }
+            }];
+        }
+    } else if (conv.type == ConversationTypeSingleUserChat) {
+        User *user = [conv.attendees anyObject];
         if (user.thumbnailImage) {
             [imageView setImage:user.thumbnailImage];
         } else {
@@ -509,19 +549,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             }];
         }
     } else {
-        if (conv.channel.thumbnailImage) {
-            [imageView setImage:conv.channel.thumbnailImage];
-        } else {
-            [[AppNetworkAPIClient sharedClient] loadImage:conv.channel.thumbnailURL withBlock:^(UIImage *image, NSError *error) {
-                if (image) {
-                    conv.channel.thumbnailImage = image;
-                    [imageView setImage:conv.channel.thumbnailImage];
-                } else {
-                    [imageView setImage:[UIImage imageNamed:@"placeholder_company.png"]];
-                }
-            }];
-        }
-    }
+        DDLogError(@"FIX: unhandled conversation type");
+    }    
 }
 
 - (void)newMessageReceived:(NSNotification *)notification
@@ -534,6 +563,87 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     self.tabBarItem.badgeValue = [NSString stringWithFormat:@"%d", self.unreadMessageCount];
     [self.tableView reloadData];
 }
+
+- (void) initFriendRequestDictFromDB
+{
+    // Need to sort the returned value, because
+    NSManagedObjectContext *moc = self.managedObjectContext;
+    NSEntityDescription *entityDescription = [NSEntityDescription
+                                              entityForName:@"FriendRequest" inManagedObjectContext:moc];
+    NSSortDescriptor *sortDesc = [NSSortDescriptor sortDescriptorWithKey:@"requestDate" ascending:YES];
+    NSArray *sortDescArray = [NSArray arrayWithObject:sortDesc];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDescription];
+    [request setSortDescriptors:sortDescArray];
+    
+    NSError *error = nil;
+    NSArray *array = [moc executeFetchRequest:request error:&error];
+    
+    self.friendRequestArray = [NSMutableArray arrayWithArray:array];
+}
+
+
+- (void)friendRequestReceived:(NSNotification *)notification
+{
+    if (self.friendRequestArray == nil) {
+        [self initFriendRequestDictFromDB];
+    }
+    
+    NSArray *allConvs = _fetchedResultsController.fetchedObjects;
+    Conversation* conv = nil;
+    for (int i = 0; i < [allConvs count]; i++) {
+        Conversation* aConv = [allConvs objectAtIndex:i];
+        if (aConv.type == ConversationTypePlugginFriendRequest) {
+            conv = aConv;
+            break;
+        }
+    }
+    
+    if (conv == nil) {
+        conv =  [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:self.managedObjectContext];
+        conv.type = ConversationTypePlugginFriendRequest;
+        conv.ownerEntity = [self appDelegate].friendRequestPluggin;
+    }
+    
+    NSString* fromJid = [notification object];
+    
+    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: fromJid, @"jid", @"2", @"op", nil];
+    
+    [[AppNetworkAPIClient sharedClient] getPath:GET_DATA_PATH parameters:getDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        DDLogVerbose(@"friend request - get user %@ data received: %@", fromJid, responseObject);
+        
+        NSString* type = [responseObject valueForKey:@"type"];
+        if ([type isEqualToString:@"user"]) {
+            // filter off duplicates
+            BOOL exists = false;
+            for (int i = 0; i < [self.friendRequestArray count]; i++) {
+                FriendRequest *request = [self.friendRequestArray objectAtIndex:i];
+                if ([request.requesterEPostalID isEqualToString:fromJid] &&
+                    (request.state == FriendRequestUnprocessed)) {
+                    exists = YES;
+                }
+            }
+            if (!exists) {
+                FriendRequest *newFriendRequest = [[ModelHelper sharedInstance] newFriendRequestWithEPostalID:fromJid andJson:responseObject];
+                MOCSave(self.managedObjectContext);
+                [self.friendRequestArray addObject:newFriendRequest];
+            }
+            
+            conv.lastMessageSentDate = [NSDate date];
+            conv.unreadMessagesCount += 1;
+            conv.lastMessageText = [NSString stringWithFormat:@"%@请求加你为好友", [ServerDataTransformer getNicknameFromServerJSON:responseObject]];
+            
+            [self contentChanged];
+        }
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        //
+        DDLogVerbose(@"error received: %@", error);
+    }];
+    
+    
+}
+
 
 - (void)contentChanged
 {

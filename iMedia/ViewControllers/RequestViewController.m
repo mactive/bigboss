@@ -210,9 +210,6 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
-    [self appDelegate].functionListController.newFriendRequestCount = 0;
-    [self appDelegate].functionListController.tabBarItem.badgeValue = nil ;
 }
 
 - (void)viewDidUnload

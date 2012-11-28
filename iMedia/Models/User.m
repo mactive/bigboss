@@ -2,7 +2,7 @@
 //  User.m
 //  iMedia
 //
-//  Created by Xiaosi Li on 10/30/12.
+//  Created by Xiaosi Li on 11/28/12.
 //  Copyright (c) 2012 Li Xiaosi. All rights reserved.
 //
 
@@ -12,13 +12,13 @@
 
 @implementation User
 
-@dynamic gender;
-@dynamic name;
-@dynamic signature;
 @dynamic birthdate;
-@dynamic hometown;
-@dynamic selfIntroduction;
 @dynamic career;
-@dynamic conversations;
+@dynamic gender;
+@dynamic hometown;
+@dynamic name;
+@dynamic selfIntroduction;
+@dynamic signature;
+@dynamic inConversations;
 
 @end

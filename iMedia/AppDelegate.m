@@ -17,6 +17,7 @@
 #import "Avatar.h"
 #import "Channel.h"
 #import "Conversation.h"
+#import "Pluggin.h"
 #import "AppDefs.h"
 #import <CocoaPlant/NSManagedObject+CocoaPlant.h>
 #import "AFNetworkActivityIndicatorManager.h"
@@ -261,16 +262,16 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
                     aChannel = [NSEntityDescription insertNewObjectForEntityForName:@"Channel" inManagedObjectContext:_managedObjectContext];
                     aChannel.owner = self.me;
                     [[ModelHelper sharedInstance] populateIdentity:aChannel withJSONData:channelInfo];
-                    aChannel.state = [NSNumber numberWithInt:IdentityStateActive];
+                    aChannel.state = IdentityStateActive;
                     
-                } else if (aChannel.state.intValue == IdentityStateActive){
+                } else if (aChannel.state == IdentityStateActive){
                     // already exists and good, just refresh content, no special handing here
                     [[ModelHelper sharedInstance] populateIdentity:aChannel withJSONData:channelInfo];
                     
-                } else if (aChannel.state.intValue == IdentityStatePendingAddSubscription || aChannel.state.intValue == IdentityStateInactive) {
+                } else if (aChannel.state == IdentityStatePendingAddSubscription || aChannel.state == IdentityStateInactive) {
                     // this should not happen, but we can sub again to clear the state;
                     [channelsToSubscribe addObject:aChannel];
-                } else if (aChannel.state.intValue == IdentityStatePendingRemoveSubscription) {
+                } else if (aChannel.state == IdentityStatePendingRemoveSubscription) {
                     [channelsToUnsubscribe addObject:aChannel];
                 }
                 
@@ -281,13 +282,13 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             // Now i will go through all local channels to check their status
             [self.me.channels enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
                 Channel* aChannel = obj;
-                if (aChannel.state.intValue == IdentityStateActive) {
+                if (aChannel.state == IdentityStateActive) {
                     if ([allServerChannels objectForKey:aChannel.node] == nil) {
                         [channelsToUnsubscribe addObject:aChannel];
                     }
-                } else if (aChannel.state.intValue == IdentityStatePendingAddSubscription) {
+                } else if (aChannel.state == IdentityStatePendingAddSubscription) {
                     [channelsToSubscribe addObject:aChannel];
-                } else if (aChannel.state.intValue == IdentityStatePendingRemoveSubscription) {
+                } else if (aChannel.state == IdentityStatePendingRemoveSubscription) {
                     [channelsToUnsubscribe addObject:aChannel];
                 }
             }];
@@ -329,17 +330,17 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
                             aChannel = [NSEntityDescription insertNewObjectForEntityForName:@"Channel" inManagedObjectContext:_managedObjectContext];
                             aChannel.owner = self.me;
                             [[ModelHelper sharedInstance] populateIdentity:aChannel withJSONData:channelInfo];
-                            aChannel.state = [NSNumber numberWithInt:IdentityStatePendingAddSubscription];
+                            aChannel.state = IdentityStatePendingAddSubscription;
                             [channelsToSubscribe addObject:aChannel];
                             
-                        } else if (aChannel.state.intValue == IdentityStateActive){
+                        } else if (aChannel.state == IdentityStateActive){
                             // already exists and good, just refresh content, no special handing here
                             [[ModelHelper sharedInstance] populateIdentity:aChannel withJSONData:channelInfo];
                             
-                        } else if (aChannel.state.intValue == IdentityStatePendingAddSubscription || aChannel.state.intValue == IdentityStateInactive) {
+                        } else if (aChannel.state == IdentityStatePendingAddSubscription || aChannel.state == IdentityStateInactive) {
                             // this should not happen, but we can sub again to clear the state;
                             [channelsToSubscribe addObject:aChannel];
-                        } else if (aChannel.state.intValue == IdentityStatePendingRemoveSubscription) {
+                        } else if (aChannel.state == IdentityStatePendingRemoveSubscription) {
                             [channelsToUnsubscribe addObject:aChannel];
                         }
                         
@@ -402,7 +403,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
 }
 
--(void)createMeWithUsername:(NSString *)username password:(NSString *)passwd jid:(NSString *)jidStr jidPasswd:(NSString *)jidPass andGUID:(NSString *)guid withBlock:(void (^)(id responseObject, NSError *error))block
+-(void)createMeAndOtherOneTimeObjectsWithUsername:(NSString *)username password:(NSString *)passwd jid:(NSString *)jidStr jidPasswd:(NSString *)jidPass andGUID:(NSString *)guid withBlock:(void (^)(id responseObject, NSError *error))block
 {
     if(self.me == nil) {
         self.me = [NSEntityDescription insertNewObjectForEntityForName:@"Me" inManagedObjectContext:_managedObjectContext];
@@ -418,19 +419,26 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         self.me.ePostalID = [bareJid bare];
         self.me.fullEPostalID = jidStr;
         self.me.ePostalPassword = jidPass;
-        self.me.type = [NSNumber numberWithInt:IdentityTypeMe];
+        self.me.type = IdentityTypeMe;
         self.me.displayName = jidStr;
         self.me.username = username;
         self.me.password = passwd;
         self.me.guid = guid;
-        self.me.state = [NSNumber numberWithInt:IdentityStatePendingServerDataUpdate];
+        self.me.state = IdentityStatePendingServerDataUpdate;
         self.me.birthdate = nil;
         self.me.selfIntroduction = @"";
         self.me.signature = @"";
         self.me.career = @"";
-        self.me.config = [NSNumber numberWithUnsignedLongLong:[ConfigSetting getDefaultConfig]];
+        self.me.config = [ConfigSetting getDefaultConfig];
         
         [self updateMeWithBlock:block];
+        
+        self.friendRequestPluggin = [NSEntityDescription insertNewObjectForEntityForName:@"Pluggin" inManagedObjectContext:_managedObjectContext];
+        self.friendRequestPluggin.displayName = T(@"好友请求消息");
+        self.friendRequestPluggin.state = IdentityStatePlugginIsEnabled;
+        self.friendRequestPluggin.type = IdentityTypePlugginFriendRequest;
+        self.friendRequestPluggin.thumbnailImage = [UIImage imageNamed:@"company_face.png"];
+        
         
         MOCSave(_managedObjectContext);
     }

@@ -710,7 +710,7 @@
     HUD.labelText = T(@"请求已发送");
     [HUD hide:YES afterDelay:2];
 
-    if (newUser.state.intValue != IdentityStateActive) {
+    if (newUser.state != IdentityStateActive) {
         [[ModelHelper sharedInstance] populateIdentity:newUser withJSONData:jsonData];
         newUser.state = [NSNumber numberWithInt:IdentityStatePendingAddFriend];
         NSLog(@"userJid %@",userJid);
@@ -722,7 +722,7 @@
 
 -(void)deleteUserButtonPushed:(id)sender
 {
-    if (self.user.state.intValue != IdentityStateInactive) {
+    if (self.user.state != IdentityStateInactive) {
         self.user.state = [NSNumber numberWithInt:IdentityStatePendingRemoveFriend];
     }
     

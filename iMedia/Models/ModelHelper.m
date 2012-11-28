@@ -12,6 +12,7 @@
 #import "Avatar.h"
 #import "Channel.h"
 #import "ImageRemote.h"
+#import "Pluggin.h"
 #import "ServerDataTransformer.h"
 #import "FriendRequest.h"
 #import "NSObject+SBJson.h"
@@ -26,6 +27,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 #endif
 
 @interface ModelHelper ()
+{
+}
 
 - (void)populateUser:(User *)user withJSONData:(NSString *)json;
 - (void)populateMe:(Me *)user withJSONData:(NSString *)json;
@@ -290,7 +293,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             imageRemote.sequence = 0;
         }
     }
-    user.type = [NSNumber numberWithInt:IdentityTypeUser];
+    user.type = IdentityTypeUser;
 }
 
 
@@ -306,7 +309,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     channel.selfIntroduction = [ServerDataTransformer getSelfIntroductionFromServerJSON:json];
     channel.lastGPSUpdated = [ServerDataTransformer getLastGPSUpdatedFromServerJSON:json];
 
-    channel.type = [NSNumber numberWithInt:IdentityTypeChannel];
+    channel.type = IdentityTypeChannel;
 }
 
 - (User *)createNewUser
@@ -317,7 +320,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         image.sequence = 0;
         [newUser addImagesObject:image];
     }
-    newUser.type = [NSNumber numberWithInt:IdentityTypeUser];
+    newUser.type = IdentityTypeUser;
     return newUser;
 }
 
@@ -344,7 +347,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
     NSLog(@"NewUSer created or found %@",newUser);
     
-    if (newUser.state.intValue != IdentityStateActive) {
+    if (newUser.state != IdentityStateActive) {
         [self populateIdentity:newUser withJSONData:jsonData];
         newUser.state = [NSNumber numberWithInt:IdentityStateActive];
         

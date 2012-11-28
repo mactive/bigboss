@@ -253,11 +253,11 @@
 #warning  -  this block end
 
     // setup self.title
-    NSEnumerator *userEnumerator = [conversation.users objectEnumerator];
+    NSEnumerator *userEnumerator = [conversation.attendees objectEnumerator];
     
     User *anUser = [userEnumerator nextObject];
     if (anUser == nil) {
-        self.title = conversation.channel.displayName;
+        self.title = conversation.ownerEntity.displayName;
     } else {
         self.title = anUser.displayName;
     }

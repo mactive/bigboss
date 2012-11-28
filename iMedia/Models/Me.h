@@ -10,6 +10,8 @@
 #import <CoreData/CoreData.h>
 #import "Identity.h"
 
+#define THUMBNAIL_IMAGE_CHANGE_NOTIFICATION @"THUMBNAIL_IMAGE_CHANGE_NOTIFICATION"  
+
 @class Avatar, Channel;
 
 @interface Me : Identity
@@ -29,7 +31,7 @@
 @property (nonatomic, retain) NSString * fullEPostalID;
 @property (nonatomic, retain) NSSet *avatars;
 @property (nonatomic, retain) NSSet *channels;
-@property (nonatomic, retain) NSNumber *config;
+@property (nonatomic) u_int64_t config;
 
 -(NSArray *)getOrderedAvatars;
 

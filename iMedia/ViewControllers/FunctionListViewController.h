@@ -10,8 +10,6 @@
 
 @interface FunctionListViewController : UIViewController
 
-@property (nonatomic, strong) NSMutableArray* friendRequestArray;
 @property (nonatomic, strong) NSManagedObjectContext* managedObjectContext;
-@property (nonatomic) int newFriendRequestCount;
 
 @end

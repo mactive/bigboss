@@ -15,6 +15,7 @@
 @class SettingViewController;
 @class Message;
 @class Me;
+@class Pluggin;
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
@@ -34,9 +35,12 @@
 // initial data population will be done.
 @property (strong, nonatomic) Me *me;
 
+// Here is a list of all available pluggins;
+@property (strong, nonatomic) Pluggin *friendRequestPluggin;
+
 - (void)startMainSession;
 - (void)startIntroSession;
-- (void)createMeWithUsername:(NSString *)username password:(NSString *)passwd jid:(NSString *)jidStr jidPasswd:(NSString *)jidPass andGUID:(NSString *)guid withBlock:(void (^)(id responseObject, NSError *error))block;
+- (void)createMeAndOtherOneTimeObjectsWithUsername:(NSString *)username password:(NSString *)passwd jid:(NSString *)jidStr jidPasswd:(NSString *)jidPass andGUID:(NSString *)guid withBlock:(void (^)(id responseObject, NSError *error))block;
 - (NSManagedObjectContext *)context;
 - (void) disableLeftBarButtonItemOnNavbar:(BOOL)disable;
 

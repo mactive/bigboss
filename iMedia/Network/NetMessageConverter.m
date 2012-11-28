@@ -86,9 +86,9 @@
     Conversation *conv;
     if (from != nil) {
         message.from = from;
-        NSSet *results = [from.conversations objectsPassingTest:^(id obj, BOOL *stop){
+        NSSet *results = [from.inConversations objectsPassingTest:^(id obj, BOOL *stop){
             Conversation *conv = (Conversation *)obj;
-            if ([conv.users count] == 1) {
+            if ([conv.attendees count] == 1) {
                 return YES;
             }
             return NO;
@@ -97,7 +97,8 @@
         if ([results count] == 0)
         {
             conv = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:context];
-            [conv addUsersObject:from];
+            [conv addAttendeesObject:from];
+            conv.type = ConversationTypeSingleUserChat;
         } else {
             conv = [results anyObject];
         }
@@ -151,6 +152,7 @@
     }
     if (channel.conversation == nil){
         channel.conversation = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:context];
+        channel.conversation.type = ConversationTypeMediaChannel;
     }
     NSSet *messages = channel.conversation.messages;
     BOOL isDuplicate = NO;
@@ -198,17 +200,18 @@
     // however, in case the rating request is LOST, we need a way to recover. The best simulation so far is to use a
     // session auto expire with time. Say, if within an hour there has been no exchange between user and cs, we stop this session
     // and start a new session
-    if (message.conversation.channel != nil) {
-        NSString* csJID = [[self threadToReceiverJidMap] valueForKey:message.conversation.channel.node];
-        NSDate *last_talk_date = [[self threadToLastConversationDateMap] valueForKey:message.conversation.channel.node];
+    if (message.conversation.type == ConversationTypeMediaChannel) {
+        Channel* channel = (Channel *)message.conversation.ownerEntity;
+        NSString* csJID = [[self threadToReceiverJidMap] valueForKey:channel.node];
+        NSDate *last_talk_date = [[self threadToLastConversationDateMap] valueForKey:channel.node];
         NSTimeInterval diff = [last_talk_date timeIntervalSinceNow];
         if (StringHasValue(csJID) && (abs(diff) > kOneHourInSeconds)) {
             toJid = csJID;
         } else {
-            toJid = message.conversation.channel.csContactPostalID;
+            toJid = channel.csContactPostalID;
         }
-    } else {
-        User *to = [message.conversation.users anyObject]; // here we suppose a conversation only between two parties
+    } else if (message.conversation.type == ConversationTypeSingleUserChat) {
+        User *to = [message.conversation.attendees anyObject]; // here it's a conversation only between two parties
         toJid = to.ePostalID;
     }
     
@@ -216,8 +219,9 @@
     NSXMLElement *body = [NSXMLElement elementWithName:@"body" stringValue:message.text];
     [msg  addChild:body];
     
-    if (message.conversation.channel != nil) {
-        NSXMLElement *thread = [NSXMLElement elementWithName:@"thread" stringValue:message.conversation.channel.node];
+    if (message.conversation.type == ConversationTypeMediaChannel) {
+        Channel* channel = (Channel *) message.conversation.ownerEntity;
+        NSXMLElement *thread = [NSXMLElement elementWithName:@"thread" stringValue:channel.node];
         [msg addChild:thread];
     }
     

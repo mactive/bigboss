@@ -2,11 +2,12 @@
 //  Identity.m
 //  iMedia
 //
-//  Created by Xiaosi Li on 11/2/12.
+//  Created by Xiaosi Li on 11/28/12.
 //  Copyright (c) 2012 Li Xiaosi. All rights reserved.
 //
 
 #import "Identity.h"
+#import "Conversation.h"
 #import "ImageRemote.h"
 
 
@@ -16,14 +17,15 @@
 @dynamic displayName;
 @dynamic ePostalID;
 @dynamic guid;
+@dynamic last_serverupdate_on;
 @dynamic lastGPSLocation;
 @dynamic lastGPSUpdated;
 @dynamic state;
+@dynamic thumbnailImage;
 @dynamic thumbnailURL;
 @dynamic type;
-@dynamic thumbnailImage;
 @dynamic images;
-@dynamic last_serverupdate_on;
+@dynamic ownedConversations;
 
 -(NSArray *)getOrderedImages
 {
@@ -43,5 +45,6 @@
     
     return result;
 }
+
 
 @end

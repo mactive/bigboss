@@ -241,8 +241,8 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     UIImage *image = [savedObjects objectForKey:@"image"];
     UIImage *thumbnail = [savedObjects objectForKey:@"thumbnail"];
     
-    NSString *url = [NSString stringWithFormat:@"http://wstone.b0.upaiyun.com%@?%.0f", upYun.name, [[NSDate date] timeIntervalSince1970]];
-    NSString *thumbnailURL = [NSString stringWithFormat:@"http://wstone.b0.upaiyun.com%@!tm?%.0f", upYun.name, [[NSDate date] timeIntervalSince1970]];
+    NSString *url = [NSString stringWithFormat:@"http://cst01.b0.upaiyun.com%@?%.0f", upYun.name, [[NSDate date] timeIntervalSince1970]];
+    NSString *thumbnailURL = [NSString stringWithFormat:@"http://cst01.b0.upaiyun.com%@!tm?%.0f", upYun.name, [[NSDate date] timeIntervalSince1970]];
     
     avatar.image = image;
     avatar.thumbnail = thumbnail;
@@ -270,8 +270,8 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     UpYun *uy = [[UpYun alloc] init];
     uy.delegate = self;
     uy.expiresIn = 100;
-    uy.bucket = @"wstone";
-    uy.passcode = @"MIovWfblZEf/dLP2y9SsNUu3uig=";
+    uy.bucket = @"cst01";
+    uy.passcode = @"JRamioTNAQo+4xQxGenZdNYmAio=";
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     //    [params setObject:@"0,1000" forKey:@"content-length-range"];
     //    [params setObject:@"png" forKey:@"allow-file-type"];
@@ -445,7 +445,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
                 }
                 
             }
-            if (identity.state.intValue == IdentityStatePendingServerDataUpdate) {
+            if (identity.state == IdentityStatePendingServerDataUpdate) {
                 identity.state = [NSNumber numberWithInt:IdentityStateActive];
             }
             [[self appDelegate].contactListController contentChanged];
