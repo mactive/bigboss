@@ -11,6 +11,9 @@
 		0436B478165136930081A6F7 /* WSBubbleTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0436B477165136930081A6F7 /* WSBubbleTableView.m */; };
 		0450A5ED164649080002BA54 /* LoginSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0450A5EC164649080002BA54 /* LoginSettingViewController.m */; };
 		0489A3E816339FA400D122DF /* MessageBubbleSectionHeader@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 0489A3E716339FA400D122DF /* MessageBubbleSectionHeader@2x.png */; };
+		04D9B836166517E1009DB832 /* ShakeCodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D9B835166517E1009DB832 /* ShakeCodeViewController.m */; };
+		04D9B83916651824009DB832 /* ShakeEntityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D9B83816651824009DB832 /* ShakeEntityViewController.m */; };
+		04D9B83C16652BD4009DB832 /* ShakeAddressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D9B83B16652BD4009DB832 /* ShakeAddressViewController.m */; };
 		2605CC40162EA9F700234442 /* navigationBar_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2605CC39162EA9F700234442 /* navigationBar_bg@2x.png */; };
 		2605CC41162EA9F700234442 /* tabbar_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2605CC3A162EA9F700234442 /* tabbar_bg@2x.png */; };
 		2605CC46162EA9F700234442 /* tabbar_overlay@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2605CC3F162EA9F700234442 /* tabbar_overlay@2x.png */; };
@@ -393,6 +396,12 @@
 		0450A5EB164649080002BA54 /* LoginSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginSettingViewController.h; path = ViewControllers/Welcome/LoginSettingViewController.h; sourceTree = "<group>"; };
 		0450A5EC164649080002BA54 /* LoginSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginSettingViewController.m; path = ViewControllers/Welcome/LoginSettingViewController.m; sourceTree = "<group>"; };
 		0489A3E716339FA400D122DF /* MessageBubbleSectionHeader@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "MessageBubbleSectionHeader@2x.png"; path = "Resources/MessageBubbleSectionHeader@2x.png"; sourceTree = "<group>"; };
+		04D9B834166517E1009DB832 /* ShakeCodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShakeCodeViewController.h; path = ViewControllers/ShakeView/ShakeCodeViewController.h; sourceTree = "<group>"; };
+		04D9B835166517E1009DB832 /* ShakeCodeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShakeCodeViewController.m; path = ViewControllers/ShakeView/ShakeCodeViewController.m; sourceTree = "<group>"; };
+		04D9B83716651824009DB832 /* ShakeEntityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShakeEntityViewController.h; path = ViewControllers/ShakeView/ShakeEntityViewController.h; sourceTree = "<group>"; };
+		04D9B83816651824009DB832 /* ShakeEntityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShakeEntityViewController.m; path = ViewControllers/ShakeView/ShakeEntityViewController.m; sourceTree = "<group>"; };
+		04D9B83A16652BD4009DB832 /* ShakeAddressViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShakeAddressViewController.h; path = ViewControllers/ShakeView/ShakeAddressViewController.h; sourceTree = "<group>"; };
+		04D9B83B16652BD4009DB832 /* ShakeAddressViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShakeAddressViewController.m; path = ViewControllers/ShakeView/ShakeAddressViewController.m; sourceTree = "<group>"; };
 		2605CC39162EA9F700234442 /* navigationBar_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "navigationBar_bg@2x.png"; path = "Resources/navigationBar_bg@2x.png"; sourceTree = "<group>"; };
 		2605CC3A162EA9F700234442 /* tabbar_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tabbar_bg@2x.png"; path = "Resources/tabbar_bg@2x.png"; sourceTree = "<group>"; };
 		2605CC3F162EA9F700234442 /* tabbar_overlay@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "tabbar_overlay@2x.png"; path = "Resources/tabbar_overlay@2x.png"; sourceTree = "<group>"; };
@@ -985,8 +994,12 @@
 				266A1A6E162E5AF2008EF1D5 /* ShakeViewController.m */,
 				26605586165F29AA003B8737 /* CheckinNoteViewController.h */,
 				26605587165F29AA003B8737 /* CheckinNoteViewController.m */,
-				26E7C4E11661F1C700366B0C /* ChannelListViewController.h */,
-				26E7C4E21661F1C700366B0C /* ChannelListViewController.m */,
+				04D9B834166517E1009DB832 /* ShakeCodeViewController.h */,
+				04D9B835166517E1009DB832 /* ShakeCodeViewController.m */,
+				04D9B83716651824009DB832 /* ShakeEntityViewController.h */,
+				04D9B83816651824009DB832 /* ShakeEntityViewController.m */,
+				04D9B83A16652BD4009DB832 /* ShakeAddressViewController.h */,
+				04D9B83B16652BD4009DB832 /* ShakeAddressViewController.m */,
 			);
 			name = ShakeView;
 			sourceTree = "<group>";
@@ -1944,6 +1957,8 @@
 			children = (
 				26E588661659ED2F00180A9D /* UITableViewCell */,
 				264A3899165DF6FA00FA0123 /* ShakeView */,
+				26E7C4E11661F1C700366B0C /* ChannelListViewController.h */,
+				26E7C4E21661F1C700366B0C /* ChannelListViewController.m */,
 				566E82601609A77D00A333EA /* ContactListViewController.h */,
 				566E82611609A77D00A333EA /* ContactListViewController.m */,
 				26F759E2163CEF6F005E9FB4 /* ProfileMeController.h */,
@@ -2529,11 +2544,17 @@
 				26E7C4E31661F1C700366B0C /* ChannelListViewController.m in Sources */,
 				56039E7C1663865300BC8065 /* ShakeInfo.m in Sources */,
 				56039E7F166389C700BC8065 /* Information.m in Sources */,
+<<<<<<< HEAD
 				56039E851664C18000BC8065 /* ConfigSetting.m in Sources */,
 				56039E8B1664E4FB00BC8065 /* Pluggin.m in Sources */,
 				56039E8E1665AC1700BC8065 /* Conversation.m in Sources */,
 				56039E911665AC2B00BC8065 /* User.m in Sources */,
 				56039E941665AC4900BC8065 /* Identity.m in Sources */,
+=======
+				04D9B836166517E1009DB832 /* ShakeCodeViewController.m in Sources */,
+				04D9B83916651824009DB832 /* ShakeEntityViewController.m in Sources */,
+				04D9B83C16652BD4009DB832 /* ShakeAddressViewController.m in Sources */,
+>>>>>>> d2173bb07e592f6dda6a9dadda45bdf58d9d6b0a
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

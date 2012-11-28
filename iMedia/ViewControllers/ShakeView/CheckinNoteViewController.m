@@ -137,7 +137,7 @@ NSInteger intSort(id num1, id num2, void *context)
 }
 
 
-- (void)setShakeInfo
+- (void)updateShakeInfo
 {
     // get op 13
 //    then set
@@ -224,7 +224,7 @@ NSInteger intSort(id num1, id num2, void *context)
     if (motion == UIEventSubtypeMotionShake)
     {
         self.isTodayChecked = YES;
-        [self setShakeInfo];
+        [self updateShakeInfo];
         [self refreshNoticeView];
         [self MBPShow:T(@"今天签到了")];
     }
