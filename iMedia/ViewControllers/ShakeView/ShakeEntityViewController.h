@@ -11,12 +11,7 @@
 @interface ShakeEntityViewController : UIViewController
 
 @property(nonatomic, strong)UIImage *promotionImage;
-@property(nonatomic, strong)NSString *merchandise_name;
-@property(nonatomic, strong)NSString *merchandise_sn;
-@property(nonatomic, strong)NSString *original_price;
-@property(nonatomic, strong)NSString *discount_price;
-@property(nonatomic, strong)NSString *description;
-
-
+@property(nonatomic, strong)NSDictionary *shakeData;
+@property(nonatomic, readwrite)NSInteger priceType;
 
 @end

@@ -68,7 +68,10 @@ extern NSString *const kXMPPmyUsername;
 - (void)getShakeDashboardInfoWithBlock:(void (^)(id, NSError *))block;
 
 
-// 连续中奖天数
+
+// op16 获取地址
+- (void)getWinnerInfoWithBlock:(void (^)(id, NSError *))block;
+- (void)updateWinnerName:(NSString *)name andPhone:(NSString *)phone andPriceType:(NSString *)priceType andAddress:(NSString *)address WithBlock:(void (^)(id, NSError *))block;
 
 - (BOOL)isConnectable;
 

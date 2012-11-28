@@ -31,12 +31,9 @@
 @synthesize promotionView;
 @synthesize promotionImageView;
 @synthesize promotionImage;
+@synthesize priceType;
 
-@synthesize merchandise_name;
-@synthesize merchandise_sn;
-@synthesize original_price;
-@synthesize discount_price;
-@synthesize description;
+@synthesize shakeData;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -58,7 +55,7 @@
 	// Do any additional setup after loading the view.
     
     // noticelabel
-    self.noticeLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 25, 320, 15)];
+    self.noticeLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 25, 320, 20)];
     [self.noticeLabel setTextAlignment:NSTextAlignmentCenter];
     [self.noticeLabel setBackgroundColor:[UIColor clearColor]];
     [self.noticeLabel setFont:[UIFont systemFontOfSize:16.0]];
@@ -111,7 +108,7 @@
     [self.view addSubview:self.secondNoticeLabel];
     [self.view addSubview:self.promotionView];
     
-    [self refreshCode];
+    [self refreshData];
 
 }
 //  填写获奖信息
@@ -119,25 +116,41 @@
 {
     ShakeAddressViewController *controller = [[ShakeAddressViewController alloc]initWithNibName:nil bundle:nil];
     [controller setHidesBottomBarWhenPushed:YES];
+    controller.priceType = self.priceType;
     [self.navigationController pushViewController:controller animated:YES];
 }
 
-- (void)refreshCode
+- (void)refreshData
 {
-    self.noticeLabel.text = [NSString stringWithFormat:T(@"你获得了 ' %@ ' "),self.merchandise_name];
-
-    [self.promotionImageView setImage:self.promotionImage];
     
-    if ([self.discount_price length ] > 0) {
-        self.priceLabel.text = [NSString stringWithFormat:T(@"此商品原价 %@ 元, 你只需要付款 %@ 元 就可以得到他"),self.original_price,self.discount_price];
+    self.noticeLabel.text = [NSString stringWithFormat:T(@"你获得了 ' %@ ' "),[self.shakeData objectForKey:@"merchandise_name"] ];
+    
+    if (self.promotionImage != nil) {
+        [self.promotionImageView setImage:self.promotionImage];
     }else{
-        self.priceLabel.text = [NSString stringWithFormat:T(@"此商品原价 %@ 元, 您将免费获得. "),self.original_price];
+        [self.promotionImageView setImage:[UIImage imageNamed:@"placeholder_company.png"]];
+    }
+    
+    NSLog(@"discount_price %@",[[self.shakeData objectForKey:@"discount_price"] class]);
+    NSLog(@"bait_type %@",[[self.shakeData objectForKey:@"bait_type"] class]);
+    
+    
+    NSNumber *_tmp_original = [self.shakeData objectForKey:@"original_price"];
+    NSNumber *_tmp_discount = [self.shakeData objectForKey:@"discount_price"];
+
+    NSInteger original_price = [_tmp_original integerValue];
+    NSInteger discount_price = [_tmp_discount integerValue];
+    
+    if (_tmp_discount != nil) {
+        self.priceLabel.text = [NSString stringWithFormat:T(@"此商品原价 %i 元, 你只需要付款 %i 元 就可以得到他"),
+                                original_price,discount_price];
+    }else{
+        self.priceLabel.text = [NSString stringWithFormat:T(@"此商品原价 %i 元, 您将免费获得. "),original_price];
     }
     
     self.secondNoticeLabel.text = T(@"系统已经为您自动下单, 配送方式为货到付款.");
-
+    
     [self.saveButton setTitle:T(@"请填写快递信息") forState:UIControlStateNormal];
-
 }
 
 

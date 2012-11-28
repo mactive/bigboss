@@ -958,6 +958,76 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 }
 
 
+// 获得获奖者信息
+- (void)getWinnerInfoWithBlock:(void (^)(id, NSError *))block
+{
+    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: @"16", @"op", nil];
+    
+    NSMutableURLRequest *getRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"GET" path:GET_DATA_PATH parameters:getDict];
+    
+    AFHTTPRequestOperation *getOperation = [[AppNetworkAPIClient sharedClient] HTTPRequestOperationWithRequest:getRequest success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        DDLogVerbose(@"getShakeDashboardInfoWithBlock: %@", responseObject);
+        
+        NSString* type = [responseObject valueForKey:@"type"];
+        
+        if (![@"error" isEqualToString:type]) {
+            if (block) {
+                block (responseObject, nil);
+            }
+        } else {
+            if (block) {
+                NSError *error = [[NSError alloc] initWithDomain:@"wingedstone.com" code:403 userInfo:nil];
+                block (nil, error);
+            }
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        //
+        if (block) {
+            block (nil, error);
+        }
+    }];
+    
+    [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:getOperation];
+}
+
+// 设置获奖者信息
+- (void)updateWinnerName:(NSString *)name andPhone:(NSString *)phone andPriceType:(NSString *)priceType andAddress:(NSString *)address WithBlock:(void (^)(id, NSError *))block
+{
+    NSString* csrfToken = [[NSUserDefaults standardUserDefaults] valueForKey:@"csrfmiddlewaretoken"];
+    
+    NSMutableDictionary *postDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                     csrfToken, @"csrfmiddlewaretoken",
+                                     @"21", @"op",
+                                     name, @"name",
+                                     phone, @"phone",
+                                     address, @"addr",
+                                     priceType, @"prize_type",
+                                     nil];
+    
+    [[AppNetworkAPIClient sharedClient] postPath:POST_DATA_PATH parameters:postDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        DDLogInfo(@"upload winner received response: %@", responseObject);
+        NSString* status = [responseObject valueForKey:@"status"];
+        if ([status isEqualToString:@"success"]) {
+            if (block ) {
+                block(responseObject, nil);
+            }
+        }
+        else {
+            if (block) {
+                NSError *error = [[NSError alloc] initWithDomain:@"wingedstone.com" code:403 userInfo:nil];
+                block (nil, error);
+            }
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        DDLogError(@"upload rating failed: %@", error);
+        if (block) {
+            block(nil, error);
+        }
+    }];
+}
+
+
+
 
 
 - (BOOL)isConnectable

@@ -165,6 +165,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+
     
 }
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -217,7 +218,8 @@
                 if ([[self.shakeTimesDict objectForKey:key] length] == 0) {
                     [self.shakeTimesDict setObject:@"" forKey:key];
                 }
-                
+            }else{
+                [self.urlArray insertObject:@"" atIndex:self.inprogressButton.tag];
             }
             
             if (waitingDict) {

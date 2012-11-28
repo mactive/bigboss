@@ -9,8 +9,13 @@
 #import "ShakeAddressViewController.h"
 #import "MBProgressHUD.h"
 #import <QuartzCore/QuartzCore.h>
+#import "AppNetworkAPIClient.h"
 
-@interface ShakeAddressViewController ()<UITextFieldDelegate,UIActionSheetDelegate>
+
+@interface ShakeAddressViewController ()<UITextFieldDelegate,MBProgressHUDDelegate>
+{
+    MBProgressHUD *HUD;
+}
 
 @property(nonatomic, strong) UIScrollView *baseView;
 @property(nonatomic,strong)UILabel *noticeLabel;
@@ -31,7 +36,7 @@
 @synthesize addressField;
 @synthesize regionButton;
 @synthesize doneButton;
-
+@synthesize priceType;
 
 @synthesize awardID;
 
@@ -92,6 +97,7 @@
     self.telField.layer.cornerRadius = 5.0f;
     self.telField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     self.telField.textAlignment = UITextAlignmentCenter;
+    self.telField.keyboardType = UIKeyboardTypeNumberPad;
     
     // regionbutton
     self.regionButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -105,7 +111,7 @@
     [self.regionButton addTarget:self action:@selector(regionAction:) forControlEvents:UIControlEventTouchUpInside];
     
     // addressField
-    self.addressField = [[UITextField alloc]initWithFrame:CGRectMake(TEXTFIELD_X_OFFSET , TEXTFIELD_Y_OFFSET*4 + TEXTFIELD_HEIGHT*3+LOGO_HEIGHT, TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT)];
+    self.addressField = [[UITextField alloc]initWithFrame:CGRectMake(TEXTFIELD_X_OFFSET ,TEXTFIELD_Y_OFFSET*3+TEXTFIELD_HEIGHT*2+LOGO_HEIGHT, TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT)];
     self.addressField.font = [UIFont systemFontOfSize:18.0];
     self.addressField.textColor = [UIColor grayColor];
     self.addressField.delegate = self;
@@ -120,31 +126,94 @@
     
     // regionbutton
     self.doneButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [self.doneButton setFrame:CGRectMake(TEXTFIELD_X_OFFSET ,TEXTFIELD_Y_OFFSET*5+TEXTFIELD_HEIGHT*5+LOGO_HEIGHT, TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT)];
+    [self.doneButton setFrame:CGRectMake(TEXTFIELD_X_OFFSET ,TEXTFIELD_Y_OFFSET*4+TEXTFIELD_HEIGHT*4+LOGO_HEIGHT, TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT)];
     [self.doneButton.titleLabel setFont:[UIFont boldSystemFontOfSize:18.0]];
     [self.doneButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [self.doneButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     [self.doneButton.titleLabel setTextAlignment:UITextAlignmentCenter];
     [self.doneButton setTitle:T(@"完成") forState:UIControlStateNormal];
     [self.doneButton setBackgroundImage:[UIImage imageNamed:@"button_cancel_bg.png"] forState:UIControlStateNormal];
-    [self.doneButton addTarget:self action:@selector(doneAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.doneButton addTarget:self action:@selector(sendButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
     
     
     self.baseView = [[UIScrollView alloc]initWithFrame:self.view.bounds];
+    self.baseView.backgroundColor = BGCOLOR;
     [self.baseView setContentSize:CGSizeMake(self.view.frame.size.width, 300)];
     [self.baseView setScrollEnabled:YES];
     
     [self.baseView addSubview:self.noticeLabel];
     [self.baseView addSubview:self.nameField];
     [self.baseView addSubview:self.telField];
-    [self.baseView addSubview:self.regionButton];
+//    [self.baseView addSubview:self.regionButton]; // 先不做区域了
     [self.baseView addSubview:self.addressField];
     [self.baseView addSubview:self.doneButton];
     
     
     [self.view addSubview:self.baseView];
     
+}
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    HUD.delegate = self;
+    HUD.labelText = T(@"正在加载信息");
+    
+    [super viewWillAppear:animated];
+    [[AppNetworkAPIClient sharedClient]getWinnerInfoWithBlock:^(id responseObject, NSError *error) {
+        if (responseObject) {
+            
+            [HUD hide:YES afterDelay:1];
+            NSDictionary *responseDict = responseObject;
+            self.nameField.text = [responseDict objectForKey:@"name"];
+            self.telField.text = [responseDict objectForKey:@"phone"];
+            self.addressField.text = [responseDict objectForKey:@"addr"];
+            
+        }else{
+            [HUD hide:YES];
+            
+            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            HUD.mode = MBProgressHUDModeText;
+            HUD.delegate = self;
+            HUD.labelText = T(@"网络错误,无法获取信息");
+            [HUD hide:YES afterDelay:1];
+        }
+    }];
+
+}
+
+- (void)sendButtonPushed:(id)sender
+{
+    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    HUD.delegate = self;
+    HUD.labelText = T(@"发送中");
+    
+    NSString *priceTypeString = [NSString stringWithFormat:@"%i",self.priceType];
+    
+    [[AppNetworkAPIClient sharedClient]updateWinnerName:self.nameField.text andPhone:self.telField.text andPriceType:priceTypeString andAddress:self.addressField.text WithBlock:^(id responseObject, NSError *error) {
+        if (error == nil) {
+            [HUD hide:YES];
+            
+            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            HUD.mode = MBProgressHUDModeText;
+            HUD.labelText = T(@"发送成功");
+            [HUD hide:YES afterDelay:1];
+            [self dismissModalViewControllerAnimated:YES];
+            
+#warning pull back to dashboard
+//            self.navigationController 
+            
+        } else {
+            [HUD hide:YES];
+            
+            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            HUD.mode = MBProgressHUDModeText;
+            HUD.labelText =  T(@"发送失败,请重试"); //[responseObject objectForKey:@"status"];
+            [HUD hide:YES afterDelay:1];
+        }
+
+    }];
+    
 }
 
 #warning store data and init form the database
@@ -155,7 +224,7 @@
 {
 //    [self.baseView setFrame:CGRectMake(0, 0, 320, 150)];  
     if ([textField isEqual:self.addressField]) {
-        [self.baseView setContentOffset:CGPointMake(0, 200) animated:YES];
+        [self.baseView setContentOffset:CGPointMake(0, 150) animated:YES];
     }
 }
 

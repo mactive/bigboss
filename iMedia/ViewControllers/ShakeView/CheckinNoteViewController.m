@@ -11,6 +11,9 @@
 #import <QuartzCore/QuartzCore.h>
 #import "MBProgressHUD.h"
 #import "NSDate-Utilities.h"
+#import "ShakeCodeViewController.h"
+#import "ShakeEntityViewController.h"
+#import "ShakeViewController.h"
 
 #define ROW_HEIGHT 50
 
@@ -57,6 +60,7 @@ NSInteger intSort(id num1, id num2, void *context)
     else
         return NSOrderedSame;
 }
+
 
 - (void)viewDidLoad
 {
@@ -108,6 +112,13 @@ NSInteger intSort(id num1, id num2, void *context)
 
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self refreshNoticeView];
+}
+
+
 
 - (void)refreshNoticeView
 {
@@ -150,13 +161,58 @@ NSInteger intSort(id num1, id num2, void *context)
     [[AppNetworkAPIClient sharedClient]sendCheckinMessageWithBlock:^(id responseObject, NSError *error) {
         if (responseObject) {
 //            [HUD hide:YES];
+//            [self MBPShow:T(@"今天签到成功")];
+
             NSDictionary *responseDict = responseObject;
-            
+            BOOL lucky = [[responseDict objectForKey:@"lucky"] boolValue];
+            NSInteger bait_type = [[responseDict objectForKey:@"bait_type"] integerValue];
+
             // update database
             self.shakeInfo.daysContinued = [NSNumber numberWithInt:[[responseDict objectForKey:@"days"] intValue]];
             self.shakeInfo.lastShakeDate = [[NSDate alloc] initWithTimeIntervalSinceNow:0];
+            if (lucky) {
+
+//                // 正在跳转页面
+//                HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//                HUD.mode = MBProgressHUDModeText;
+//                HUD.delegate = self;
+//                HUD.labelText = T(@"恭喜你签到成功,并获得了奖品.");
+//                [HUD showAnimated:YES whileExecutingBlock:^{
+//                    // nothing
+//                } completionBlock:^{
+//                    sleep(2);
+//                    [HUD hide:YES];
+//                }];
+                    // block begin ==========================
+                    
+                    if ( bait_type == BaitTypeCode) {
+                        ShakeCodeViewController *controller = [[ShakeCodeViewController alloc]initWithNibName:nil bundle:nil];
+                        controller.codeString = [responseDict objectForKey:@"code"];
+                        [controller setHidesBottomBarWhenPushed:YES];
+                        [self.navigationController pushViewController:controller animated:YES];
+                        
+                    }
+                    if ( bait_type == BaitTypeFree || bait_type == BaitTypeDiscount) {
+                        ShakeEntityViewController *controller = [[ShakeEntityViewController alloc]initWithNibName:nil bundle:nil];
+                        controller.shakeData = responseDict;
+                        controller.priceType = PriceTypeCheckin;
+                        
+                        
+                        [controller setHidesBottomBarWhenPushed:YES];
+                        [self.navigationController pushViewController:controller animated:YES];
+                        
+                    }
+                    
+                    // block end==========================
+               
+
+                
+            }else{
+                [self MBPShow:T(@"今天签到成功")];
+                [self refreshNoticeView];
+
+            }
             
-            [self refreshNoticeView];
             
         }else{
             [HUD hide:YES];
@@ -170,6 +226,8 @@ NSInteger intSort(id num1, id num2, void *context)
     }];
 
 }
+
+
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -223,10 +281,11 @@ NSInteger intSort(id num1, id num2, void *context)
 {
     if (motion == UIEventSubtypeMotionShake)
     {
-        self.isTodayChecked = YES;
-        [self updateShakeInfo];
-        [self refreshNoticeView];
-        [self MBPShow:T(@"今天签到了")];
+        if (self.isTodayChecked) {
+            [self MBPShow:T(@"今天已经签过了")];
+        }else{
+            [self updateShakeInfo];
+        }
     }
 }
 

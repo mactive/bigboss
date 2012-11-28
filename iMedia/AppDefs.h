@@ -113,6 +113,20 @@ typedef enum _IdentityState
     IdentityStateInactive   = 100
 } IdentityState;
 
+// shake shake
+typedef enum _BaitType
+{
+    BaitTypeFree = 1,
+    BaitTypeDiscount = 2,
+    BaitTypeCode = 3
+} BaitType;
+
+typedef enum _PriceType
+{
+    PriceTypeCheckin = 1,
+    PriceTypePromotion = 2
+} PriceType;
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // add by mactive
 #define T(a)    NSLocalizedString((a), nil)

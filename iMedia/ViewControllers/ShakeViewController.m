@@ -237,7 +237,6 @@
             }
             
         }else{
-            [self MBPShow:T(@"活动未开始或者没有已经结束了")];
         }
         
     }
@@ -261,17 +260,17 @@
             
             if (lucky && self.noChance == NO) {
                 
-                // 正在跳转页面
-                HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-                HUD.mode = MBProgressHUDModeText;
-                HUD.delegate = self;
-                HUD.labelText = T(@"恭喜你摇中了,正在跳转页面.");
-                [HUD showAnimated:YES whileExecutingBlock:^{
-                    //
-                } completionBlock:^{
-                    sleep(2);
-                    [HUD hide:YES];
-                    
+//                // 正在跳转页面
+//                HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//                HUD.mode = MBProgressHUDModeText;
+//                HUD.delegate = self;
+//                HUD.labelText = T(@"恭喜你摇中了,正在跳转页面.");
+//                [HUD showAnimated:YES whileExecutingBlock:^{
+//                    //
+//                } completionBlock:^{
+//                    sleep(2);
+//                    [HUD hide:YES];
+//                }];
                     // block begin ==========================
                     
                     if ( bait_type == BaitTypeCode) {
@@ -283,15 +282,10 @@
                     }
                     if ( bait_type == BaitTypeFree || bait_type == BaitTypeDiscount) {
                         ShakeEntityViewController *controller = [[ShakeEntityViewController alloc]initWithNibName:nil bundle:nil];
+                        controller.shakeData = responseDict;
                         controller.promotionImage = self.shakeImageView.image;
-                        controller.description = [responseDict objectForKey:@"description"];
-                        controller.merchandise_name = [responseDict objectForKey:@"merchandise_name"];
-                        controller.merchandise_sn = [responseDict objectForKey:@"merchandise_sn"];
-                        controller.original_price = [responseDict objectForKey:@"original_price"];
-                        
-                        if ([[responseDict objectForKey:@"discount_price"] length]> 0) {
-                            controller.discount_price = [responseDict objectForKey:@"discount_price"];
-                        }
+                        controller.priceType = PriceTypePromotion;
+
                         
                         
                         [controller setHidesBottomBarWhenPushed:YES];
@@ -301,7 +295,7 @@
                     
                     // block end==========================
                     
-                }];
+                
                                 
                 
                 
