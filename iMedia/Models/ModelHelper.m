@@ -393,6 +393,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
                         @"ImageLocal",
                         @"ImageRemote",
                         @"Message",
+                        @"Information",
+                        @"ShakeInfo",
                         nil];
     
     // Common

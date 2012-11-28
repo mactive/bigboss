@@ -10,11 +10,5 @@
 #import "MBProgressHUD.h"
 
 @interface LoginViewController : UIViewController<MBProgressHUDDelegate,UITextFieldDelegate>
-{
-    MBProgressHUD *HUD;
-}
-
-
-
 
 @end

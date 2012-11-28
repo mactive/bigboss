@@ -98,7 +98,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [self setField:passwordField forKey:kXMPPmyPassword];
     
 	
-    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    MBProgressHUD * HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 	HUD.delegate = self;
 	HUD.labelText = T(@"登录中");
     
@@ -124,11 +124,11 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
                     WelcomeViewController *welcomeController = [[WelcomeViewController alloc]initWithNibName:nil bundle:nil];
                     [self.navigationController pushViewController:welcomeController animated:YES];
                 } else {
-                    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-                    HUD.delegate = self;
-                    HUD.mode = MBProgressHUDModeText;
-                    HUD.labelText = [responseObject valueForKey:@"status"];
-                    [HUD hide:YES afterDelay:2];
+                    MBProgressHUD * HUD2 = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                    HUD2.delegate = self;
+                    HUD2.mode = MBProgressHUDModeText;
+                    HUD2.labelText = [responseObject valueForKey:@"status"];
+                    [HUD2 hide:YES afterDelay:2];
                 }
             }];
             
@@ -136,18 +136,18 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             DDLogError(@"NSError received during login: %@", error);
             [HUD hide:YES];
             
-            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            HUD.delegate = self;
-            HUD.mode = MBProgressHUDModeText;
+            MBProgressHUD *HUD2 = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            HUD2.delegate = self;
+            HUD2.mode = MBProgressHUDModeText;
             NSString * status = [responseObject valueForKey:@"status"];
             if ([status isEqualToString:@"banned"]) {
-                HUD.labelText = T(@"您的帐号已被封，请联系客服");
+                HUD2.labelText = T(@"您的帐号已被封，请联系客服");
             } else if ([status isEqualToString:@"wrongusername"] || [status isEqualToString:@"wrongpassword"]) {
-                HUD.labelText = T(@"用户名或密码错误");
+                HUD2.labelText = T(@"用户名或密码错误");
             } else {
-                HUD.labelText = T(@"系统维护，请稍后重试或联系客服");
+                HUD2.labelText = T(@"系统维护，请稍后重试或联系客服");
             }
-            [HUD hide:YES afterDelay:2];
+            [HUD2 hide:YES afterDelay:2];
         }
         
     }];

@@ -565,7 +565,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 - (void)xmppPrivacy:(XMPPPrivacy *)sender didReceiveListNames:(NSArray *)listNames
 {
     DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
- //  if ([xmppPrivacy defaultListName] == nil) {
+    if ([xmppPrivacy defaultListName] == nil) {
         
         NSXMLElement *deny1 = [XMPPPrivacy privacyItemWithAction:@"deny" order:1];
         [XMPPPrivacy blockPresenceIn:deny1];
@@ -580,25 +580,17 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
         
         NSArray *defaultList = [NSArray arrayWithObjects:deny1, allow1, deny2, global, nil];
     
-    if ([pubsubhost isEqualToString:@"pubsub.192.168.1.104"]) {
-        [xmppPrivacy setListWithName:@"default" items:[NSArray arrayWithObjects:global, nil]];
-    } else {
-        [xmppPrivacy setListWithName:@"default" items:defaultList];
-    }
+        // disable localnetwork verification
+        if ([pubsubhost isEqualToString:@"pubsub.192.168.1.104"]) {
+            [xmppPrivacy setListWithName:@"default" items:[NSArray arrayWithObjects:global, nil]];
+        } else {
+            [xmppPrivacy setListWithName:@"default" items:defaultList];
+        }
     
         [xmppPrivacy setDefaultListName:@"default"];
-  // }
+   }
 }
 
-- (void)xmppPrivacy:(XMPPPrivacy *)sender didSetDefaultListName:(NSString *)name
-{
-    DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD); 
-}
-
-- (void)xmppPrivacy:(XMPPPrivacy *)sender didNotSetDefaultListName:(NSString *)name error:(id)error
-{
-    DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);    
-}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark XMPPRosterMemoryStoargeDelegate
