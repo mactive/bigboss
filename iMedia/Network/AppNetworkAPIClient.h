@@ -53,15 +53,22 @@ extern NSString *const kXMPPmyUsername;
 - (void)updateLocation:(double)latitude andLongitude:(double)longitude;
 
 - (void)getNearestPeopleWithGender:(NSUInteger)gender start:(NSUInteger)start querysize:(NSUInteger)querySize andBlock:(void (^)(id, NSError *))block;
-- (void)getShakeDashboardInfoWithBlock:(void (^)(id, NSError *))block;
-- (void)getChannelListWithBlock:(void (^)(id, NSError *))block;
 
-//摇一摇列表和签到
-- (void)getCheckinInfoWithBlock:(void (^)(id, NSError *))block;
+
+
+// op11 频道信息
+- (void)getChannelListWithBlock:(void (^)(id, NSError *))block;
+// op12 是否中奖
+- (void)getShakeInfoWithBlock:(void (^)(id, NSError *))block;
+// op13 签到操作，不需要参数
 - (void)sendCheckinMessageWithBlock:(void (^)(id, NSError *))block;
+// op14 获取签到奖品列表
+- (void)getCheckinInfoWithBlock:(void (^)(id, NSError *))block;
+// op15 获取摇一摇活动列表
+- (void)getShakeDashboardInfoWithBlock:(void (^)(id, NSError *))block;
+
 
 // 连续中奖天数
-- (void)getShakeInfoWithBlock:(void (^)(id, NSError *))block;
 
 - (BOOL)isConnectable;
 

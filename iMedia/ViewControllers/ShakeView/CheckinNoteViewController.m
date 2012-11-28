@@ -147,7 +147,7 @@ NSInteger intSort(id num1, id num2, void *context)
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    [[AppNetworkAPIClient sharedClient]getShakeInfoWithBlock:^(id responseObject, NSError *error) {
+    [[AppNetworkAPIClient sharedClient]sendCheckinMessageWithBlock:^(id responseObject, NSError *error) {
         if (responseObject) {
 //            [HUD hide:YES];
             NSDictionary *responseDict = responseObject;

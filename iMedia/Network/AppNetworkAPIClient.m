@@ -38,8 +38,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 #import "UpYun.h"
 #endif
 
-//static NSString * const kAppNetworkAPIBaseURLString = @"http://192.168.1.104:8000/";//
-static NSString * const kAppNetworkAPIBaseURLString = @"http://media.wingedstone.com:8000/";
+static NSString * const kAppNetworkAPIBaseURLString = @"http://192.168.1.104:8000/";//
+//static NSString * const kAppNetworkAPIBaseURLString = @"http://media.wingedstone.com:8000/";
 
 
 
@@ -793,14 +793,16 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     
 }
 
-- (void)getShakeDashboardInfoWithBlock:(void (^)(id, NSError *))block
+// 频道列表
+- (void)getChannelListWithBlock:(void (^)(id, NSError *))block
 {
-    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: @"15", @"op", nil];
-
+    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: @"11", @"op", nil];
+    // 11 是频道列表
     NSMutableURLRequest *getRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"GET" path:GET_DATA_PATH parameters:getDict];
     
+    
     AFHTTPRequestOperation *getOperation = [[AppNetworkAPIClient sharedClient] HTTPRequestOperationWithRequest:getRequest success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        DDLogVerbose(@"getShakeDashboardInfoWithBlock: %@", responseObject);
+        DDLogVerbose(@"getChannelListWithBlock: %@", responseObject);
         
         NSString* type = [responseObject valueForKey:@"type"];
         
@@ -824,16 +826,16 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:getOperation];
 }
 
-// 签到奖励列表
-- (void)getCheckinInfoWithBlock:(void (^)(id, NSError *))block
+// 频道列表
+- (void)getShakeInfoWithBlock:(void (^)(id, NSError *))block
 {
-    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: @"14", @"op", nil];
-    // 11 是频道列表
+    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: @"12", @"op", nil];
+    // 13 是频道列表
     NSMutableURLRequest *getRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"GET" path:GET_DATA_PATH parameters:getDict];
     
     
     AFHTTPRequestOperation *getOperation = [[AppNetworkAPIClient sharedClient] HTTPRequestOperationWithRequest:getRequest success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        DDLogVerbose(@"getCheckinInfoWithBlock: %@", responseObject);
+        DDLogVerbose(@"getShakeInfoWithBlock: %@", responseObject);
         
         NSString* type = [responseObject valueForKey:@"type"];
         
@@ -890,17 +892,16 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:getOperation];
 }
 
-
-// 频道列表
-- (void)getChannelListWithBlock:(void (^)(id, NSError *))block
+// 签到奖励列表
+- (void)getCheckinInfoWithBlock:(void (^)(id, NSError *))block
 {
-    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: @"11", @"op", nil];
+    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: @"14", @"op", nil];
     // 11 是频道列表
     NSMutableURLRequest *getRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"GET" path:GET_DATA_PATH parameters:getDict];
     
     
     AFHTTPRequestOperation *getOperation = [[AppNetworkAPIClient sharedClient] HTTPRequestOperationWithRequest:getRequest success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        DDLogVerbose(@"getChannelListWithBlock: %@", responseObject);
+        DDLogVerbose(@"getCheckinInfoWithBlock: %@", responseObject);
         
         NSString* type = [responseObject valueForKey:@"type"];
         
@@ -924,16 +925,15 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:getOperation];
 }
 
-// 频道列表
-- (void)getShakeInfoWithBlock:(void (^)(id, NSError *))block
+// 摇一摇活动信息
+- (void)getShakeDashboardInfoWithBlock:(void (^)(id, NSError *))block
 {
-    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: @"13", @"op", nil];
-    // 11 是频道列表
+    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: @"15", @"op", nil];
+    
     NSMutableURLRequest *getRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"GET" path:GET_DATA_PATH parameters:getDict];
     
-    
     AFHTTPRequestOperation *getOperation = [[AppNetworkAPIClient sharedClient] HTTPRequestOperationWithRequest:getRequest success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        DDLogVerbose(@"getShakeInfoWithBlock: %@", responseObject);
+        DDLogVerbose(@"getShakeDashboardInfoWithBlock: %@", responseObject);
         
         NSString* type = [responseObject valueForKey:@"type"];
         

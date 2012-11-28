@@ -24,6 +24,7 @@
 @synthesize noticeLabel;
 @synthesize codeLabel;
 @synthesize saveButton;
+@synthesize codeString;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -79,7 +80,12 @@
 - (void)refreshCode
 {
     self.noticeLabel.text = T(@"这是您的中奖code，请您去官方网站兑换");
-    self.codeLabel.text = @"6E82UYND";
+    if ([codeString length] > 0 && codeString!= nil) {
+        self.codeLabel.text = self.codeString;
+    }else{
+        self.codeLabel.text = T(@"code有错误");
+
+    }
     
 }
 

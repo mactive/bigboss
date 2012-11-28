@@ -11,7 +11,9 @@
 #import "MBProgressHUD.h"
 #import "NSDate-Utilities.h"
 #import <QuartzCore/QuartzCore.h>
-
+#import "AppNetworkAPIClient.h"
+#import "ShakeCodeViewController.h"
+#import "ShakeEntityViewController.h"
 
 @interface ShakeViewController ()<MBProgressHUDDelegate>
 {
@@ -158,6 +160,8 @@
     HUD.delegate = self;
     HUD.labelText = _string;
     [HUD hide:YES afterDelay:2];
+    
+    
 }
 
 
@@ -195,20 +199,7 @@
         AudioServicesCreateSystemSoundID((__bridge CFURLRef)audioPath, &completeSound);
         AudioServicesPlaySystemSound (completeSound);
         
-#warning  send to server and get is getted
-        BOOL getted = NO;
-        
-        if (getted) {
-            [self MBPShow:T(@"恭喜你摇中了! ")];
-#warning show the next button and push shake form view
-
-            
-        }else{
-            self.shakeTimes +=1;
-            [self refreshShakeTimesView];
-            [self MBPShow:T(@"没有摇中,再摇一次")];
-        }
-
+        [self getShakeInfoFromServer];
         /*
         
         [UIView animateWithDuration:0.7f animations:^
@@ -225,6 +216,41 @@
          */
                 
     }
+}
+
+-(void)getShakeInfoFromServer
+{
+    [[AppNetworkAPIClient sharedClient]getShakeInfoWithBlock:^(id responseObject, NSError *error) {
+        if (responseObject) {
+            //            [HUD hide:YES];
+            NSDictionary *responseDict = responseObject;
+            BOOL lucky = [[responseDict objectForKey:@"lucky"] boolValue];
+            NSInteger bait_type = [[responseDict objectForKey:@"bait_type"] integerValue];
+            
+            if (lucky) {
+                [self MBPShow:T(@"恭喜你摇中了! ")];
+            
+                
+                if ( bait_type == BaitTypeCode) {
+                    ShakeCodeViewController *controller = [[ShakeCodeViewController alloc]initWithNibName:nil bundle:nil];
+                    controller.codeString = [responseDict objectForKey:@"code"];
+                    [controller setHidesBottomBarWhenPushed:YES];
+                    [self.navigationController pushViewController:controller animated:YES];
+                }
+                
+                
+                
+            }else{
+                self.shakeTimes +=1;
+                [self refreshShakeTimesView];
+                [self MBPShow:T(@"没有摇中,再摇一次")];
+            }
+            
+            
+        }else{
+            [self MBPShow:T(@"网络错误,无法获取信息")];
+        }
+    }];
 }
 
 @end
