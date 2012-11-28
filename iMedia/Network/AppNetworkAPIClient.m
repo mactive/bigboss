@@ -446,7 +446,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
                 
             }
             if (identity.state == IdentityStatePendingServerDataUpdate) {
-                identity.state = [NSNumber numberWithInt:IdentityStateActive];
+                identity.state = IdentityStateActive;
             }
             [[self appDelegate].contactListController contentChanged];
             

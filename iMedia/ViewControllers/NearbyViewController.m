@@ -139,11 +139,6 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
     [[AppNetworkAPIClient sharedClient]getNearestPeopleWithGender:gender start:start querysize:querySize andBlock:^(id responseObject, NSError *error) {
         if (responseObject != nil) {
-
-            BOOL t1 = self.isLOADMORE;
-            NSInteger t2 = gender;
-            NSInteger t3 = start;
-            
             NSDictionary *responseDict = responseObject;
             
             int loadedObjectCount = [responseDict count];

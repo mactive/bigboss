@@ -346,6 +346,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         controller.friendRequestArray = self.friendRequestArray;
         [self.navigationController pushViewController:controller animated:YES];
         conv.unreadMessagesCount = 0;
+        [self updateUnreadBadge];
 
     } else {
         _detailController.conversation = conv;
@@ -379,11 +380,13 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         }
     } else if ([obj isKindOfClass:[Channel class]]) {
         Channel *channel = obj;
-        if (channel.conversation == nil) {
-            channel.conversation = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:self.managedObjectContext];
-            channel.conversation.type = ConversationTypeMediaChannel;
+        if ([channel.ownedConversations count] == 0) {
+            Conversation *conv = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:self.managedObjectContext];
+            conv.type = ConversationTypeMediaChannel;
+            [channel addOwnedConversationsObject:conv];
         }
-        _detailController.conversation = channel.conversation;
+        Conversation *conv = [channel.ownedConversations anyObject];
+        _detailController.conversation = conv;
 
     }
     
@@ -585,6 +588,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 - (void)friendRequestReceived:(NSNotification *)notification
 {
+    // init data only when it is used
     if (self.friendRequestArray == nil) {
         [self initFriendRequestDictFromDB];
     }
@@ -644,8 +648,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
 }
 
-
-- (void)contentChanged
+- (void)updateUnreadBadge
 {
     NSArray *conversations = [_fetchedResultsController fetchedObjects];
     self.unreadMessageCount = 0;
@@ -658,6 +661,11 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     } else {
         self.tabBarItem.badgeValue = nil;
     }
+}
+
+- (void)contentChanged
+{
+    [self updateUnreadBadge];
     [self.tableView reloadData];
 }
 @end

@@ -637,7 +637,7 @@
 
         [[AppNetworkAPIClient sharedClient] reportID:hisGUID myID:[self appDelegate].me.guid type:@"p" description:@"用户举报，无具体描述" otherInfo:@"" withBlock:nil];
         
-        self.user.state = [NSNumber numberWithInt:IdentityStatePendingRemoveFriend];
+        self.user.state = IdentityStatePendingRemoveFriend;
                 
         [[XMPPNetworkCenter sharedClient] removeBuddy:self.user.ePostalID withCallbackBlock:^(NSError *error) {
             
@@ -712,7 +712,7 @@
 
     if (newUser.state != IdentityStateActive) {
         [[ModelHelper sharedInstance] populateIdentity:newUser withJSONData:jsonData];
-        newUser.state = [NSNumber numberWithInt:IdentityStatePendingAddFriend];
+        newUser.state = IdentityStatePendingAddFriend;
         NSLog(@"userJid %@",userJid);
     }
     
@@ -723,7 +723,7 @@
 -(void)deleteUserButtonPushed:(id)sender
 {
     if (self.user.state != IdentityStateInactive) {
-        self.user.state = [NSNumber numberWithInt:IdentityStatePendingRemoveFriend];
+        self.user.state = IdentityStatePendingRemoveFriend;
     }
     
     HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
