@@ -30,7 +30,6 @@
 #define ACTION_BAR_HEIGHT 40
 #define TEXTFEILD_HEIGHT 40
 #define NAV_MAX_BUTTON 80
-#define TEMPLATE_CELL_HEIGHT 50
 
 #define TEMPLATE_IMAGE_HEIGHT 150
 #define TEMPLATE_TITLE_HEIGHT 30
@@ -52,6 +51,8 @@
 #define CELL_MAX_LENGTH 11
 #define HOMETOWN_MAX_LENGTH 10
 
+#define TEMPLATE_CELL_OFFSET 10
+#define TEMPLATE_CELL_IHEIGHT 50
 
 #define UIKeyboardNotificationsObserve() \
 NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter]; \

@@ -110,19 +110,22 @@ const UIEdgeInsets templateInsetsMine = {20, 20, 20, 20};
     NSString *title4 = [[element elementForName:@"title4"] stringValue];
     
     
-    UIFont *titleFont = [UIFont systemFontOfSize:14.0f];
+    UIFont *titleFont = [UIFont boldSystemFontOfSize:16.0f];
     
     CGSize titleSize2 = [(title2 ? title2 : @"") sizeWithFont:titleFont constrainedToSize:CGSizeMake(210, 9999) lineBreakMode:UILineBreakModeWordWrap];
     CGSize titleSize3 = [(title3 ? title3 : @"") sizeWithFont:titleFont constrainedToSize:CGSizeMake(210, 9999) lineBreakMode:UILineBreakModeWordWrap];
     CGSize titleSize4 = [(title4 ? title4 : @"") sizeWithFont:titleFont constrainedToSize:CGSizeMake(210, 9999) lineBreakMode:UILineBreakModeWordWrap];
     
-    self.templateView = [[UIView alloc]init];
+    CGFloat height2 = (titleSize2.height > TEMPLATE_CELL_IHEIGHT ? titleSize2.height : TEMPLATE_CELL_IHEIGHT) + TEMPLATE_CELL_OFFSET;
+    CGFloat height3 = (titleSize3.height > TEMPLATE_CELL_IHEIGHT ? titleSize3.height : TEMPLATE_CELL_IHEIGHT) + TEMPLATE_CELL_OFFSET;
+    CGFloat height4 = (titleSize4.height > TEMPLATE_CELL_IHEIGHT ? titleSize4.height : TEMPLATE_CELL_IHEIGHT) + TEMPLATE_CELL_OFFSET;
     
-    self.templateView.frame = CGRectMake(0, 0, 275, TEMPLATE_IMAGE_HEIGHT+titleSize2.height +titleSize3.height +titleSize4.height );
-        
+    self.templateView = [[UIView alloc]init];
+    self.templateView.frame = CGRectMake(0, 0, 275, TEMPLATE_IMAGE_HEIGHT + height2 + height3 + height4);
+    
+    
     UIEdgeInsets insets = templateInsetsMine;
     return [self initWithView:self.templateView date:date content:urlString type:type insets:insets];
-    
 }
 
 

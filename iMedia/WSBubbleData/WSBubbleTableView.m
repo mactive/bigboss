@@ -19,7 +19,8 @@
 
 #import "WSBubbleTableViewCell.h"
 #import "WSBubbleTextTableViewCell.h"
-#import "WSBubbleTemplateTableViewCell.h"
+#import "WSBubbleTemplateATableViewCell.h"
+#import "WSBubbleTemplateBTableViewCell.h"
 #import "WSBubbleRateTableViewCell.h"
 #import "ContactDetailController.h"
 #import "ProfileMeController.h"
@@ -35,7 +36,8 @@
 
 #define SECTION_HEIGHT 28
 static NSString *CellText = @"CellText";
-static NSString *CellTemplate = @"CellTemplate";
+static NSString *CellTemplateA = @"CellTemplateA";
+static NSString *CellTemplateB = @"CellTemplateB";
 static NSString *CellRate = @"CellRate";
 
 
@@ -126,7 +128,9 @@ static NSString *CellRate = @"CellRate";
     if (rowData.type == BubbleTypeMine || rowData.type == BubbleTypeSomeoneElse) {
         cell = [tableView dequeueReusableCellWithIdentifier:CellText];
     }else if ( rowData.type == BubbleTypeTemplateAview){
-        cell = [tableView dequeueReusableCellWithIdentifier:CellTemplate];
+        cell = [tableView dequeueReusableCellWithIdentifier:CellTemplateA];
+    }else if ( rowData.type == BubbleTypeTemplateBview){
+        cell = [tableView dequeueReusableCellWithIdentifier:CellTemplateB];
     }else if ( rowData.type == BubbleTypeRateview){
         cell = [tableView dequeueReusableCellWithIdentifier:CellRate];
     }
@@ -135,7 +139,9 @@ static NSString *CellRate = @"CellRate";
         if (rowData.type == BubbleTypeMine || rowData.type == BubbleTypeSomeoneElse) {
             cell = [[WSBubbleTextTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellText];
         }else if ( rowData.type == BubbleTypeTemplateAview){
-            cell = [[WSBubbleTemplateTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellTemplate];
+            cell = [[WSBubbleTemplateATableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellTemplateA];
+        }else if ( rowData.type == BubbleTypeTemplateBview){
+            cell = [[WSBubbleTemplateBTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellTemplateB];
         }else if ( rowData.type == BubbleTypeRateview){
             cell = [[WSBubbleRateTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellRate];
         }

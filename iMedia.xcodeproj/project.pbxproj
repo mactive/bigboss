@@ -76,6 +76,7 @@
 		2674B85A164A661A0092D980 /* 37x-Checkmark@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2674B858164A661A0092D980 /* 37x-Checkmark@2x.png */; };
 		267B5E361648E40200D56910 /* gender_male@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 267B5E341648E40200D56910 /* gender_male@2x.png */; };
 		267B5E371648E40200D56910 /* gender_female@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 267B5E351648E40200D56910 /* gender_female@2x.png */; };
+		267B678516689BB000CF25C2 /* WSBubbleTemplateBTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 267B678416689BB000CF25C2 /* WSBubbleTemplateBTableViewCell.m */; };
 		267F5087164015BD00B42D21 /* sex_unknown_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 267F5086164015BD00B42D21 /* sex_unknown_bg@2x.png */; };
 		267F508E1640DAAD00B42D21 /* EditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 267F508D1640DAAD00B42D21 /* EditViewController.m */; };
 		26825BD716378FA3008DA7CC /* GCPagedScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 26825BD616378FA3008DA7CC /* GCPagedScrollView.m */; };
@@ -131,7 +132,7 @@
 		26B91A131654EB1D009D0104 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26B91A101654EB1D009D0104 /* Default@2x.png */; };
 		26B91A141654EB1D009D0104 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26B91A111654EB1D009D0104 /* Default-568h@2x.png */; };
 		26BA7EF21653908E0094D030 /* WSBubbleTextTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 26BA7EF11653908E0094D030 /* WSBubbleTextTableViewCell.m */; };
-		26BA7EF5165390C00094D030 /* WSBubbleTemplateTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 26BA7EF4165390C00094D030 /* WSBubbleTemplateTableViewCell.m */; };
+		26BA7EF5165390C00094D030 /* WSBubbleTemplateATableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 26BA7EF4165390C00094D030 /* WSBubbleTemplateATableViewCell.m */; };
 		26BA7EF8165390D30094D030 /* WSBubbleRateTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 26BA7EF7165390D30094D030 /* WSBubbleRateTableViewCell.m */; };
 		26C76E5A162EB01200298865 /* barbutton_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26C76E59162EB01200298865 /* barbutton_bg@2x.png */; };
 		26DE71D91654C1C400672C4F /* NearbyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 26DE71D81654C1C400672C4F /* NearbyViewController.m */; };
@@ -474,6 +475,8 @@
 		2674B858164A661A0092D980 /* 37x-Checkmark@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "37x-Checkmark@2x.png"; path = "Resources/37x-Checkmark@2x.png"; sourceTree = "<group>"; };
 		267B5E341648E40200D56910 /* gender_male@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "gender_male@2x.png"; path = "Resources/gender_male@2x.png"; sourceTree = "<group>"; };
 		267B5E351648E40200D56910 /* gender_female@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "gender_female@2x.png"; path = "Resources/gender_female@2x.png"; sourceTree = "<group>"; };
+		267B678316689BB000CF25C2 /* WSBubbleTemplateBTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WSBubbleTemplateBTableViewCell.h; path = WSBubbleData/WSBubbleTemplateBTableViewCell.h; sourceTree = "<group>"; };
+		267B678416689BB000CF25C2 /* WSBubbleTemplateBTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WSBubbleTemplateBTableViewCell.m; path = WSBubbleData/WSBubbleTemplateBTableViewCell.m; sourceTree = "<group>"; };
 		267F5086164015BD00B42D21 /* sex_unknown_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "sex_unknown_bg@2x.png"; path = "Resources/sex_unknown_bg@2x.png"; sourceTree = "<group>"; };
 		267F508C1640DAAC00B42D21 /* EditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EditViewController.h; path = ViewControllers/EditViewController.h; sourceTree = "<group>"; };
 		267F508D1640DAAD00B42D21 /* EditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EditViewController.m; path = ViewControllers/EditViewController.m; sourceTree = "<group>"; };
@@ -544,8 +547,8 @@
 		26B91A111654EB1D009D0104 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "Resources/Default-568h@2x.png"; sourceTree = "<group>"; };
 		26BA7EF01653908E0094D030 /* WSBubbleTextTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WSBubbleTextTableViewCell.h; path = WSBubbleData/WSBubbleTextTableViewCell.h; sourceTree = "<group>"; };
 		26BA7EF11653908E0094D030 /* WSBubbleTextTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WSBubbleTextTableViewCell.m; path = WSBubbleData/WSBubbleTextTableViewCell.m; sourceTree = "<group>"; };
-		26BA7EF3165390C00094D030 /* WSBubbleTemplateTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WSBubbleTemplateTableViewCell.h; path = WSBubbleData/WSBubbleTemplateTableViewCell.h; sourceTree = "<group>"; };
-		26BA7EF4165390C00094D030 /* WSBubbleTemplateTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WSBubbleTemplateTableViewCell.m; path = WSBubbleData/WSBubbleTemplateTableViewCell.m; sourceTree = "<group>"; };
+		26BA7EF3165390C00094D030 /* WSBubbleTemplateATableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WSBubbleTemplateATableViewCell.h; path = WSBubbleData/WSBubbleTemplateATableViewCell.h; sourceTree = "<group>"; };
+		26BA7EF4165390C00094D030 /* WSBubbleTemplateATableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WSBubbleTemplateATableViewCell.m; path = WSBubbleData/WSBubbleTemplateATableViewCell.m; sourceTree = "<group>"; };
 		26BA7EF6165390D30094D030 /* WSBubbleRateTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WSBubbleRateTableViewCell.h; path = WSBubbleData/WSBubbleRateTableViewCell.h; sourceTree = "<group>"; };
 		26BA7EF7165390D30094D030 /* WSBubbleRateTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WSBubbleRateTableViewCell.m; path = WSBubbleData/WSBubbleRateTableViewCell.m; sourceTree = "<group>"; };
 		26C76E59162EB01200298865 /* barbutton_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "barbutton_bg@2x.png"; path = "Resources/barbutton_bg@2x.png"; sourceTree = "<group>"; };
@@ -1037,10 +1040,12 @@
 				269EB9D016522D80000048F7 /* WSBubbleTableViewCell.m */,
 				26BA7EF01653908E0094D030 /* WSBubbleTextTableViewCell.h */,
 				26BA7EF11653908E0094D030 /* WSBubbleTextTableViewCell.m */,
-				26BA7EF3165390C00094D030 /* WSBubbleTemplateTableViewCell.h */,
-				26BA7EF4165390C00094D030 /* WSBubbleTemplateTableViewCell.m */,
 				26BA7EF6165390D30094D030 /* WSBubbleRateTableViewCell.h */,
 				26BA7EF7165390D30094D030 /* WSBubbleRateTableViewCell.m */,
+				26BA7EF3165390C00094D030 /* WSBubbleTemplateATableViewCell.h */,
+				26BA7EF4165390C00094D030 /* WSBubbleTemplateATableViewCell.m */,
+				267B678316689BB000CF25C2 /* WSBubbleTemplateBTableViewCell.h */,
+				267B678416689BB000CF25C2 /* WSBubbleTemplateBTableViewCell.m */,
 			);
 			name = WSBubbleData;
 			sourceTree = "<group>";
@@ -2530,7 +2535,7 @@
 				269EB9CE16522811000048F7 /* WSBubbleSectionHeader.m in Sources */,
 				269EB9D116522D80000048F7 /* WSBubbleTableViewCell.m in Sources */,
 				26BA7EF21653908E0094D030 /* WSBubbleTextTableViewCell.m in Sources */,
-				26BA7EF5165390C00094D030 /* WSBubbleTemplateTableViewCell.m in Sources */,
+				26BA7EF5165390C00094D030 /* WSBubbleTemplateATableViewCell.m in Sources */,
 				26BA7EF8165390D30094D030 /* WSBubbleRateTableViewCell.m in Sources */,
 				26DE71D91654C1C400672C4F /* NearbyViewController.m in Sources */,
 				26E5886A1659ED8200180A9D /* NearbyTableViewCell.m in Sources */,
@@ -2552,6 +2557,7 @@
 				04D9B836166517E1009DB832 /* ShakeCodeViewController.m in Sources */,
 				04D9B83916651824009DB832 /* ShakeEntityViewController.m in Sources */,
 				04D9B83C16652BD4009DB832 /* ShakeAddressViewController.m in Sources */,
+				267B678516689BB000CF25C2 /* WSBubbleTemplateBTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
