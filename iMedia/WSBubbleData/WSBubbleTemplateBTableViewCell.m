@@ -107,6 +107,10 @@
         [self.templateBackView.layer setBorderColor:[RGBCOLOR(194, 194, 194) CGColor]];
         [self.templateBackView.layer setBorderWidth:1.0];
         
+        [self.templateBackView addSubview:self.separaterView2];
+        [self.templateBackView addSubview:self.separaterView3];
+        [self.templateBackView addSubview:self.separaterView4];
+        
         [self.templateBackView addSubview:self.templateImage1];
         [self.templateBackView addSubview:self.templateTitle1]; // 文字在上边
         
@@ -117,9 +121,7 @@
         [self.templateBackView addSubview:self.templateTitle4];
         [self.templateBackView addSubview:self.templateImage4];
         
-        [self.templateBackView addSubview:self.separaterView2];
-        [self.templateBackView addSubview:self.separaterView3];
-        [self.templateBackView addSubview:self.separaterView4];
+
         
         [self.contentView addSubview:self.templateBackView];
     }
@@ -178,11 +180,11 @@
     [self.templateImage4 setFrame:CGRectMake(235, TEMPLATE_IMAGE_HEIGHT+TEMPLATE_CELL_OFFSET*3 + height2+ height3,
                                              TEMPLATE_CELL_IHEIGHT, TEMPLATE_CELL_IHEIGHT)];
     
-    [self.separaterView2 setFrame:CGRectMake(0, TEMPLATE_IMAGE_HEIGHT+TEMPLATE_CELL_OFFSET-TEMPLATE_CELL_OFFSET/2,
+    [self.separaterView2 setFrame:CGRectMake(0, TEMPLATE_IMAGE_HEIGHT+TEMPLATE_CELL_OFFSET-TEMPLATE_CELL_OFFSET/3,
                                              300, 1)];
-    [self.separaterView3 setFrame:CGRectMake(235, TEMPLATE_IMAGE_HEIGHT+TEMPLATE_CELL_OFFSET*2-TEMPLATE_CELL_OFFSET/2 + height2,
+    [self.separaterView3 setFrame:CGRectMake(235, TEMPLATE_IMAGE_HEIGHT+TEMPLATE_CELL_OFFSET*2-TEMPLATE_CELL_OFFSET/3 + height2,
                                              300, 1)];
-    [self.separaterView4 setFrame:CGRectMake(235, TEMPLATE_IMAGE_HEIGHT+TEMPLATE_CELL_OFFSET*3-TEMPLATE_CELL_OFFSET/2 + height2+ height3,
+    [self.separaterView4 setFrame:CGRectMake(235, TEMPLATE_IMAGE_HEIGHT+TEMPLATE_CELL_OFFSET*3-TEMPLATE_CELL_OFFSET/3 + height2+ height3,
                                              300, 1)];
     
     [self.templateImage1 setImageWithURL:[NSURL URLWithString:image1] placeholderImage:[UIImage imageNamed:@"template_placeholder.png"]];
