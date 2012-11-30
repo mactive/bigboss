@@ -87,8 +87,10 @@ NS_INLINE BOOL StringHasValue(NSString * str) {
 typedef enum _MessageType
 {
     MessageTypeChat = 1,
-    MessageTypePublish = 2,
-    MessageTypeRate = 3,
+    MessageTypeRate = 2,
+    MessageTypeNotification = 3,
+    MessageTypeTemplateA= 4,
+    MessageTypeTemplateB = 5,
     MessageTypeNone = 10
 } MessageType;
 

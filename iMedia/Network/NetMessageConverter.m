@@ -139,6 +139,8 @@
     NSString* summary = [[entry elementForName:@"title9"] stringValue];
     NSString *nodeStr = [items attributeStringValueForName:@"node"];
     NSString *itemID = [item attributeStringValueForName:@"id"];
+    NSString *template = [[entry elementForName:@"template"] stringValue];
+    
     
     if (item == nil) {
         return nil;
@@ -175,7 +177,12 @@
     msg.from = channel;
     msg.sentDate = [NSDate date];
     msg.text = [entry XMLString];
-    msg.type = [NSNumber numberWithInt:MessageTypePublish];
+    
+    if ([template isEqual:@"templateA"]) {
+        msg.type = [NSNumber numberWithInt:MessageTypeTemplateA];
+    }else if ([template isEqual:@"templateB"]){
+        msg.type = [NSNumber numberWithInt:MessageTypeTemplateB];
+    }
     msg.transportID = itemID;
     
     conv.lastMessageSentDate = msg.sentDate;

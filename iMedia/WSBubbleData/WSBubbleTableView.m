@@ -125,7 +125,7 @@ static NSString *CellRate = @"CellRate";
     
     if (rowData.type == BubbleTypeMine || rowData.type == BubbleTypeSomeoneElse) {
         cell = [tableView dequeueReusableCellWithIdentifier:CellText];
-    }else if ( rowData.type == BubbleTypeTemplateview){
+    }else if ( rowData.type == BubbleTypeTemplateAview){
         cell = [tableView dequeueReusableCellWithIdentifier:CellTemplate];
     }else if ( rowData.type == BubbleTypeRateview){
         cell = [tableView dequeueReusableCellWithIdentifier:CellRate];
@@ -134,7 +134,7 @@ static NSString *CellRate = @"CellRate";
     if (cell == nil) {
         if (rowData.type == BubbleTypeMine || rowData.type == BubbleTypeSomeoneElse) {
             cell = [[WSBubbleTextTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellText];
-        }else if ( rowData.type == BubbleTypeTemplateview){
+        }else if ( rowData.type == BubbleTypeTemplateAview){
             cell = [[WSBubbleTemplateTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellTemplate];
         }else if ( rowData.type == BubbleTypeRateview){
             cell = [[WSBubbleRateTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellRate];
@@ -188,7 +188,7 @@ static NSString *CellRate = @"CellRate";
         data.msg = nil;
         [[self appDelegate].conversationController contentChanged];
     }
-    if (data.type == BubbleTypeTemplateview) {
+    if (data.type == BubbleTypeTemplateAview) {
         
         NSXMLElement *element = [[NSXMLElement alloc] initWithXMLString:data.content error:nil];
         NSString* imageString = [[element elementForName:@"link9"] stringValue];
