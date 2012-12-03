@@ -40,6 +40,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 #define IMAGE_TAG 3
 #define SUMMARY_TAG 4
 #define TIME_ICON_TAG 5
+#define BADGE_TAG 6
 
 #define LEFT_COLUMN_OFFSET 10.0
 #define LEFT_COLUMN_WIDTH 36.0
@@ -57,6 +58,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 #define IMAGE_SIDE 50.0
 #define SUMMARY_WIDTH_OFFEST 16.0
+#define BADGE_WIDTH 16.0
 
 @interface ConversationsController ()
 {
@@ -473,6 +475,23 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	label.textAlignment = UITextAlignmentLeft;
 	label.textColor = RGBCOLOR(140, 140, 140);
     label.backgroundColor = [UIColor clearColor];
+    [cell.contentView addSubview:label];
+
+    
+    // Create a label for the badge.
+	rect = CGRectMake(LEFT_COLUMN_OFFSET+LEFT_COLUMN_WIDTH+3, 2 ,BADGE_WIDTH ,BADGE_WIDTH );
+	label = [[UILabel alloc] initWithFrame:rect];
+	label.tag = BADGE_TAG;
+	label.font = [UIFont boldSystemFontOfSize:9.0f];
+	label.textAlignment = UITextAlignmentCenter;
+    label.textColor = [UIColor whiteColor];
+    label.backgroundColor = RGBCOLOR(237, 28, 36);
+    [label.layer setMasksToBounds:YES];
+    [label.layer setCornerRadius:7.0];
+    [label.layer setBorderColor:[UIColor whiteColor].CGColor];
+    [label.layer setBorderWidth:2.0f];
+    label.shadowColor = RGBACOLOR(0, 0, 0, 0.3);
+    label.shadowOffset = CGSizeMake(0, 1);
     
     [cell.contentView addSubview:label];
 //    [cell.contentView addSubview:timeIconView];
@@ -519,7 +538,16 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 	// Set the date
 	label = (UILabel *)[cell viewWithTag:TIME_TAG];
 	label.text = [conv.lastMessageSentDate timesince];
-	
+    
+    // set badge
+    label = (UILabel *)[cell viewWithTag:BADGE_TAG];
+    if (conv.unreadMessagesCount == 0) {
+        [label removeFromSuperview];
+    }else{
+        label.text = [NSString stringWithFormat:@"%i",conv.unreadMessagesCount];
+//        [label setFrame:CGRectMake(label.frame.origin.x, label.frame.origin.y, [label.text length]*16, label.frame.size.height)];
+    }
+
 	// Set the image.
 	UIImageView *imageView = (UIImageView *)[cell viewWithTag:IMAGE_TAG];
     if (conv.type == ConversationTypePlugginFriendRequest) {
