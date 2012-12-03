@@ -166,21 +166,13 @@
     
     //// location && time
     
-    NSString *lon  = [data objectForKey:@"lon"];
-    NSString *lat  = [data objectForKey:@"lat"];
-    CLLocation *dataLocation = [[CLLocation alloc] initWithLatitude:[lat doubleValue]
-                                                          longitude:[lon doubleValue]];
-	CLLocationDistance dataDistance = -1.0f;
-	if (self.here_location != nil && dataLocation != nil)
-		dataDistance = [dataLocation distanceFromLocation:self.here_location];
-    
     // time
     NSDateFormatter *dateFormater = [[NSDateFormatter alloc]init];
     [dateFormater setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
     NSDate *updateDate = [dateFormater dateFromString:[data objectForKey:@"last_updated"]];
     
     // location , timeago
-    self.locationLabel.text = [self distanceDisplay:dataDistance];
+    self.locationLabel.text = [self distanceDisplay:[data objectForKey:@"distance"]];
     self.timeLabel.text     = [updateDate timesinceAgo];
                                
     //// nickname
@@ -218,19 +210,18 @@
     
 }
 
-- (NSString *)distanceDisplay:(CLLocationDistance)_distance
+- (NSString *)distanceDisplay:(NSNumber *)distanceNumber
 {
-    
-    CLLocationDistance distance = _distance;
-    
+    NSInteger distance = [distanceNumber integerValue];
+        
     NSString *distanceString = @"";
-    if ((int)floor(distance) == 0) {
+    if (distance == 0) {
         distanceString = T(@"就在这");
-    } else if ((int)floor(distance) < 1000) {   // less than 1KM，count by m
+    } else if (distance < 1000) {   // less than 1KM，count by m
         distanceString = [NSString stringWithFormat:T(@"%.0f米"), distance];
-    } else if ((int)floor(distance) < 50000) { // less than 50KM，count by KM,show decimals
+    } else if (distance < 50000) { // less than 50KM，count by KM,show decimals
         distanceString = [NSString stringWithFormat:T(@"%.1f公里"), distance / 1000.0f];
-    } else if ((int)floor(distance) < 1000000) { // less than 100KM，count by KM, NOT show decimals
+    } else if (distance < 1000000) { // less than 100KM，count by KM, NOT show decimals
         distanceString = [NSString stringWithFormat:T(@"%.0f公里"), distance / 1000.0f];
     } else {
         distanceString = T(@"大于1000公里"); // more than 1000KM，count by KM,too for

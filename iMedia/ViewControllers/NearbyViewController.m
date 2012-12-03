@@ -20,6 +20,7 @@
 #import "ModelHelper.h"
 #import "LocationManager.h"
 #import "NSObject+SBJson.h"
+#import "LocationManager.h"
 
 
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
@@ -41,6 +42,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 @property( nonatomic, readwrite) NSUInteger startInt;
 @property (nonatomic, readwrite) BOOL isLOADMORE;
 @property (nonatomic, strong) NSDictionary* prefDict;
+@property (nonatomic, strong) NSMutableDictionary* sourceDict;
+@property (nonatomic, strong) CLLocation *hereLocation;
 @end
 
 @implementation NearbyViewController
@@ -51,6 +54,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 @synthesize startInt;
 @synthesize isLOADMORE;
 @synthesize prefDict;
+@synthesize sourceDict;
+@synthesize hereLocation;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -81,6 +86,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
         self.genderInt = gender.intValue;
     }
     
+    self.hereLocation = [LocationManager sharedInstance].lastLocation;
+    
     self.locManager = [[CLLocationManager alloc] init];
 
 //    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
@@ -108,7 +115,9 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     [self.loadMoreButton addTarget:self action:@selector(loadMoreAction) forControlEvents:UIControlEventTouchUpInside];
     [self.loadMoreButton setHidden:YES];
     [self.tableView.tableFooterView addSubview:self.loadMoreButton];
-
+    
+//    self.sourceData = [[NSArray alloc]init];
+    self.sourceDict = [[NSMutableDictionary alloc]init];
 }
 
 - (void)pullToRefreshViewShouldRefresh:(PullToRefreshView *)view;
@@ -139,31 +148,12 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     [self populateDataWithGender:self.genderInt andStart:self.startInt];
     
 }
-
-- (BOOL)distinctResult:(NSDictionary *)aDict
+// sort sourcedata
+-(void)generateSourceDataFromDict:(NSDictionary*)dict
 {
-    // first time don't check
-    if ([self.sourceData count] == 0) {
-        return YES;
-    }
-
-//    int offset = [self.sourceData count];
-
-    // check all
-    for (int i = 0; i<[self.sourceData count]; i++) {
-        
-        NSDictionary * sourceDict = [self.sourceData objectAtIndex:i];
-        
-        NSNumber *numberA = [sourceDict objectForKey:@"guid"];
-        NSNumber *numberB = [aDict objectForKey:@"guid"];
-        
-        // 有重复直接跳出 
-        if ([numberA isEqualToNumber:numberB]) {
-            return NO;
-        }
-    }
-    // 没问题返回TRUE
-    return YES;    
+    NSArray *sortArray = [dict allValues];
+    NSSortDescriptor *sortDesc = [NSSortDescriptor sortDescriptorWithKey:@"distance" ascending:YES];
+    self.sourceData = [sortArray sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDesc]];
 }
 
 - (void)populateDataWithGender:(NSUInteger)gender andStart:(NSUInteger)start
@@ -176,37 +166,48 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
     [[AppNetworkAPIClient sharedClient]getNearestPeopleWithGender:gender start:start querysize:querySize andBlock:^(id responseObject, NSError *error) {
         if (responseObject != nil) {
-            NSDictionary *responseDict = responseObject;
+            NSMutableDictionary *responseDict = responseObject;
+            NSMutableDictionary *transDict = [[NSMutableDictionary alloc] init];
             
-            int loadedObjectCount = [responseDict count];
-            if (loadedObjectCount > 0) {
-                NSMutableArray *responseArray = [[NSMutableArray alloc] init];
-                for (int j = 0; j < loadedObjectCount; j++) {
-                    // 不重复才插入
-                    NSDictionary *aDict = [responseDict objectForKey:[NSString stringWithFormat:@"%i",start + j]];
-                    if ([self distinctResult:aDict]) {
-                        [responseArray addObject:aDict];
-                        NSLog(@"start=== %i",start + j);
-//                      [responseArray insertObject:aDict atIndex:j];
-                    }
-                }
-                if (self.isLOADMORE == YES) {
-                    // append result to source Data
-                    self.sourceData = [self.sourceData arrayByAddingObjectsFromArray:responseArray];
-                } else {
-                    self.sourceData = [NSArray arrayWithArray:responseArray];
-                }
+            [responseDict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+                
+                //// location && time
+                
+                NSString *lon  = [obj objectForKey:@"lon"];
+                NSString *lat  = [obj objectForKey:@"lat"];
+                CLLocation *dataLocation = [[CLLocation alloc] initWithLatitude:[lat doubleValue]
+                                                                      longitude:[lon doubleValue]];
+                CLLocationDistance dataDistance = -1.0f;
+                if (self.hereLocation != nil && dataLocation != nil)
+                    dataDistance = [dataLocation distanceFromLocation:self.hereLocation];
+                NSNumber *distanceNumber = [NSNumber numberWithDouble:dataDistance];
+                
+                // 复制一份
+                NSMutableDictionary *aDict = [NSMutableDictionary dictionaryWithDictionary:obj];
+                [aDict setValue:distanceNumber forKey:@"distance"];
+                
+                [transDict setValue:aDict forKey:key];
+            }];
+            
+            // 去重复
+            if (self.isLOADMORE) {
+                [self.sourceDict addEntriesFromDictionary:transDict];
+            }else{
+                self.sourceDict = transDict;
             }
+            // 排序
+            [self generateSourceDataFromDict:self.sourceDict];
             
             // 重新设置start
             self.startInt = [self.sourceData count];
             
             // 数量太少不出现 load more
-            if(loadedObjectCount < querySize) {
+            if([responseDict count] < querySize) {
                 [self.loadMoreButton setTitle:T(@"没有更多了") forState:UIControlStateNormal];
             } else {
                 [self.loadMoreButton setTitle:T(@"点击加载更多") forState:UIControlStateNormal];
             }
+            
             [self.tableView reloadData];
             
         }else{
