@@ -16,8 +16,10 @@
 #import "AppDelegate.h"
 #import "ConversationsController.h"
 #import "User.h"
+#import "Me.h"  
 #import "ModelHelper.h"
 #import "LocationManager.h"
+#import "NSObject+SBJson.h"
 
 
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
@@ -38,6 +40,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 @property( nonatomic, readwrite) NSUInteger genderInt;
 @property( nonatomic, readwrite) NSUInteger startInt;
 @property (nonatomic, readwrite) BOOL isLOADMORE;
+@property (nonatomic, strong) NSDictionary* prefDict;
 @end
 
 @implementation NearbyViewController
@@ -47,6 +50,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 @synthesize genderInt;
 @synthesize startInt;
 @synthesize isLOADMORE;
+@synthesize prefDict;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -70,6 +74,12 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     self.genderInt = 0;
     self.startInt = 0;
     self.isLOADMORE = NO;
+    
+    self.prefDict = [[self appDelegate].me.lastSearchPreference JSONValue];
+    NSNumber *gender = [self.prefDict valueForKey:@"gender"];
+    if (gender != nil) {
+        self.genderInt = gender.intValue;
+    }
     
     self.locManager = [[CLLocationManager alloc] init];
 
@@ -261,7 +271,8 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
             self.startInt  = 0;
             self.title = T(@"附近(男)");
         }
-        
+        [self.prefDict setValue:[NSNumber numberWithInt:genderInt] forKey:@"gender"];
+        [self appDelegate].me.lastSearchPreference = [self.prefDict JSONRepresentation];
         [self populateDataWithGender:self.genderInt andStart:self.startInt];
     
     }

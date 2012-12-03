@@ -427,6 +427,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         self.me.signature = @"";
         self.me.career = @"";
         self.me.config = [ConfigSetting getDefaultConfig];
+        self.me.lastSearchPreference = @"";
         
         [self updateMeWithBlock:block];
         
