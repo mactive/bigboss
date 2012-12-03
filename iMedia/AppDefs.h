@@ -53,6 +53,7 @@
 
 #define TEMPLATE_CELL_OFFSET 10
 #define TEMPLATE_CELL_IHEIGHT 50
+#define TEMPLATEB_RESIZE_WIDTH 250
 
 #define UIKeyboardNotificationsObserve() \
 NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter]; \

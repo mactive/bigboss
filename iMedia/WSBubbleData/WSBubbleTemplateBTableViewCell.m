@@ -49,6 +49,7 @@
 @synthesize data = _data;
 
 #define WIDTH_S 200
+#define TEMPLATEB_RESIZE_WIDTH 250
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -60,11 +61,11 @@
         // title 1 and image 1
         
         self.separaterView2 = [[UIView alloc]initWithFrame:CGRectMake(0, 10, 295, 1)];
-        self.separaterView2.backgroundColor = RGBCOLOR(240, 240, 240);
+        self.separaterView2.backgroundColor = RGBCOLOR(230, 230, 230);
         self.separaterView3 = [[UIView alloc]initWithFrame:CGRectMake(0, 10, 295, 1)];
-        self.separaterView3.backgroundColor = RGBCOLOR(240, 240, 240);
+        self.separaterView3.backgroundColor = RGBCOLOR(230, 230, 230);
         self.separaterView4 = [[UIView alloc]initWithFrame:CGRectMake(0, 10, 295, 1)];
-        self.separaterView4.backgroundColor = RGBCOLOR(240, 240, 240);
+        self.separaterView4.backgroundColor = RGBCOLOR(230, 230, 230);
 
         self.templateImage1 = [[UIImageView alloc]initWithFrame:CGRectMake(12, 10, 275, TEMPLATE_IMAGE_HEIGHT)];
         self.templateImage2 = [[UIImageView alloc]initWithFrame:CGRectMake(225, 10, TEMPLATE_CELL_IHEIGHT, TEMPLATE_CELL_IHEIGHT)];
@@ -107,9 +108,7 @@
         [self.templateBackView.layer setBorderColor:[RGBCOLOR(194, 194, 194) CGColor]];
         [self.templateBackView.layer setBorderWidth:1.0];
         
-        [self.templateBackView addSubview:self.separaterView2];
-        [self.templateBackView addSubview:self.separaterView3];
-        [self.templateBackView addSubview:self.separaterView4];
+
         
         [self.templateBackView addSubview:self.templateImage1];
         [self.templateBackView addSubview:self.templateTitle1]; // 文字在上边
@@ -121,7 +120,9 @@
         [self.templateBackView addSubview:self.templateTitle4];
         [self.templateBackView addSubview:self.templateImage4];
         
-
+        [self.templateBackView addSubview:self.separaterView2];
+        [self.templateBackView addSubview:self.separaterView3];
+        [self.templateBackView addSubview:self.separaterView4];
         
         [self.contentView addSubview:self.templateBackView];
     }
@@ -158,9 +159,9 @@
     UIFont *titleFont = [UIFont boldSystemFontOfSize:16.0f];
     
     CGSize titleSize1 = [(title1 ? title1 : @"") sizeWithFont:titleFont constrainedToSize:CGSizeMake(275, 9999) lineBreakMode:UILineBreakModeWordWrap];
-    CGSize titleSize2 = [(title2 ? title2 : @"") sizeWithFont:titleFont constrainedToSize:CGSizeMake(WIDTH_S, 9999) lineBreakMode:UILineBreakModeWordWrap];
-    CGSize titleSize3 = [(title3 ? title3 : @"") sizeWithFont:titleFont constrainedToSize:CGSizeMake(WIDTH_S, 9999) lineBreakMode:UILineBreakModeWordWrap];
-    CGSize titleSize4 = [(title4 ? title4 : @"") sizeWithFont:titleFont constrainedToSize:CGSizeMake(WIDTH_S, 9999) lineBreakMode:UILineBreakModeWordWrap];
+    CGSize titleSize2 = [(title2 ? title2 : @"") sizeWithFont:titleFont constrainedToSize:CGSizeMake(TEMPLATEB_RESIZE_WIDTH, 9999) lineBreakMode:UILineBreakModeWordWrap];
+    CGSize titleSize3 = [(title3 ? title3 : @"") sizeWithFont:titleFont constrainedToSize:CGSizeMake(TEMPLATEB_RESIZE_WIDTH, 9999) lineBreakMode:UILineBreakModeWordWrap];
+    CGSize titleSize4 = [(title4 ? title4 : @"") sizeWithFont:titleFont constrainedToSize:CGSizeMake(TEMPLATEB_RESIZE_WIDTH, 9999) lineBreakMode:UILineBreakModeWordWrap];
     
     CGFloat height1 = titleSize1.height + 10;
     CGFloat height2 = (titleSize2.height > TEMPLATE_CELL_IHEIGHT ? titleSize2.height : TEMPLATE_CELL_IHEIGHT);
@@ -174,17 +175,17 @@
     [self.templateTitle3 setFrame:CGRectMake(16, TEMPLATE_IMAGE_HEIGHT + TEMPLATE_CELL_OFFSET*2 + height2, WIDTH_S, height3)];
     [self.templateTitle4 setFrame:CGRectMake(16, TEMPLATE_IMAGE_HEIGHT + TEMPLATE_CELL_OFFSET*3 + height2+ height3, WIDTH_S, height4)];
     
-    [self.templateImage2 setFrame:CGRectMake(235, TEMPLATE_IMAGE_HEIGHT+TEMPLATE_CELL_OFFSET, TEMPLATE_CELL_IHEIGHT, TEMPLATE_CELL_IHEIGHT)];
-    [self.templateImage3 setFrame:CGRectMake(235, TEMPLATE_IMAGE_HEIGHT+TEMPLATE_CELL_OFFSET*2 + height2,
+    [self.templateImage2 setFrame:CGRectMake(235, TEMPLATE_IMAGE_HEIGHT+TEMPLATE_CELL_OFFSET+5, TEMPLATE_CELL_IHEIGHT, TEMPLATE_CELL_IHEIGHT)];
+    [self.templateImage3 setFrame:CGRectMake(235, TEMPLATE_IMAGE_HEIGHT+TEMPLATE_CELL_OFFSET*2+5 + height2,
                                              TEMPLATE_CELL_IHEIGHT, TEMPLATE_CELL_IHEIGHT)];
-    [self.templateImage4 setFrame:CGRectMake(235, TEMPLATE_IMAGE_HEIGHT+TEMPLATE_CELL_OFFSET*3 + height2+ height3,
+    [self.templateImage4 setFrame:CGRectMake(235, TEMPLATE_IMAGE_HEIGHT+TEMPLATE_CELL_OFFSET*3 +5 + height2+ height3,
                                              TEMPLATE_CELL_IHEIGHT, TEMPLATE_CELL_IHEIGHT)];
     
-    [self.separaterView2 setFrame:CGRectMake(0, TEMPLATE_IMAGE_HEIGHT+TEMPLATE_CELL_OFFSET-TEMPLATE_CELL_OFFSET/3,
+    [self.separaterView2 setFrame:CGRectMake(0, TEMPLATE_IMAGE_HEIGHT+TEMPLATE_CELL_OFFSET-TEMPLATE_CELL_OFFSET/2,
                                              300, 1)];
-    [self.separaterView3 setFrame:CGRectMake(235, TEMPLATE_IMAGE_HEIGHT+TEMPLATE_CELL_OFFSET*2-TEMPLATE_CELL_OFFSET/3 + height2,
+    [self.separaterView3 setFrame:CGRectMake(0, TEMPLATE_IMAGE_HEIGHT+TEMPLATE_CELL_OFFSET*2-TEMPLATE_CELL_OFFSET/2 + height2,
                                              300, 1)];
-    [self.separaterView4 setFrame:CGRectMake(235, TEMPLATE_IMAGE_HEIGHT+TEMPLATE_CELL_OFFSET*3-TEMPLATE_CELL_OFFSET/3 + height2+ height3,
+    [self.separaterView4 setFrame:CGRectMake(0, TEMPLATE_IMAGE_HEIGHT+TEMPLATE_CELL_OFFSET*3-TEMPLATE_CELL_OFFSET/2 + height2+ height3,
                                              300, 1)];
     
     [self.templateImage1 setImageWithURL:[NSURL URLWithString:image1] placeholderImage:[UIImage imageNamed:@"template_placeholder.png"]];

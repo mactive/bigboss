@@ -26,7 +26,8 @@
 
 const UIEdgeInsets textInsetsMine = {5, 10, 11, 17};
 const UIEdgeInsets textInsetsSomeone = {5, 15, 11, 10};
-const UIEdgeInsets templateInsetsMine = {20, 20, 20, 20};
+const UIEdgeInsets templateAInsetsMine = {20, 20, 20, 20};
+const UIEdgeInsets templateBInsetsMine = {12, 20, 12, 20};
 
 #define MAX_WIDTH 220
 
@@ -85,7 +86,7 @@ const UIEdgeInsets templateInsetsMine = {20, 20, 20, 20};
         self.templateView.frame = CGRectMake(0, 0, 275, TEMPLATE_IMAGE_HEIGHT+ size.height + titleSize.height);
     }
     
-    UIEdgeInsets insets = templateInsetsMine;
+    UIEdgeInsets insets = templateAInsetsMine;
     return [self initWithView:self.templateView date:date content:urlString type:type insets:insets];
     
 }
@@ -98,6 +99,7 @@ const UIEdgeInsets templateInsetsMine = {20, 20, 20, 20};
 {
     return [[WSBubbleData alloc] initWithTemplateB:urlString date:date type:type];
 }
+
 
 - (id)initWithTemplateB:(NSString *)urlString date:(NSDate *)date type:(WSBubbleType)type
 {
@@ -112,9 +114,9 @@ const UIEdgeInsets templateInsetsMine = {20, 20, 20, 20};
     
     UIFont *titleFont = [UIFont boldSystemFontOfSize:16.0f];
     
-    CGSize titleSize2 = [(title2 ? title2 : @"") sizeWithFont:titleFont constrainedToSize:CGSizeMake(210, 9999) lineBreakMode:UILineBreakModeWordWrap];
-    CGSize titleSize3 = [(title3 ? title3 : @"") sizeWithFont:titleFont constrainedToSize:CGSizeMake(210, 9999) lineBreakMode:UILineBreakModeWordWrap];
-    CGSize titleSize4 = [(title4 ? title4 : @"") sizeWithFont:titleFont constrainedToSize:CGSizeMake(210, 9999) lineBreakMode:UILineBreakModeWordWrap];
+    CGSize titleSize2 = [(title2 ? title2 : @"") sizeWithFont:titleFont constrainedToSize:CGSizeMake(TEMPLATEB_RESIZE_WIDTH, 9999) lineBreakMode:UILineBreakModeWordWrap];
+    CGSize titleSize3 = [(title3 ? title3 : @"") sizeWithFont:titleFont constrainedToSize:CGSizeMake(TEMPLATEB_RESIZE_WIDTH, 9999) lineBreakMode:UILineBreakModeWordWrap];
+    CGSize titleSize4 = [(title4 ? title4 : @"") sizeWithFont:titleFont constrainedToSize:CGSizeMake(TEMPLATEB_RESIZE_WIDTH, 9999) lineBreakMode:UILineBreakModeWordWrap];
     
     CGFloat height2 = (titleSize2.height > TEMPLATE_CELL_IHEIGHT ? titleSize2.height : TEMPLATE_CELL_IHEIGHT) + TEMPLATE_CELL_OFFSET;
     CGFloat height3 = (titleSize3.height > TEMPLATE_CELL_IHEIGHT ? titleSize3.height : TEMPLATE_CELL_IHEIGHT) + TEMPLATE_CELL_OFFSET;
@@ -124,7 +126,7 @@ const UIEdgeInsets templateInsetsMine = {20, 20, 20, 20};
     self.templateView.frame = CGRectMake(0, 0, 275, TEMPLATE_IMAGE_HEIGHT + height2 + height3 + height4);
     
     
-    UIEdgeInsets insets = templateInsetsMine;
+    UIEdgeInsets insets = templateBInsetsMine;
     return [self initWithView:self.templateView date:date content:urlString type:type insets:insets];
 }
 

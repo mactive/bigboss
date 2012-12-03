@@ -10,6 +10,7 @@
 #import "MBProgressHUD.h"
 #import <QuartzCore/QuartzCore.h>
 #import "AppNetworkAPIClient.h"
+#import "ShakeDashboardViewController.h"
 
 
 @interface ShakeAddressViewController ()<UITextFieldDelegate,MBProgressHUDDelegate>
@@ -184,9 +185,12 @@
 
 - (void)sendButtonPushed:(id)sender
 {
+    [self.addressField resignFirstResponder];
+
     HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     HUD.delegate = self;
     HUD.labelText = T(@"发送中");
+        
     
     NSString *priceTypeString = [NSString stringWithFormat:@"%i",self.priceType];
     
@@ -197,11 +201,19 @@
             HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             HUD.mode = MBProgressHUDModeText;
             HUD.labelText = T(@"发送成功");
+            HUD.delegate = self;
             [HUD hide:YES afterDelay:1];
-            [self dismissModalViewControllerAnimated:YES];
+            sleep(2);
+            // backto dashboard
+            NSArray *controllerArray =  self.navigationController.viewControllers;
+            for (int i=0; i< [controllerArray count]; i++) {
+                UIViewController *tmp = [controllerArray objectAtIndex:i];
+                if ([tmp isKindOfClass:[ShakeDashboardViewController class]]) {
+                    [self.navigationController popToViewController:tmp animated:YES];
+                    break;
+                }
+            }
             
-#warning pull back to dashboard
-//            self.navigationController 
             
         } else {
             [HUD hide:YES];
