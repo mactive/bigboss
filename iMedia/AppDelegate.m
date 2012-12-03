@@ -398,9 +398,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [self updateMyChannelInformation:nil];
     
     [[AppNetworkAPIClient sharedClient] updateIdentity:self.me withBlock:block];
-    
-    self.me.lastSyncFromServerDate = [NSDate date];
-    
 }
 
 -(void)createMeAndOtherOneTimeObjectsWithUsername:(NSString *)username password:(NSString *)passwd jid:(NSString *)jidStr jidPasswd:(NSString *)jidPass andGUID:(NSString *)guid withBlock:(void (^)(id responseObject, NSError *error))block

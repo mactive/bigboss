@@ -19,7 +19,7 @@
 @dynamic ePostalPassword;
 @dynamic gender;
 @dynamic hometown;
-@dynamic lastSyncFromServerDate;
+@dynamic lastSearchPreference;
 @dynamic name;
 @dynamic password;
 @dynamic selfIntroduction;

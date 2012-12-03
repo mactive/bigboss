@@ -22,7 +22,7 @@
 @property (nonatomic, retain) NSString * ePostalPassword;
 @property (nonatomic, retain) NSString * gender;
 @property (nonatomic, retain) NSString * hometown;
-@property (nonatomic, retain) NSDate * lastSyncFromServerDate;
+@property (nonatomic, retain) NSString * lastSearchPreference;
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * password;
 @property (nonatomic, retain) NSString * selfIntroduction;

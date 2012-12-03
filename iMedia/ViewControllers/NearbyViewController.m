@@ -135,7 +135,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     [self.loadMoreButton setEnabled:NO];
     pull.enabled = NO;
     
-    NSUInteger querySize = 5;
+    NSUInteger querySize = 15 ;
 
     [[AppNetworkAPIClient sharedClient]getNearestPeopleWithGender:gender start:start querysize:querySize andBlock:^(id responseObject, NSError *error) {
         if (responseObject != nil) {
