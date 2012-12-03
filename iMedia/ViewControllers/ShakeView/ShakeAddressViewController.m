@@ -25,6 +25,9 @@
 @property(strong,nonatomic) UITextField *addressField;
 @property(strong, nonatomic) UIButton *regionButton;
 @property(strong, nonatomic) UIButton *doneButton;
+@property(strong, nonatomic)UITapGestureRecognizer *tapGestureRecognizer;
+@property(strong, nonatomic) UITextField *handleField;
+@property(strong, nonatomic)UIButton *closeButton;
 
 @end
 
@@ -38,8 +41,10 @@
 @synthesize regionButton;
 @synthesize doneButton;
 @synthesize priceType;
-
+@synthesize tapGestureRecognizer;
 @synthesize awardID;
+@synthesize handleField;
+@synthesize closeButton;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -136,6 +141,16 @@
     [self.doneButton setBackgroundImage:[UIImage imageNamed:@"button_cancel_bg.png"] forState:UIControlStateNormal];
     [self.doneButton addTarget:self action:@selector(sendButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
     
+    // regionbutton
+    self.closeButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [self.closeButton setFrame:CGRectMake(TEXTFIELD_X_OFFSET ,TEXTFIELD_Y_OFFSET*5+TEXTFIELD_HEIGHT*5+LOGO_HEIGHT, TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT)];
+    [self.closeButton.titleLabel setFont:[UIFont boldSystemFontOfSize:18.0]];
+    [self.closeButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [self.closeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+    [self.closeButton.titleLabel setTextAlignment:UITextAlignmentCenter];
+    [self.closeButton setTitle:T(@"关闭") forState:UIControlStateNormal];
+    [self.closeButton setBackgroundImage:[UIImage imageNamed:@"button_cancel_bg.png"] forState:UIControlStateNormal];
+    [self.closeButton addTarget:self action:@selector(closeButtonPushed) forControlEvents:UIControlEventTouchUpInside];
     
     self.baseView = [[UIScrollView alloc]initWithFrame:self.view.bounds];
     self.baseView.backgroundColor = BGCOLOR;
@@ -148,11 +163,29 @@
 //    [self.baseView addSubview:self.regionButton]; // 先不做区域了
     [self.baseView addSubview:self.addressField];
     [self.baseView addSubview:self.doneButton];
+    [self.baseView addSubview:self.closeButton];
     
     
     [self.view addSubview:self.baseView];
     
+    self.tapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(handleTaps:)];
+    self.tapGestureRecognizer.numberOfTapsRequired = 1;
+    self.tapGestureRecognizer.numberOfTouchesRequired = 1;
+    
 }
+
+- (void)closeButtonPushed
+{
+    [self dismissModalViewControllerAnimated:YES];
+}
+
+- (void)handleTaps:(UIGestureRecognizer *)paramSender
+{
+    NSLog(@"handleTaps");
+    [self.handleField resignFirstResponder];
+    [self.baseView setContentOffset:CGPointMake(0, 0) animated:YES];
+}
+
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -190,30 +223,41 @@
     HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     HUD.delegate = self;
     HUD.labelText = T(@"发送中");
-        
+
     
     NSString *priceTypeString = [NSString stringWithFormat:@"%i",self.priceType];
     
+
     [[AppNetworkAPIClient sharedClient]updateWinnerName:self.nameField.text andPhone:self.telField.text andPriceType:priceTypeString andAddress:self.addressField.text WithBlock:^(id responseObject, NSError *error) {
         if (error == nil) {
             [HUD hide:YES];
+     
+//            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//            HUD.mode = MBProgressHUDModeText;
+//            HUD.labelText = T(@"发送成功");
+//            HUD.delegate = self;
+//            [HUD hide:YES afterDelay:2];
             
-            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            HUD.mode = MBProgressHUDModeText;
-            HUD.labelText = T(@"发送成功");
-            HUD.delegate = self;
-            [HUD hide:YES afterDelay:1];
-            sleep(2);
-            // backto dashboard
-            NSArray *controllerArray =  self.navigationController.viewControllers;
-            for (int i=0; i< [controllerArray count]; i++) {
-                UIViewController *tmp = [controllerArray objectAtIndex:i];
-                if ([tmp isKindOfClass:[ShakeDashboardViewController class]]) {
-                    [self.navigationController popToViewController:tmp animated:YES];
-                    break;
-                }
-            }
+            MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.view];
+            [self.view addSubview:hud];
+            hud.labelText = T(@"发送成功");
+            hud.mode = MBProgressHUDModeText;
             
+            [hud showAnimated:YES whileExecutingBlock:^{
+                sleep(2);
+            } completionBlock:^{
+                [hud removeFromSuperview];
+//                // backto dashboard
+//                NSArray *controllerArray =  self.navigationController.viewControllers;
+//                for (int i=0; i< [controllerArray count]; i++) {
+//                    UIViewController *tmp = [controllerArray objectAtIndex:i];
+//                    if ([tmp isKindOfClass:[ShakeDashboardViewController class]]) {
+//                        [self.navigationController popToViewController:tmp animated:YES];
+//                        break;
+//                    }
+//                }
+                [self dismissModalViewControllerAnimated:YES];
+            }];
             
         } else {
             [HUD hide:YES];
@@ -221,7 +265,9 @@
             HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             HUD.mode = MBProgressHUDModeText;
             HUD.labelText =  T(@"发送失败,请重试"); //[responseObject objectForKey:@"status"];
-            [HUD hide:YES afterDelay:1];
+            [HUD hide:YES afterDelay:2];
+            
+
         }
 
     }];
@@ -232,21 +278,32 @@
 
 #warning 出现键盘的时候 点击键盘消失 或者scroll view
 
+-(void)textFieldDidEndEditing:(UITextField *)textField
+{
+    [self.view removeGestureRecognizer:self.tapGestureRecognizer];
+}
+
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-//    [self.baseView setFrame:CGRectMake(0, 0, 320, 150)];  
+//    [self.baseView setFrame:CGRectMake(0, 0, 320, 150)];
+    self.handleField  = textField;
     if ([textField isEqual:self.addressField]) {
         [self.baseView setContentOffset:CGPointMake(0, 150) animated:YES];
     }
+    
+    [self.view addGestureRecognizer:self.tapGestureRecognizer];
+
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
 //    [self.baseView setFrame:self.view.bounds];
+    [self.view removeGestureRecognizer:self.tapGestureRecognizer];
+
     [self.baseView setContentOffset:CGPointMake(0, 0) animated:YES];
-
-
     return [textField resignFirstResponder];
+    
+
 }
 
 - (void)didReceiveMemoryWarning

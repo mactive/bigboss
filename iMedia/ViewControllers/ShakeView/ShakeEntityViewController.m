@@ -117,7 +117,7 @@
     ShakeAddressViewController *controller = [[ShakeAddressViewController alloc]initWithNibName:nil bundle:nil];
     [controller setHidesBottomBarWhenPushed:YES];
     controller.priceType = self.priceType;
-    [self.navigationController pushViewController:controller animated:YES];
+    [self.navigationController presentModalViewController:controller animated:YES];
 }
 
 - (void)refreshData

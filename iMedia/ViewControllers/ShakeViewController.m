@@ -100,7 +100,7 @@
     
     [self.view addSubview:self.shakeImageView];
     // ShakeTimesView
-    [self initShakeTimesView];    
+    [self initShakeTimesView];
 }
 //////////////////////////////////////////////////////
 #pragma mark - 根据时间显示
@@ -142,8 +142,7 @@
     self.shakeTimesLabel.text = [NSString stringWithFormat:@"%i 次",self.shakeTimes];
     
     NSString *tmp = [NSString stringWithFormat:@"%i", self.shakeTimes];
-    NSString *ttt = [self.shakeData objectForKey:@"id"];
-    [self.shakeTimesDict setObject:tmp forKey:[self.shakeData objectForKey:@"id"]];
+     [self.shakeTimesDict setObject:tmp forKey:[self.shakeData objectForKey:@"id"]];
   
 }
 
@@ -168,7 +167,7 @@
         [self MBPShow:T(@"活动还没开始! ")];
         self.canShake = NO;
     }else if(self.endedMins > 0){
-        [self MBPShow:T(@"活动还没结束了! ")];
+        [self MBPShow:T(@"活动已经结束了! ")];
         self.canShake = NO;
     }
     else{
@@ -221,13 +220,14 @@
 {
     if (motion == UIEventSubtypeMotionShake)
     {
- 
+        // your code
+        NSURL *audioPath = [[NSBundle mainBundle] URLForResource:@"message_3" withExtension:@"wav"];
+        AudioServicesCreateSystemSoundID((__bridge CFURLRef)audioPath, &completeSound);
+        AudioServicesPlaySystemSound (completeSound);
+        self.shakeTimes +=1;
+        [self refreshShakeTimesView];
         // request server
         if (self.isShaking == NO && self.canShake == YES) {
-            // your code
-            NSURL *audioPath = [[NSBundle mainBundle] URLForResource:@"message_3" withExtension:@"wav"];
-            AudioServicesCreateSystemSoundID((__bridge CFURLRef)audioPath, &completeSound);
-            AudioServicesPlaySystemSound (completeSound);
             
             if (self.noChance == YES){
                 [self MBPShow:T(@"没有机会了")];
@@ -237,6 +237,11 @@
             }
             
         }else{
+            if (self.startedMins > 0) {
+                [self MBPShow:T(@"活动还没开始! ")];
+            }else if(self.endedMins > 0){
+                [self MBPShow:T(@"活动已经结束了! ")];
+            }
         }
         
     }
@@ -273,36 +278,28 @@
 //                }];
                     // block begin ==========================
                     
-                    if ( bait_type == BaitTypeCode) {
-                        ShakeCodeViewController *controller = [[ShakeCodeViewController alloc]initWithNibName:nil bundle:nil];
-                        controller.codeString = [responseDict objectForKey:@"code"];
-                        [controller setHidesBottomBarWhenPushed:YES];
-                        [self.navigationController pushViewController:controller animated:YES];
-                        
-                    }
-                    if ( bait_type == BaitTypeFree || bait_type == BaitTypeDiscount) {
-                        ShakeEntityViewController *controller = [[ShakeEntityViewController alloc]initWithNibName:nil bundle:nil];
-                        controller.shakeData = responseDict;
-                        controller.promotionImage = self.shakeImageView.image;
-                        controller.priceType = PriceTypePromotion;
+                if ( bait_type == BaitTypeCode) {
+                    ShakeCodeViewController *controller = [[ShakeCodeViewController alloc]initWithNibName:nil bundle:nil];
+                    controller.codeString = [responseDict objectForKey:@"code"];
+                    [controller setHidesBottomBarWhenPushed:YES];
+                    [self.navigationController pushViewController:controller animated:YES];
+                    
+                }
+                if ( bait_type == BaitTypeFree || bait_type == BaitTypeDiscount) {
+                    ShakeEntityViewController *controller = [[ShakeEntityViewController alloc]initWithNibName:nil bundle:nil];
+                    controller.shakeData = responseDict;
+                    controller.promotionImage = self.shakeImageView.image;
+                    controller.priceType = PriceTypePromotion;
 
-                        
-                        
-                        [controller setHidesBottomBarWhenPushed:YES];
-                        [self.navigationController pushViewController:controller animated:YES];
-                        
-                    }
                     
-                    // block end==========================
                     
-                
-                                
-                
+                    [controller setHidesBottomBarWhenPushed:YES];
+                    [self.navigationController pushViewController:controller animated:YES];
+                    
+                }
                 
                 
             }else{
-                self.shakeTimes +=1;
-                [self refreshShakeTimesView];
                 [self MBPShow:T(@"没有摇中,再摇一次")];
             }
             
