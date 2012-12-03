@@ -30,7 +30,6 @@
 #define ACTION_BAR_HEIGHT 40
 #define TEXTFEILD_HEIGHT 40
 #define NAV_MAX_BUTTON 80
-#define TEMPLATE_CELL_HEIGHT 50
 
 #define TEMPLATE_IMAGE_HEIGHT 150
 #define TEMPLATE_TITLE_HEIGHT 30
@@ -52,6 +51,8 @@
 #define CELL_MAX_LENGTH 11
 #define HOMETOWN_MAX_LENGTH 10
 
+#define TEMPLATE_CELL_OFFSET 10
+#define TEMPLATE_CELL_IHEIGHT 50
 
 #define UIKeyboardNotificationsObserve() \
 NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter]; \
@@ -87,8 +88,10 @@ NS_INLINE BOOL StringHasValue(NSString * str) {
 typedef enum _MessageType
 {
     MessageTypeChat = 1,
-    MessageTypePublish = 2,
-    MessageTypeRate = 3,
+    MessageTypeRate = 2,
+    MessageTypeNotification = 3,
+    MessageTypeTemplateA= 4,
+    MessageTypeTemplateB = 5,
     MessageTypeNone = 10
 } MessageType;
 
@@ -112,6 +115,20 @@ typedef enum _IdentityState
     IdentityStatePlugginIsDisabled   = 11,
     IdentityStateInactive   = 100
 } IdentityState;
+
+// shake shake
+typedef enum _BaitType
+{
+    BaitTypeFree = 1,
+    BaitTypeDiscount = 2,
+    BaitTypeCode = 3
+} BaitType;
+
+typedef enum _PriceType
+{
+    PriceTypeCheckin = 1,
+    PriceTypePromotion = 2
+} PriceType;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // add by mactive

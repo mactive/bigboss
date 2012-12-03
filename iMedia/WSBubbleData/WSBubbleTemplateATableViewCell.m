@@ -1,19 +1,19 @@
 //
-//  WSBubbleTemplateTableViewCell.m
+//  WSBubbleTemplateATableViewCell.m
 //  iMedia
 //
 //  Created by meng qian on 12-11-14.
 //  Copyright (c) 2012年 Li Xiaosi. All rights reserved.
 //
 
-#import "WSBubbleTemplateTableViewCell.h"
+#import "WSBubbleTemplateATableViewCell.h"
 #import <QuartzCore/QuartzCore.h>
 #import "XMPPFramework.h"
 #import "UIImageView+AFNetworking.h"
 #import "WSBubbleData.h"
 
 
-@interface WSBubbleTemplateTableViewCell ()
+@interface WSBubbleTemplateATableViewCell ()
 
 @property (nonatomic, strong) UIView *templateBackView;
 @property (nonatomic, strong) UILabel *templateTitle;
@@ -24,7 +24,7 @@
 
 @end
 
-@implementation WSBubbleTemplateTableViewCell
+@implementation WSBubbleTemplateATableViewCell
 @synthesize templateBackView = _templateBackView;
 @synthesize templateTitle = _templateTitle;
 @synthesize templateImage = _templateImage;

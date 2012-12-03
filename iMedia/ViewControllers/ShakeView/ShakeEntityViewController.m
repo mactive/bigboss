@@ -10,6 +10,7 @@
 #import "MBProgressHUD.h"
 #import "UIImageView+AFNetworking.h"
 #import <QuartzCore/QuartzCore.h>
+#import "ShakeAddressViewController.h"
 
 @interface ShakeEntityViewController ()
 
@@ -30,6 +31,9 @@
 @synthesize promotionView;
 @synthesize promotionImageView;
 @synthesize promotionImage;
+@synthesize priceType;
+
+@synthesize shakeData;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -51,7 +55,7 @@
 	// Do any additional setup after loading the view.
     
     // noticelabel
-    self.noticeLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 25, 320, 15)];
+    self.noticeLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 25, 320, 20)];
     [self.noticeLabel setTextAlignment:NSTextAlignmentCenter];
     [self.noticeLabel setBackgroundColor:[UIColor clearColor]];
     [self.noticeLabel setFont:[UIFont systemFontOfSize:16.0]];
@@ -69,8 +73,9 @@
     [self.promotionView addSubview:self.promotionImageView];
     
     // priceLabel
-    self.priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(60,250, 200, 25)];
-    self.priceLabel.font = [UIFont systemFontOfSize:25.0f];
+    self.priceLabel = [[UILabel alloc]initWithFrame:CGRectMake(30,250, 260, 50)];
+    self.priceLabel.numberOfLines = 0;
+    self.priceLabel.font = [UIFont systemFontOfSize:18.0f];
     [self.priceLabel setTextAlignment:NSTextAlignmentCenter];
     self.priceLabel.textAlignment = NSTextAlignmentCenter;
     self.priceLabel.textColor =  RGBCOLOR(82, 82, 82);
@@ -79,7 +84,7 @@
     self.priceLabel.shadowOffset = CGSizeMake(0, 1);
     
     // secondNoticeLabel
-    self.secondNoticeLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 290, 300, 20)];
+    self.secondNoticeLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 310, 300, 20)];
     [self.secondNoticeLabel setTextAlignment:NSTextAlignmentCenter];
     self.secondNoticeLabel.font = [UIFont systemFontOfSize:14.0f];
     self.secondNoticeLabel.textAlignment = NSTextAlignmentCenter;
@@ -89,7 +94,7 @@
     self.secondNoticeLabel.shadowOffset = CGSizeMake(0, 1);
     
     // saveButton
-    self.saveButton = [[UIButton alloc] initWithFrame:CGRectMake(22.5, 312, 275, 40)];
+    self.saveButton = [[UIButton alloc] initWithFrame:CGRectMake(22.5, 332, 275, 40)];
     [self.saveButton.titleLabel setFont:[UIFont systemFontOfSize:16]];
     [self.saveButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [self.saveButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
@@ -103,23 +108,49 @@
     [self.view addSubview:self.secondNoticeLabel];
     [self.view addSubview:self.promotionView];
     
-    [self refreshCode];
+    [self refreshData];
 
 }
-
-- (void)refreshCode
+//  填写获奖信息
+- (void)saveCodeAction
 {
-    NSString *entityName = @"小米M1电信版一部";
-    self.noticeLabel.text = [NSString stringWithFormat:T(@"你获得了 ' %@ ' "),entityName];
+    ShakeAddressViewController *controller = [[ShakeAddressViewController alloc]initWithNibName:nil bundle:nil];
+    [controller setHidesBottomBarWhenPushed:YES];
+    controller.priceType = self.priceType;
+    [self.navigationController pushViewController:controller animated:YES];
+}
 
-    NSURL *url = [NSURL URLWithString:@"http://img.hb.aicdn.com/2dbd066f3b4088890ef0b66e18d9dded730d6ba73da1d-3uc13p_fw554"];
-    [self.promotionImageView setImageWithURL:url];
+- (void)refreshData
+{
     
-    self.priceLabel.text = [NSString stringWithFormat:T(@"你需要付款 %@ 元 "),@"50"];
+    self.noticeLabel.text = [NSString stringWithFormat:T(@"你获得了 ' %@ ' "),[self.shakeData objectForKey:@"merchandise_name"] ];
+    
+    if (self.promotionImage != nil) {
+        [self.promotionImageView setImage:self.promotionImage];
+    }else{
+        [self.promotionImageView setImage:[UIImage imageNamed:@"placeholder_company.png"]];
+    }
+    
+    NSLog(@"discount_price %@",[[self.shakeData objectForKey:@"discount_price"] class]);
+    NSLog(@"bait_type %@",[[self.shakeData objectForKey:@"bait_type"] class]);
+    
+    
+    NSNumber *_tmp_original = [self.shakeData objectForKey:@"original_price"];
+    NSNumber *_tmp_discount = [self.shakeData objectForKey:@"discount_price"];
+
+    NSInteger original_price = [_tmp_original integerValue];
+    NSInteger discount_price = [_tmp_discount integerValue];
+    
+    if (_tmp_discount != nil) {
+        self.priceLabel.text = [NSString stringWithFormat:T(@"此商品原价 %i 元, 你只需要付款 %i 元 就可以得到他"),
+                                original_price,discount_price];
+    }else{
+        self.priceLabel.text = [NSString stringWithFormat:T(@"此商品原价 %i 元, 您将免费获得. "),original_price];
+    }
+    
     self.secondNoticeLabel.text = T(@"系统已经为您自动下单, 配送方式为货到付款.");
-
+    
     [self.saveButton setTitle:T(@"请填写快递信息") forState:UIControlStateNormal];
-
 }
 
 

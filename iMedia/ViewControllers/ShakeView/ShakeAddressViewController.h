@@ -11,5 +11,6 @@
 @interface ShakeAddressViewController : UIViewController
 
 @property(nonatomic, strong)NSString *awardID;
+@property(nonatomic, readwrite)NSInteger priceType;
 
 @end

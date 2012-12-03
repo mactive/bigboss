@@ -16,6 +16,7 @@
 @property(nonatomic, strong) UILabel *noticeLabel;
 @property(nonatomic, strong) UILabel *codeLabel;
 @property(nonatomic, strong) UIButton *saveButton;
+@property(nonatomic, strong) NSMutableArray *codeArray;
 
 @end
 
@@ -24,6 +25,8 @@
 @synthesize noticeLabel;
 @synthesize codeLabel;
 @synthesize saveButton;
+@synthesize codeString;
+@synthesize codeArray;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -66,7 +69,7 @@
     [self.saveButton.titleLabel setTextAlignment:UITextAlignmentCenter];
     [self.saveButton setBackgroundImage:[UIImage imageNamed:@"button_cancel_bg.png"] forState:UIControlStateNormal];
     [self.saveButton setTitle:T(@"保存到 设置->备忘录") forState:UIControlStateNormal];
-    [self.saveButton addTarget:self action:@selector(saveCodeAction) forControlEvents:UIControlEventTouchUpInside];
+//    [self.saveButton addTarget:self action:@selector(saveCodeAction) forControlEvents:UIControlEventTouchUpInside];
 
     [self.view addSubview:self.codeLabel];
     [self.view addSubview:self.saveButton];
@@ -79,7 +82,19 @@
 - (void)refreshCode
 {
     self.noticeLabel.text = T(@"这是您的中奖code，请您去官方网站兑换");
-    self.codeLabel.text = @"6E82UYND";
+    if ([codeString length] > 0 && codeString!= nil) {
+        self.codeLabel.text = self.codeString;
+        
+        // get and set
+        self.codeArray = [[NSMutableArray alloc]initWithArray:(NSMutableArray *)[[NSUserDefaults standardUserDefaults] objectForKey:@"codeArray"]];
+        [self.codeArray addObject:self.codeString];
+        NSArray *tmp_array = [[NSArray alloc]initWithArray:self.codeArray];
+        [[NSUserDefaults standardUserDefaults] setObject:tmp_array forKey:@"codeArray"];
+        
+        
+    }else{
+        self.codeLabel.text = T(@"code有错误");
+    }
     
 }
 

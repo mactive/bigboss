@@ -10,4 +10,5 @@
 
 @interface ShakeCodeViewController : UIViewController
 
+@property(nonatomic, strong)NSString *codeString;
 @end

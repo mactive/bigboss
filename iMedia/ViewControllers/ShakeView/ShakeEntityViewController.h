@@ -11,5 +11,7 @@
 @interface ShakeEntityViewController : UIViewController
 
 @property(nonatomic, strong)UIImage *promotionImage;
+@property(nonatomic, strong)NSDictionary *shakeData;
+@property(nonatomic, readwrite)NSInteger priceType;
 
 @end

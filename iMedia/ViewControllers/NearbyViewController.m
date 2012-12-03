@@ -129,6 +129,37 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     
 }
 
+- (BOOL)distinctResult:(NSDictionary *)aDict
+{
+    
+    if ([self.sourceData count] == 0) {
+        return YES;
+    }
+    
+    int offset = 3;
+
+    // make the diffArray A
+    for (int i = [self.sourceData count]-offset; i<[self.sourceData count]; i++) {
+        NSDictionary * sourceDict = [self.sourceData objectAtIndex:i];
+        
+        
+        NSNumber *numberA = [sourceDict objectForKey:@"guid"];
+        
+        NSNumber *numberB = [aDict objectForKey:@"guid"];
+        
+        
+        if ([numberA isEqualToNumber:numberB]) {
+            return NO;
+        }else{
+            return YES;
+        }
+    }
+    
+    
+    
+    
+}
+
 - (void)populateDataWithGender:(NSUInteger)gender andStart:(NSUInteger)start
 {
     [self.loadMoreButton setTitle:T(@"正在载入") forState:UIControlStateNormal];
@@ -143,12 +174,18 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
             
             int loadedObjectCount = [responseDict count];
             if (loadedObjectCount > 0) {
-                NSMutableArray *responseArray = [[NSMutableArray alloc] initWithCapacity:loadedObjectCount];
+                NSMutableArray *responseArray = [[NSMutableArray alloc] init];
                 for (int j = 0; j < loadedObjectCount; j++) {
-                    [responseArray insertObject:[responseObject objectForKey:[NSString stringWithFormat:@"%i",start + j]] atIndex:j];
+                    // 不重复才插入
+                    NSDictionary *aDict = [responseDict objectForKey:[NSString stringWithFormat:@"%i",start + j]];
+                    if ([self distinctResult:aDict]) {
+                        [responseArray insertObject:aDict atIndex:j];
+//                        [responseArray insertObject:[responseObject objectForKey:[NSString stringWithFormat:@"%i",start + j]] atIndex:j];
+
+                    }
                 }
                 if (self.isLOADMORE == YES) {
-                    // append result to source Data                
+                    // append result to source Data
                     self.sourceData = [self.sourceData arrayByAddingObjectsFromArray:responseArray];
                 } else {
                     self.sourceData = [NSArray arrayWithArray:responseArray];

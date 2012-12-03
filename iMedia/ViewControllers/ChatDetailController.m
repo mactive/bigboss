@@ -461,11 +461,14 @@
         [data addObject:itemBubble];
         self.bubbleTable.showAvatars = YES;
     }
-    else if (msg.type == [NSNumber numberWithInt:MessageTypePublish]) {
-        [data addObject:[WSBubbleData dataWithTemplate:msg.text date:msg.sentDate type:BubbleTypeTemplateview]];
+    else if (msg.type == [NSNumber numberWithInt:MessageTypeTemplateA]) {
+        [data addObject:[WSBubbleData dataWithTemplateA:msg.text date:msg.sentDate type:BubbleTypeTemplateAview]];
         bubbleTable.showAvatars = NO;
-    } else if (msg.type == [NSNumber numberWithInt:MessageTypeRate]) {
-        WSBubbleData *rateData = [WSBubbleData dataWithTemplate:msg.text date:msg.sentDate type:BubbleTypeRateview];
+    }else if (msg.type == [NSNumber numberWithInt:MessageTypeTemplateB]) {
+        [data addObject:[WSBubbleData dataWithTemplateB:msg.text date:msg.sentDate type:BubbleTypeTemplateBview]];
+        bubbleTable.showAvatars = NO;
+    }else if (msg.type == [NSNumber numberWithInt:MessageTypeRate]) {
+        WSBubbleData *rateData = [WSBubbleData dataWithTemplateA:msg.text date:msg.sentDate type:BubbleTypeRateview];
         rateData.msg = msg;
         [data addObject:rateData];
         bubbleTable.showAvatars = NO; 

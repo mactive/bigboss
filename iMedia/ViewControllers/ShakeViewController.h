@@ -13,6 +13,4 @@
 
 @property(nonatomic, strong)NSDictionary *shakeData;
 
-
-
 @end
