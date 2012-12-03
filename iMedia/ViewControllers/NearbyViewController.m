@@ -76,6 +76,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 //    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
 //    self.tableView.separatorColor = [UIColor whiteColor];
     self.tableView.backgroundColor = BGCOLOR;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 
 	pull = [[PullToRefreshView alloc] initWithScrollView:(UIScrollView *) self.tableView];
     [pull setDelegate:self];
@@ -85,12 +86,12 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     self.tableView.tableFooterView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 320, 60)];
     
     self.loadMoreButton  = [[UIButton alloc] initWithFrame:CGRectMake(40, 10, 240, 40)];
-    [self.loadMoreButton.titleLabel setFont:[UIFont boldSystemFontOfSize:14]];
+    [self.loadMoreButton.titleLabel setFont:[UIFont systemFontOfSize:16.0]];
     [self.loadMoreButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
     [self.loadMoreButton setTitleColor:RGBCOLOR(143, 183, 225) forState:UIControlStateHighlighted];
     [self.loadMoreButton.titleLabel setTextAlignment:UITextAlignmentCenter];
     [self.loadMoreButton setTitle:T(@"点击加载更多") forState:UIControlStateNormal];
-    [self.loadMoreButton setBackgroundColor:RGBCOLOR(229, 240, 251)];
+    [self.loadMoreButton setBackgroundColor:[UIColor clearColor]];
 //    [self.loadMoreButton.layer setBorderColor:[RGBCOLOR(187, 217, 247) CGColor]];
 //    [self.loadMoreButton.layer setBorderWidth:1.0f];
     [self.loadMoreButton.layer setCornerRadius:5.0f];
@@ -131,33 +132,28 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 - (BOOL)distinctResult:(NSDictionary *)aDict
 {
-    
+    // first time don't check
     if ([self.sourceData count] == 0) {
         return YES;
     }
-    
-    int offset = 3;
 
-    // make the diffArray A
-    for (int i = [self.sourceData count]-offset; i<[self.sourceData count]; i++) {
+//    int offset = [self.sourceData count];
+
+    // check all
+    for (int i = 0; i<[self.sourceData count]; i++) {
+        
         NSDictionary * sourceDict = [self.sourceData objectAtIndex:i];
         
-        
         NSNumber *numberA = [sourceDict objectForKey:@"guid"];
-        
         NSNumber *numberB = [aDict objectForKey:@"guid"];
         
-        
+        // 有重复直接跳出 
         if ([numberA isEqualToNumber:numberB]) {
             return NO;
-        }else{
-            return YES;
         }
     }
-    
-    
-    
-    
+    // 没问题返回TRUE
+    return YES;    
 }
 
 - (void)populateDataWithGender:(NSUInteger)gender andStart:(NSUInteger)start
@@ -179,9 +175,9 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
                     // 不重复才插入
                     NSDictionary *aDict = [responseDict objectForKey:[NSString stringWithFormat:@"%i",start + j]];
                     if ([self distinctResult:aDict]) {
-                        [responseArray insertObject:aDict atIndex:j];
-//                        [responseArray insertObject:[responseObject objectForKey:[NSString stringWithFormat:@"%i",start + j]] atIndex:j];
-
+                        [responseArray addObject:aDict];
+                        NSLog(@"start=== %i",start + j);
+//                      [responseArray insertObject:aDict atIndex:j];
                     }
                 }
                 if (self.isLOADMORE == YES) {

@@ -233,7 +233,7 @@
     } else if ((int)floor(distance) < 1000000) { // less than 100KM，count by KM, NOT show decimals
         distanceString = [NSString stringWithFormat:T(@"%.0f公里"), distance / 1000.0f];
     } else {
-        distanceString = T(@"太远了"); // more than 1000KM，count by KM,too for
+        distanceString = T(@"大于1000公里"); // more than 1000KM，count by KM,too for
     }
     
     return distanceString;
