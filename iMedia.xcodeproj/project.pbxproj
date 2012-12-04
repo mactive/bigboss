@@ -27,6 +27,7 @@
 		2635E4BF165663DA00F522B1 /* placeholder_user@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2635E4BA165663DA00F522B1 /* placeholder_user@2x.png */; };
 		2635E4C0165663DA00F522B1 /* placeholder_company@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2635E4BB165663DA00F522B1 /* placeholder_company@2x.png */; };
 		2635E4C2165663E800F522B1 /* button_arrow_bg@2x copy.png in Resources */ = {isa = PBXBuildFile; fileRef = 2635E4C1165663E800F522B1 /* button_arrow_bg@2x copy.png */; };
+		263ACBC4166DA9AF00D61725 /* WSBubbleNoticationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 263ACBC3166DA9AF00D61725 /* WSBubbleNoticationTableViewCell.m */; };
 		2640031F1642B45E00A1B779 /* WelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2640031E1642B45E00A1B779 /* WelcomeViewController.m */; };
 		264003211642B87200A1B779 /* logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 264003201642B87200A1B779 /* logo@2x.png */; };
 		264A389C165DF75200FA0123 /* ShakeDashboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 264A389B165DF75200FA0123 /* ShakeDashboardViewController.m */; };
@@ -417,6 +418,8 @@
 		2635E4BA165663DA00F522B1 /* placeholder_user@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "placeholder_user@2x.png"; path = "Resources/placeholder_user@2x.png"; sourceTree = "<group>"; };
 		2635E4BB165663DA00F522B1 /* placeholder_company@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "placeholder_company@2x.png"; path = "Resources/placeholder_company@2x.png"; sourceTree = "<group>"; };
 		2635E4C1165663E800F522B1 /* button_arrow_bg@2x copy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "button_arrow_bg@2x copy.png"; path = "Resources/button_arrow_bg@2x copy.png"; sourceTree = "<group>"; };
+		263ACBC2166DA9AF00D61725 /* WSBubbleNoticationTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WSBubbleNoticationTableViewCell.h; path = WSBubbleData/WSBubbleNoticationTableViewCell.h; sourceTree = "<group>"; };
+		263ACBC3166DA9AF00D61725 /* WSBubbleNoticationTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WSBubbleNoticationTableViewCell.m; path = WSBubbleData/WSBubbleNoticationTableViewCell.m; sourceTree = "<group>"; };
 		2640031D1642B45E00A1B779 /* WelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WelcomeViewController.h; path = ViewControllers/Welcome/WelcomeViewController.h; sourceTree = "<group>"; };
 		2640031E1642B45E00A1B779 /* WelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WelcomeViewController.m; path = ViewControllers/Welcome/WelcomeViewController.m; sourceTree = "<group>"; };
 		264003201642B87200A1B779 /* logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "logo@2x.png"; path = "Resources/logo@2x.png"; sourceTree = "<group>"; };
@@ -1046,6 +1049,8 @@
 				26BA7EF4165390C00094D030 /* WSBubbleTemplateATableViewCell.m */,
 				267B678316689BB000CF25C2 /* WSBubbleTemplateBTableViewCell.h */,
 				267B678416689BB000CF25C2 /* WSBubbleTemplateBTableViewCell.m */,
+				263ACBC2166DA9AF00D61725 /* WSBubbleNoticationTableViewCell.h */,
+				263ACBC3166DA9AF00D61725 /* WSBubbleNoticationTableViewCell.m */,
 			);
 			name = WSBubbleData;
 			sourceTree = "<group>";
@@ -2558,6 +2563,7 @@
 				04D9B83916651824009DB832 /* ShakeEntityViewController.m in Sources */,
 				04D9B83C16652BD4009DB832 /* ShakeAddressViewController.m in Sources */,
 				267B678516689BB000CF25C2 /* WSBubbleTemplateBTableViewCell.m in Sources */,
+				263ACBC4166DA9AF00D61725 /* WSBubbleNoticationTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

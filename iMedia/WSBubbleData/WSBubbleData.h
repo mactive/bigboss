@@ -38,10 +38,13 @@ typedef enum _WSBubbleType
 
 - (id)initWithText:(NSString *)text date:(NSDate *)date type:(WSBubbleType)type;
 + (id)dataWithText:(NSString *)text date:(NSDate *)date type:(WSBubbleType)type;
-- (id)initWithTemplateA:(NSString *)urlString date:(NSDate *)date type:(WSBubbleType)type;
-+ (id)dataWithTemplateA:(NSString *)urlString date:(NSDate *)date type:(WSBubbleType)type;
-- (id)initWithTemplateB:(NSString *)urlString date:(NSDate *)date type:(WSBubbleType)type;
-+ (id)dataWithTemplateB:(NSString *)urlString date:(NSDate *)date type:(WSBubbleType)type;
+- (id)initWithTemplateA:(NSString *)xmlString date:(NSDate *)date type:(WSBubbleType)type;
++ (id)dataWithTemplateA:(NSString *)xmlString date:(NSDate *)date type:(WSBubbleType)type;
+- (id)initWithTemplateB:(NSString *)xmlString date:(NSDate *)date type:(WSBubbleType)type;
++ (id)dataWithTemplateB:(NSString *)xmlString date:(NSDate *)date type:(WSBubbleType)type;
+
+- (id)initWithNotication:(NSString *)xmlString date:(NSDate *)date type:(WSBubbleType)type;
++ (id)dataWithNotication:(NSString *)xmlString date:(NSDate *)date type:(WSBubbleType)type;
 
 - (id)initWithView:(UIView *)view date:(NSDate *)date content:(NSString *)content type:(WSBubbleType)type insets:(UIEdgeInsets)insets;
 

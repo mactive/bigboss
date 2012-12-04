@@ -59,14 +59,14 @@ const UIEdgeInsets templateBInsetsMine = {12, 20, 12, 20};
 #pragma mark - web bubble templateA
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-+ (id)dataWithTemplateA:(NSString *)urlString date:(NSDate *)date type:(WSBubbleType)type
++ (id)dataWithTemplateA:(NSString *)xmlString date:(NSDate *)date type:(WSBubbleType)type
 {
-    return [[WSBubbleData alloc] initWithTemplateA:urlString date:date type:type];
+    return [[WSBubbleData alloc] initWithTemplateA:xmlString date:date type:type];
 }
 
-- (id)initWithTemplateA:(NSString *)urlString date:(NSDate *)date type:(WSBubbleType)type
+- (id)initWithTemplateA:(NSString *)xmlString date:(NSDate *)date type:(WSBubbleType)type
 {
-    NSXMLElement *element =[[NSXMLElement alloc] initWithXMLString:urlString error:nil];    
+    NSXMLElement *element =[[NSXMLElement alloc] initWithXMLString:xmlString error:nil];    
     
     NSString *title = [[element elementForName:@"title9"] stringValue];
     NSString *image = [[element elementForName:@"image9"] stringValue];
@@ -87,7 +87,7 @@ const UIEdgeInsets templateBInsetsMine = {12, 20, 12, 20};
     }
     
     UIEdgeInsets insets = templateAInsetsMine;
-    return [self initWithView:self.templateView date:date content:urlString type:type insets:insets];
+    return [self initWithView:self.templateView date:date content:xmlString type:type insets:insets];
     
 }
 
@@ -95,17 +95,16 @@ const UIEdgeInsets templateBInsetsMine = {12, 20, 12, 20};
 #pragma mark - web bubble templateB
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-+ (id)dataWithTemplateB:(NSString *)urlString date:(NSDate *)date type:(WSBubbleType)type
++ (id)dataWithTemplateB:(NSString *)xmlString date:(NSDate *)date type:(WSBubbleType)type
 {
-    return [[WSBubbleData alloc] initWithTemplateB:urlString date:date type:type];
+    return [[WSBubbleData alloc] initWithTemplateB:xmlString date:date type:type];
 }
 
-
-- (id)initWithTemplateB:(NSString *)urlString date:(NSDate *)date type:(WSBubbleType)type
+- (id)initWithTemplateB:(NSString *)xmlString date:(NSDate *)date type:(WSBubbleType)type
 {
     // 4块 分区域显示
     // title1 为大图 title2 3 4 为小图
-    NSXMLElement *element =[[NSXMLElement alloc] initWithXMLString:urlString error:nil];
+    NSXMLElement *element =[[NSXMLElement alloc] initWithXMLString:xmlString error:nil];
     
     NSString *title2 = [[element elementForName:@"title2"] stringValue];
     NSString *title3 = [[element elementForName:@"title3"] stringValue];
@@ -127,8 +126,39 @@ const UIEdgeInsets templateBInsetsMine = {12, 20, 12, 20};
     
     
     UIEdgeInsets insets = templateBInsetsMine;
-    return [self initWithView:self.templateView date:date content:urlString type:type insets:insets];
+    return [self initWithView:self.templateView date:date content:xmlString type:type insets:insets];
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - web bubble templateA
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
++ (id)dataWithNotication:(NSString *)xmlString date:(NSDate *)date type:(WSBubbleType)type
+{
+    return [[WSBubbleData alloc] initWithTemplateA:xmlString date:date type:type];
+}
+
+- (id)dataWithNotication:(NSString *)xmlString date:(NSDate *)date type:(WSBubbleType)type
+{
+    NSXMLElement *element =[[NSXMLElement alloc] initWithXMLString:xmlString error:nil];
+    
+    NSString *content = [[element elementForName:@"content9"] stringValue];
+    
+    
+    UIFont *font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
+    
+    CGSize size = [(content ? content : @"") sizeWithFont:font constrainedToSize:CGSizeMake(TEMPLATEB_RESIZE_WIDTH, 9999) lineBreakMode:UILineBreakModeWordWrap];
+    
+    self.templateView = [[UIView alloc]init];
+
+    self.templateView.frame = CGRectMake(0, 0, 250,  size.height);
+
+    
+    UIEdgeInsets insets = templateAInsetsMine;
+    return [self initWithView:self.templateView date:date content:xmlString type:type insets:insets];
+    
+}
+
 
 
 - (id)initWithView:(UIView *)view date:(NSDate *)date content:(NSString *)content type:(WSBubbleType)type insets:(UIEdgeInsets)insets

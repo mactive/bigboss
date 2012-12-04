@@ -467,6 +467,9 @@
     }else if (msg.type == [NSNumber numberWithInt:MessageTypeTemplateB]) {
         [data addObject:[WSBubbleData dataWithTemplateB:msg.text date:msg.sentDate type:BubbleTypeTemplateBview]];
         bubbleTable.showAvatars = NO;
+    }else if (msg.type == [NSNumber numberWithInt:MessageTypeNotification]) {
+        [data addObject:[WSBubbleData dataWithNotication:msg.text date:msg.sentDate type:BubbleTypeNoticationview]];
+        bubbleTable.showAvatars = NO;
     }else if (msg.type == [NSNumber numberWithInt:MessageTypeRate]) {
         WSBubbleData *rateData = [WSBubbleData dataWithTemplateA:msg.text date:msg.sentDate type:BubbleTypeRateview];
         rateData.msg = msg;
