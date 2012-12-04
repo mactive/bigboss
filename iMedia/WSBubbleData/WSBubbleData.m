@@ -123,7 +123,7 @@ const UIEdgeInsets templateBInsetsMine = {12, 20, 12, 20};
     CGFloat height4 = (titleSize4.height > TEMPLATE_CELL_IHEIGHT ? titleSize4.height : TEMPLATE_CELL_IHEIGHT) + TEMPLATE_CELL_OFFSET;
     
     self.templateView = [[UIView alloc]init];
-    self.templateView.frame = CGRectMake(0, 0, 275, TEMPLATE_IMAGE_HEIGHT + height2 + height3 + height4);
+    self.templateView.frame = CGRectMake(0, 0, 275, TEMPLATE_IMAGE_HEIGHT + height2 + height3 + height4 +20);
     
     
     UIEdgeInsets insets = templateBInsetsMine;

@@ -143,7 +143,7 @@
     
     NSXMLElement *element = [[NSXMLElement alloc] initWithXMLString:cellData.content error:nil];
     
-    [self.templateBackView setFrame:CGRectMake(10, 0, 300, height +TEMPLATE_TITLE_HEIGHT)];
+    [self.templateBackView setFrame:CGRectMake(10, 0, 300, height)];
     [self.templateImage1 setFrame:CGRectMake(12, 10, 275, TEMPLATE_IMAGE_HEIGHT)];
     
     NSString *title1 = [[element elementForName:@"title1"] stringValue];

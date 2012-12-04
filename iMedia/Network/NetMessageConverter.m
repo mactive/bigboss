@@ -76,6 +76,7 @@
     message.sentDate = [NSDate date];
     if (StringHasValue(rateKey)) {
         // is a final rate message
+#warning ratekey will display as lastmessage
         message.text = rateKey;
         message.type = [NSNumber numberWithInt:MessageTypeRate];
     } else {
@@ -120,7 +121,11 @@
         
     // Find a conversation that this message belongs. That is judged by the conversation's user list.
     conv.lastMessageSentDate = message.sentDate;
-    conv.lastMessageText = message.text;
+    if (StringHasValue(rateKey)) {
+        conv.lastMessageText = [NSString stringWithFormat:@"%@",T(@"客服评价")];
+    }else{
+        conv.lastMessageText = message.text;
+    }
     [conv addMessagesObject:message];
     
     return message;
