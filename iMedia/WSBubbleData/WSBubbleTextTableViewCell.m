@@ -76,11 +76,11 @@
     // bubbleimage bg
     if (type == BubbleTypeSomeoneElse)
     {
-        self.bubbleImage = [[UIImage imageNamed:@"bubbleSomeone.png"]resizableImageWithCapInsets:UIEdgeInsetsMake(14, 7, 4, 4) resizingMode:UIImageResizingModeStretch];
-//        self.bubbleImage = [[UIImage imageNamed:@"bubbleSomeone.png"] stretchableImageWithLeftCapWidth:20 topCapHeight:15];
+        self.bubbleImage = [[UIImage imageNamed:@"bubbleSomeone.png"]
+                            resizableImageWithCapInsets:UIEdgeInsetsMake(14, 8, 4, 4) ];
     }else if(type == BubbleTypeMine) {
-//        self.bubbleImage = [[UIImage imageNamed:@"bubbleMine.png"] stretchableImageWithLeftCapWidth:20 topCapHeight:15];
-        self.bubbleImage = [[UIImage imageNamed:@"bubbleMine.png"]resizableImageWithCapInsets:UIEdgeInsetsMake(14, 4, 4, 7) resizingMode:UIImageResizingModeStretch];
+        self.bubbleImage = [[UIImage imageNamed:@"bubbleMine.png"]
+                            resizableImageWithCapInsets:UIEdgeInsetsMake(14, 4, 4, 8) ];
     }
     
     [self.bubbleImage drawInRect:CGRectMake(x, y, width + self.rowData.insets.left + self.rowData.insets.right, height + self.rowData.insets.top/2 + self.rowData.insets.bottom/2)];
