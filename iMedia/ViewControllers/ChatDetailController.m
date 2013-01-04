@@ -634,8 +634,4 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [self refreshBubbleData];
 }
 
-- (void)rateAction:(id)sender
-{
-    
-}
 @end
