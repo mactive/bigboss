@@ -14,11 +14,10 @@
     
 }
 
-@property(nonatomic,assign) NSObject<PassValueDelegate> *delegate;
+@property(nonatomic,assign) id<PassValueDelegate> delegate;
 
 @property(strong, nonatomic) NSString * nameText;
 @property(strong, nonatomic) NSString * valueText;
 @property(assign, nonatomic) NSUInteger valueIndex;
-@property(assign, nonatomic) NSString * valueType;
 
 @end

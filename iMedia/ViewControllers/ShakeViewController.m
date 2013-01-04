@@ -9,16 +9,23 @@
 #import "ShakeViewController.h"
 #import "UIImageView+AFNetworking.h"
 #import "MBProgressHUD.h"
+#import "ConvenienceMethods.h"
 #import "NSDate-Utilities.h"
 #import <QuartzCore/QuartzCore.h>
 #import "AppNetworkAPIClient.h"
 #import "ShakeCodeViewController.h"
 #import "ShakeEntityViewController.h"
+#import "DDLog.h"
+// Log levels: off, error, warn, info, verbose
+#if DEBUG
+static const int ddLogLevel = LOG_LEVEL_VERBOSE;
+#else
+static const int ddLogLevel = LOG_LEVEL_OFF;
+#endif
 
-@interface ShakeViewController ()<MBProgressHUDDelegate>
+@interface ShakeViewController ()
 {
     SystemSoundID completeSound;
-    MBProgressHUD *HUD;
 }
 
 @property(nonatomic, strong) UIImageView *shakeImageView;
@@ -34,6 +41,9 @@
 @property(nonatomic, readwrite)BOOL canShake; // 可不可以shake
 @property(nonatomic, readwrite)BOOL isShaking;
 @property(nonatomic, readwrite)BOOL noChance;
+@property(nonatomic, strong) NSString *server_began;
+
+
 
 @end
 
@@ -51,6 +61,8 @@
 @synthesize canShake;
 @synthesize isShaking;
 @synthesize noChance;
+@synthesize managedObjectContext;
+@synthesize server_began;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -77,13 +89,14 @@
     self.shakeImageView = [[UIImageView alloc] initWithFrame:self.view.bounds];
     
     MBProgressHUD *HUD_t = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    HUD_t.delegate = self;
+    HUD_t.removeFromSuperViewOnHide = YES;
     HUD_t.labelText = T(@"正在加载");
     
     [self.shakeImageView setImageWithURLRequest:urlRequest placeholderImage:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
-        [HUD_t hide:YES afterDelay:2];
+        [HUD_t hide:YES];
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
-        // 
+        //
+        [HUD_t hide:YES];
     }];
     [self.shakeImageView setFrame:self.view.bounds];
     
@@ -159,35 +172,42 @@
     NSDate *beginDate = [dateFormatter dateFromString:[self.shakeData objectForKey:@"begin_time"]];
     NSDate *endDate = [dateFormatter dateFromString:[self.shakeData objectForKey:@"end_time"]];
 
+    self.server_began = [self.shakeData objectForKey:@"server_began"];
+    
     NSDate *now = [[NSDate alloc]initWithTimeIntervalSinceNow:0];
     self.startedMins = (NSInteger )[now minutesBeforeDate:beginDate];
     self.endedMins = (NSInteger )[now minutesAfterDate:endDate];
     
-    if (self.startedMins > 0) {
+//    if (self.startedMins > 0) {
+//        [self MBPShow:T(@"活动还没开始! ")];
+//        self.canShake = NO;
+//    }else if(self.endedMins > 0){
+//        [self MBPShow:T(@"活动已经结束了! ")];
+//        self.canShake = NO;
+//    }
+//    else{
+//        [self MBPShow:T(@"想得到么, 摇一摇! ")];
+//        self.canShake = YES;
+//    }
+
+    if([self.server_began isEqual:@"NO"]){
         [self MBPShow:T(@"活动还没开始! ")];
         self.canShake = NO;
     }else if(self.endedMins > 0){
         [self MBPShow:T(@"活动已经结束了! ")];
         self.canShake = NO;
-    }
-    else{
+    }else{
         [self MBPShow:T(@"想得到么, 摇一摇! ")];
         self.canShake = YES;
     }
-    
+
 }
 
 - (void)MBPShow:(NSString *)_string
 {
-    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     UIImageView *custom =  [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"metro_icon_3.png"]];
     [custom setFrame:CGRectMake(0, 0, 50, 50)];
-    HUD.customView = custom;
-    HUD.mode = MBProgressHUDModeCustomView;
-    HUD.delegate = self;
-    HUD.labelText = _string;
-    [HUD hide:YES afterDelay:1];
-
+    [ConvenienceMethods showHUDAddedTo:self.view animated:YES customView:custom text:_string andHideAfterDelay:1];
 }
 
 
@@ -220,10 +240,11 @@
 {
     if (motion == UIEventSubtypeMotionShake)
     {
-        // your code
+        // playsound
         NSURL *audioPath = [[NSBundle mainBundle] URLForResource:@"message_3" withExtension:@"wav"];
         AudioServicesCreateSystemSoundID((__bridge CFURLRef)audioPath, &completeSound);
         AudioServicesPlaySystemSound (completeSound);
+        
         self.shakeTimes +=1;
         [self refreshShakeTimesView];
         // request server
@@ -231,14 +252,15 @@
             
             if (self.noChance == YES){
                 [self MBPShow:T(@"没有机会了")];
-                NSLog(@"没有机会了");
+                DDLogVerbose(@"没有机会了");
             }else{
                 [self getShakeInfoFromServer];
             }
             
         }else{
-            if (self.startedMins > 0) {
+            if([self.server_began isEqual:@"NO"]){
                 [self MBPShow:T(@"活动还没开始! ")];
+                self.canShake = NO;
             }else if(self.endedMins > 0){
                 [self MBPShow:T(@"活动已经结束了! ")];
             }
@@ -281,6 +303,7 @@
                 if ( bait_type == BaitTypeCode) {
                     ShakeCodeViewController *controller = [[ShakeCodeViewController alloc]initWithNibName:nil bundle:nil];
                     controller.codeString = [responseDict objectForKey:@"code"];
+                    controller.managedObjectContext = self.managedObjectContext;
                     [controller setHidesBottomBarWhenPushed:YES];
                     [self.navigationController pushViewController:controller animated:YES];
                     

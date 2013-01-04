@@ -11,7 +11,6 @@
 #import "XMPPNetworkCenter.h"
 #import "AppNetworkAPIClient.h"
 #import "AppDelegate.h" 
-#import "RequestViewController.h"
 #import "FriendRequestListViewController.h"
 #import "FriendRequest.h"
 #import "ModelHelper.h"
@@ -23,7 +22,7 @@
 #if DEBUG
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 #else
-static const int ddLogLevel = LOG_LEVEL_INFO;
+static const int ddLogLevel = LOG_LEVEL_OFF;
 #endif
 
 @interface FunctionListViewController ()
@@ -51,9 +50,9 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 #define VIEW_ALBUM_OFFSET 10
 #define VIEW_ALBUM_WIDTH 300
-#define VIEW_ALBUM_HEIGHT 100
+#define VIEW_ALBUM_HEIGHT 150
 #define COUNT_PER_LINE 1
-#define Y_OFFEST 14
+#define Y_OFFEST 16
 
 - (CGRect)calcRect:(NSInteger)index
 {
@@ -67,23 +66,23 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 {
     [super viewDidLoad];
     
-    self.settingTitleArray = [[NSArray alloc] initWithObjects:@"打招呼的人", @"摇一摇",@"频道列表", nil];
-    
+    self.settingTitleArray = [[NSArray alloc] initWithObjects:@"摇一摇",@"情趣研究院", nil]; //@"打招呼的人", 
+    self.view.backgroundColor = BGCOLOR;
     [self.view addSubview:self.settingView];
     
     for (int index = 0; index <[self.settingTitleArray count]; index++) {
         MetroButton *button = [[MetroButton alloc]initWithFrame:[self calcRect:index]];
         NSString *title = [self.settingTitleArray objectAtIndex:index];
-        NSString *image = [NSString stringWithFormat:@"metro_icon_%d.png",(index+2)];
+        NSString *image = [NSString stringWithFormat:@"metro_icon_%d.png",(index+3)];
         [button initMetroButton:[UIImage imageNamed:image] andText:title andIndex:index];
         
+//        if (index == 0) {
+//            [button addTarget:self action:@selector(sayhiAction) forControlEvents:UIControlEventTouchUpInside];
+//        }
         if (index == 0) {
-            [button addTarget:self action:@selector(sayhiAction) forControlEvents:UIControlEventTouchUpInside];
-        }
-        if (index == 1) {
             [button addTarget:self action:@selector(shakeAction) forControlEvents:UIControlEventTouchUpInside];
         }
-        if (index == 2) {
+        if (index == 1) {
             [button addTarget:self action:@selector(channelListAction) forControlEvents:UIControlEventTouchUpInside];
         }
         [self.view addSubview:button];

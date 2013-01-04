@@ -12,5 +12,7 @@
 @interface ShakeViewController : UIViewController
 
 @property(nonatomic, strong)NSDictionary *shakeData;
+@property(nonatomic, strong) NSManagedObjectContext *managedObjectContext;
+
 
 @end

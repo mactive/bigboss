@@ -14,15 +14,15 @@
 
 @interface WelcomeViewController ()
 
-@property(strong, nonatomic)UIButton *welcomeButton;
-@property(strong, nonatomic)UIImageView *welcomeTitleView;
+//@property(strong, nonatomic)UIButton *welcomeButton;
+//@property(strong, nonatomic)UIImageView *welcomeTitleView;
 @property(strong, nonatomic)Me *me;
 
 @end
 
 @implementation WelcomeViewController
-@synthesize welcomeButton;
-@synthesize welcomeTitleView;
+//@synthesize welcomeButton;
+//@synthesize welcomeTitleView;
 @synthesize me;
 
 
@@ -42,7 +42,6 @@
 	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -52,32 +51,31 @@
     [backgroundView setImage:[UIImage imageNamed:@"welcome_bg.png"]];
     [self.view addSubview:backgroundView];
     
-    self.welcomeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.welcomeButton setFrame:CGRectMake(80, 115, 160, 41)];
-    [self.welcomeButton.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
-    [self.welcomeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [self.welcomeButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
-    [self.welcomeButton.titleLabel setTextAlignment:UITextAlignmentCenter];
-    //    [self.loginButton setBackgroundImage:[UIImage imageNamed:@"button_bg.png"] forState:UIControlStateNormal];
-    
-    self.welcomeTitleView = [[UIImageView alloc]initWithFrame:CGRectMake(21, 32 , 278, 86)];
-    [self.welcomeTitleView setImage:[UIImage imageNamed:@"welcome_title.png"]];
+//    self.welcomeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//    [self.welcomeButton setFrame:CGRectMake(80, 115, 160, 41)];
+//    [self.welcomeButton.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
+//    [self.welcomeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//    [self.welcomeButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
+//    [self.welcomeButton.titleLabel setTextAlignment:UITextAlignmentCenter];
+//    [self.welcomeButton setTitle:T(@"芥末") forState:UIControlStateNormal];
+//    [self.welcomeButton setBackgroundImage:[UIImage imageNamed:@"welcome_btn.png"] forState:UIControlStateNormal];
+//    [self.welcomeButton addTarget:self action:@selector(welcomeAction:) forControlEvents:UIControlEventTouchUpInside];
+//    self.welcomeTitleView = [[UIImageView alloc]initWithFrame:CGRectMake(21, 32 , 278, 86)];
+//    [self.welcomeTitleView setImage:[UIImage imageNamed:@"welcome_title.png"]];
 
+//    [self.view addSubview:self.welcomeButton];
+//    [self.view addSubview:self.welcomeTitleView];
+//    Do any additional setup after loading the view.
     if ([self.me.gender isEqualToString:@""] || [self.me.displayName isEqualToString:@""] || self.me.gender == nil || self.me.displayName == nil ) {
         LoginSettingViewController *settingViewController = [[LoginSettingViewController alloc]initWithNibName:nil bundle:nil];
         [self.navigationController presentModalViewController:settingViewController animated:NO];
+    }else{
+        [self doneGenderNameAction];
     }
     
-    [self.welcomeButton setTitle:T(@"春水堂") forState:UIControlStateNormal];
-    [self.welcomeButton setBackgroundImage:[UIImage imageNamed:@"welcome_btn.png"] forState:UIControlStateNormal];
-    [self.welcomeButton addTarget:self action:@selector(welcomeAction:) forControlEvents:UIControlEventTouchUpInside];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(doneGenderNameAction) name:@"doneGenderName" object:nil];
 
-    
-    [self.view addSubview:self.welcomeButton];
-    [self.view addSubview:self.welcomeTitleView];
-	// Do any additional setup after loading the view.
-    
+
     [[self appDelegate] disableLeftBarButtonItemOnNavbar:YES];
 }
 
@@ -87,14 +85,12 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 
-- (void)settingAction:(id)sender
+- (void)doneGenderNameAction
 {
-    //
-    LoginSettingViewController *settingViewController = [[LoginSettingViewController alloc]initWithNibName:nil bundle:nil];
-    [self.navigationController presentModalViewController:settingViewController animated:YES];
+    [self performSelector:@selector(welcomeAction) withObject:nil afterDelay:2];
 }
 
-- (void)welcomeAction:(id)sender
+- (void)welcomeAction
 {
     [[self appDelegate] disableLeftBarButtonItemOnNavbar:NO];
     [[self appDelegate] startMainSession];

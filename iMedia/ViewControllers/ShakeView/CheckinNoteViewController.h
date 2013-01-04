@@ -12,5 +12,8 @@
 @interface CheckinNoteViewController : UITableViewController
 @property(nonatomic, strong)ShakeInfo *shakeInfo;
 
+@property(nonatomic, strong) NSManagedObjectContext *managedObjectContext;
+
+
 
 @end

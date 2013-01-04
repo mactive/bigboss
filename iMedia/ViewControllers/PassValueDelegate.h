@@ -7,11 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "PassValueDelegate.h"
 
 @protocol PassValueDelegate <NSObject>
 
 @optional
 -(void)passStringValue:(NSString *)value andIndex:(NSUInteger )index;
 -(void)passNSDateValue:(NSDate *)value andIndex:(NSUInteger)index;
+-(void)passUIImageValue:(UIImage *)value andKey:(NSString *)key;
 
 @end

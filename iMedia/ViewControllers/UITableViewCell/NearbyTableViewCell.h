@@ -7,9 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "PassValueDelegate.h"
 @interface NearbyTableViewCell : UITableViewCell
 
-@property(nonatomic, strong)NSDictionary *data;
+@property(nonatomic,weak) id<PassValueDelegate> delegate;
+- (void)setNewData:(NSDictionary *)data;
 
 @end

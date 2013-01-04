@@ -12,6 +12,14 @@
 #import <QuartzCore/QuartzCore.h>
 #import "ServerDataTransformer.h"
 #import "AppNetworkAPIClient.h"
+#import "ConvenienceMethods.h"
+#import "DDLog.h"
+// Log levels: off, error, warn, info, verbose
+#if DEBUG
+static const int ddLogLevel = LOG_LEVEL_VERBOSE;
+#else
+static const int ddLogLevel = LOG_LEVEL_OFF;
+#endif
 
 @interface LoginSettingViewController ()<UITextFieldDelegate>
 
@@ -158,12 +166,13 @@
     self.welcomeButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [self.welcomeButton setFrame:CGRectMake(10, 160, 300, 40)];
     [self.welcomeButton.titleLabel setFont:[UIFont boldSystemFontOfSize:18]];
-    [self.welcomeButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
-    [self.welcomeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+    [self.welcomeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.welcomeButton setTitleColor:RGBCOLOR(230, 230, 230) forState:UIControlStateHighlighted];
     [self.welcomeButton.titleLabel setTextAlignment:UITextAlignmentCenter];
     [self.welcomeButton setAlpha:0.3];
-    [self.welcomeButton setTitle:T(@"欢迎来到春水堂") forState:UIControlStateNormal];
+    [self.welcomeButton setTitle:T(@"欢迎来到芥末") forState:UIControlStateNormal];
     [self.welcomeButton setEnabled:NO];
+    [self.welcomeButton setBackgroundImage:[UIImage imageNamed:@"button_blue_bg.png"] forState:UIControlStateNormal];
     [self.welcomeButton addTarget:self action:@selector(welcomeAction) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.welcomeButton];
     
@@ -173,15 +182,23 @@
 
 - (void)welcomeAction
 {
-    [[AppNetworkAPIClient sharedClient] uploadMe:self.me withBlock:nil];
-    [self dismissModalViewControllerAnimated:YES];
+    [[AppNetworkAPIClient sharedClient] uploadMe:self.me withBlock:^(id responseObject, NSError *error) {
+        if (responseObject) {
+            [self dismissModalViewControllerAnimated:YES];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"doneGenderName" object:nil];
+        } else {
+            // Network Error, hint
+            [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"网络错误，请稍后再试") andHideAfterDelay:2];
+        }
+    }];
+    
 }
 
 - (void)segmentAction:(UISegmentedControl *)seg
 {
     NSInteger Index = seg.selectedSegmentIndex;
     self.me.gender = [self.genderTitleKey objectAtIndex:Index];
-    NSLog(@"Index %i %@", Index,self.me.gender);
+    DDLogVerbose(@"Index %i %@", Index,self.me.gender);
     
     self.me.displayName = self.displayNameField.text;
     

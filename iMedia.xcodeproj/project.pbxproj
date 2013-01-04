@@ -139,6 +139,7 @@
 		260971891696BAC500D0E785 /* welcome_title@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2609710D1696BAC500D0E785 /* welcome_title@2x.png */; };
 		260971901696BBBE00D0E785 /* CuteData.m in Sources */ = {isa = PBXBuildFile; fileRef = 2609718C1696BBBE00D0E785 /* CuteData.m */; };
 		260971911696BBBE00D0E785 /* PageViewLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 2609718F1696BBBE00D0E785 /* PageViewLogger.m */; };
+		260971941696BC8900D0E785 /* WSBubbleSectionHeaderTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 260971931696BC8900D0E785 /* WSBubbleSectionHeaderTableViewCell.m */; };
 		2625096D16428282009ED7D8 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2625096C16428282009ED7D8 /* AssetsLibrary.framework */; };
 		2631C52A16313033004DE7FB /* NSDate+timesince.m in Sources */ = {isa = PBXBuildFile; fileRef = 2631C52916313033004DE7FB /* NSDate+timesince.m */; };
 		263ACBC4166DA9AF00D61725 /* WSBubbleNoticationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 263ACBC3166DA9AF00D61725 /* WSBubbleNoticationTableViewCell.m */; };
@@ -164,7 +165,6 @@
 		2692531F16353F6E000D7AFB /* pinyin.c in Sources */ = {isa = PBXBuildFile; fileRef = 2692531B16353F6E000D7AFB /* pinyin.c */; };
 		2692532016353F6E000D7AFB /* POAPinyin.m in Sources */ = {isa = PBXBuildFile; fileRef = 2692531E16353F6E000D7AFB /* POAPinyin.m */; };
 		269DDE071650F21C00320B02 /* WSBubbleData.m in Sources */ = {isa = PBXBuildFile; fileRef = 269DDE061650F21C00320B02 /* WSBubbleData.m */; };
-		269EB9CE16522811000048F7 /* WSBubbleSectionHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = 269EB9CD16522811000048F7 /* WSBubbleSectionHeader.m */; };
 		269EB9D116522D80000048F7 /* WSBubbleTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 269EB9D016522D80000048F7 /* WSBubbleTableViewCell.m */; };
 		26A587781649199600009968 /* RateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 26A587771649199600009968 /* RateViewController.m */; };
 		26BA7EF21653908E0094D030 /* WSBubbleTextTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 26BA7EF11653908E0094D030 /* WSBubbleTextTableViewCell.m */; };
@@ -542,6 +542,8 @@
 		2609718D1696BBBE00D0E785 /* LogEventConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogEventConstants.h; sourceTree = "<group>"; };
 		2609718E1696BBBE00D0E785 /* PageViewLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PageViewLogger.h; sourceTree = "<group>"; };
 		2609718F1696BBBE00D0E785 /* PageViewLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PageViewLogger.m; sourceTree = "<group>"; };
+		260971921696BC8900D0E785 /* WSBubbleSectionHeaderTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WSBubbleSectionHeaderTableViewCell.h; path = WSBubbleData/WSBubbleSectionHeaderTableViewCell.h; sourceTree = "<group>"; };
+		260971931696BC8900D0E785 /* WSBubbleSectionHeaderTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WSBubbleSectionHeaderTableViewCell.m; path = WSBubbleData/WSBubbleSectionHeaderTableViewCell.m; sourceTree = "<group>"; };
 		2625096C16428282009ED7D8 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		2631C52816313033004DE7FB /* NSDate+timesince.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDate+timesince.h"; path = "contrib/NSDate+timesince.h"; sourceTree = "<group>"; };
 		2631C52916313033004DE7FB /* NSDate+timesince.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDate+timesince.m"; path = "contrib/NSDate+timesince.m"; sourceTree = "<group>"; };
@@ -590,8 +592,6 @@
 		2692531E16353F6E000D7AFB /* POAPinyin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = POAPinyin.m; path = POAPinyin/POAPinyin.m; sourceTree = "<group>"; };
 		269DDE051650F21C00320B02 /* WSBubbleData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WSBubbleData.h; path = WSBubbleData/WSBubbleData.h; sourceTree = "<group>"; };
 		269DDE061650F21C00320B02 /* WSBubbleData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WSBubbleData.m; path = WSBubbleData/WSBubbleData.m; sourceTree = "<group>"; };
-		269EB9CC16522811000048F7 /* WSBubbleSectionHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WSBubbleSectionHeader.h; path = WSBubbleData/WSBubbleSectionHeader.h; sourceTree = "<group>"; };
-		269EB9CD16522811000048F7 /* WSBubbleSectionHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WSBubbleSectionHeader.m; path = WSBubbleData/WSBubbleSectionHeader.m; sourceTree = "<group>"; };
 		269EB9CF16522D80000048F7 /* WSBubbleTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WSBubbleTableViewCell.h; path = WSBubbleData/WSBubbleTableViewCell.h; sourceTree = "<group>"; };
 		269EB9D016522D80000048F7 /* WSBubbleTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WSBubbleTableViewCell.m; path = WSBubbleData/WSBubbleTableViewCell.m; sourceTree = "<group>"; };
 		26A587761649199600009968 /* RateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RateViewController.h; path = ViewControllers/RateViewController.h; sourceTree = "<group>"; };
@@ -1203,8 +1203,6 @@
 				269DDE061650F21C00320B02 /* WSBubbleData.m */,
 				0436B476165136930081A6F7 /* WSBubbleTableView.h */,
 				0436B477165136930081A6F7 /* WSBubbleTableView.m */,
-				269EB9CC16522811000048F7 /* WSBubbleSectionHeader.h */,
-				269EB9CD16522811000048F7 /* WSBubbleSectionHeader.m */,
 				269EB9CF16522D80000048F7 /* WSBubbleTableViewCell.h */,
 				269EB9D016522D80000048F7 /* WSBubbleTableViewCell.m */,
 				26BA7EF01653908E0094D030 /* WSBubbleTextTableViewCell.h */,
@@ -1217,6 +1215,8 @@
 				267B678416689BB000CF25C2 /* WSBubbleTemplateBTableViewCell.m */,
 				263ACBC2166DA9AF00D61725 /* WSBubbleNoticationTableViewCell.h */,
 				263ACBC3166DA9AF00D61725 /* WSBubbleNoticationTableViewCell.m */,
+				260971921696BC8900D0E785 /* WSBubbleSectionHeaderTableViewCell.h */,
+				260971931696BC8900D0E785 /* WSBubbleSectionHeaderTableViewCell.m */,
 			);
 			name = WSBubbleData;
 			sourceTree = "<group>";
@@ -2589,7 +2589,6 @@
 				268CEED7164C177400BFBA13 /* WebViewController.m in Sources */,
 				269DDE071650F21C00320B02 /* WSBubbleData.m in Sources */,
 				0436B478165136930081A6F7 /* WSBubbleTableView.m in Sources */,
-				269EB9CE16522811000048F7 /* WSBubbleSectionHeader.m in Sources */,
 				269EB9D116522D80000048F7 /* WSBubbleTableViewCell.m in Sources */,
 				26BA7EF21653908E0094D030 /* WSBubbleTextTableViewCell.m in Sources */,
 				26BA7EF5165390C00094D030 /* WSBubbleTemplateATableViewCell.m in Sources */,
@@ -2618,6 +2617,7 @@
 				263ACBC4166DA9AF00D61725 /* WSBubbleNoticationTableViewCell.m in Sources */,
 				260971901696BBBE00D0E785 /* CuteData.m in Sources */,
 				260971911696BBBE00D0E785 /* PageViewLogger.m in Sources */,
+				260971941696BC8900D0E785 /* WSBubbleSectionHeaderTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

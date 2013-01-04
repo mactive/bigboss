@@ -8,7 +8,7 @@
 
 #import "AddFriendController.h"
 #import "AddFriendByIDController.h"
-
+#import "AppDefs.h"
 @interface AddFriendController ()
 
 @end
@@ -19,7 +19,7 @@
 {
     self = [super initWithStyle:style];
     if (self) {
-        self.title = @"AddFriend";
+        self.title = T(@"添加好友");
     }
     return self;
 }

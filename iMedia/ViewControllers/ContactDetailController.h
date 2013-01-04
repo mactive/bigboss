@@ -8,10 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@protocol ChatWithIdentityDelegate;
 @class User;
 @class AlbumViewController;
-
+@class FriendRequest;
 
 @interface ContactDetailController : UIViewController<UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate,UIActionSheetDelegate>
 {
@@ -21,10 +20,8 @@
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic) User *user;
 @property (strong, nonatomic) id   jsonData;
-@property (strong, nonatomic) NSString * GUID;
-
-
-@property (strong, nonatomic) id <ChatWithIdentityDelegate> delegate;
+@property (strong, nonatomic) NSString *GUIDString; // When push from nearby guid is not in jsondata 
+@property (strong, nonatomic) FriendRequest *request;
 
 @end
 

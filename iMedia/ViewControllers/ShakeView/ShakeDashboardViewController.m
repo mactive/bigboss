@@ -12,72 +12,81 @@
 #import "TrapezoidLabel.h"
 #import "UIImageView+AFNetworking.h"
 #import "MBProgressHUD.h"
+#import "ConvenienceMethods.h"
 #import "ShakeViewController.h"
 #import "CheckinNoteViewController.h"
 #import "ShakeInfo.h"
+#import "DDLog.h"
+// Log levels: off, error, warn, info, verbose
+#if DEBUG
+static const int ddLogLevel = LOG_LEVEL_VERBOSE;
+#else
+static const int ddLogLevel = LOG_LEVEL_OFF;
+#endif
 
-@interface ShakeDashboardViewController ()<MBProgressHUDDelegate>
+@interface ShakeDashboardViewController ()
 {
-    MBProgressHUD *HUD;
     ShakeInfo     *_shakeInfo;
 }
 
-@property(nonatomic, strong) TrapezoidLabel *inprogressLabel;
-@property(nonatomic, strong) TrapezoidLabel *waitingLabel;
 @property(nonatomic, strong) UIView *checkinView;
+@property(nonatomic, strong) UIImageView *checkinImageView;
 @property(nonatomic, strong) UILabel *checkinLabel;
 @property(nonatomic, strong) UIButton *checkinButton;
+@property(nonatomic, strong) UIButton *checkinOverlayButton;
+@property(nonatomic, strong) UIView *checkinBottomLineView;
+
 @property(nonatomic, strong) NSMutableArray *urlArray;
+@property(nonatomic, strong) NSArray *dataArray;
 @property(nonatomic, strong) NSMutableDictionary *shakeTimesDict;
-
-
-@property(nonatomic, strong)UIButton *inprogressButton;
+@property(nonatomic, strong) UIImageView *replaceView;
+@property(nonatomic, strong) UIImageView *inprogressImageView;
+@property(nonatomic, strong) UIScrollView *baseView;
 
 @end
 
 @implementation ShakeDashboardViewController
 
-@synthesize inprogressLabel;
-@synthesize waitingLabel;
-@synthesize inprogressButton;
+@synthesize managedObjectContext;
 @synthesize checkinLabel;
 @synthesize checkinView;
+@synthesize checkinImageView;
 @synthesize checkinButton;
+@synthesize checkinOverlayButton;
+@synthesize checkinBottomLineView;
 @synthesize urlArray;
+@synthesize dataArray;
 @synthesize shakeTimesDict;
+@synthesize replaceView;
+@synthesize baseView;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithStyle:(UITableViewStyle)style
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithStyle:style];
     if (self) {
         // Custom initialization
-        self.title = T(@"摇一摇");
-        _shakeInfo = nil;
+        self.tableView.delegate = self;
+        self.tableView.dataSource = self;
     }
     return self;
 }
 
-#define LARGE_BUTTON_WIDTH 320
-#define LARGE_BUTTON_HEIGHT 160
-
-#define BUTTON_WIDTH 160
-#define BUTTON_HEIGHT 80
 #define FIRST_TAG 0
-#define BUTTON_OFFEST 1
 
-#define VIEW_ALBUM_OFFSET 1
-#define VIEW_ALBUM_WIDTH 160
-#define VIEW_ALBUM_HEIGHT 80
-#define COUNT_PER_LINE 2
-#define Y_OFFEST 203
-#define X_OFFEST -0.5
+#define ROW_HEIGHT 120
+#define CHECKIN_HEIGHT 126
 
-- (CGRect)calcRect:(NSInteger)index
-{
-    CGFloat x = VIEW_ALBUM_OFFSET * (index % COUNT_PER_LINE * 1 ) + VIEW_ALBUM_WIDTH * (index % COUNT_PER_LINE) ;
-    CGFloat y = VIEW_ALBUM_OFFSET * (floor(index / COUNT_PER_LINE) * 1 + 1) + VIEW_ALBUM_HEIGHT * floor(index / COUNT_PER_LINE);
-    return  CGRectMake( x + X_OFFEST, y+Y_OFFEST, VIEW_ALBUM_WIDTH, VIEW_ALBUM_HEIGHT);
-}
+#define TITLE_TAG 1
+#define SUBTITLE_TAG 2
+#define IMAGE_TAG 3
+
+#define TITLE_HEIGHT 20
+#define SUBTITLE_HEIGHT 15
+#define SUBTITLE_WIDTH 87
+
+#define MAIN_FONT_SIZE 14.0
+#define SUMMARY_FONT_SIZE 12.0
+
 
 - (void) initShakeData
 {
@@ -102,71 +111,229 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
- 
+    
+    self.title = T(@"摇一摇");
+    _shakeInfo = nil;
+    
+    // refresh button
+    UIButton *button1 = [[UIButton alloc] init];
+    button1.frame=CGRectMake(0, 0, 50, 30);
+    [button1 setBackgroundImage:[UIImage imageNamed: @"barbutton_refresh.png"] forState:UIControlStateNormal];
+    [button1 addTarget:self action:@selector(populateData) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:button1];
+    
+        
+    self.tableView = [[UITableView alloc]initWithFrame:self.view.bounds];
+    self.tableView.separatorColor = [UIColor grayColor];
+//    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.backgroundColor = BGCOLOR;
+    self.tableView.scrollsToTop = YES;
+    [self.tableView setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero]];
+
+
     [self initShakeData];
     
-    // green title 
-    self.inprogressLabel = [[TrapezoidLabel alloc] initWithFrame:CGRectMake(0, 0, 87, 15)];
-    self.inprogressLabel.text = T(@"正在进行的活动");
-    self.inprogressLabel.textColor = [UIColor blackColor];
-    self.inprogressLabel.backgroundColor = [ UIColor clearColor];
-    self.inprogressLabel.bgColor = RGBCOLOR(123, 248, 68);
-    
-    //blur title
-    self.waitingLabel = [[TrapezoidLabel alloc] initWithFrame:CGRectMake(0, 0, 87, 15)];
-    self.waitingLabel.text = T(@"即将开始的活动");
-    self.waitingLabel.textColor = [UIColor whiteColor];
-    self.waitingLabel.backgroundColor = [UIColor clearColor];
-    self.waitingLabel.bgColor = RGBCOLOR(60, 91, 148);
-    
-    // 顶部大button
-    self.inprogressButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.inprogressButton.frame = CGRectMake(0, 0, LARGE_BUTTON_WIDTH, LARGE_BUTTON_HEIGHT);
-    self.inprogressButton.tag = FIRST_TAG;
-    
     // checkinView
-    self.checkinView = [[UIView alloc]initWithFrame:CGRectMake(0, LARGE_BUTTON_HEIGHT, 320, 44)];
+    self.checkinView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 320, CHECKIN_HEIGHT)];
     self.checkinView.backgroundColor = RGBCOLOR(237, 223, 214);
-    // checklabel
-    self.checkinLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 12, 200, 20)];
-    self.checkinLabel.text = T(@"连续签到7天可以获得精美礼品");
-    self.checkinLabel.font = [UIFont systemFontOfSize:12];
-    self.checkinLabel.textAlignment = NSTextAlignmentLeft;
-    self.checkinLabel.textColor = RGBCOLOR(195, 70, 21);
-    self.checkinLabel.backgroundColor = [UIColor clearColor];
-    [self.checkinView addSubview:self.checkinLabel];
+    
+    // checkinImageView
+    self.checkinImageView = [[UIImageView alloc]initWithFrame:CGRectMake(90, 24, 128, 56)];
+    [self.checkinImageView setImage:[UIImage imageNamed:@"checkin_image.png"]];
+    [self.checkinView addSubview:self.checkinImageView];
+    
+    self.checkinBottomLineView = [[UIView alloc]initWithFrame:CGRectMake(0, CHECKIN_HEIGHT-1, 320, 1)];
+    self.checkinBottomLineView.backgroundColor = RGBCOLOR(235, 147, 109);
+    [self.checkinView addSubview:self.checkinBottomLineView];
+    
     // checkButton
-    UIImageView *checkinButtonImage = [[ UIImageView alloc]initWithFrame:CGRectMake(3, 3, 24, 24)];
-    [checkinButtonImage setImage:[UIImage imageNamed:@"metro_icon_3.png"]];
+    UIImageView *checkinButtonImage = [[ UIImageView alloc]initWithFrame:CGRectMake(0, 1, 12, 12)];
+    [checkinButtonImage setImage:[UIImage imageNamed:@"arraw_icon.png"]];
     
     self.checkinButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.checkinButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 25, 0, 0)];
+    [self.checkinButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 13, 0, 0)];
     [self.checkinButton addSubview:checkinButtonImage];
-    [self.checkinButton setTitle:T(@"摇一摇签到") forState:UIControlStateNormal];
-    [self.checkinButton setTitleColor:RGBCOLOR(255, 255, 255) forState:UIControlStateNormal];
-    self.checkinButton.backgroundColor = RGBCOLOR(233, 163, 136);
+    [self.checkinButton setTitle:T(@"点击进入摇一摇签到") forState:UIControlStateNormal];
+    [self.checkinButton setTitleColor:RGBCOLOR(195, 70, 21) forState:UIControlStateNormal];
+    self.checkinButton.backgroundColor = [UIColor clearColor];
     self.checkinButton.titleLabel.font = [UIFont systemFontOfSize:12];
     self.checkinButton.layer.cornerRadius = 5.0f;
-    self.checkinButton.frame = CGRectMake(210, 7, 102, 30);
-    [self.checkinButton addTarget:self action:@selector(checkinAction) forControlEvents:UIControlEventTouchUpInside];
+    self.checkinButton.frame = CGRectMake(95, 100, 130, 14);
     [self.checkinView addSubview:self.checkinButton];
     
-    self.urlArray = [[NSMutableArray alloc]init];
     
-    [self.view addSubview:self.checkinView];
-    [self.view addSubview:self.inprogressButton];
+    // Create a label for the subtitle.
+    TrapezoidLabel *subTitle =[[TrapezoidLabel alloc] initWithFrame:CGRectMake(0, 0, SUBTITLE_WIDTH, SUBTITLE_HEIGHT)];
+    subTitle.textColor = [UIColor whiteColor];
+    subTitle.numberOfLines = 1;
+    subTitle.backgroundColor = [UIColor clearColor];
+    subTitle.bgColor = RGBCOLOR(195, 70, 21);
+    subTitle.text = T(@"摇一摇签到");
+    [self.checkinView addSubview:subTitle];
+    
+    // overlay button
+    self.checkinOverlayButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.checkinOverlayButton.backgroundColor = [UIColor clearColor];
+    self.checkinOverlayButton.enabled = YES;
+    [self.checkinOverlayButton setFrame:self.checkinView.bounds];
+    [self.checkinOverlayButton addTarget:self action:@selector(checkinAction) forControlEvents:UIControlEventTouchUpInside];
+    [self.checkinView addSubview:self.checkinOverlayButton];
+    
+    self.tableView.tableHeaderView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 320, CHECKIN_HEIGHT)];
+    [self.tableView.tableHeaderView addSubview:self.checkinView];
     
     // did load populate
     [self populateData];
-
+    
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - tableview delegate
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return [self.dataArray count];
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return ROW_HEIGHT;
+}
+
+
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *CellIdentifier = @"ShakeDashboard";
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    
+    // Configure the cell...
+    if (cell == nil) {
+        cell = [self tableViewCellWithReuseIdentifier:CellIdentifier];
+    }
+    
+    [self configureCell:cell forIndexPath:indexPath];
+    
+    return cell;
+}
+
+- (void) tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    cell.backgroundColor = [UIColor whiteColor];
+}
+
+////////////////////////////////////////////////////////////////////////////////////
+#pragma mark Configuring table view cells
+////////////////////////////////////////////////////////////////////////////////////
+
+- (UITableViewCell *)tableViewCellWithReuseIdentifier:(NSString *)identifier{
+    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+    
+    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+    
+    CGRect rect;
+    // Create an image view for the quarter image.
+	CGRect imageRect = CGRectMake(0, 0, 320, ROW_HEIGHT);
+    
+    UIImageView *avatarImage = [[UIImageView alloc] initWithFrame:imageRect];
+    avatarImage.tag = IMAGE_TAG;
+    avatarImage.contentMode = UIViewContentModeScaleAspectFit;
+
+    [cell.contentView addSubview:avatarImage];
+    
+    // Create a label for the subtitle.
+	rect = CGRectMake(0, 0, SUBTITLE_WIDTH, SUBTITLE_HEIGHT);
+    TrapezoidLabel *subTitle =[[TrapezoidLabel alloc] initWithFrame:rect];
+    subTitle.textColor = [UIColor whiteColor];
+	subTitle.tag = SUBTITLE_TAG;
+    subTitle.numberOfLines = 1;
+    subTitle.backgroundColor = [UIColor clearColor];
+    [cell.contentView addSubview:subTitle];
+    
+    // Create a label for title
+	rect = CGRectMake(0, ROW_HEIGHT- TITLE_HEIGHT, 320, TITLE_HEIGHT);
+    UILabel * label = [[UILabel alloc] initWithFrame:rect];
+	label.tag = TITLE_TAG;
+    label.numberOfLines = 1;
+	label.font = [UIFont systemFontOfSize:MAIN_FONT_SIZE];
+	label.textAlignment = UITextAlignmentLeft;
+    label.textColor = RGBCOLOR(255, 255, 255);
+    label.backgroundColor = RGBACOLOR(0, 0, 0, 0.5);
+    
+	[cell.contentView addSubview:label];
+    
+    return  cell;
+}
+
+- (void)configureCell:(UITableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath {
+    
+    NSDictionary * data = [self.dataArray objectAtIndex:indexPath.row];
+    
+    // set
+    UIImageView *imageView;
+    BOOL ISINPROGRESS = indexPath.row == 0 ? YES: NO; // 默认有一个正在进行的活动
+    
+    //set avatar
+    imageView = (UIImageView *)[cell viewWithTag:IMAGE_TAG];
+    
+    if (StringHasValue([data objectForKey:@"id"])) {
+        NSURL *url = [NSURL URLWithString:[data objectForKey:@"thumbnail"]];
+        [imageView setImageWithURL:url placeholderImage:[UIImage imageNamed:@"template_placeholder.png"]];
+    }else{
+        [imageView setImage:[UIImage imageNamed:@"shake_replace.png"]];
+    }
+    
+    
+    
+    // set the subtitle text
+    TrapezoidLabel *subTitle = (TrapezoidLabel *)[cell viewWithTag:SUBTITLE_TAG];
+    if (ISINPROGRESS) {
+        subTitle.text = T(@"正在进行的活动");
+        subTitle.bgColor = RGBCOLOR(71, 221, 36);
+    }else{
+        subTitle.text = T(@"即将开始的活动");
+        subTitle.bgColor = RGBCOLOR(60, 91, 148);
+    }
+    
+    // title
+    UILabel *title = (UILabel *)[cell viewWithTag:TITLE_TAG];    
+    if (StringHasValue([data objectForKey:@"id"])) {
+        title.text = [NSString stringWithFormat:@"  %@",[data objectForKey:@"name"]];
+    }else{
+        title.text = [NSString stringWithFormat:@"  %@",T(@"暂时没有活动")];
+    }
+    
+}
+
+
+
+#pragma mark - Table view delegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    NSDictionary *rowData = [self.dataArray objectAtIndex:indexPath.row];
+    if ( StringHasValue([rowData objectForKey:@"id"]) ) {
+        ShakeViewController *controller = [[ShakeViewController alloc]initWithNibName:nil bundle:nil];
+        controller.shakeData = rowData;
+        controller.managedObjectContext = self.managedObjectContext;
+        [controller setHidesBottomBarWhenPushed:YES];
+        [self.navigationController pushViewController:controller animated:YES];
+    }
+}
+
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
 
-    
 }
 //////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - click actions
@@ -175,74 +342,55 @@
 {
     CheckinNoteViewController *controller = [[CheckinNoteViewController alloc]initWithNibName:nil bundle:nil];
     [controller setHidesBottomBarWhenPushed:YES];
+    controller.managedObjectContext = self.managedObjectContext;
     controller.shakeInfo = _shakeInfo;
-    [self.navigationController pushViewController:controller animated:YES];
-}
-
-- (void)buttonAction:(UIButton *)sender
-{
-    ShakeViewController *controller = [[ShakeViewController alloc]initWithNibName:nil bundle:nil];
-    controller.shakeData = [self.urlArray objectAtIndex:sender.tag];
-    [controller setHidesBottomBarWhenPushed:YES];
     [self.navigationController pushViewController:controller animated:YES];
 }
 
 - (void)populateData
 {
-    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    HUD.delegate = self;
+    self.urlArray  = [[NSMutableArray alloc]init];
+
+    MBProgressHUD* HUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+    HUD.removeFromSuperViewOnHide = YES;
     HUD.labelText = T(@"正在加载信息");
     
     self.shakeTimesDict = [[NSMutableDictionary alloc]init];
     
+    // 先全部不显示
+//    [self allButtonHide];
+
     [[AppNetworkAPIClient sharedClient]getShakeDashboardInfoWithBlock:^(id responseObject, NSError *error) {
+        [HUD hide:YES];
         if (responseObject != nil) {
-            [HUD hide:YES];
             NSDictionary *responseDict = responseObject;
             NSDictionary *inprogressDict = [responseDict objectForKey:@"inprogress"];
             NSDictionary *waitingDict = [responseDict objectForKey:@"waiting"];
  
             if (inprogressDict) {
-                UIImageView *buttonImageView = [[UIImageView alloc]initWithFrame:self.inprogressButton.bounds];
-                NSURL *url = [[NSURL alloc]initWithString:[inprogressDict objectForKey:@"thumbnail"]];
-                [buttonImageView setImageWithURL:url placeholderImage:[UIImage imageNamed:@"shake_test_image.png"]];
-                [self.inprogressButton addSubview:buttonImageView];
-                [self.inprogressButton addSubview:self.inprogressLabel];
                 
-                [self.urlArray insertObject:inprogressDict atIndex:self.inprogressButton.tag];
-                
-                [self.inprogressButton addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
-                
+                [self.urlArray addObject:inprogressDict];
+
                 // set shaketime user default
                 NSString *key = [inprogressDict objectForKey:@"id"];
                 if ([[self.shakeTimesDict objectForKey:key] length] == 0) {
                     [self.shakeTimesDict setObject:@"" forKey:key];
                 }
             }else{
-                [self.urlArray insertObject:@"" atIndex:self.inprogressButton.tag];
+                NSDictionary * emptyDict = [[NSDictionary alloc] initWithObjectsAndKeys:@"inprogress",@"type", nil];
+                [self.urlArray insertObject:emptyDict atIndex:FIRST_TAG];
             }
             
             if (waitingDict) {
                 for (int j = 0; j < [waitingDict count]; j++) {
+                    
                     NSDictionary *waitingItem = [waitingDict objectForKey:[NSString stringWithFormat:@"%i",j]];
-                    
-                    UIButton *waitingButton = [UIButton buttonWithType:UIButtonTypeCustom];
-                    waitingButton.frame = [self calcRect:j];
-                    
-                    UIImageView *imageView = [[UIImageView alloc]initWithFrame:waitingButton.bounds];
-                    NSURL *url = [[NSURL alloc]initWithString:[waitingItem objectForKey:@"thumbnail"]];
-                    [imageView setImageWithURL:url placeholderImage:[UIImage imageNamed:@"shake_test_thumbnail.png"]];
-                    waitingButton.tag = FIRST_TAG+j+1;
-                    
-                    [self.urlArray insertObject:waitingItem atIndex:waitingButton.tag];
-                    
-                    [waitingButton addTarget:self action:@selector(buttonAction:) forControlEvents:UIControlEventTouchUpInside];
 
-                    [waitingButton addSubview:imageView];
-                    if (j == 0) {
-                        [waitingButton addSubview:self.waitingLabel];
-                    }
-                    [self.view addSubview:waitingButton];
+                    // base in server time not local time
+                    NSMutableDictionary *passValueItem = [[NSMutableDictionary alloc]initWithDictionary:waitingItem];
+                    [passValueItem setValue:@"NO" forKey:@"server_began"];
+                    
+                    [self.urlArray addObject:passValueItem];
                     
                     // set shaketime user default
                     NSString *key = [waitingItem objectForKey:@"id"];
@@ -250,29 +398,28 @@
                         [self.shakeTimesDict setObject:@"" forKey:key];
                     }
                 }
+            }else{
+                NSDictionary * emptyDict = [[NSDictionary alloc] initWithObjectsAndKeys:@"waiting",@"type", nil];
+                [self.urlArray insertObject:emptyDict atIndex:FIRST_TAG+1];
             }
             
             NSDictionary *tmp_dict = [[NSDictionary alloc]initWithDictionary:self.shakeTimesDict];
             [[NSUserDefaults standardUserDefaults] setObject:tmp_dict forKey:@"shakeTimesDict"];
             
-
-
-     
-        }else{
-            [HUD hide:YES];
+            // 都有的时候才去掉替代显示
+            if (inprogressDict != nil && waitingDict != nil) {
+                [self.replaceView removeFromSuperview];
+            }
             
-            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            HUD.mode = MBProgressHUDModeText;
-            HUD.delegate = self;
-            HUD.labelText = T(@"网络错误,无法获取信息");
-            [HUD hide:YES afterDelay:1];
+            self.dataArray  = [[NSArray alloc]initWithArray:self.urlArray];
+            DDLogVerbose(@"### %@",self.urlArray);
+            
+            [self.tableView reloadData];
+            
+        }else{
+            [ConvenienceMethods showHUDAddedTo:self.navigationController.view animated:YES text:T(@"网络错误,无法获取信息") andHideAfterDelay:1];
         }
-        
-        
     }];
-    
-    
-    
 }
 
 - (void)didReceiveMemoryWarning

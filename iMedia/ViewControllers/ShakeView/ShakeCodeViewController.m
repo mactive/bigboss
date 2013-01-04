@@ -9,9 +9,19 @@
 #import "ShakeCodeViewController.h"
 #import "MBProgressHUD.h"
 #import <QuartzCore/QuartzCore.h>
+#import "Information.h"
 
+#import "DDLog.h"
+// Log levels: off, error, warn, info, verbose
+#if DEBUG
+static const int ddLogLevel = LOG_LEVEL_VERBOSE;
+#else
+static const int ddLogLevel = LOG_LEVEL_OFF;
+#endif
 
 @interface ShakeCodeViewController ()
+{
+}
 
 @property(nonatomic, strong) UILabel *noticeLabel;
 @property(nonatomic, strong) UILabel *codeLabel;
@@ -27,6 +37,7 @@
 @synthesize saveButton;
 @synthesize codeString;
 @synthesize codeArray;
+@synthesize managedObjectContext;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -36,6 +47,7 @@
     }
     return self;
 }
+
 
 - (void)viewDidLoad
 {
@@ -68,8 +80,8 @@
     [self.saveButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     [self.saveButton.titleLabel setTextAlignment:UITextAlignmentCenter];
     [self.saveButton setBackgroundImage:[UIImage imageNamed:@"button_cancel_bg.png"] forState:UIControlStateNormal];
-    [self.saveButton setTitle:T(@"保存到 设置->备忘录") forState:UIControlStateNormal];
-//    [self.saveButton addTarget:self action:@selector(saveCodeAction) forControlEvents:UIControlEventTouchUpInside];
+    [self.saveButton setTitle:T(@"保存到 设置->优惠码备忘录") forState:UIControlStateNormal];
+    [self.saveButton addTarget:self action:@selector(saveCodeAction:) forControlEvents:UIControlEventTouchUpInside];
 
     [self.view addSubview:self.codeLabel];
     [self.view addSubview:self.saveButton];
@@ -81,7 +93,7 @@
 
 - (void)refreshCode
 {
-    self.noticeLabel.text = T(@"这是您的中奖code，请您去官方网站兑换");
+    self.noticeLabel.text = T(@"这是你的中奖code，请你去官方网站兑换");
     if ([codeString length] > 0 && codeString!= nil) {
         self.codeLabel.text = self.codeString;
         
@@ -98,10 +110,41 @@
     
 }
 
+- (void)saveCodeAction:(id)sender {
+    
+    Information *info = [NSEntityDescription insertNewObjectForEntityForName:@"Information" inManagedObjectContext:self.managedObjectContext];
+    
+
+    [info setName:@"Wincode"];
+    [info setType:WinnerCodeFromShake];
+    [info setCreatedOn:[NSDate date]];
+    [info setValue:self.codeString];
+    
+    NSError *error;
+    if(![self.managedObjectContext save:&error]){
+        DDLogVerbose(@"Save ERROR");
+    }
+    
+    MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.view];
+    [self.view addSubview:hud];
+    hud.removeFromSuperViewOnHide = YES;
+    hud.mode = MBProgressHUDModeText;
+    hud.labelText = T(@"存储成功");
+    hud.detailsLabelText = T(@"请到 设置->优惠码备忘录 查看");
+    hud.detailsLabelText = T(@"返回上一层");
+    [hud showAnimated:YES whileExecutingBlock:^{
+        sleep(2);
+    } completionBlock:^{
+        [self.navigationController popViewControllerAnimated:YES];
+    }];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+
 
 @end

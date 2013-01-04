@@ -23,6 +23,16 @@
 #import "XMPPNetworkCenter.h"
 #import "ConversationsController.h"
 #import "NSDate-Utilities.h"
+#import "ConvenienceMethods.h"
+#import "math.h"
+#import "DDLog.h"
+// Log levels: off, error, warn, info, verbose
+#if DEBUG
+static const int ddLogLevel = LOG_LEVEL_VERBOSE;
+#else
+static const int ddLogLevel = LOG_LEVEL_OFF;
+#endif
+
 
 // TODO: Rename to CHAT_BAR_HEIGHT_1, etc.
 #define kChatBarHeight1                      40
@@ -33,9 +43,9 @@
 #define MESSAGE_TEXT_WIDTH_MAX               180
 #define MESSAGE_MARGIN_TOP                   7
 #define MESSAGE_MARGIN_BOTTOM                10
-#define TEXT_VIEW_X                          7   // 40  (with CameraButton)
+#define TEXT_VIEW_X                          18   // 40  (with CameraButton)
 #define TEXT_VIEW_Y                          2
-#define TEXT_VIEW_WIDTH                      249 // 216 (with CameraButton)
+#define TEXT_VIEW_WIDTH                      290 // 249 (with CameraButton)
 #define TEXT_VIEW_HEIGHT_MIN                 90
 #define ContentHeightMax                     80
 #define MESSAGE_COUNT_LIMIT                  50
@@ -43,7 +53,8 @@
 #define MESSAGE_SENT_DATE_LABEL_TAG          100
 #define MESSAGE_BACKGROUND_IMAGE_VIEW_TAG    101
 #define MESSAGE_TEXT_LABEL_TAG               102
-
+#define TEXT_VIEW_DEFAULT_HEIGHT             36.0f
+#define TEXT_VIEW_DEFAULT_MAX_HEIGHT         96.0f
 #define MESSAGE_TEXT_SIZE_WITH_FONT(message, font) \
 [message.text sizeWithFont:font constrainedToSize:CGSizeMake(MESSAGE_TEXT_WIDTH_MAX, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap]
 
@@ -57,9 +68,13 @@
     NSDate *_previousShownSentDate;
 }
 
+@property(strong, nonatomic)UISwipeGestureRecognizer *swipeGestureRecognizer;
 @property(strong, nonatomic)UITapGestureRecognizer *tapGestureRecognizer;
+@property(strong, nonatomic)UIView *swipeView;
+@property(nonatomic, readwrite)CGFloat keyboardBoundHeight;
+@property(nonatomic, readwrite)CGFloat textViewContentHeight;
 
-- (void)addMessage:(Message *)msg toBubbleData:(NSMutableArray *)data;
+- (WSBubbleData *)addMessage:(Message *)msg toBubbleData:(NSMutableArray *)data;
 
 // receive new message notification
 - (void)newMessageReceived:(NSNotification *)notification;
@@ -73,7 +88,10 @@
 @synthesize bubbleTable;
 @synthesize conversation;
 @synthesize managedObjectContext;
+@synthesize swipeGestureRecognizer;
 @synthesize tapGestureRecognizer;
+@synthesize keyboardBoundHeight;
+@synthesize textViewContentHeight;
 
 - (id)init
 {
@@ -94,6 +112,7 @@
 {
 	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
+
 
 - (void)viewDidLoad
 {
@@ -125,7 +144,9 @@
     _textView.scrollIndicatorInsets = UIEdgeInsetsMake(13, 0, 8, 6);
     _textView.scrollsToTop = NO;
     _textView.font = [UIFont systemFontOfSize:MessageFontSize];
-    _textView.placeholder = NSLocalizedString(@" Message", nil);
+    _textView.placeholder = T(@"说点什么吧");
+    _textView.returnKeyType = UIReturnKeySend;
+    _textView.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [messageInputBar addSubview:_textView];
     _previousTextViewContentHeight = MessageFontSize+20;
     
@@ -135,48 +156,98 @@
     messageInputBarBackgroundImageView.autoresizingMask = self.bubbleTable.autoresizingMask;
     [messageInputBar addSubview:messageInputBarBackgroundImageView];
     
-    // Create sendButton.
-    self.sendButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    _sendButton.frame = CGRectMake(messageInputBar.frame.size.width-65, 8, 59, 26);
-    _sendButton.autoresizingMask = (UIViewAutoresizingFlexibleTopMargin /* multiline input */ | UIViewAutoresizingFlexibleLeftMargin /* landscape */);
-    UIEdgeInsets sendButtonEdgeInsets = UIEdgeInsetsMake(0, 13, 0, 13); // 27 x 27
-    UIImage *sendButtonBackgroundImage = [[UIImage imageNamed:@"SendButton"] resizableImageWithCapInsets:sendButtonEdgeInsets];
-    [_sendButton setBackgroundImage:sendButtonBackgroundImage forState:UIControlStateNormal];
-    [_sendButton setBackgroundImage:sendButtonBackgroundImage forState:UIControlStateDisabled];
-    [_sendButton setBackgroundImage:[[UIImage imageNamed:@"SendButtonHighlighted"] resizableImageWithCapInsets:sendButtonEdgeInsets] forState:UIControlStateHighlighted];
-    _sendButton.titleLabel.font = [UIFont boldSystemFontOfSize:16];
-    _sendButton.titleLabel.shadowOffset = CGSizeMake(0.0, -1.0);
-    [_sendButton setTitle:NSLocalizedString(@"Send", nil) forState:UIControlStateNormal];
-    [_sendButton setTitleShadowColor:[UIColor colorWithRed:0.325f green:0.463f blue:0.675f alpha:1] forState:UIControlStateNormal];
-    [_sendButton addTarget:self action:@selector(sendMessage) forControlEvents:UIControlEventTouchUpInside];
-    [messageInputBar addSubview:_sendButton];
-    
     [self.view addSubview:self.bubbleTable];
     [self.view addSubview:messageInputBar];
     
     //  单点触控
-    self.tapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(handleTaps:)];
+    self.swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(handleSwipe:)];
+    self.swipeGestureRecognizer.direction = UISwipeGestureRecognizerDirectionDown;
+    self.swipeGestureRecognizer.numberOfTouchesRequired = 1;
+    
+    self.tapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(handleTap:)];
     self.tapGestureRecognizer.numberOfTapsRequired = 1;
     self.tapGestureRecognizer.numberOfTouchesRequired = 1;
+    
+    self.swipeView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 320, 150)];
+    self.swipeView.backgroundColor = [UIColor clearColor];
+    
 }
 
-- (void)handleTaps:(UIGestureRecognizer *)paramSender
+- (void)keyboardWillChangeFrame:(NSNotification *)notification{
+    NSValue *keyboardBoundsValue = [[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey];
+    CGRect keyboardBounds;
+    [keyboardBoundsValue getValue:&keyboardBounds];
+    
+    self.keyboardBoundHeight = keyboardBounds.size.height;
+    self.swipeView.frame =  CGRectMake(0, 0, 320, 370 - self.keyboardBoundHeight);
+
+    DDLogVerbose(@"keyboardBounds.size.height %f",keyboardBounds.size.height);
+    
+}
+
+// textview 如果输入换行 当作发送
+- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text;
 {
-    NSLog(@"handleTaps");
+	if ([text isEqualToString:@"\n"]){
+        if (StringHasValue(self.textView.text)) {
+            [self sendMessage];
+            return NO;
+        }else{
+            [textView resignFirstResponder];
+            [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"信息不能为空") andHideAfterDelay:1];
+            return YES;
+        }
+
+    }else{
+        return YES; 
+    }
+}
+
+
+- (void)handleTap:(UITapGestureRecognizer *)paramSender
+{
     [self.textView resignFirstResponder];
+}
+
+- (void)handleSwipe:(UISwipeGestureRecognizer *)paramSender
+{
+    if (paramSender.direction & UISwipeGestureRecognizerDirectionDown) {
+        [self.textView resignFirstResponder];
+    }
+    
 }
 
 /////////////////////////////////////////////////////
 #pragma mark - sort Bubble data make a section data
 /////////////////////////////////////////////////////
 
+- (NSMutableArray *)addLatestData:(WSBubbleData *)data toSortedBubbleSection:(NSMutableArray *)section
+{
+    if (section == nil) {
+        WSBubbleData *headerData = [WSBubbleData dataWithSectionHeader:data.date type:BubbleTypeSectionHeader];
+        NSMutableArray *result = [[NSMutableArray alloc] initWithObjects:[[NSMutableArray alloc] initWithObjects:headerData, data, nil], nil];
+        return result;
+    }
+    
+    NSMutableArray *lastSection = [section lastObject];
+    WSBubbleData* lastData = [lastSection lastObject];
+    if ([data.date timeIntervalSinceDate:lastData.date] > self.bubbleTable.snapInterval) {
+        NSMutableArray* oneNewSection = [[NSMutableArray alloc] init];
+        WSBubbleData *headerData = [WSBubbleData dataWithSectionHeader:data.date type:BubbleTypeSectionHeader];
+        [oneNewSection addObject:headerData];
+        [section addObject:oneNewSection];
+        [oneNewSection addObject:data];
+    } else {
+        [lastSection addObject:data];
+    }
+    
+    return section;
+}
 - (NSMutableArray *)sortBubbleSection:(NSMutableArray *)unorderData
 {
     if (unorderData != nil && [unorderData count] > 0)
     {
-        int count = [unorderData count];
         
-        NSMutableArray *bubbleSection = [[NSMutableArray alloc] init];
         NSArray *resultData = [unorderData sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
             WSBubbleData *bubbleData1 = (WSBubbleData *)obj1;
             WSBubbleData *bubbleData2 = (WSBubbleData *)obj2;
@@ -186,8 +257,8 @@
         
         NSDate *last = [NSDate dateWithTimeIntervalSince1970:0];
         NSMutableArray *currentSection = nil;
-        
-        for (int i = 0; i < count; i++)
+        NSMutableArray *bubbleSection = [[NSMutableArray alloc] init];
+        for (int i = 0; i < [unorderData count]; i++)
         {
             WSBubbleData *data = (WSBubbleData *)[resultData objectAtIndex:i];
                     
@@ -195,6 +266,9 @@
             {
 
                 currentSection = [[NSMutableArray alloc] init];
+                WSBubbleData *headerData = [WSBubbleData dataWithSectionHeader:data.date type:BubbleTypeSectionHeader];
+                [currentSection addObject:headerData];
+                
                 [bubbleSection addObject:currentSection];
             }
             
@@ -209,14 +283,6 @@
 }
 
 
-/*
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-}
-*/
-
 - (void)refreshBubbleData
 {
     NSSet *messages = conversation.messages;
@@ -230,7 +296,7 @@
     
     self.bubbleTable.bubbleSection = [self sortBubbleSection:self.bubbleData];
     [self.bubbleTable reloadData];
-    [self scrollToBottomAnimated:NO];
+    [self scrollToBottomBubble:YES];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -250,7 +316,6 @@
     self.bubbleTable.bubbleSection = [self sortBubbleSection:self.bubbleData];
     [self.bubbleTable reloadData];
     
-#warning  -  this block end
 
     // setup self.title
     NSEnumerator *userEnumerator = [conversation.attendees objectEnumerator];
@@ -267,7 +332,7 @@
         [[self appDelegate].conversationController contentChanged];
     }
     
-    [self scrollToBottomAnimated:NO];
+    [self scrollToBottomBubble:YES];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -278,6 +343,9 @@
                                              selector:@selector(newMessageReceived:)
                                                  name:NEW_MESSAGE_NOTIFICATION object:conversation];
     [self.bubbleTable flashScrollIndicators];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillChangeFrame:)
+                                                 name:UIKeyboardWillChangeFrameNotification object:nil];
     
 }
 
@@ -285,6 +353,8 @@
 {
     NotificationsUnobserve();
     [super viewWillDisappear:animated];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillChangeFrameNotification object:nil];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -294,6 +364,7 @@
         self.conversation.unreadMessagesCount = 0;
         [[self appDelegate].conversationController contentChanged];
     }
+
 }
 
 
@@ -305,7 +376,9 @@
 #pragma mark - Keyboard Notification
 
 - (void)keyboardWillShow:(NSNotification *)notification {
-    [self.bubbleTable addGestureRecognizer:self.tapGestureRecognizer];
+    [self.view addSubview:self.swipeView];
+    [self.swipeView addGestureRecognizer:self.swipeGestureRecognizer];
+    [self.swipeView addGestureRecognizer:self.tapGestureRecognizer];
 
     NSTimeInterval animationDuration;
     UIViewAnimationCurve animationCurve;
@@ -315,25 +388,20 @@
     [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] getValue:&animationDuration];
     [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] getValue:&frameEnd];
     
-    //    NSLog(@"animationDuration: %f", animationDuration); // TODO: Why 0.35 on viewDidLoad?
+    //    DDLogVerbose(@"animationDuration: %f", animationDuration); // TODO: Why 0.35 on viewDidLoad?
     [UIView animateWithDuration:animationDuration delay:0.0 options:(UIViewAnimationOptionsFromCurve(animationCurve) | UIViewAnimationOptionBeginFromCurrentState) animations:^{
         CGFloat viewHeight = [self.view convertRect:frameEnd fromView:nil].origin.y;
         UIView *messageInputBar = _textView.superview;
         UIViewSetFrameY(messageInputBar, viewHeight-messageInputBar.frame.size.height);
         
-        if([self.bubbleTable contentOffset].y > 0) {
-            UIEdgeInsets insets = self.bubbleTable.contentInset;
-            insets.bottom = viewHeight + 20;
-            [self.bubbleTable setContentInset:insets];
-            [self.bubbleTable setScrollIndicatorInsets:insets];
-        }
-        
-        [self scrollToBottomAnimated:NO];
+        [self scrollToBottomBubble:YES];
     } completion:nil];
 }
 
 - (void)keyboardWillHide:(NSNotification*)notification {
-    [self.bubbleTable removeGestureRecognizer:self.tapGestureRecognizer];
+    [self.swipeView removeFromSuperview];
+    [self.swipeView removeGestureRecognizer:self.swipeGestureRecognizer];
+    [self.swipeView removeGestureRecognizer:self.tapGestureRecognizer];
 
     NSTimeInterval animationDuration;
     UIViewAnimationCurve animationCurve;
@@ -343,75 +411,131 @@
     [[userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey] getValue:&animationDuration];
     [[userInfo objectForKey:UIKeyboardFrameEndUserInfoKey] getValue:&frameEnd];
     
-    //    NSLog(@"animationDuration: %f", animationDuration); // TODO: Why 0.35 on viewDidLoad?
+    //    DDLogVerbose(@"animationDuration: %f", animationDuration); // TODO: Why 0.35 on viewDidLoad?
     [UIView animateWithDuration:animationDuration delay:0.0 options:(UIViewAnimationOptionsFromCurve(animationCurve) | UIViewAnimationOptionBeginFromCurrentState) animations:^{
-        CGFloat viewHeight = [self.view convertRect:frameEnd fromView:nil].origin.y;
         UIView *messageInputBar = _textView.superview;
         UIViewSetFrameY(messageInputBar, self.view.frame.size.height - messageInputBar.frame.size.height);
-//        self.bubbleTable.contentInset = self.bubbleTable.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, 60, 0);
         
-        if([self.bubbleTable contentOffset].y > 0) {
-            UIEdgeInsets insets = self.bubbleTable.contentInset;
-            insets.bottom = 0;
-            [self.bubbleTable setContentInset:insets];
-            [self.bubbleTable setScrollIndicatorInsets:insets];
-        }
+        self.keyboardBoundHeight = 0;
+        [self scrollToBottomBubble:YES];
         
-        [self scrollToBottomAnimated:NO];
     } completion:nil];
 }
 
+- (void)scrollToBottomBubble:(BOOL)isScroll {
+    
+    if([self.bubbleTable contentOffset].y > 0) {
+        UIEdgeInsets insets = self.bubbleTable.contentInset;
+        insets.bottom = self.keyboardBoundHeight;
+        [self.bubbleTable setContentInset:insets];
+        [self.bubbleTable setScrollIndicatorInsets:insets];
+    }
+    
+    CGFloat t1 = [self.bubbleTable contentOffset].y;
+    CGFloat t2 = [self.bubbleTable contentSize].height;
+    CGFloat t3 = self.bubbleTable.contentInset.bottom;
+    CGFloat t4 = self.keyboardBoundHeight;
+    CGFloat t5 = self.textViewContentHeight;
+    CGFloat t6 = self.bubbleTable.frame.size.height;
+    BOOL T5BOOL = t5 > TEXT_VIEW_DEFAULT_HEIGHT && t5 <= TEXT_VIEW_DEFAULT_MAX_HEIGHT ? YES : NO ;
+    BOOL HALFSCREEN = (t2+t4 > t6) && (t2 < t6) ? YES : NO ;
+    CGFloat contentOffsetY = t2- t6 ;
+    if (isScroll &&  (contentOffsetY > 0 || HALFSCREEN) ) { // 超过一屏 不够一屏幕超过半屏幕
+        // key show
+        // t1 只能用来判断 不能用来赋值计算
+        if(t1 >= 0) {
+            if (self.textViewContentHeight <= TEXT_VIEW_DEFAULT_MAX_HEIGHT) {
+                if (self.keyboardBoundHeight == 0) {
+                    [self.bubbleTable setContentOffset:CGPointMake(0, contentOffsetY-t3)];
+                }else{
+                    if (HALFSCREEN) {
+                        [self.bubbleTable setContentOffset:CGPointMake(0, contentOffsetY+t4)];
+                    }else{
+                        [self.bubbleTable setContentOffset:CGPointMake(0, contentOffsetY+t3)];
+                    }
+                }
+            }else{
+                CGFloat tmp = TEXT_VIEW_DEFAULT_MAX_HEIGHT - TEXT_VIEW_DEFAULT_HEIGHT;
+                if (self.keyboardBoundHeight == 0) {
+                    [self.bubbleTable setContentOffset:CGPointMake(0, contentOffsetY-t3+tmp)];
+                }else{
+                    [self.bubbleTable setContentOffset:CGPointMake(0, contentOffsetY+t3+tmp)];
+                }
+            }
+
+        }
+
+        // 输入过程中 input 高度变化
+        if (T5BOOL) {
+            [self.bubbleTable setContentOffset:CGPointMake(0, t2-t6 +t4+(t5 - TEXT_VIEW_DEFAULT_HEIGHT))];
+        }
+    
+    }else{
+        if (!HALFSCREEN ) {
+            [self.bubbleTable setContentOffset:CGPointMake(0, 0)];
+        }
+    }
+    
+    
+//    t1 = [self.bubbleTable contentOffset].y;
+//    t2 = [self.bubbleTable contentSize].height;
+//    t3 = self.bubbleTable.contentInset.bottom;
+//    t4 = self.keyboardBoundHeight;
+//    t5 = self.textViewContentHeight;
+//    t6 = self.bubbleTable.frame.size.height;
+//    DDLogVerbose(@"=================================");
+//    DDLogVerbose(@"offsetY %li %li %li %li %li %li", lrintf(t1),lrintf(t2),lrintf(t3),lrintf(t4),lrintf(t5),lrintf(t6) );
+    
+}
+
+/* replace with scrollToBottomBubble
 - (void)scrollToBottomAnimated:(BOOL)animated {
     NSInteger numberOfRows = 0;
-    NSInteger numberOfSections = [self.bubbleTable numberOfSections];
+    NSInteger numberOfSections = [self.bubbleTable numberOfSectionsInTableView:self.bubbleTable];
     if (numberOfSections > 0) {
         numberOfRows = [self.bubbleTable tableView:self.bubbleTable numberOfRowsInSection:numberOfSections-1];
     }
     if (numberOfRows) {
-        [self.bubbleTable scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:numberOfRows-1 inSection:numberOfSections-1] atScrollPosition:UITableViewScrollPositionBottom animated:animated];
+        NSIndexPath *scrollIndex = [NSIndexPath indexPathForRow:numberOfRows-1 inSection:numberOfSections -1];
+        [self.bubbleTable scrollToRowAtIndexPath:scrollIndex atScrollPosition:UITableViewScrollPositionBottom animated:YES];
     }
 }
-
+*/
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark UITextViewDelegate
 ////////////////////////////////////////////////////////////////////////////////////////////
 - (void)textViewDidChange:(UITextView *)textView {
     // Change height of _tableView & messageInputBar to match textView's content height.
-    CGFloat textViewContentHeight = textView.contentSize.height;
+    self.textViewContentHeight = textView.contentSize.height;
     CGFloat changeInHeight = textViewContentHeight - _previousTextViewContentHeight;
-    //    NSLog(@"textViewContentHeight: %f", textViewContentHeight);
+    DDLogVerbose(@"textViewContentHeight: %f", self.textViewContentHeight);
     
-    if (textViewContentHeight+changeInHeight > kChatBarHeight4+2) {
+    if (self.textViewContentHeight+changeInHeight > kChatBarHeight4+2) {
         changeInHeight = kChatBarHeight4+2-_previousTextViewContentHeight;
     }
     
     if (changeInHeight) {
         [UIView animateWithDuration:0.2 animations:^{
-           self.bubbleTable.contentInset = self.bubbleTable.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, self.bubbleTable.contentInset.bottom+changeInHeight, 0);
-            [self scrollToBottomAnimated:NO];
+            
+            self.bubbleTable.contentInset = self.bubbleTable.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, self.bubbleTable.contentInset.bottom+changeInHeight, 0);
+
+            [self scrollToBottomBubble:YES];
+
             UIView *messageInputBar = _textView.superview;
             messageInputBar.frame = CGRectMake(0, messageInputBar.frame.origin.y-changeInHeight, messageInputBar.frame.size.width, messageInputBar.frame.size.height+changeInHeight);
         } completion:^(BOOL finished) {
             [_textView updateShouldDrawPlaceholder];
         }];
-        _previousTextViewContentHeight = MIN(textViewContentHeight, kChatBarHeight4+2);
+        _previousTextViewContentHeight = MIN(self.textViewContentHeight, kChatBarHeight4+2);
     }
     
-    // Enable/disable sendButton if textView.text has/lacks length.
-    if ([textView.text length]) {
-        _sendButton.enabled = YES;
-        _sendButton.titleLabel.alpha = 1;
-    } else {
-        _sendButton.enabled = NO;
-        _sendButton.titleLabel.alpha = 0.5f; // Sam S. says 0.4f
-    }
 }
 
 - (void)sendMessage
 {
     // Autocomplete text before sending. @hack
-    [self.textView resignFirstResponder];
+//    [self.textView resignFirstResponder];
     
     Message *message = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:managedObjectContext];
     message.from = [self appDelegate].me;
@@ -423,61 +547,78 @@
     [self.conversation addMessagesObject:message];
     self.conversation.lastMessageSentDate = message.sentDate;
     self.conversation.lastMessageText = message.text;
-
-
+    
+    WSBubbleData* wsData = [self addMessage:message toBubbleData:self.bubbleData];
+    self.bubbleTable.bubbleSection = [self addLatestData:wsData toSortedBubbleSection:self.bubbleTable.bubbleSection];
+    
     self.textView.text = nil;
     [self textViewDidChange:_textView];
-    [self.textView resignFirstResponder];
-    [[XMPPNetworkCenter sharedClient] sendMessage:message];
-    
-//    [self refreshBubbleData];
-    
-    [self addMessage:message toBubbleData:self.bubbleData];
-    self.bubbleTable.bubbleSection = [self sortBubbleSection:self.bubbleData];
+
+    // check whether the user is a friend. If not then hint to add a friend first
+    if ((self.conversation.type == ConversationTypeSingleUserChat) && (![[XMPPNetworkCenter sharedClient] isBuddyWithJIDString:self.conversation.ownerEntity.ePostalID] && (self.conversation.ownerEntity.state != IdentityStatePendingAddFriend && self.conversation.ownerEntity.state != IdentityStateActive))) {
+        // this user is not a buddy on our roster, and is not on pending add friend or active
+        // we will display a warning message to ask user to add a friend first
+        
+        Message *msg = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:managedObjectContext];
+        msg.from = self.conversation.ownerEntity;
+        msg.sentDate = [NSDate date];
+        msg.text = [NSString stringWithFormat:@"%@开启了好友认证，你还不是TA好友，请点击发送好友验证请求，对方验证通过后，才能对话", self.conversation.ownerEntity.displayName];
+        msg.conversation = self.conversation;
+        msg.type = [NSNumber numberWithInt:MessageTypeNotification];
+        
+        [self.conversation addMessagesObject:msg];
+        self.conversation.lastMessageSentDate = msg.sentDate;
+        self.conversation.lastMessageText = msg.text;
+        
+        WSBubbleData* wsData2 = [self addMessage:msg toBubbleData:self.bubbleData];
+        self.bubbleTable.bubbleSection = [self addLatestData:wsData2 toSortedBubbleSection:self.bubbleTable.bubbleSection];
+    } else {
+        [[XMPPNetworkCenter sharedClient] sendMessage:message];
+    }
     [self.bubbleTable reloadData];
-    
-    [self scrollToBottomAnimated:NO];
+    [self scrollToBottomBubble:YES];
     
 }
 
-- (void)addMessage:(Message *)msg toBubbleData:(NSMutableArray *)data
+- (WSBubbleData *)addMessage:(Message *)msg toBubbleData:(NSMutableArray *)data
 {
     WSBubbleType type = BubbleTypeMine; // 默认是自己的
     
     if (msg.from.ePostalID != [self appDelegate].me.ePostalID) {
         type = BubbleTypeSomeoneElse;   // 如果发送过来的 jid 不同就是别人的
     }
+    WSBubbleData *wsData = nil;
     if (msg.type == [NSNumber numberWithInt:MessageTypeChat])
     {
-        WSBubbleData *itemBubble = [WSBubbleData dataWithText:msg.text date:msg.sentDate type:type];
-        itemBubble.msg = msg;
-        itemBubble.avatar = msg.from.thumbnailImage;
+        wsData = [WSBubbleData dataWithText:msg.text date:msg.sentDate type:type];
+        wsData.msg = msg;
+        wsData.avatar = msg.from.thumbnailImage;
         if (msg.from.thumbnailImage == nil) {
             [[AppNetworkAPIClient sharedClient] loadImage:msg.from.thumbnailURL withBlock:^(UIImage *image, NSError *error) {
                 msg.from.thumbnailImage = image;
-                itemBubble.avatar = msg.from.thumbnailImage;
+                wsData.avatar = msg.from.thumbnailImage;
             }];
         }
-        [data addObject:itemBubble];
-        self.bubbleTable.showAvatars = YES;
     }
     else if (msg.type == [NSNumber numberWithInt:MessageTypeTemplateA]) {
-        [data addObject:[WSBubbleData dataWithTemplateA:msg.text date:msg.sentDate type:BubbleTypeTemplateAview]];
-        bubbleTable.showAvatars = NO;
+        wsData = [WSBubbleData dataWithTemplateA:msg.text date:msg.sentDate type:BubbleTypeTemplateAview];
     }else if (msg.type == [NSNumber numberWithInt:MessageTypeTemplateB]) {
-        [data addObject:[WSBubbleData dataWithTemplateB:msg.text date:msg.sentDate type:BubbleTypeTemplateBview]];
-        bubbleTable.showAvatars = NO;
+        wsData = [WSBubbleData dataWithTemplateB:msg.text date:msg.sentDate type:BubbleTypeTemplateBview];
     }else if (msg.type == [NSNumber numberWithInt:MessageTypeNotification]) {
-        [data addObject:[WSBubbleData dataWithNotication:msg.text date:msg.sentDate type:BubbleTypeNoticationview]];
-        bubbleTable.showAvatars = NO;
+        wsData = [WSBubbleData dataWithNotication:msg.text date:msg.sentDate type:BubbleTypeNoticationview];
+        wsData.msg = msg;
     }else if (msg.type == [NSNumber numberWithInt:MessageTypeRate]) {
-        WSBubbleData *rateData = [WSBubbleData dataWithTemplateA:msg.text date:msg.sentDate type:BubbleTypeRateview];
-        rateData.msg = msg;
-        [data addObject:rateData];
-        bubbleTable.showAvatars = NO; 
-
+        wsData = [WSBubbleData dataWithTemplateA:msg.text date:msg.sentDate type:BubbleTypeRateview];
+        wsData.msg = msg;
     }
-
+    
+    if (msg.type == [NSNumber numberWithInt:MessageTypeChat]) {
+        self.bubbleTable.showAvatars = YES;
+    } else {
+        self.bubbleTable.showAvatars = NO;
+    }
+    [data addObject:wsData];
+    return wsData;
 }
 
 - (void)newMessageReceived:(NSNotification *)notification

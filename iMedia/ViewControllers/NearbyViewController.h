@@ -7,13 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MBProgressHUD.h"
 #import "NearbyTableViewCell.h"
-#import "PullToRefreshView.h"
 #import "ChatWithIdentity.h"
+#import "PullToRefreshView.h"
+#import "PassValueDelegate.h"
 
-
-
-@interface NearbyViewController : UITableViewController
+@interface NearbyViewController : UITableViewController<PassValueDelegate>
 
 @end

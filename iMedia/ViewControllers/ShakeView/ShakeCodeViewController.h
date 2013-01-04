@@ -10,5 +10,7 @@
 
 @interface ShakeCodeViewController : UIViewController
 
+@property(nonatomic, strong) NSManagedObjectContext *managedObjectContext;
+
 @property(nonatomic, strong)NSString *codeString;
 @end

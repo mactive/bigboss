@@ -11,15 +11,19 @@
 #import "WelcomeViewController.h"
 #import "AppNetworkAPIClient.h"
 #import "XMPPNetworkCenter.h"
-#import "DDLog.h"
 #import <unistd.h>
 #import <QuartzCore/QuartzCore.h>
+#import "ConvenienceMethods.h"
+#import "MBProgressHUD.h"
+#import "CuteData.h"
+#import "LogEventConstants.h"
 
+#import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 #else
-static const int ddLogLevel = LOG_LEVEL_INFO;
+static const int ddLogLevel = LOG_LEVEL_OFF;
 #endif
 
 
@@ -30,6 +34,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 @property(strong, nonatomic)UIButton *loginButton;
 @property(strong, nonatomic)UIImageView *logoImage;
 @property(strong, nonatomic)UIView *loginView;
+@property(strong, nonatomic) UILabel *userAgreementLabel;
+@property(strong, nonatomic) id handle;
 
 @end
 
@@ -40,6 +46,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 @synthesize loginButton;
 @synthesize logoImage;
 @synthesize loginView;
+@synthesize userAgreementLabel;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -92,56 +99,63 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 - (void)loginAction:(id)sender
 {
-    [self.passwordField resignFirstResponder];
+    if (self.handle != nil) {
+        if ([self.handle isKindOfClass:[UITextField class]]) {
+            [(UITextField *)self.handle resignFirstResponder];
+        }
+    }
     
     [self setField:usernameField forKey:kXMPPmyJID];
     [self setField:passwordField forKey:kXMPPmyPassword];
     
 	
     MBProgressHUD * HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-	HUD.delegate = self;
+	HUD.removeFromSuperViewOnHide = YES;
 	HUD.labelText = T(@"登录中");
     
-    [[AppNetworkAPIClient sharedClient] loginWithUsername:self.usernameField.text andPassword:passwordField.text withBlock:^(id responseObject, NSError *error) {
+    [XFox logEvent:EVENT_LOGIN_TIMER withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"success", @"status", @"", @"error", nil] timed:YES];
+    
+    [[AppNetworkAPIClient sharedClient] loginWithRetryCount:1 username:self.usernameField.text andPassword:passwordField.text withBlock:^(id responseObject, NSError *error) {
         if (responseObject!= nil &&  error == nil) {
-
-            [HUD hide:YES];
-            
             NSString* barejid = [responseObject valueForKey:@"jid"];
             NSString *jPassword = [responseObject valueForKey:@"jpass"];
+            NSString *returnPassword = [responseObject valueForKey:@"pwd"];
             NSString *guid= [[responseObject valueForKey:@"guid"] stringValue];
             NSString *fulljid = [NSString stringWithFormat:@"%@/%@", barejid, guid];
                         
             if (![[XMPPNetworkCenter sharedClient] connectWithUsername:fulljid andPassword:jPassword])
             {
                 DDLogVerbose(@"%@: %@ cannot connect to XMPP server", THIS_FILE, THIS_METHOD);
-            }            
-            [[self appDelegate] createMeAndOtherOneTimeObjectsWithUsername:usernameField.text password:passwordField.text jid:fulljid jidPasswd:jPassword andGUID:guid withBlock:^(id responseObject, NSError *error) {
-                
+            }
+            
+            [[self appDelegate] createMeAndOtherOneTimeObjectsWithUsername:usernameField.text password:returnPassword jid:fulljid jidPasswd:jPassword andGUID:guid withBlock:^(id responseObject, NSError *error) {
+            
                 [HUD hide:YES];
                 
                 if (responseObject != nil) {
+                    [XFox endTimedEvent:EVENT_LOGIN_TIMER withParameters:nil];
+                    
                     WelcomeViewController *welcomeController = [[WelcomeViewController alloc]initWithNibName:nil bundle:nil];
                     [self.navigationController pushViewController:welcomeController animated:YES];
                 } else {
-                    MBProgressHUD * HUD2 = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-                    HUD2.delegate = self;
-                    HUD2.mode = MBProgressHUDModeText;
-                    HUD2.labelText = [responseObject valueForKey:@"status"];
-                    [HUD2 hide:YES afterDelay:2];
+                    [XFox endTimedEvent:EVENT_LOGIN_TIMER withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"failure", @"status", error, @"error", nil]];
+                    [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:[responseObject valueForKey:@"status"] andHideAfterDelay:2];
                 }
             }];
             
         } else {
+            [XFox endTimedEvent:EVENT_LOGIN_TIMER withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"failure", @"status", error, @"error", nil]];
+            
             DDLogError(@"NSError received during login: %@", error);
             [HUD hide:YES];
             
             MBProgressHUD *HUD2 = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            HUD2.delegate = self;
+            HUD2.removeFromSuperViewOnHide = YES;
             HUD2.mode = MBProgressHUDModeText;
             NSString * status = [responseObject valueForKey:@"status"];
             if ([status isEqualToString:@"banned"]) {
-                HUD2.labelText = T(@"您的帐号已被封，请联系客服");
+                HUD2.labelText = T(@"你的帐号已被封");
+                HUD2.detailsLabelText = T(@"请联系4006780365");
             } else if ([status isEqualToString:@"wrongusername"] || [status isEqualToString:@"wrongpassword"]) {
                 HUD2.labelText = T(@"用户名或密码错误");
             } else {
@@ -180,7 +194,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [backgroundView setImage:[UIImage imageNamed:@"login_bg.png"]];
     [self.view addSubview:backgroundView];
     
-    self.logoImage = [[UIImageView alloc]initWithFrame:CGRectMake(87.5, 250,145, 75)];
+    self.logoImage = [[UIImageView alloc]initWithFrame:CGRectMake(87.5, 270, 145, 75)];
     [self.logoImage setImage:[UIImage imageNamed:@"login_intro_oyeah.png"]];
 
 
@@ -208,10 +222,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     self.passwordField.layer.cornerRadius = 5.0f;
     self.passwordField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     self.passwordField.textAlignment = UITextAlignmentCenter;
-    
 
-
-    
     
     self.loginButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [self.loginButton setFrame:CGRectMake(TEXTFIELD_OFFSET +10 ,TEXTFEILD_HEIGHT*3+TEXTFIELD_HEIGHT-10, TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT)];
@@ -237,14 +248,29 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     self.passwordField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.passwordField.secureTextEntry = YES;
     
+    self.userAgreementLabel = [[UILabel alloc]initWithFrame:CGRectMake(TEXTFIELD_OFFSET +25 ,TEXTFEILD_HEIGHT*5, TEXTFIELD_WIDTH*0.9, TEXTFIELD_HEIGHT)];
+    self.userAgreementLabel.numberOfLines  = 2;
+    self.userAgreementLabel.text = T(@"使用春水堂注册账户才可以登录. 登录即表示你接受芥末用户协议");
+    self.userAgreementLabel.backgroundColor = [UIColor clearColor];
+    self.userAgreementLabel.textAlignment = NSTextAlignmentLeft;
+    self.userAgreementLabel.font = [UIFont systemFontOfSize:12.0f];
+    self.userAgreementLabel.textColor = RGBCOLOR(66, 66, 66);
+    
     [self.loginView addSubview:self.usernameField];
     [self.loginView addSubview:self.passwordField];
     [self.view addSubview:self.loginView];
     [self.view addSubview:self.loginButton];
     [self.view addSubview:self.logoImage];
+    [self.view addSubview:self.userAgreementLabel];
     
 	// Do any additional setup after loading the view.
 }
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    self.handle = textField;
+}
+
 
 - (void)didReceiveMemoryWarning
 {

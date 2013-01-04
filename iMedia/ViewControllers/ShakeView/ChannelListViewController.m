@@ -12,6 +12,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "UIImageView+AFNetworking.h"
 #import "MBProgressHUD.h"
+#import "ConvenienceMethods.h"
 #import "Channel.h"
 #import "ModelHelper.h"
 #import "ChannelViewController.h"
@@ -21,7 +22,7 @@
 #if DEBUG
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 #else
-static const int ddLogLevel = LOG_LEVEL_INFO;
+static const int ddLogLevel = LOG_LEVEL_OFF;
 #endif
 
 #define NAME_TAG 1
@@ -32,7 +33,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 #define LEFT_COLUMN_OFFSET 10.0
 #define LEFT_COLUMN_WIDTH 36.0
 
-#define MIDDLE_COLUMN_OFFSET 90.0
+#define MIDDLE_COLUMN_OFFSET 80.0
 #define MIDDLE_COLUMN_WIDTH 100.0
 
 #define RIGHT_COLUMN_OFFSET 230.0
@@ -51,10 +52,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 
 
-@interface ChannelListViewController ()<MBProgressHUDDelegate>
-{
-    MBProgressHUD *HUD;
-}
+@interface ChannelListViewController ()
 
 @property(nonatomic, strong)NSArray *dataArray;
 
@@ -90,15 +88,18 @@ NSInteger intSort2(id num1, id num2, void *context)
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.view.backgroundColor = BGCOLOR;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    self.tableView.separatorColor = SEPCOLOR;
+    [self.tableView setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero]];
 
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
-    self.title = T(@"频道列表");
-    [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
-    [self.view setBackgroundColor:BGCOLOR];
-    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    HUD.delegate = self;
+    self.title = T(@"情趣研究院");
+//    [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+    MBProgressHUD* HUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+    HUD.removeFromSuperViewOnHide = YES;
     HUD.labelText = T(@"正在加载信息");
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
@@ -120,11 +121,8 @@ NSInteger intSort2(id num1, id num2, void *context)
             [self.tableView reloadData];
         }else{
             [HUD hide:YES];
-            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            HUD.mode = MBProgressHUDModeText;
-            HUD.delegate = self;
-            HUD.labelText = T(@"网络错误，无法获取信息");
-            [HUD hide:YES afterDelay:1];
+            
+            [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"网络错误，无法获取信息") andHideAfterDelay:1];
         }
     }];
 
@@ -173,6 +171,10 @@ NSInteger intSort2(id num1, id num2, void *context)
     return cell;
 }
 
+- (void) tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    cell.backgroundColor = [UIColor whiteColor];
+}
 
 ////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Configuring table view cells
@@ -181,8 +183,8 @@ NSInteger intSort2(id num1, id num2, void *context)
 - (UITableViewCell *)tableViewCellWithReuseIdentifier:(NSString *)identifier{
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     
-    UIImageView *cellBgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell_bg.png"]];
-    cell.backgroundView = cellBgView;
+//    UIImageView *cellBgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell_bg.png"]];
+//    cell.backgroundView = cellBgView;
     [cell setSelectionStyle:UITableViewCellSelectionStyleBlue];
     
     UILabel *label;
@@ -195,8 +197,6 @@ NSInteger intSort2(id num1, id num2, void *context)
     CALayer *avatarLayer = [avatarImage layer];
     [avatarLayer setMasksToBounds:YES];
     [avatarLayer setCornerRadius:5.0];
-    [avatarLayer setBorderWidth:1.0];
-    [avatarLayer setBorderColor:[[UIColor whiteColor] CGColor]];
     [cell.contentView addSubview:avatarImage];
     
     // Create a label for the user name.
@@ -294,11 +294,8 @@ NSInteger intSort2(id num1, id num2, void *context)
 - (void)getDict:(NSString *)nodeString andGuid:(NSString *)guidString
 {
     Channel *aChannel = [[ModelHelper sharedInstance]findChannelWithNode:nodeString];
-    // if the user already exist - then show the user
     
-    if (aChannel != nil && aChannel.state == IdentityStateActive) {
-        // it is a buddy on our contact list
-        
+    if (aChannel != nil && aChannel.state == IdentityStateActive) {        
         ChannelViewController *controller = [[ChannelViewController alloc] initWithNibName:nil bundle:nil];
         controller.delegate = [self appDelegate].contactListController;
         controller.managedObjectContext = [self appDelegate].context;
@@ -310,8 +307,8 @@ NSInteger intSort2(id num1, id num2, void *context)
         // get user info from web and display as if it is searched
         NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: guidString, @"guid", @"1", @"op", nil];
         
-        HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        HUD.delegate = self;
+        MBProgressHUD* HUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+        HUD.removeFromSuperViewOnHide = YES;
         
         [[AppNetworkAPIClient sharedClient] getPath:GET_DATA_PATH parameters:getDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
             DDLogVerbose(@"get config JSON received: %@", responseObject);
@@ -335,11 +332,7 @@ NSInteger intSort2(id num1, id num2, void *context)
             DDLogVerbose(@"error received: %@", error);
             [HUD hide:YES];
             
-            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            HUD.mode = MBProgressHUDModeText;
-            HUD.delegate = self;
-            HUD.labelText = T(@"网络错误，无法获取用户数据");
-            [HUD hide:YES afterDelay:1];
+            [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"网络错误，无法获取用户数据") andHideAfterDelay:1];
         }];
         
     }

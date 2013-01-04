@@ -10,18 +10,22 @@
 #import "User.h"
 #import <QuartzCore/QuartzCore.h>
 #import "ServerDataTransformer.h"
-#import "RequestViewController.h"
 #import "UIImageView+AFNetworking.h"
 #import "NSDate+timesince.h"
 #import "FriendRequest.h"
 #import "NSObject+SBJson.h"
-
+#import "ContactDetailController.h"
+#import "AppDelegate.h"
+#import "ModelHelper.h"
 #import "DDLog.h"
+#import "MBProgressHUD.h"
+#import "AppNetworkAPIClient.h"
+#import "ConvenienceMethods.h"
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 #else
-static const int ddLogLevel = LOG_LEVEL_INFO;
+static const int ddLogLevel = LOG_LEVEL_OFF;
 #endif
 #define ROW_HEIGHT  130.0
 
@@ -49,6 +53,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     self.title = T(@"好友请求列表");
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.backgroundColor = BGCOLOR;
+}
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
     [self scrollToBottomAnimated:NO];
 }
 
@@ -92,7 +100,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 ////////////////////////////////////////////////////////////////////////////////////
 #define NAME_TAG 1
 #define TIME_TAG 2
-#define SNS_TAG 20
 #define AVATAR_TAG 3
 #define SUMMARY_TAG 4
 #define STATE_TAG 5
@@ -102,7 +109,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 #define TOP_OFFEST 40.0
 
 #define MIDDLE_COLUMN_OFFSET 100.0
-#define MIDDLE_COLUMN_WIDTH 150.0
+#define MIDDLE_COLUMN_WIDTH 180.0
 
 #define RIGHT_COLUMN_OFFSET 230.0
 #define RIGHT_COLUMN_WIDTH  60
@@ -113,9 +120,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 #define SUMMARY_PADDING 10.0
 
 #define IMAGE_SIDE 50.0
-#define SNS_SIDE 15.0
 #define SUMMARY_WIDTH_OFFEST 30.0
-#define SUMMARY_WIDTH 80.0
+#define SUMMARY_WIDTH 150.0
 
 - (UITableViewCell *)tableViewCellWithReuseIdentifier:(NSString *)identifier{
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];    
@@ -132,15 +138,12 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     CGRect rect;
     // Create an image view for the quarter image.
 	CGRect imageRect = CGRectMake(LEFT_COLUMN_OFFSET, TOP_OFFEST , IMAGE_SIDE, IMAGE_SIDE);
-	CGRect snsRect;
     
     UIImageView *avatarImage = [[UIImageView alloc] initWithFrame:imageRect];
     avatarImage.tag = AVATAR_TAG;
     CALayer *avatarLayer = [avatarImage layer];
     [avatarLayer setMasksToBounds:YES];
     [avatarLayer setCornerRadius:5.0];
-    [avatarLayer setBorderWidth:1.0];
-    [avatarLayer setBorderColor:[[UIColor whiteColor] CGColor]];
     [cell.contentView addSubview:avatarImage];
     
     
@@ -157,7 +160,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
     
     // Create a label for the user name.
-	rect = CGRectMake(MIDDLE_COLUMN_OFFSET, TOP_OFFEST , MIDDLE_COLUMN_WIDTH, LABEL_HEIGHT);
+	rect = CGRectMake(MIDDLE_COLUMN_OFFSET, TOP_OFFEST-5 , MIDDLE_COLUMN_WIDTH, LABEL_HEIGHT);
 	label = [[UILabel alloc] initWithFrame:rect];
 	label.tag = NAME_TAG;
     label.numberOfLines = 2;
@@ -168,43 +171,27 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [cell.contentView addSubview:label];
     
     // Create a label for the add btn.
-	rect = CGRectMake(240, 113,  60 , LABEL_HEIGHT);
+	rect = CGRectMake(230, 113,  60 , LABEL_HEIGHT);
 	label = [[UILabel alloc] initWithFrame:rect];
     label.tag = STATE_TAG;
     label.numberOfLines = 1;
 	label.font = [UIFont boldSystemFontOfSize:MAIN_FONT_SIZE];
 	label.textAlignment = UITextAlignmentLeft;
-    label.textColor = RGBCOLOR(198, 198, 198);
+    label.textColor = RGBCOLOR(220, 220, 220);
     label.backgroundColor = [UIColor clearColor];
     label.text = T(@"添加");
     [cell.contentView addSubview:label];
     
-    // set avatar
-    NSMutableArray *snsArray = [[NSMutableArray alloc] init];
-    UIImageView *snsImage;
-    
-    for(int i=0;i<[snsArray count];i++)  
-    {  
-        snsRect = CGRectMake(MIDDLE_COLUMN_OFFSET + MIDDLE_COLUMN_WIDTH + (SNS_SIDE + 3)* i, TOP_OFFEST+3 , SNS_SIDE, SNS_SIDE);
-        snsImage = [[UIImageView alloc] initWithFrame:snsRect];
-        snsImage.tag = SNS_TAG + i;
-        
-        [cell.contentView addSubview:snsImage];
-    } 
-    
-    
     // Create a label for the summary
-	rect = CGRectMake(MIDDLE_COLUMN_OFFSET, TOP_OFFEST + LABEL_HEIGHT, SUMMARY_WIDTH, LABEL_HEIGHT);
+	rect = CGRectMake(MIDDLE_COLUMN_OFFSET, TOP_OFFEST + LABEL_HEIGHT-5, SUMMARY_WIDTH, LABEL_HEIGHT);
 	label = [[UILabel alloc] initWithFrame:rect];
 	label.tag = SUMMARY_TAG;
     label.numberOfLines = 2;
 	label.font = [UIFont systemFontOfSize:SUMMARY_FONT_SIZE];
-	label.textAlignment = UITextAlignmentCenter;
+	label.textAlignment = UITextAlignmentLeft;
     label.textColor = RGBCOLOR(158, 158, 158);
-    label.backgroundColor = RGBCOLOR(236, 238, 240);
-    
-    [label.layer setMasksToBounds:YES];
-    [label.layer setCornerRadius:3.0];
+    label.backgroundColor = [UIColor clearColor];
+
 	[cell.contentView addSubview:label];    
     
     return  cell;
@@ -229,26 +216,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     NSString *imageUrl = [ServerDataTransformer getAvatarFromServerJSON:localDict];
     [imageView setImageWithURL:[NSURL URLWithString:imageUrl]];
     
-    //set sns icon
-    NSMutableArray *snsArray = [[NSMutableArray alloc] initWithObjects:nil];
-    for (int i =0; i< [snsArray count]; i++) {
-        imageView = (UIImageView *)[cell viewWithTag:SNS_TAG + i];
-        
-        if ([[snsArray objectAtIndex:i] isEqual:@"weibo"]) {
-            imageView.image = [UIImage imageNamed:@"sns_icon_weibo.png"];
-        }else if([[snsArray objectAtIndex:i] isEqual:@"douban"]){
-            imageView.image = [UIImage imageNamed:@"sns_icon_douban.png"];
-        }else if([[snsArray objectAtIndex:i] isEqual:@"wechat"]){
-            imageView.image = [UIImage imageNamed:@"sns_icon_wechat.png"];
-        }else if([[snsArray objectAtIndex:i] isEqual:@"kaixin"]){
-            imageView.image = [UIImage imageNamed:@"sns_icon_kaixin.png"];
-        }else if([[snsArray objectAtIndex:i] isEqual:@"renren"]){
-            imageView.image = [UIImage imageNamed:@"sns_icon_renren.png"];
-        }else if([[snsArray objectAtIndex:i] isEqual:@"tmweibo"]){
-            imageView.image = [UIImage imageNamed:@"sns_icon_tmweibo.png"];
-        }
-    }
-    
+
     // set the time text
     UILabel *timeLabel = (UILabel *)[cell viewWithTag:TIME_TAG];
     timeLabel.text =  [request.requestDate timesince];
@@ -261,10 +229,15 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     UILabel *stateLabel = (UILabel *)[cell viewWithTag:STATE_TAG];
     if (request.state == FriendRequestDeclined) {
         stateLabel.text = T(@"已拒绝");
+        stateLabel.textColor = RGBCOLOR(177, 177, 177);
+
     } else if (request.state == FriendRequestApproved) {
         stateLabel.text = T(@"已添加");
+        stateLabel.textColor = RGBCOLOR(177, 177, 177);
+
     } else {
-        stateLabel.text = T(@"添加");
+        stateLabel.text = T(@"+ 添加");
+        stateLabel.textColor = RGBCOLOR(220, 220, 220);
     }
 
 
@@ -281,14 +254,18 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     UILabel *signatureLabel = (UILabel *)[cell viewWithTag:SUMMARY_TAG];
     NSString *signature =[ServerDataTransformer getSignatureFromServerJSON:localDict];
     
-    CGSize signatureSize = [signature sizeWithFont:signatureLabel.font constrainedToSize:summaryMaxSize lineBreakMode: UILineBreakModeTailTruncation];
-    if (signatureSize.height > LABEL_HEIGHT) {
-        _labelHeight = TOP_OFFEST+LABEL_HEIGHT+2;
-    }else {
-        _labelHeight = TOP_OFFEST+LABEL_HEIGHT+10;
+    if ([signature length] > 0) {
+        CGSize signatureSize = [signature sizeWithFont:signatureLabel.font constrainedToSize:summaryMaxSize lineBreakMode: UILineBreakModeTailTruncation];
+        if (signatureSize.height > LABEL_HEIGHT) {
+            _labelHeight = TOP_OFFEST+LABEL_HEIGHT+2;
+        }else {
+            _labelHeight = TOP_OFFEST+LABEL_HEIGHT+10;
+        }
+        signatureLabel.text = signature;
+        signatureLabel.frame = CGRectMake(signatureLabel.frame.origin.x, _labelHeight, signatureSize.width + SUMMARY_PADDING, signatureSize.height+SUMMARY_PADDING);
+    }else{
+        [signatureLabel removeFromSuperview];
     }
-    signatureLabel.text = signature;
-    signatureLabel.frame = CGRectMake(signatureLabel.frame.origin.x, _labelHeight, signatureSize.width + SUMMARY_PADDING, signatureSize.height+SUMMARY_PADDING);
     
 }
 
@@ -297,55 +274,69 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     return 170.0;
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
 
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Navigation logic may go here. Create and push another view controller.
-    RequestViewController *requestViewController = [[RequestViewController alloc]initWithNibName:nil bundle:nil];    
-    requestViewController.request = [self.friendRequestArray objectAtIndex:indexPath.row];
-    NSLog(@"%@",[self.friendRequestArray objectAtIndex:indexPath.row]);
-    [self.navigationController pushViewController:requestViewController animated:YES];
+    FriendRequest *request = [self.friendRequestArray objectAtIndex:indexPath.row];
+    [self getDict:request];
+}
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark Accessors & selectors
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (void)getDict:(FriendRequest *)request
+{
+    
+    NSString * guidString = request.guid;
+    // if the user already exist - then show the user
+    User* aUser = [[ModelHelper sharedInstance] findUserWithGUID:guidString];
+    
+    if (aUser != nil && aUser.state == IdentityStateActive) {
+        // it is a buddy on our contact list
+        ContactDetailController *controller = [[ContactDetailController alloc] initWithNibName:nil bundle:nil];
+        controller.user = aUser;
+        controller.GUIDString = guidString;
+        controller.managedObjectContext = [self appDelegate].context;
+        
+        // Pass the selected object to the new view controller.
+        [controller setHidesBottomBarWhenPushed:YES];
+        [self.navigationController pushViewController:controller animated:YES];
+    } else {
+        // get user info from web and display as if it is searched
+        NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: guidString, @"guid", @"1", @"op", nil];
+        
+        MBProgressHUD* HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        HUD.removeFromSuperViewOnHide = YES;
+        
+        [[AppNetworkAPIClient sharedClient] getPath:GET_DATA_PATH parameters:getDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
+//            DDLogVerbose(@"get user received: %@", responseObject);
+            
+            [HUD hide:YES];
+            NSString* type = [responseObject valueForKey:@"type"];
+            if ([type isEqualToString:@"user"]) {
+                ContactDetailController *controller = [[ContactDetailController alloc] initWithNibName:nil bundle:nil];
+                controller.jsonData = responseObject;
+                controller.managedObjectContext = [self appDelegate].context;
+                controller.GUIDString = guidString;
+                controller.request = request;
+                // Pass the selected object to the new view controller.
+                [controller setHidesBottomBarWhenPushed:YES];
+                [self.navigationController pushViewController:controller animated:YES];
+                
+            }
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            //
+            DDLogVerbose(@"error received: %@", error);
+            [HUD hide:YES];
+            [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"网络错误，无法获取用户数据") andHideAfterDelay:1];
+        }];
+        
+    }
 }
 
 - (void)scrollToBottomAnimated:(BOOL)animated {
@@ -357,6 +348,11 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     if (numberOfRows) {
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:numberOfRows-1 inSection:numberOfSections-1] atScrollPosition:UITableViewScrollPositionBottom animated:animated];
     }
+}
+
+- (AppDelegate *)appDelegate
+{
+	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
 

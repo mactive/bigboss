@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ShakeDashboardViewController : UIViewController
+@interface ShakeDashboardViewController : UITableViewController
 
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 

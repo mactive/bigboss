@@ -22,8 +22,8 @@
 @property (nonatomic, retain) NSMutableArray *friendRequestArray;
 
 
-- (UITableViewCell *)tableViewCellWithReuseIdentifier:(NSString *)identifier;
-- (void)configureCell:(UITableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath;
+//- (UITableViewCell *)tableViewCellWithReuseIdentifier:(NSString *)identifier;
+//- (void)configureCell:(UITableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath;
 
 - (void)chatWithIdentity:(id)obj;
 - (void)contentChanged;

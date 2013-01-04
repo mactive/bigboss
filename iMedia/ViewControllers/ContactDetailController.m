@@ -10,7 +10,6 @@
 #import "User.h"
 #import "Me.h"
 #import "Channel.h"
-#import "ChatWithIdentity.h"
 #import "ModelHelper.h"
 #import "XMPPNetworkCenter.h"
 #import "DDLog.h"
@@ -20,16 +19,29 @@
 #import "UIImageView+AFNetworking.h"
 #import "ImageRemote.h"
 #import "MBProgressHUD.h"
+#import "ConvenienceMethods.h"
 #import "AFImageRequestOperation.h"
 #import "AppNetworkAPIClient.h"
 #import "AppDelegate.h"
 #import "NSDate+timesince.h"
+#import "WebViewController.h"
 
-@interface ContactDetailController ()<MBProgressHUDDelegate>
-{
-    MBProgressHUD *HUD;
-}
+// request view
+#import "FriendRequest.h"
+#import "ModelHelper.h"
+#import "ConversationsController.h"
+#import "NSObject+SBJson.h"
+#import "ContactListViewController.h"
 
+// Log levels: off, error, warn, info, verbose
+#if DEBUG
+static const int ddLogLevel = LOG_LEVEL_VERBOSE;
+#else
+static const int ddLogLevel = LOG_LEVEL_ERROR;
+#endif
+
+
+@interface ContactDetailController ()
 @property(strong, nonatomic) UIActionSheet *reportActionsheet;
 
 @property (strong, nonatomic) UIScrollView *contentView;
@@ -49,6 +61,11 @@
 @property (strong, nonatomic) UIButton *deleteUserButton;
 @property (strong, nonatomic) UIButton *reportUserButton;
 @property (strong, nonatomic) UILabel  *nameLabel;
+@property (strong, nonatomic) UIButton *confirmButton;
+@property (strong, nonatomic) UIButton *cancelButton;
+@property (strong, nonatomic) UIButton *helloButton;
+@property (strong, nonatomic) UIButton *friendReqestStateButton;
+
 
 
 
@@ -57,7 +74,6 @@
 
 @property (strong, nonatomic) NSArray *infoArray;
 @property (strong, nonatomic) NSArray *infoDescArray;
-@property (strong, nonatomic) AlbumViewController* albumViewController;
 
 - (NSString *)getGender;
 - (NSString *)getAgeStr;
@@ -65,8 +81,13 @@
 - (NSString *)getSignature;
 - (NSString *)getCareer;
 - (NSString *)getHometown;
+- (NSString *)getSinaWeiboID;
 - (NSString *)getSelfIntroduction;
 - (NSString *)getNickname;
+- (NSString *)getAlwaysbeen;
+- (NSString *)getInterest;
+- (NSString *)getSchool;
+- (NSString *)getCompany; 
 
 @end
 
@@ -78,13 +99,11 @@
 @synthesize reportUserButton;
 @synthesize nameLabel = _nameLabel;
 @synthesize user =_user;
-@synthesize delegate = _delegate;
 @synthesize jsonData;
 @synthesize contentView;
 
 @synthesize albumView;
 @synthesize albumArray = _albumArray;
-@synthesize albumViewController;
 
 @synthesize statusView;
 @synthesize snsView;
@@ -98,13 +117,18 @@
 @synthesize horoscopeLabel;
 @synthesize timeLabel;
 @synthesize guidLabel;
-@synthesize GUID;
+@synthesize GUIDString;
+@synthesize request;
+@synthesize confirmButton;
+@synthesize cancelButton;
+@synthesize friendReqestStateButton;
+@synthesize helloButton;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.albumViewController = [[AlbumViewController alloc] init];
+        self.hidesBottomBarWhenPushed = YES;
     }
     return self;
 }
@@ -121,24 +145,29 @@
 #define VIEW_PADDING_LEFT 12
 #define VIEW_ALBUM_HEIGHT 160
 #define VIEW_STATUS_HEIGHT 15
-#define VIEW_SNS_HEIGHT 30
-#define VIEW_ACTION_HEIGHT 41
+#define VIEW_SNS_HEIGHT 50
+#define VIEW_ACTION_HEIGHT 44
 #define VIEW_UINAV_HEIGHT 44
 
 #define VIEW_COMMON_WIDTH 296
+#define VIEW_INFO_HEIGHT 560
 
-- (void)loadView
+- (void)viewDidLoad
 {
-    [super loadView];
+    [super viewDidLoad];
     self.contentView = [[UIScrollView alloc]initWithFrame:
                         CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - VIEW_ACTION_HEIGHT - VIEW_UINAV_HEIGHT)];
-    [self.contentView setContentSize:CGSizeMake(self.view.frame.size.width, 600)];
+    [self.contentView setContentSize:CGSizeMake(self.view.frame.size.width, VIEW_INFO_HEIGHT + 290)];
     [self.contentView setScrollEnabled:YES];
     self.contentView.backgroundColor = RGBCOLOR(222, 224, 227);
-
+    
+    self.title = [self getNickname];
+    
+    [self initStatusView];
+    [self initInfoView]; // table view 
     
     [self initAlbumView];
-//    [self initSNSView];
+    [self initSNSView];
     [self initActionView];
     
     [self.view addSubview:self.contentView];
@@ -147,8 +176,14 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self initStatusView];
-    [self initInfoView];
+    
+    [self refreshStatusView];
+    [self refreshSNSView];
+    [self refreshAlbumView];
+
+    [self updateButtonsBasedRequestState];
+ 
+    [XFox logEvent:PAGE_CONTACT_DETAIL withParameters:[NSDictionary dictionaryWithObjectsAndKeys: self.user ? self.user.guid : self.GUIDString, @"guid", nil]];
 }
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -  ablum view
@@ -219,7 +254,7 @@
                 [albumButton setFrame:CGRectMake(VIEW_ALBUM_OFFSET * (pos%4*2 + 1) + VIEW_ALBUM_WIDTH * (pos%4), VIEW_ALBUM_OFFSET * (floor(pos/4)*2+1) + VIEW_ALBUM_WIDTH * floor(pos/4), VIEW_ALBUM_WIDTH, VIEW_ALBUM_WIDTH)];
                 [albumButton.layer setMasksToBounds:YES];
                 [albumButton.layer setCornerRadius:3.0];
-                albumButton.tag = i;
+                albumButton.tag = i - 1;
                 [albumButton addTarget:self action:@selector(albumClick:) forControlEvents:UIControlEventTouchUpInside];
                 
                 [self.albumView addSubview:albumButton];                
@@ -230,28 +265,28 @@
         }
     }
     
-    
     [self.contentView addSubview:self.albumView];
+    
+}
+
+- (void)refreshAlbumView
+{
     
 }
 
 - (void)albumClick:(UIButton *)sender
 {
-
-    self.albumViewController.albumArray = self.albumArray;
-    self.albumViewController.albumIndex = sender.tag;
-    [self.albumViewController setHidesBottomBarWhenPushed:YES];
+    AlbumViewController* albumViewController = [[AlbumViewController alloc] init];
+    albumViewController.albumArray = self.albumArray;
+    albumViewController.albumIndex = sender.tag;
+    [albumViewController setHidesBottomBarWhenPushed:YES];
     // Pass the selected object to the new view controller.
-    [self.navigationController pushViewController:self.albumViewController animated:YES];
-    NSLog(@"%d",sender.tag);
+    [self.navigationController pushViewController:albumViewController animated:YES];
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark - status view
 ////////////////////////////////////////////////////////////////////////////////
-
-
-
 - (void)initStatusView
 {
     self.statusView = [[UIView alloc] initWithFrame:CGRectMake(VIEW_PADDING_LEFT, VIEW_ALBUM_HEIGHT + 10, VIEW_COMMON_WIDTH, 15)];
@@ -292,78 +327,31 @@
     [self.guidLabel setShadowOffset:CGSizeMake(0, 1)];
     [self.guidLabel setTextColor:RGBCOLOR(97, 97, 97)];
     
-    // Create a label icon for the time.
-//    UIImageView *timeIconView = [[UIImageView alloc] initWithFrame:CGRectMake(120, 2 , 15, 15)];
-//    timeIconView.image = [UIImage imageNamed:@"time_icon.png"];
-//    
-//    self.timeLabel = [[UILabel alloc] initWithFrame:CGRectMake(137, 2 ,60, 20)];
-//	self.timeLabel.font = [UIFont systemFontOfSize:12.0];
-//	self.timeLabel.textAlignment = UITextAlignmentLeft;
-//	self.timeLabel.textColor = RGBCOLOR(140, 140, 140);
-//    self.timeLabel.backgroundColor = [UIColor clearColor];
-
-    
-    // Create a label icon for the time.
-    /*
-    UIImageView *locationIconView = [[UIImageView alloc] initWithFrame:CGRectMake(140, 0 , 15, 15)];
-    locationIconView.image = [UIImage imageNamed:@"location_icon.png"];
-    
-    UILabel* locationLabel = [[UILabel alloc] initWithFrame:CGRectMake(158, 0 ,40, 15)];
-	locationLabel.font = [UIFont systemFontOfSize:12.0];
-	locationLabel.textAlignment = UITextAlignmentLeft;
-	locationLabel.textColor = RGBCOLOR(140, 140, 140);
-    locationLabel.backgroundColor = [UIColor clearColor];
-    locationLabel.text  = @"200M";
-    [locationLabel sizeToFit];
-    */ 
-    
     // add to the statusView
     [self.statusView addSubview:self.horoscopeLabel];
     [self.statusView addSubview:sexView];
-//  [self.statusView addSubview:timeIconView];
-//	[self.statusView addSubview:self.timeLabel];
-//  [self.statusView addSubview:locationIconView];
-//	[self.statusView addSubview:locationLabel];
     [self.statusView addSubview:self.guidLabel];
 
     [self.contentView addSubview: self.statusView];
-    [self refreshStatusView];
 }
 
 - (void)refreshStatusView 
 {
-    //time
-//    if (self.user == nil) {
-//        NSDate *tmp = [ServerDataTransformer getLastGPSUpdatedFromServerJSON:self.jsonData];
-//        if (tmp == nil) {
-//            timeLabel.text = T(@"未知");
-//        } else {
-//            self.timeLabel.text = [tmp timesinceAgo];
-//        }
-//    }else {
-//        if (self.user.lastGPSUpdated == nil) {
-//            self.timeLabel.text = T(@"未知");
-//        } else {
-//            self.timeLabel.text = [self.user.lastGPSUpdated timesinceAgo];
-//        }
-//    }
-//    [self.timeLabel sizeToFit];
-
     // guid
-    if (self.user == nil) {
-        self.guidLabel.text  = [ NSString stringWithFormat:@" %@: %@",T(@"ID"),self.GUID];
-    }else{
-        self.guidLabel.text  = [ NSString stringWithFormat:@" %@: %@",T(@"ID"),self.user.guid];
-    }
+    self.guidLabel.text  = [ NSString stringWithFormat:@" %@: %@",T(@"ID"), self.GUIDString];
     
     // horoscope
     if (self.user == nil) {
         NSDateFormatter * dateFormater = [[NSDateFormatter alloc]init];
         [dateFormater setDateFormat:@"yyyy-MM-dd"];
         NSDate *_date = [dateFormater dateFromString:[self.jsonData objectForKey:@"birthdate"]];
-        self.horoscopeLabel.text = [_date horoscope];
+        if (_date != nil) {
+            self.horoscopeLabel.text = [_date horoscope];
+        }
     }else {
-        self.horoscopeLabel.text = [self.user.birthdate horoscope];
+        if (self.user.birthdate) {
+            self.horoscopeLabel.text = [self.user.birthdate horoscope];
+        }
     }
     
     //age
@@ -376,45 +364,73 @@
 ////////////////////////////////////////////////////////////////////////////////
 - (void)initSNSView
 {
-    self.snsView = [[UIView alloc] initWithFrame:CGRectMake(VIEW_PADDING_LEFT, VIEW_ALBUM_HEIGHT + VIEW_STATUS_HEIGHT + 24, VIEW_COMMON_WIDTH, VIEW_SNS_HEIGHT)];
+    self.snsView = [[UIView alloc] initWithFrame:CGRectMake(VIEW_PADDING_LEFT, VIEW_ALBUM_HEIGHT + VIEW_STATUS_HEIGHT + VIEW_INFO_HEIGHT, VIEW_COMMON_WIDTH, VIEW_SNS_HEIGHT*2)];
     
-    NSArray *buttonNames = [NSArray arrayWithObjects:@"weibo", @"wechat", @"kaixin", @"douban", nil];
+    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 200, 20)];
+    titleLabel.text = T(@"社交认证");
+    titleLabel.font = [UIFont systemFontOfSize:16];
+    titleLabel.backgroundColor = [UIColor clearColor];
+    [self.snsView addSubview:titleLabel];
+    
+    NSArray *buttonNames = [NSArray arrayWithObjects:@"新浪微博",  nil]; //@"wechat", @"kaixin", @"douban",
     NSUInteger _count = [buttonNames count];
     UIButton *snsButton;
-    UIImageView *snsIcon;
+    UILabel *snsLabel;
+
     for (int index = 0; index < _count; index++ ) {
         snsButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [snsButton setFrame:CGRectMake( VIEW_COMMON_WIDTH / _count * index, 0, VIEW_COMMON_WIDTH / _count -1, VIEW_SNS_HEIGHT)];
-        [snsButton setTitle:[buttonNames objectAtIndex:index] forState:UIControlStateNormal];
+        snsButton.enabled = YES;
+        [snsButton setFrame:CGRectMake( VIEW_COMMON_WIDTH / _count * index, 30, VIEW_COMMON_WIDTH / 3, VIEW_SNS_HEIGHT)];
         [snsButton setTitleColor:RGBCOLOR(108, 108, 108) forState:UIControlStateNormal];
-        snsButton.titleLabel.font = [UIFont systemFontOfSize:11.0];
-        [snsButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 15, 0, 0)];
+        snsButton.titleLabel.font = [UIFont systemFontOfSize:14.0];
         [snsButton.layer setMasksToBounds:YES];
         [snsButton.layer setCornerRadius:3.0];
-        
         snsButton.backgroundColor = RGBCOLOR(255, 255, 255);
-        [snsButton setBackgroundImage:[UIImage imageNamed:@"uibutton_bg_color.png"] forState:UIControlStateHighlighted];
-        
-        snsIcon = [[UIImageView alloc]initWithFrame:CGRectMake(5, 7.5, 15, 15)];
-        [snsIcon setImage:[UIImage imageNamed:[NSString stringWithFormat:@"sns_icon_%@_c.png",[buttonNames objectAtIndex:index]]]];
-        [snsButton addSubview:snsIcon];
+        [snsButton setImage:[UIImage imageNamed:[NSString stringWithFormat:@"sns_big_icon_%i.png",index]] forState:UIControlStateNormal];
         
         snsButton.tag = 1000 + index;
-        [snsButton addTarget:self action:@selector(snsAction:) forControlEvents:UIControlEventTouchUpInside];
         
-        [self.snsView addSubview:snsButton];
-    }
-
-
+        snsLabel = [[UILabel alloc] initWithFrame:CGRectMake( VIEW_COMMON_WIDTH / _count * index, 30+VIEW_SNS_HEIGHT, VIEW_COMMON_WIDTH / 3, 20)];
+        snsLabel.text = [buttonNames objectAtIndex:index];
+        snsLabel.textAlignment = UITextAlignmentCenter;
+        snsLabel.textColor = [UIColor blackColor];
+        snsLabel.backgroundColor = [UIColor clearColor];
+        snsLabel.font = [UIFont systemFontOfSize:14];
     
+        [self.snsView addSubview:snsLabel];
+        [self.snsView addSubview:snsButton];
+        
+    }
     
     [self.contentView addSubview: self.snsView];
-
+    
 }
+
+- (void)refreshSNSView
+{
+    NSArray *buttonNames = SNS_ARRAY;
+    NSUInteger _count = [buttonNames count];
+    UIButton *snsButton;
+    for (int index = 0; index < _count; index++ ) {
+        if ( StringHasValue([self getSinaWeiboID])){
+            snsButton = (UIButton *)[self.snsView viewWithTag:index+1000];
+            [snsButton setImage:[UIImage imageNamed:[NSString stringWithFormat:@"sns_big_icon_%i_c.png",index]] forState:UIControlStateNormal];
+            [snsButton addTarget:self action:@selector(snsAction:) forControlEvents:UIControlEventTouchUpInside];
+        }else{
+            snsButton = (UIButton *)[self.snsView viewWithTag:index+1000];
+            [snsButton setImage:[UIImage imageNamed:[NSString stringWithFormat:@"sns_big_icon_%i.png",index]] forState:UIControlStateNormal];
+        }
+    }
+}
+
 
 -(void)snsAction:(UIButton *)sender
 {
-    NSLog(@"Seg.selectedSegmentIndex:%d",sender.tag);
+    WebViewController *controller = [[WebViewController alloc]initWithNibName:nil bundle:nil];
+    controller.urlString = [NSString stringWithFormat:@"%@%@",@"http://weibo.cn/u/",[self getSinaWeiboID]];
+    controller.title = T(@"用户微博");
+    [self.navigationController pushViewController:controller animated:YES];
+    
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -423,22 +439,26 @@
 - (void)initInfoView
 {
     self.infoView = [[UIView alloc] initWithFrame:
-                     CGRectMake(0, VIEW_ALBUM_HEIGHT + VIEW_STATUS_HEIGHT + 15, self.view.frame.size.width, 400)];
+                     CGRectMake(0, VIEW_ALBUM_HEIGHT + VIEW_STATUS_HEIGHT + 15, self.view.frame.size.width, VIEW_INFO_HEIGHT)];
     self.infoView.backgroundColor = [UIColor clearColor];
     
-    self.infoArray = [[NSArray alloc] initWithObjects: @"签名",@"职业",@"家乡",@"个人说明",nil ];    
+    self.infoArray = [[NSArray alloc] initWithObjects:
+                      [[NSArray alloc] initWithObjects:T(@"签名"),nil],
+                      [[NSArray alloc] initWithObjects:T(@"职业"), T(@"公司"),T(@"学校"),nil],
+                      [[NSArray alloc] initWithObjects:T(@"兴趣爱好"),T(@"常出没的地方"),T(@"个人说明"),nil],
+                      nil];
+    
     self.infoDescArray = [[NSArray alloc] initWithObjects:
-                          [self getSignature],
-                          [self getCareer],
-                          [self getHometown],
-                          [self getSelfIntroduction],
+                          [[NSArray alloc] initWithObjects:[self getSignature],nil],
+                          [[NSArray alloc] initWithObjects: [self getCareer], [self getCompany],[self getSchool],nil],
+                          [[NSArray alloc] initWithObjects:[self getInterest],[self getAlwaysbeen],[self getSelfIntroduction],nil],
                           nil];
     
     self.infoTableView = [[UITableView alloc]initWithFrame:self.infoView.bounds style:UITableViewStyleGrouped];
     self.infoTableView.dataSource = self;
     self.infoTableView.delegate = self;
-    [self.infoTableView setBackgroundColor:[UIColor clearColor]];
-    
+    self.infoTableView.backgroundView = nil;
+    [self.infoTableView setBackgroundColor:[UIColor clearColor]];    
     
     [self.infoView addSubview:self.infoTableView];
     
@@ -451,8 +471,14 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if( indexPath.row == [self.infoArray count] -1 ){
-        return 120.0;
+    if(indexPath.section ==2){
+        if ( indexPath.row == 2) {
+            return 120.0;
+        }else{
+            return 80.0;
+        }
+    }else if(indexPath.section ==0){
+        return 60.0;
     }else{
         return 44.0;
     }
@@ -460,13 +486,21 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    return 3;
 }
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [infoArray count];
+    if (section == 0) {
+        return 1;
+    }else if(section == 1){
+        return 3;
+    }else if(section == 2){
+        return 3;
+    }else{
+        return 0;
+    }
 }
 
 
@@ -490,49 +524,56 @@
 	/*
 	 Create an instance of UITableViewCell and add tagged subviews for the name, message, and quarter image of the time zone.
 	 */
+    NSArray *titleArray = (NSArray *)[self.infoArray objectAtIndex:indexPath.section];
+    NSArray *descArray = (NSArray *)[self.infoDescArray objectAtIndex:indexPath.section];
     
 	UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
-    //    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
-    cell.backgroundView.backgroundColor = RGBCOLOR(248, 248, 248);
-    
-    cell.selectedBackgroundView.backgroundColor =  RGBCOLOR(228, 228, 228);
-    
-    UILabel* titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 10, 70, 20)];
-    titleLabel.text = [self.infoArray objectAtIndex:indexPath.row];
+    UILabel* titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 10, 70, 24)];
+    titleLabel.text = [titleArray objectAtIndex:indexPath.row];
     titleLabel.font = [UIFont boldSystemFontOfSize:16.0];
     titleLabel.textColor = RGBCOLOR(155, 161, 172);
     titleLabel.backgroundColor = [UIColor clearColor];
     [cell addSubview:titleLabel];
-//    cell.textLabel.text = [self.infoArray objectAtIndex:indexPath.row];
-//    cell.textLabel.textColor = RGBCOLOR(155, 161, 172);
 
     // Create a label for the summary
     UILabel* descLabel;
-	CGRect rect = CGRectMake( 80, 10, 210, 30);
+	CGRect rect = CGRectMake( 80, 10, 210, 20);
 	descLabel = [[UILabel alloc] initWithFrame:rect];
     descLabel.numberOfLines = 0;
 	descLabel.font = [UIFont systemFontOfSize:13.0];
 	descLabel.textAlignment = UITextAlignmentLeft;
     descLabel.textColor = RGBCOLOR(125, 125, 125);
     descLabel.backgroundColor = [UIColor clearColor];
-    NSString *signature = [self.infoDescArray objectAtIndex:indexPath.row];
+    NSString *signature = [descArray objectAtIndex:indexPath.row];
     
     CGSize summaryMaxSize = CGSizeMake(SUMMARY_WIDTH, LABEL_HEIGHT*4);
     CGFloat _labelHeight;
 
     CGSize signatureSize = [signature sizeWithFont:descLabel.font constrainedToSize:summaryMaxSize lineBreakMode: UILineBreakModeTailTruncation];
     if (signatureSize.height > 20) {
-        _labelHeight = 6.0;
+        if (indexPath.section == 0) {
+            _labelHeight = 14.0;
+        }else{
+            _labelHeight = 6.0;
+        }
     }else {
-        _labelHeight = 14.0;
+        if (indexPath.section == 0) {
+            _labelHeight = 22.0;
+        }else{
+            _labelHeight = 14.0;
+        }
     }
     descLabel.text = signature;
     descLabel.frame = CGRectMake(descLabel.frame.origin.x, _labelHeight, signatureSize.width , signatureSize.height );
 
     
-    if( indexPath.row == [self.infoArray count] -1 ){
-        descLabel.frame = CGRectMake(20, _labelHeight + 25 , SUMMARY_WIDTH + 50 , signatureSize.height );
+    if( indexPath.section == 2){
+        titleLabel.frame = CGRectMake(20, 12, 150, 20);
+        descLabel.frame = CGRectMake(10, 37 , SUMMARY_WIDTH + 50 , signatureSize.height );
+    }else if(indexPath.section == 0 && indexPath.row == 0 ){
+        titleLabel.frame = CGRectMake(20, 20, 150, 20);
     }
     
     
@@ -557,17 +598,31 @@
     [self.actionView addSubview:actionViewBg];
     
     
-    self.sendMsgButton = [[UIButton alloc] initWithFrame:CGRectMake(SMALL_GAP, 6, 94.0f, 29.0f)];
+    self.sendMsgButton = [[UIButton alloc] initWithFrame:CGRectMake(SMALL_GAP, 5.0f, 94.0f, 34.0f)];
     [self.sendMsgButton setTag:0];
-    [self.sendMsgButton.titleLabel setFont:[UIFont systemFontOfSize:TINY_FONT_HEIGHT]];
+    [self.sendMsgButton.titleLabel setFont:[UIFont systemFontOfSize:SMALL_FONT_HEIGHT]];
     [self.sendMsgButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [self.sendMsgButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
     [self.sendMsgButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 18, 0, 0)];
+    [self.sendMsgButton setTitle:T(@"发送") forState:UIControlStateNormal];
+    [self.sendMsgButton setBackgroundImage:[UIImage imageNamed:@"profile_tabbar_btn1.png"] forState:UIControlStateNormal];
+    [self.sendMsgButton addTarget:self action:@selector(sendMsgRequest:) forControlEvents:UIControlEventTouchUpInside];
     [self.actionView addSubview:self.sendMsgButton];
     
-    self.reportUserButton = [[UIButton alloc] initWithFrame:CGRectMake(SMALL_GAP + 210.0f, 6, 94.0f, 29.0f)];
+    self.helloButton = [[UIButton alloc] initWithFrame:CGRectMake(SMALL_GAP, 5.0f, 94.0f, 34.0f)];
+    [self.helloButton setTag:6];
+    [self.helloButton.titleLabel setFont:[UIFont systemFontOfSize:SMALL_FONT_HEIGHT]];
+    [self.helloButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.helloButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
+    [self.helloButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 18, 0, 0)];
+    [self.helloButton setTitle:T(@"打招呼") forState:UIControlStateNormal];
+    [self.helloButton setBackgroundImage:[UIImage imageNamed:@"profile_tabbar_btn2.png"] forState:UIControlStateNormal];
+    [self.helloButton addTarget:self action:@selector(addFriendAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.actionView addSubview:self.helloButton];
+
+    self.reportUserButton = [[UIButton alloc] initWithFrame:CGRectMake(SMALL_GAP + 210.0f, 5.0f, 94.0f, 34.0f)];
     [self.reportUserButton setTag:3];
-    [self.reportUserButton.titleLabel setFont:[UIFont systemFontOfSize:TINY_FONT_HEIGHT]];
+    [self.reportUserButton.titleLabel setFont:[UIFont systemFontOfSize:SMALL_FONT_HEIGHT]];
     [self.reportUserButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [self.reportUserButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
     [self.reportUserButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 18, 0, 0)];
@@ -576,29 +631,46 @@
     [self.reportUserButton addTarget:self action:@selector(reportAction:) forControlEvents:UIControlEventTouchUpInside];
     [self.actionView addSubview:self.reportUserButton];
     
-    // Now set content. Either user or jsonData must have value
-    self.title = [self getNickname];
-    if (self.user == nil) {
-        [self.sendMsgButton setTitle:T(@"添加") forState:UIControlStateNormal];
-        [self.sendMsgButton setBackgroundImage:[UIImage imageNamed:@"profile_tabbar_btn2.png"] forState:UIControlStateNormal];
-        [self.sendMsgButton addTarget:self action:@selector(addFriendButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
-        
-    } else {
-        [self.sendMsgButton setTitle:T(@"发送") forState:UIControlStateNormal];
-        [self.sendMsgButton setBackgroundImage:[UIImage imageNamed:@"profile_tabbar_btn1.png"] forState:UIControlStateNormal];
-        [self.sendMsgButton addTarget:self action:@selector(sendMsgButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
-        
-        self.deleteUserButton = [[UIButton alloc] initWithFrame:CGRectMake(SMALL_GAP+105.0f, 6, 94.0f, 29.0f )];
-        [self.deleteUserButton setTag:2];
-        [self.deleteUserButton.titleLabel setFont:[UIFont systemFontOfSize:TINY_FONT_HEIGHT]];
-        [self.deleteUserButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-        [self.deleteUserButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
-        [self.deleteUserButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 18, 0, 0)];
-        [self.deleteUserButton setBackgroundImage:[UIImage imageNamed:@"profile_tabbar_btn4.png"] forState:UIControlStateNormal];
-        [self.deleteUserButton setTitle:T(@"删除") forState:UIControlStateNormal];
-        [self.deleteUserButton addTarget:self action:@selector(deleteUserButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
-        [self.actionView addSubview:self.deleteUserButton];
-    }
+    self.deleteUserButton = [[UIButton alloc] initWithFrame:CGRectMake(SMALL_GAP+105.0f, 5.0f, 94.0f, 34.0f )];
+    [self.deleteUserButton setTag:2];
+    [self.deleteUserButton.titleLabel setFont:[UIFont systemFontOfSize:SMALL_FONT_HEIGHT]];
+    [self.deleteUserButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.deleteUserButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
+    [self.deleteUserButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 18, 0, 0)];
+    [self.deleteUserButton setBackgroundImage:[UIImage imageNamed:@"profile_tabbar_btn4.png"] forState:UIControlStateNormal];
+    [self.deleteUserButton setTitle:T(@"删除") forState:UIControlStateNormal];
+    [self.deleteUserButton addTarget:self action:@selector(deleteUserAction:) forControlEvents:UIControlEventTouchUpInside];
+     [self.actionView addSubview:self.deleteUserButton];
+    
+    
+    self.confirmButton = [[UIButton alloc] initWithFrame:CGRectMake(SMALL_GAP, 5.0f, 94.0f, 34.0f)];
+    [self.confirmButton.titleLabel setFont:[UIFont systemFontOfSize:SMALL_FONT_HEIGHT]];
+    [self.confirmButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.confirmButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
+    [self.confirmButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 20, 0, 0)];
+    [self.confirmButton setTitle:T(@"加为好友") forState:UIControlStateNormal];
+    [self.confirmButton setBackgroundImage:[UIImage imageNamed:@"profile_tabbar_btn5.png"] forState:UIControlStateNormal];
+    [self.confirmButton addTarget:self action:@selector(confirmRequest) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.actionView addSubview:self.confirmButton];
+    
+    self.cancelButton = [[UIButton alloc] initWithFrame:CGRectMake(SMALL_GAP+210.0f, 5.0f, 94.0f, 34.0f )];
+    [self.cancelButton.titleLabel setFont:[UIFont systemFontOfSize:SMALL_FONT_HEIGHT]];
+    [self.cancelButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.cancelButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
+    [self.cancelButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 20, 0, 0)];
+    [self.cancelButton setTitle:T(@"拒绝请求") forState:UIControlStateNormal];
+    [self.cancelButton setBackgroundImage:[UIImage imageNamed:@"profile_tabbar_btn4.png"] forState:UIControlStateNormal];
+    [self.cancelButton addTarget:self action:@selector(cancelRequest) forControlEvents:UIControlEventTouchUpInside];
+    [self.actionView addSubview:self.cancelButton];
+    
+    self.friendReqestStateButton = [[UIButton alloc] initWithFrame:CGRectMake(SMALL_GAP, 5.0f, 94.0f, 34.0f)];
+    [self.friendReqestStateButton.titleLabel setFont:[UIFont systemFontOfSize:SMALL_FONT_HEIGHT]];
+    [self.friendReqestStateButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.friendReqestStateButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
+    [self.friendReqestStateButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 20, 0, 0)];
+    [self.actionView addSubview:self.friendReqestStateButton];
+
     
     [self.view addSubview:self.actionView];
 }
@@ -622,44 +694,34 @@
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex == 0 ) {
-        NSString* hisGUID;
-        if (self.user != nil) {
-            hisGUID = self.user.guid;
-        } else {
-            hisGUID = [ServerDataTransformer getGUIDFromServerJSON:self.jsonData];
-        }
+        NSString* hisGUID = self.GUIDString;
         
-        HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        HUD.delegate = self;
+        MBProgressHUD* HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        HUD.removeFromSuperViewOnHide = YES;
         HUD.labelText = T(@"正在发送");
-        
-        [HUD hide:YES afterDelay:2];
 
         [[AppNetworkAPIClient sharedClient] reportID:hisGUID myID:[self appDelegate].me.guid type:@"p" description:@"用户举报，无具体描述" otherInfo:@"" withBlock:nil];
         
         self.user.state = IdentityStatePendingRemoveFriend;
                 
         [[XMPPNetworkCenter sharedClient] removeBuddy:self.user.ePostalID withCallbackBlock:^(NSError *error) {
-            
+            [HUD hide:YES];  
             if (error == nil) {
-                [HUD hide:YES];
-                
-                HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-                HUD.delegate = self;
-                HUD.mode = MBProgressHUDModeText;
-                HUD.labelText = T(@"举报成功");
-                [HUD hide:YES afterDelay:2];
-                
-                [self.navigationController popViewControllerAnimated:YES];
-                
+                MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.view];
+                [self.view addSubview:hud];
+                hud.mode = MBProgressHUDModeText;
+                hud.removeFromSuperViewOnHide = YES;
+                hud.labelText = T(@"你已成功举报该用户");
+                hud.detailsLabelText = T(@"我们将核对信息后尽快处理");
+                                
+                [hud showAnimated:YES whileExecutingBlock:^{
+                    sleep(2);
+                } completionBlock:^{
+                    [self.navigationController popViewControllerAnimated:YES];
+                }];
+
             }else{
-                [HUD hide:YES];
-                
-                HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-                HUD.delegate = self;
-                HUD.mode = MBProgressHUDModeText;
-                HUD.labelText = T(@"网络问题，请稍候再试");
-                [HUD hide:YES afterDelay:2];
+                [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"网络问题，请稍候再试") andHideAfterDelay:2];
             }
         }];
         
@@ -667,32 +729,16 @@
 }
 
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	// Do any additional setup after loading the view.
-}
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-}
-
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
 
--(void)sendMsgButtonPushed:(id)sender
+-(void)addFriendAction:(id)sender
 {
-    [self.delegate viewController:self didChatIdentity:self.user];
-}
-
--(void)addFriendButtonPushed:(id)sender
-{
-    NSLog(@"addFriendButtonPushed %@", jsonData);
+   DDLogInfo(@"addFriendAction %@", jsonData);
+    
     
     NSString *userJid = [jsonData valueForKey:@"jid"];
 
@@ -702,59 +748,148 @@
         newUser = [[ModelHelper sharedInstance] createNewUser];
     }
     
-    NSLog(@"NewUSer %@",newUser);
-    
-    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    HUD.delegate = self;
-    HUD.mode = MBProgressHUDModeText;
-    HUD.labelText = T(@"请求已发送");
-    [HUD hide:YES afterDelay:2];
+    [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"请求已发送") andHideAfterDelay:2];
 
-    if (newUser.state != IdentityStateActive) {
+    if (newUser.state == IdentityStatePendingServerDataUpdate) {
+        [[AppNetworkAPIClient sharedClient] updateIdentity:newUser withBlock:nil];
+    } else if (newUser.state != IdentityStateActive) {
         [[ModelHelper sharedInstance] populateIdentity:newUser withJSONData:jsonData];
         newUser.state = IdentityStatePendingAddFriend;
-        NSLog(@"userJid %@",userJid);
     }
     
     // send sub request anyway - idempotent requests all the way
     [[XMPPNetworkCenter sharedClient] addBuddy:userJid withCallbackBlock:nil];
+    
+    [XFox logEvent:EVENT_ADD_FRIEND withParameters:[NSDictionary dictionaryWithObjectsAndKeys:newUser.guid, @"guid", nil]];
 }
 
--(void)deleteUserButtonPushed:(id)sender
+-(void)deleteUserAction:(id)sender
 {
     if (self.user.state != IdentityStateInactive) {
         self.user.state = IdentityStatePendingRemoveFriend;
     }
     
-    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    HUD.delegate = self;
+    MBProgressHUD* HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    HUD.removeFromSuperViewOnHide = YES;
     HUD.labelText = T(@"正在发送");
-    [HUD hide:YES afterDelay:2];
     
     [[XMPPNetworkCenter sharedClient] removeBuddy:self.user.ePostalID withCallbackBlock:^(NSError *error) {
-
+        [HUD hide:YES];
         if (error == nil) {
-            [HUD hide:YES];
-            
-            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            HUD.delegate = self;
-            HUD.mode = MBProgressHUDModeText;
-            HUD.labelText = T(@"删除成功");
-            [HUD hide:YES afterDelay:2];
-            
+            [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"删除成功") andHideAfterDelay:2];
             [self.navigationController popViewControllerAnimated:YES];
             
         }else{
-            [HUD hide:YES];
-            
-            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            HUD.delegate = self;
-            HUD.mode = MBProgressHUDModeText;
-            HUD.labelText = T(@"未删除成功");
-            [HUD hide:YES afterDelay:2];
+            [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"网络错误，请稍后重试") andHideAfterDelay:2];
         }
     }];
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
+#pragma mark - request action view
+////////////////////////////////////////////////////////////////////////////////
+
+- (void)updateButtonsBasedRequestState
+{
+    // we have three views: 1) friend view; 2) stranger view (add a friend); 3) friend request action view
+    // (approve friend request)
+    
+    if (self.user != nil && self.user.state == IdentityStateActive) {
+        // friend view
+        [self.sendMsgButton setHidden:NO];
+        [self.deleteUserButton setHidden:NO];
+        [self.reportUserButton setHidden:NO];
+        [self.confirmButton setHidden:YES];
+        [self.cancelButton setHidden:YES];
+        [self.friendReqestStateButton setHidden:YES];
+        [self.helloButton setHidden:YES];
+    } else if (self.request != nil && self.request.state == FriendRequestUnprocessed) {
+        // display approval & denial action
+        [self.sendMsgButton setHidden:YES];
+        [self.deleteUserButton setHidden:YES];
+        [self.reportUserButton setHidden:YES];
+        [self.confirmButton setHidden:NO];
+        [self.cancelButton setHidden:NO];
+        [self.friendReqestStateButton setHidden:YES];
+        [self.helloButton setHidden:YES];
+    } else if (self.request != nil && self.request.state != FriendRequestUnprocessed) {
+        // display current friend state
+        User* user = [[ModelHelper sharedInstance] findUserWithEPostalID:self.request.requesterEPostalID];
+        if (user != nil && user.state == IdentityStateActive) {
+            [self.sendMsgButton setHidden:NO];
+            [self.deleteUserButton setHidden:NO];
+            [self.reportUserButton setHidden:NO];
+            [self.confirmButton setHidden:YES];
+            [self.cancelButton setHidden:YES];
+            [self.friendReqestStateButton setHidden:YES];
+            [self.helloButton setHidden:YES];
+        } else {
+            [self.sendMsgButton setHidden:YES];
+            [self.deleteUserButton setHidden:YES];
+            [self.reportUserButton setHidden:YES];
+            [self.confirmButton setHidden:YES];
+            [self.cancelButton setHidden:YES];
+            [self.friendReqestStateButton setHidden:NO];
+            [self.helloButton setHidden:YES];
+            
+            if (self.request.state == FriendRequestApproved) {
+                [self.friendReqestStateButton setTitle:T(@"已添加") forState:UIControlStateNormal];
+                [self.friendReqestStateButton setBackgroundImage:[UIImage imageNamed:@"profile_tabbar_btn5.png"] forState:UIControlStateNormal];
+            } else {
+                [self.friendReqestStateButton setTitle:T(@"已拒绝") forState:UIControlStateNormal];
+                [self.friendReqestStateButton setBackgroundImage:[UIImage imageNamed:@"profile_tabbar_btn3.png"] forState:UIControlStateNormal];
+
+            }
+        }
+    } else  {
+        // display stranger
+        [self.sendMsgButton setHidden:YES];
+        [self.deleteUserButton setHidden:YES];
+        [self.reportUserButton setHidden:NO];
+        [self.confirmButton setHidden:YES];
+        [self.cancelButton setHidden:YES];
+        [self.friendReqestStateButton setHidden:YES];
+        [self.helloButton setHidden:NO];
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mask - button action
+////////////////////////////////////////////////////////////////////////////////////////////////
+-(void)sendMsgRequest:(id)sender
+{
+    [self.navigationController popToRootViewControllerAnimated:NO];
+    [[self appDelegate].tabController setSelectedIndex:1];
+    
+    if (self.user != nil) {
+        [[self appDelegate].conversationController chatWithIdentity:self.user];
+    } else {
+        User* user = [[ModelHelper sharedInstance] findUserWithGUID:self.GUIDString];
+        [[self appDelegate].conversationController chatWithIdentity:user];
+    }
+}
+
+- (void)confirmRequest
+{
+    self.request.state = FriendRequestApproved;
+    self.user = [[ModelHelper sharedInstance] createActiveUserWithFullServerJSONData:[self.request.userJSONData JSONValue]];
+    [[XMPPNetworkCenter sharedClient] acceptPresenceSubscriptionRequestFrom:self.request.requesterEPostalID andAddToRoster:YES];
+    [[self appDelegate].contactListController contentChanged];
+    
+    [self updateButtonsBasedRequestState];
+}
+
+- (void)cancelRequest
+{
+    self.request.state = FriendRequestDeclined;
+    [[XMPPNetworkCenter sharedClient] removeBuddy:self.request.requesterEPostalID withCallbackBlock:nil];
+    [[XMPPNetworkCenter sharedClient] rejectPresenceSubscriptionRequestFrom:self.request.requesterEPostalID];
+    
+    [self updateButtonsBasedRequestState];
+}
+
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // Getter help to get data from either user or jsonData
@@ -777,11 +912,26 @@
     //unsigned int unitFlags = NSMonthCalendarUnit | NSDayCalendarUnit;
     NSDateComponents *comps ;
     if (self.user == nil) {
-        comps = [gregorian components:NSYearCalendarUnit fromDate:[ServerDataTransformer getBirthdateFromServerJSON:self.jsonData]  toDate:now  options:0];
+        NSDate *fromDate = [ServerDataTransformer getBirthdateFromServerJSON:self.jsonData];
+        if (fromDate != nil) {
+            comps = [gregorian components:NSYearCalendarUnit fromDate:fromDate  toDate:now  options:0];
+        }else{
+            return @"";
+        }
     } else {
-        comps = [gregorian components:NSYearCalendarUnit fromDate:self.user.birthdate  toDate:now  options:0];
+        if (self.user.birthdate != nil) {
+            comps = [gregorian components:NSYearCalendarUnit fromDate:self.user.birthdate  toDate:now  options:0];
+        }else{
+            return @"";
+        }
     }
-    return [NSString stringWithFormat:@"%d", comps.year];
+    
+    if (comps != nil) {
+        return [NSString stringWithFormat:@"%d", comps.year];
+    } else {
+        return @"";
+    }
+    
 }
 
 - (NSString *)getLastGPSUpdatedTimeStr
@@ -793,7 +943,9 @@
     if (self.user == nil) {
         comps = [gregorian components:unitFlags fromDate:[ServerDataTransformer getLastGPSUpdatedFromServerJSON:self.jsonData]  toDate:now  options:0];
     } else {
-        comps = [gregorian components:unitFlags fromDate:self.user.lastGPSUpdated  toDate:now  options:0];
+        if(self.user.lastGPSUpdated != nil){
+            comps = [gregorian components:unitFlags fromDate:self.user.lastGPSUpdated  toDate:now  options:0];
+        }
     }
     if (comps.day == 1) {
         return [NSString stringWithFormat:@"%d day ago", comps.day];
@@ -837,6 +989,57 @@
         return self.user.hometown;
     } else if (self.jsonData != nil) {
         return [ServerDataTransformer getHometownFromServerJSON:self.jsonData];
+    } else {
+        return @"";
+    }
+}
+- (NSString *)getSinaWeiboID
+{
+    if (self.user != nil && self.user.sinaWeiboID != nil) {
+        return self.user.sinaWeiboID;
+    } else if (self.jsonData != nil) {
+        return [ServerDataTransformer getSinaWeiboIDFromServerJSON:self.jsonData];
+    } else {
+        return @"";
+    }
+}
+- (NSString *)getSchool
+{
+    if (self.user != nil && self.user.school != nil) {
+        return self.user.school;
+    } else if (self.jsonData != nil){
+        return [ServerDataTransformer getSchoolFromServerJSON:self.jsonData];
+    } else {
+        return @"";
+    }
+}
+- (NSString *)getCompany
+{
+    if (self.user != nil && self.user.company != nil) {
+        return self.user.company;
+    } else if (self.jsonData != nil){
+        return [ServerDataTransformer getCompanyFromServerJSON:self.jsonData];
+    } else {
+        return @"";
+    }
+}
+- (NSString *)getAlwaysbeen
+{
+    if (self.user != nil && self.user.alwaysbeen != nil) {
+        return self.user.alwaysbeen;
+    } else if (self.jsonData != nil){
+        return [ServerDataTransformer getAlwaysbeenFromServerJSON:self.jsonData];
+    } else {
+        return @"";
+    }
+}
+
+- (NSString *)getInterest
+{
+    if (self.user != nil && self.user.interest != nil) {
+        return self.user.interest;
+    } else if (self.jsonData != nil){
+        return [ServerDataTransformer getInterestFromServerJSON:self.jsonData];
     } else {
         return @"";
     }

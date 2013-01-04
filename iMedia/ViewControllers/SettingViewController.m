@@ -8,7 +8,6 @@
 
 #import "SettingViewController.h"
 #import "ProfileMeController.h"
-#import "RequestViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "Me.h" 
 #import "AppDelegate.h"
@@ -16,16 +15,21 @@
 #import "FeedBackViewController.h"
 #import "AboutUsViewController.h"
 #import "ModelHelper.h"
+#import "ShakeCodeViewController.h"
 #import "ShakeAddressViewController.h"
+#import "MemoViewController.h"
+#import "FeedBackViewController.h"
+#import "PrivacyViewController.h"
+#import "ConfigSetting.h"
 
-@interface SettingViewController ()<UIActionSheetDelegate>
+@interface SettingViewController ()<UIActionSheetDelegate,UIAlertViewDelegate>
 
 @property(nonatomic, strong) UIActionSheet *logoutActionsheet;
 @property(nonatomic, strong) UITableView *settingTableView;
 @property(nonatomic, strong) UIButton *loginButton;
-
+@property(nonatomic, strong) UISwitch *privacySwitch;
+@property(nonatomic, strong) UIAlertView *privacyAlert;
 @property(nonatomic, strong) NSArray *settingTitleArray;
-@property(nonatomic, strong) UIButton *logoutButton;
 @property (strong, nonatomic) Me *me;
 @property (nonatomic, strong) UIImageView *myAvatar;
 
@@ -40,9 +44,10 @@
 @synthesize loginButton;
 @synthesize settingTitleArray;
 @synthesize managedObjectContext;
-@synthesize logoutButton;
 @synthesize me;
 @synthesize myAvatar;
+@synthesize privacySwitch;
+@synthesize privacyAlert;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -58,6 +63,11 @@
     return self;
 }
 
+- (void)dealloc
+{
+    NotificationsUnobserve();
+}
+
 - (AppDelegate *)appDelegate
 {
 	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -65,11 +75,15 @@
 
 - (void)loadView{
     [super loadView];
-//    UIImageView *tabbarBgView  = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"navigationBar_bg.png"]];
-//    [self.navigationController.navigationBar insertSubview:tabbarBgView atIndex:1];
-//    [self.navigationController.navigationBar setBackgroundColor:[UIColor blackColor]];
+
     CGRect imageRect = CGRectMake(220, 5,  50, 50);
     self.myAvatar = [[UIImageView alloc] initWithFrame:imageRect];
+    self.myAvatar.contentMode = UIViewContentModeScaleToFill;
+    self.myAvatar.clipsToBounds = YES;
+
+    CALayer *avatarLayer = [self.myAvatar layer];
+    [avatarLayer setMasksToBounds:YES];
+    [avatarLayer setCornerRadius:5.0];
 }
 
 - (void)viewDidLoad
@@ -78,9 +92,8 @@
     
     self.settingTitleArray = [[NSArray alloc] initWithObjects:
                               [[NSArray alloc] initWithObjects:@"个人设置",nil],
-                              [[NSArray alloc] initWithObjects:@"App精品推荐", nil],
-                              [[NSArray alloc] initWithObjects:@"去春水堂打个分吧",@"帮助与反馈",@"关于春水堂", nil],
-                              [[NSArray alloc] initWithObjects:@"退出登录", nil],
+                              [[NSArray alloc] initWithObjects:@"隐私保护",@"优惠码备忘录", nil],
+                              [[NSArray alloc] initWithObjects:@"去芥末打个分吧",@"帮助与反馈",@"关于芥末", nil],
                               nil ];
     //,@"我的相册",@"新浪微博",@"微信朋友圈"
     
@@ -90,8 +103,55 @@
     self.settingTableView.delegate = self;
 
     [self.view addSubview:self.settingTableView];
-    
+
+    self.privacySwitch = [[UISwitch alloc] initWithFrame:CGRectMake(210, 10, 50, 20)];
+    [self.privacySwitch addTarget:self action:@selector(privacyChanged) forControlEvents:UIControlEventValueChanged];
+
 }
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    
+    if([ConfigSetting isSettingEnabled:self.me.config withSetting:CONFIG_PRIVACY_REQUIRED]){
+        [self.privacySwitch setOn:YES animated:NO];
+    }else{
+        [self.privacySwitch setOn:NO animated:NO];
+    }
+    
+    [self.myAvatar setImage:self.me.thumbnailImage];
+}
+
+- (void)privacyChanged{
+    if (self.privacySwitch.on) {
+        PrivacyViewController *controller = [[PrivacyViewController alloc]initWithNibName:nil bundle:nil];
+        [controller setHidesBottomBarWhenPushed:YES];
+        [self.navigationController presentModalViewController:controller animated:YES];
+    }else{
+        self.privacyAlert = [[UIAlertView alloc]initWithTitle:T(@"取消隐私保护")
+                                                        message:T(@"即将解除隐私保护.请注意保护你的隐私.不要将手机轻易借给他人.")
+                                                       delegate:self
+                                              cancelButtonTitle:T(@"取消")
+                                              otherButtonTitles:T(@"确定"), nil];
+        [self.privacyAlert show];
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if ([alertView isEqual:self.privacyAlert]) {
+        if (buttonIndex == 0){
+            //cancel clicked ...do your action
+            [self.privacySwitch setOn:YES animated:NO];
+        }else if (buttonIndex == 1){
+            self.me.config = [ConfigSetting disableConfig:[self appDelegate].me.config withSetting:CONFIG_PRIVACY_REQUIRED];
+            self.me.privacyPass = nil;
+        }
+    }
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark - tableview
 ////////////////////////////////////////////////////////////////////////////////
@@ -142,17 +202,13 @@
 	 Create an instance of UITableViewCell and add tagged subviews for the name, message, and quarter image of the time zone.
 	 */
     
-	UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+	UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
+    
     
     NSUInteger labelY = 12;
     
     if (indexPath.section == 0 && indexPath.row == 0) {
         // Create an image view for the quarter image
-        CALayer *avatarLayer = [self.myAvatar layer];
-        [avatarLayer setMasksToBounds:YES];
-        [avatarLayer setCornerRadius:5.0];
-        [avatarLayer setBorderColor:[[UIColor whiteColor] CGColor]];
-        [self.myAvatar setImage:self.me.thumbnailImage];
         [cell.contentView addSubview:self.myAvatar];
         labelY = 20;
     }
@@ -178,7 +234,11 @@
     
     [cell addSubview:titleLabel];
     
-
+    if (indexPath.section == 1 && indexPath.row == 0) {
+        [cell addSubview:self.privacySwitch];
+        [cell setSelectionStyle:UITableViewCellEditingStyleNone];
+    }
+    
     
     return cell;
 }
@@ -190,31 +250,41 @@
     if (indexPath.row == 0 && indexPath.section == 0 ) {
         ProfileMeController *profileMeController = [[ProfileMeController alloc] initWithNibName:nil bundle:nil];
         profileMeController.managedObjectContext = self.managedObjectContext;
+        [profileMeController setHidesBottomBarWhenPushed:YES];
         [self.navigationController pushViewController:profileMeController animated:YES];
     }
     
-    // for test
-    if (indexPath.row == 0 && indexPath.section == 1 ) {
-        ShakeAddressViewController *controller = [[ShakeAddressViewController alloc]initWithNibName:nil bundle:nil];
+    
+    if (indexPath.row == 1 && indexPath.section == 1 ) {
+        MemoViewController *controller = [[MemoViewController alloc]initWithNibName:nil bundle:nil];
+        controller.managedObjectContext = self.managedObjectContext;
         [controller setHidesBottomBarWhenPushed:YES];
-        controller.priceType = 1;
-        [self.navigationController presentModalViewController:controller animated:YES];
+        [self.navigationController pushViewController:controller animated:YES];
+        //        [self.navigationController presentModalViewController:controller animated:YES];
+    }
+    
+    if (indexPath.row == 0 && indexPath.section == 2 ) {
+        // 打分 评价
+        NSString *str = [NSString stringWithFormat:
+                         @"itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=%d",
+                         M_APPLEID ];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:str]];
+    }
+    if (indexPath.row == 1 && indexPath.section == 2 ) {
+        FeedBackViewController *controller = [[FeedBackViewController alloc]initWithNibName:nil bundle:nil];
+        [self.navigationController pushViewController:controller animated:YES];
     }
     
     if (indexPath.row == 2 && indexPath.section == 2 ) {
         AboutUsViewController *controller = [[AboutUsViewController alloc]initWithNibName:nil bundle:nil];
         [self.navigationController pushViewController:controller animated:YES];
     }
-    
-    if (indexPath.row == 0 && indexPath.section == 3) {
-        [self logoutAction];
-    }
 
 }
 /////////////////////////////////////////////
 #pragma mark - logout
 ////////////////////////////////////////////
-
+/*
 - (void)logoutAction
 {
     self.logoutActionsheet = [[UIActionSheet alloc]
@@ -234,15 +304,14 @@
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex == 0 && [self.logoutActionsheet isEqual:actionSheet] ) {
-        [[ModelHelper sharedInstance] clearAllObjects];
-        [self appDelegate].me = nil;
         [[self appDelegate] clearSession];
+        [[ModelHelper sharedInstance] clearAllObjects];
         
         [[self appDelegate] startIntroSession];
     }
 
 }
-
+*/
 
 
 - (void)viewDidUnload

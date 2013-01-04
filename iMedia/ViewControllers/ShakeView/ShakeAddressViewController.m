@@ -8,16 +8,21 @@
 
 #import "ShakeAddressViewController.h"
 #import "MBProgressHUD.h"
+#import "ConvenienceMethods.h"
 #import <QuartzCore/QuartzCore.h>
 #import "AppNetworkAPIClient.h"
 #import "ShakeDashboardViewController.h"
+#import "SettingViewController.h"
+#import "ShakeEntityViewController.h"
+#import "DDLog.h"
+// Log levels: off, error, warn, info, verbose
+#if DEBUG
+static const int ddLogLevel = LOG_LEVEL_VERBOSE;
+#else
+static const int ddLogLevel = LOG_LEVEL_OFF;
+#endif
 
-
-@interface ShakeAddressViewController ()<UITextFieldDelegate,MBProgressHUDDelegate>
-{
-    MBProgressHUD *HUD;
-}
-
+@interface ShakeAddressViewController ()<UITextFieldDelegate,UIAlertViewDelegate>
 @property(nonatomic, strong) UIScrollView *baseView;
 @property(nonatomic,strong)UILabel *noticeLabel;
 @property(strong,nonatomic) UITextField *nameField;
@@ -28,7 +33,7 @@
 @property(strong, nonatomic)UITapGestureRecognizer *tapGestureRecognizer;
 @property(strong, nonatomic) UITextField *handleField;
 @property(strong, nonatomic)UIButton *closeButton;
-
+@property(strong, nonatomic) UIAlertView *closeAlertView;
 @end
 
 @implementation ShakeAddressViewController
@@ -45,6 +50,7 @@
 @synthesize awardID;
 @synthesize handleField;
 @synthesize closeButton;
+@synthesize closeAlertView;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -76,14 +82,14 @@
     self.noticeLabel.textColor = RGBCOLOR(195, 70, 21);
     self.noticeLabel.shadowColor = [UIColor whiteColor];
     self.noticeLabel.shadowOffset = CGSizeMake(0, 1);
-    self.noticeLabel.text = T(@"请留下您的联系方式，我们将您中奖的商品快递给你");
+    self.noticeLabel.text = T(@"请留下你的联系方式，我们将你中奖的商品快递给你");
     
     // nameField
     self.nameField = [[UITextField alloc]initWithFrame:CGRectMake(TEXTFIELD_X_OFFSET , TEXTFIELD_Y_OFFSET+LOGO_HEIGHT, TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT)];
     self.nameField.font = [UIFont systemFontOfSize:18.0];
     self.nameField.textColor = [UIColor grayColor];
     self.nameField.delegate = self;
-    self.nameField.placeholder = T(@"您的姓名");
+    self.nameField.placeholder = T(@"你的姓名");
     self.nameField.backgroundColor = RGBCOLOR(240, 240, 240);
     self.nameField.layer.borderColor = [RGBCOLOR(147, 150, 157) CGColor];
     self.nameField.layer.borderWidth  = 1.0f;
@@ -96,7 +102,7 @@
     self.telField.font = [UIFont systemFontOfSize:18.0];
     self.telField.textColor = [UIColor grayColor];
     self.telField.delegate = self;
-    self.telField.placeholder = T(@"您的电话");
+    self.telField.placeholder = T(@"你的电话");
     self.telField.backgroundColor = RGBCOLOR(240, 240, 240);
     self.telField.layer.borderColor = [RGBCOLOR(147, 150, 157) CGColor];
     self.telField.layer.borderWidth  = 1.0f;
@@ -143,9 +149,9 @@
     
     // regionbutton
     self.closeButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [self.closeButton setFrame:CGRectMake(TEXTFIELD_X_OFFSET ,TEXTFIELD_Y_OFFSET*5+TEXTFIELD_HEIGHT*5+LOGO_HEIGHT, TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT)];
+    [self.closeButton setFrame:CGRectMake(TEXTFIELD_X_OFFSET ,TEXTFIELD_Y_OFFSET*5+TEXTFIELD_HEIGHT*6+LOGO_HEIGHT, TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT)];
     [self.closeButton.titleLabel setFont:[UIFont boldSystemFontOfSize:18.0]];
-    [self.closeButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [self.closeButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
     [self.closeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     [self.closeButton.titleLabel setTextAlignment:UITextAlignmentCenter];
     [self.closeButton setTitle:T(@"关闭") forState:UIControlStateNormal];
@@ -176,12 +182,30 @@
 
 - (void)closeButtonPushed
 {
-    [self dismissModalViewControllerAnimated:YES];
+    self.closeAlertView = [[UIAlertView alloc]initWithTitle:T(@"放弃填写")
+                                                    message:T(@"你将放弃这次机会,而且不能再参与这次摇一摇!")
+                                                   delegate:self
+                                          cancelButtonTitle:T(@"取消")
+                                          otherButtonTitles:T(@"确定"), nil];
+    [self.closeAlertView show];
+}
+
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if ([alertView isEqual:self.closeAlertView]) {
+        if (buttonIndex == 0){
+            //cancel clicked ...do your action
+        }else if (buttonIndex == 1){
+            [self dismissModalViewControllerAnimated:YES];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"cancelUploadAddress" object:nil];
+        }
+    }
 }
 
 - (void)handleTaps:(UIGestureRecognizer *)paramSender
 {
-    NSLog(@"handleTaps");
+    DDLogVerbose(@"handleTaps");
     [self.handleField resignFirstResponder];
     [self.baseView setContentOffset:CGPointMake(0, 0) animated:YES];
 }
@@ -189,89 +213,73 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    HUD.delegate = self;
+    MBProgressHUD* HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    HUD.removeFromSuperViewOnHide = YES;
     HUD.labelText = T(@"正在加载信息");
     
     [super viewWillAppear:animated];
     [[AppNetworkAPIClient sharedClient]getWinnerInfoWithBlock:^(id responseObject, NSError *error) {
+        [HUD hide:YES];
         if (responseObject) {
-            
-            [HUD hide:YES afterDelay:1];
             NSDictionary *responseDict = responseObject;
             self.nameField.text = [responseDict objectForKey:@"name"];
             self.telField.text = [responseDict objectForKey:@"phone"];
             self.addressField.text = [responseDict objectForKey:@"addr"];
-            
         }else{
-            [HUD hide:YES];
-            
-            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            HUD.mode = MBProgressHUDModeText;
-            HUD.delegate = self;
-            HUD.labelText = T(@"网络错误,无法获取信息");
-            [HUD hide:YES afterDelay:1];
+            [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"网络错误,无法获取信息") andHideAfterDelay:1];
         }
     }];
-
 }
 
 - (void)sendButtonPushed:(id)sender
 {
     [self.addressField resignFirstResponder];
-
-    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    HUD.delegate = self;
-    HUD.labelText = T(@"发送中");
-
+    [self.baseView setContentOffset:CGPointMake(0, 0) animated:YES];
     
-    NSString *priceTypeString = [NSString stringWithFormat:@"%i",self.priceType];
-    
-
-    [[AppNetworkAPIClient sharedClient]updateWinnerName:self.nameField.text andPhone:self.telField.text andPriceType:priceTypeString andAddress:self.addressField.text WithBlock:^(id responseObject, NSError *error) {
-        if (error == nil) {
+    if (StringHasValue(self.nameField.text) && StringHasValue(self.telField.text) && StringHasValue(self.addressField.text)) {
+        
+        
+        MBProgressHUD* HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        HUD.removeFromSuperViewOnHide = YES;
+        HUD.labelText = T(@"发送中");
+        
+        NSString *priceTypeString = [NSString stringWithFormat:@"%i",self.priceType];
+        
+        [[AppNetworkAPIClient sharedClient]updateWinnerName:self.nameField.text andPhone:self.telField.text andPriceType:priceTypeString andAddress:self.addressField.text WithBlock:^(id responseObject, NSError *error) {
             [HUD hide:YES];
-     
-//            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-//            HUD.mode = MBProgressHUDModeText;
-//            HUD.labelText = T(@"发送成功");
-//            HUD.delegate = self;
-//            [HUD hide:YES afterDelay:2];
-            
-            MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.view];
-            [self.view addSubview:hud];
-            hud.labelText = T(@"发送成功");
-            hud.mode = MBProgressHUDModeText;
-            
-            [hud showAnimated:YES whileExecutingBlock:^{
-                sleep(2);
-            } completionBlock:^{
-                [hud removeFromSuperview];
-//                // backto dashboard
-//                NSArray *controllerArray =  self.navigationController.viewControllers;
-//                for (int i=0; i< [controllerArray count]; i++) {
-//                    UIViewController *tmp = [controllerArray objectAtIndex:i];
-//                    if ([tmp isKindOfClass:[ShakeDashboardViewController class]]) {
-//                        [self.navigationController popToViewController:tmp animated:YES];
-//                        break;
-//                    }
-//                }
-                [self dismissModalViewControllerAnimated:YES];
-            }];
-            
-        } else {
-            [HUD hide:YES];
-            
-            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            HUD.mode = MBProgressHUDModeText;
-            HUD.labelText =  T(@"发送失败,请重试"); //[responseObject objectForKey:@"status"];
-            [HUD hide:YES afterDelay:2];
-            
+            if (error == nil) {
+                MBProgressHUD *hud = [[MBProgressHUD alloc] initWithView:self.view];
+                [self.view addSubview:hud];
+                hud.labelText = T(@"发送成功");
+                hud.mode = MBProgressHUDModeText;
+                
+                [hud showAnimated:YES whileExecutingBlock:^{
+                    sleep(2);
+                } completionBlock:^{
+                    [hud removeFromSuperview];
+                    //                // backto dashboard
+                    //                NSArray *controllerArray =  self.navigationController.viewControllers;
+                    //                for (int i=0; i< [controllerArray count]; i++) {
+                    //                    UIViewController *tmp = [controllerArray objectAtIndex:i];
+                    //                    if ([tmp isKindOfClass:[ShakeDashboardViewController class]]) {
+                    //                        [self.navigationController popToViewController:tmp animated:YES];
+                    //                        break;
+                    //                    }
+                    //                }
+                    [self dismissModalViewControllerAnimated:YES];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:@"doneUploadAddress" object:nil];
+                    
+                }];
+                
+            } else {
+                [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"发送失败,请重试") andHideAfterDelay:2];
+            }
+        }];
+        
 
-        }
-
-    }];
-    
+    }else{
+        [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"有没填写的项") andHideAfterDelay:2];
+    }
 }
 
 #warning store data and init form the database

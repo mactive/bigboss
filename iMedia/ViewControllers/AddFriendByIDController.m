@@ -10,11 +10,12 @@
 #import "AppNetworkAPIClient.h"
 #import "DDLog.h"
 #import "MBProgressHUD.h"
+#import "ConvenienceMethods.h"
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 #else
-static const int ddLogLevel = LOG_LEVEL_INFO;
+static const int ddLogLevel = LOG_LEVEL_OFF;
 #endif
 
 #import "User.h"
@@ -25,10 +26,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 #import <QuartzCore/QuartzCore.h>
 #import "ConversationsController.h"
 
-@interface AddFriendByIDController () <UITextFieldDelegate,MBProgressHUDDelegate, ChatWithIdentityDelegate>
-{
-    MBProgressHUD * HUD;
-}
+@interface AddFriendByIDController () <UITextFieldDelegate, ChatWithIdentityDelegate>
 
 @property (strong, nonatomic) UILabel *desc;
 @property (strong, nonatomic) UITextField *field;
@@ -101,40 +99,30 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
 }
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	// Do any additional setup after loading the view.
-}
-
 - (void)getDict
 {
     NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: field.text, @"guid", @"1", @"op", nil];
     
-    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    HUD.delegate = self;
+    MBProgressHUD* HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     HUD.labelText = T(@"正在搜索");
     
     [[AppNetworkAPIClient sharedClient] getPath:GET_DATA_PATH parameters:getDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        DDLogVerbose(@"get config JSON received: %@", responseObject);
+//        DDLogVerbose(@"search friend get user received: %@", responseObject);
         
-        [HUD hide:YES];
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        
         NSString* type = [responseObject valueForKey:@"type"];
         if ([type isEqualToString:@"user"]) {
-            sleep(1);
-            
             ContactDetailController *controller = [[ContactDetailController alloc] initWithNibName:nil bundle:nil];
             controller.jsonData = responseObject;
+            controller.GUIDString = field.text;
             controller.managedObjectContext = [self appDelegate].context;
-            NSLog(@"self delegate %@",[self appDelegate]);
             
             // Pass the selected object to the new view controller.
             [controller setHidesBottomBarWhenPushed:YES];
             [self.navigationController pushViewController:controller animated:YES];
             
         } else if ([type isEqualToString:@"channel"]) {
-            sleep(1);
-
             ChannelViewController *controller = [[ChannelViewController alloc] initWithNibName:nil bundle:nil];
             controller.delegate = self;
             controller.jsonData = responseObject;
@@ -142,23 +130,13 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             
             [self.navigationController pushViewController:controller animated:YES];
         } else {
-            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            HUD.mode = MBProgressHUDModeText;
-            HUD.delegate = self;
-            HUD.labelText = T(@"用户名不存在");
-            [HUD hide:YES afterDelay:1];
+            [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"用户名不存在") andHideAfterDelay:1];
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        //
         DDLogVerbose(@"error received: %@", error);
-        [HUD hide:YES];
-        
-        HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        HUD.mode = MBProgressHUDModeText;
-        HUD.delegate = self;
-        HUD.labelText = T(@"网络错误，无法获取用户数据");
-        [HUD hide:YES afterDelay:1];
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        [ConvenienceMethods showHUDAddedTo:self.view animated:YES text: T(@"网络错误，无法获取用户数据") andHideAfterDelay:1];
     }];
 
 }

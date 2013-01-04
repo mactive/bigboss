@@ -8,16 +8,14 @@
 
 #import "RateViewController.h"
 #import "MBProgressHUD.h"
+#import "ConvenienceMethods.h"
 #import <QuartzCore/QuartzCore.h>
 #import "AppDelegate.h"
 #import "Me.h"
 #import "ServerDataTransformer.h"
 #import "AppNetworkAPIClient.h"
 
-@interface RateViewController ()<MBProgressHUDDelegate>
-{
-    MBProgressHUD *HUD;
-}
+@interface RateViewController ()
 @property(strong, nonatomic)UILabel *welcomeLabel;
 @property(strong, nonatomic)NSArray *starWordArray;
 @property(strong, nonatomic)UIButton *starButton0;
@@ -114,7 +112,7 @@
     self.welcomeLabel.numberOfLines = 1;
     self.welcomeLabel.shadowColor = [UIColor blackColor];
     self.welcomeLabel.shadowOffset = CGSizeMake(0, 1);
-    self.welcomeLabel.text = T(@"请您对我的服务做出评价");
+    self.welcomeLabel.text = T(@"请你对我的服务做出评价");
     [self.view addSubview:self.welcomeLabel];
 	// Do any additional setup after loading the view.
     
@@ -123,7 +121,7 @@
     [self.noticeLabel setBackgroundColor:[UIColor clearColor]];
     [self.noticeLabel setFont:[UIFont systemFontOfSize:20.0]];
     self.noticeLabel.textColor = RGBCOLOR(195, 70, 21);
-    self.noticeLabel.text = T(@"请评价");
+    self.noticeLabel.text = T(@"请点亮下面的星星评价客服");
     self.noticeLabel.shadowColor = [UIColor whiteColor];
     self.noticeLabel.shadowOffset = CGSizeMake(0, 1);
     
@@ -184,31 +182,18 @@
 
 - (void)sendButtonPushed:(id)sender
 {
-    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    HUD.delegate = self;
+    MBProgressHUD* HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    HUD.removeFromSuperViewOnHide = YES;
     HUD.labelText = T(@"发送中");
     
     [[AppNetworkAPIClient sharedClient] uploadRating:self.conversionKey rate:self.rateString andComment:nil withBlock:^(id responseObject, NSError *error) {
-        
+        [HUD hide:YES];
         if (error == nil) {
-            [HUD hide:YES];
-            
-            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            HUD.mode = MBProgressHUDModeText;
-            HUD.labelText = T(@"评价成功");
-            sleep(2);
-            [HUD hide:YES];
+            [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"评价成功") andHideAfterDelay:2];
             [self dismissModalViewControllerAnimated:YES];
         } else {
-            [HUD hide:YES];
-
-            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            HUD.mode = MBProgressHUDModeText;
-            HUD.labelText =  T(@"评价失败,请重试"); //[responseObject objectForKey:@"status"];
-            [HUD hide:YES afterDelay:1];
+            [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"评价失败,请重试") andHideAfterDelay:1];
         }
-        
-        
     }];
 }
 

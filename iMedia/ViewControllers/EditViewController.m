@@ -46,7 +46,6 @@
 @synthesize valueText;
 @synthesize delegate;
 @synthesize valueIndex;
-@synthesize valueType;
 @synthesize sexPicker;
 @synthesize sexTitleDict;
 @synthesize sexTitleValue;
@@ -74,6 +73,7 @@
                                                                     action:@selector(doneAction)];
         [ttButton setTintColor:RGBCOLOR(77, 139, 192)];
         self.navigationItem.rightBarButtonItem = ttButton;
+        self.navigationItem.leftBarButtonItem  = ttButton; // hide left bar button
     }
     return self;
 }
@@ -202,8 +202,12 @@
     
     self.birthValueLabel.text = self.valueText;
     NSDate *_date = [self.dateFormatter dateFromString:self.valueText];
-    NSUInteger age = floor([_date daysBeforeDate:[NSDate dateWithDaysFromNow:0]] / 365);
-    self.ageValueLabel.text = [ NSString stringWithFormat:T(@"%i 岁"), age ];
+    if (_date == nil) {
+        self.ageValueLabel.text = nil;
+    } else {
+        NSUInteger age = floor([_date daysBeforeDate:[NSDate dateWithDaysFromNow:0]] / 365);
+        self.ageValueLabel.text = [ NSString stringWithFormat:T(@"%i 岁"), age ];
+    }
     
     [self.view addSubview:self.horoscopeLabel];    
     [self.view addSubview:self.ageTitleLabel];
@@ -224,7 +228,7 @@
         }
     }else if(self.valueIndex == NICKNAME_ITEM_INDEX){
         if ([self.valueTextField.text length] == 0 ) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:T(@"所填项目不能为空") delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:T(@"昵称不能为空") delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
             [alert show];
         }else{
             [self.navigationController popViewControllerAnimated:YES];
@@ -237,13 +241,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    if (self.valueIndex == SEX_ITEM_INDEX) {
-//        [self.sexPicker selectRow:1 inComponent:1 animated:YES];
-        NSInteger index =  [self.sexTitleKey indexOfObject:self.valueText];
-        [self.sexPicker selectRow:index inComponent:0 animated:YES];
-        [self.view addSubview:self.sexPicker];
-        
-    }else if(self.valueIndex == BIRTH_ITEM_INDEX)
+    if(self.valueIndex == BIRTH_ITEM_INDEX)
     {
         [self initBirthView];
         
@@ -251,9 +249,10 @@
             self.horoscopeLabel.text = T(@"星座");
         } else {
             NSDate *_date = [self.dateFormatter dateFromString:self.valueText];
-            NSLog(@"date:%@", _date);
-            [self.datePicker setDate:_date animated:YES];
-            self.horoscopeLabel.text = [_date horoscope];
+            if (_date != nil) {
+                [self.datePicker setDate:_date animated:YES];
+                self.horoscopeLabel.text = [_date horoscope];
+            }
             [self.datePicker addTarget:self action:@selector(dateChanged) forControlEvents:UIControlEventValueChanged];
             [self.view addSubview:self.datePicker];
         }
@@ -284,6 +283,10 @@
         }else if (self.valueIndex == HOMETOWN_ITEM_INDEX){
             self.noticeLabel.text = [NSString stringWithFormat:T(@"不能超过%i个字符."),HOMETOWN_MAX_LENGTH];
             self.restCountLabel.text = [NSString stringWithFormat:@"%i",HOMETOWN_MAX_LENGTH - [self.valueText length]];
+        }else{
+            // school interest company always
+            self.noticeLabel.text = [NSString stringWithFormat:T(@"不能超过%i个字符."),DEFAULT_MAX_LENGTH];
+            self.restCountLabel.text = [NSString stringWithFormat:@"%i",DEFAULT_MAX_LENGTH - [self.valueText length]];
         }
         
         [self.view addSubview:self.restCountLabel];
@@ -304,21 +307,35 @@
         return YES;
     }
     NSString * toBeString = [textField.text stringByReplacingCharactersInRange:range withString:string];
-    
+
     if (self.valueTextField == textField)
     {
         if (self.valueIndex == NICKNAME_ITEM_INDEX || self.valueIndex  == CAREER_ITEM_INDEX) {
             
-            self.restCountLabel.text = [NSString stringWithFormat:@"%i",NICKNAME_MAX_LENGTH - 1 - [self.valueTextField.text length]];
-
+            NSInteger countInt = (NICKNAME_MAX_LENGTH > [toBeString length]) ? NICKNAME_MAX_LENGTH - [toBeString length]: 0;
+            self.restCountLabel.text = [NSString stringWithFormat:@"%i",countInt];
+            
             if ([toBeString length] > NICKNAME_MAX_LENGTH) {
                 textField.text = [toBeString substringToIndex:NICKNAME_MAX_LENGTH];
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:T(@"超过最大字数不能输入了") delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
                 [alert show];
                 return NO;
             }
-        }else if (self.valueIndex == CELL_ITEM_INDEX){
-            self.restCountLabel.text = [NSString stringWithFormat:@"%i",CELL_MAX_LENGTH - 1 - [self.valueTextField.text length]];
+            
+            if ([toBeString length] == 0) {
+                textField.text = @"";
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:T(@"此项不能为空") delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                [alert show];
+                return NO;
+            }
+            
+            
+        }
+        
+        else if (self.valueIndex == CELL_ITEM_INDEX){
+            
+            NSInteger countInt = (CELL_MAX_LENGTH > [toBeString length]) ? CELL_MAX_LENGTH - [toBeString length]: 0;
+            self.restCountLabel.text = [NSString stringWithFormat:@"%i",countInt];
 
             if ([toBeString length] > CELL_MAX_LENGTH) {
                 textField.text = [toBeString substringToIndex:CELL_MAX_LENGTH];
@@ -327,8 +344,11 @@
                 return NO;
             }
         }else if (self.valueIndex == HOMETOWN_ITEM_INDEX){
-            self.restCountLabel.text = [NSString stringWithFormat:@"%i",HOMETOWN_MAX_LENGTH - 1 - [self.valueTextField.text length]];
             
+            
+            NSInteger countInt = (HOMETOWN_MAX_LENGTH > [toBeString length]) ? HOMETOWN_MAX_LENGTH - [toBeString length]: 0;
+            self.restCountLabel.text = [NSString stringWithFormat:@"%i",countInt];
+                        
             if ([toBeString length] > HOMETOWN_MAX_LENGTH) {
                 textField.text = [toBeString substringToIndex:HOMETOWN_MAX_LENGTH];
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:T(@"家乡有点长") delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
@@ -336,6 +356,18 @@
                 return NO;
             }
             
+        }else{
+            // school interest company always
+            NSInteger countInt = (DEFAULT_MAX_LENGTH > [toBeString length]) ? DEFAULT_MAX_LENGTH - [toBeString length]: 0;
+            self.restCountLabel.text = [NSString stringWithFormat:@"%i",countInt];
+            
+            if ([toBeString length] > DEFAULT_MAX_LENGTH) {
+                textField.text = [toBeString substringToIndex:DEFAULT_MAX_LENGTH];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:T(@"字数有点多") delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                [alert show];
+                return NO;
+            }
+
         }
     
     }
@@ -343,12 +375,7 @@
 }
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField
 {
-    NSString *text = textField.text;
-    const char* utf8str = text.UTF8String;
-    NSString *decodedString = [NSString stringWithUTF8String:utf8str];
-    
-    //NSString *decodedString = [NSString stringWithUTF8String:[text cStringUsingEncoding:[NSString defaultCStringEncoding]]];
-    
+#warning    TEST for all UTF8 character handling
     [self.delegate passStringValue:self.valueTextField.text andIndex:self.valueIndex];
     return YES;
 }
@@ -420,20 +447,22 @@
     {
         if (self.valueIndex == SIGNATURE_ITEM_INDEX ) {
             
-            self.restCountLabel.text = [NSString stringWithFormat:@"%i", SIGNATURE_MAX_LENGTH - 1 - [self.valueTextView.text length]];
+            NSInteger countInt = (SIGNATURE_MAX_LENGTH > [toBeString length]) ? SIGNATURE_MAX_LENGTH - [toBeString length]: 0;
+            self.restCountLabel.text = [NSString stringWithFormat:@"%i",countInt];
             
             if ([toBeString length] > SIGNATURE_MAX_LENGTH) {
                 textView.text = [toBeString substringToIndex:SIGNATURE_MAX_LENGTH];
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:T(@"超过最大字数不能输入了") delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:T(@"字数有点多") delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
                 [alert show];
                 return NO;
             }
         }else if ( self.valueIndex  == SELF_INTRO_ITEM_INDEX){
-            self.restCountLabel.text = [NSString stringWithFormat:@"%i", SELF_INTRO_MAX_LENGTH  - 1 -  [self.valueTextView.text length]];
+            NSInteger countInt = (SELF_INTRO_MAX_LENGTH > [toBeString length]) ? SELF_INTRO_MAX_LENGTH - [toBeString length]: 0;
+            self.restCountLabel.text = [NSString stringWithFormat:@"%i",countInt];
             
             if ([toBeString length] > SELF_INTRO_MAX_LENGTH) {
                 textView.text = [toBeString substringToIndex:SELF_INTRO_MAX_LENGTH];
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:T(@"超过最大字数不能输入了") delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:T(@"字数有点多") delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
                 [alert show];
                 return NO;
             }
@@ -442,13 +471,6 @@
         
     }
     return YES;
-}
-
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

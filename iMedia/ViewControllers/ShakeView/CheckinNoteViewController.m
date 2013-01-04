@@ -10,6 +10,7 @@
 #import "AppNetworkAPIClient.h"
 #import <QuartzCore/QuartzCore.h>
 #import "MBProgressHUD.h"
+#import "ConvenienceMethods.h"
 #import "NSDate-Utilities.h"
 #import "ShakeCodeViewController.h"
 #import "ShakeEntityViewController.h"
@@ -17,15 +18,16 @@
 
 #define ROW_HEIGHT 50
 
-@interface CheckinNoteViewController ()<MBProgressHUDDelegate>
+@interface CheckinNoteViewController ()
 {
-    MBProgressHUD * HUD;
+    SystemSoundID _completeSound;
 }
 @property(nonatomic, strong)NSArray *dataArray;
 @property(nonatomic, strong)UIView *noticeView;
 @property(nonatomic, strong)UILabel *noticeLabel;
 @property(nonatomic, readwrite)NSInteger checkinDays;
 @property(nonatomic, readwrite)BOOL isTodayChecked;
+@property(nonatomic, strong)NSString *agg;
 
 @end
 
@@ -36,6 +38,8 @@
 @synthesize checkinDays;
 @synthesize isTodayChecked;
 @synthesize shakeInfo;
+@synthesize managedObjectContext;
+@synthesize agg;
 
 #define DESC_TAG 10
 - (id)initWithStyle:(UITableViewStyle)style
@@ -65,18 +69,35 @@ NSInteger intSort(id num1, id num2, void *context)
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.view.backgroundColor = BGCOLOR;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    self.tableView.separatorColor = SEPCOLOR;
+    [self.tableView setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero]];
 
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
     self.title = T(@"连续签到奖励");
-    [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
-    [self.view setBackgroundColor:BGCOLOR];
     [self initNoticeView];
     
-    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    HUD.delegate = self;
-    HUD.labelText = T(@"正在加载信息");
+    // get from parent info
+    
+    NSURL *audioPath = [[NSBundle mainBundle] URLForResource:@"message_3" withExtension:@"wav"];
+    AudioServicesCreateSystemSoundID((__bridge CFURLRef)audioPath, &_completeSound);
 
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self populateData];
+    [self refreshNoticeView];
+}
+
+
+- (void)populateData
+{
+    MBProgressHUD* HUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+    HUD.removeFromSuperViewOnHide = YES;
+    HUD.labelText = T(@"正在加载信息");
+    
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     [[AppNetworkAPIClient sharedClient]getCheckinInfoWithBlock:^(id responseObject, NSError *error) {
@@ -85,7 +106,14 @@ NSInteger intSort(id num1, id num2, void *context)
             NSDictionary *responseDict = responseObject;
             NSDictionary *item = [[NSDictionary alloc]init];
             NSMutableArray *tempArray = [[NSMutableArray alloc]init];
-            NSArray *keyArray = [[responseDict allKeys] sortedArrayUsingFunction:intSort context:NULL];
+            NSMutableArray *allKeyArray = [NSMutableArray arrayWithArray:[responseDict allKeys]];
+            for (int k = 0; k < [allKeyArray count]; k++) {
+                if ([[allKeyArray objectAtIndex:k] isEqualToString:@"agg"]) {
+                    [allKeyArray removeObjectAtIndex:k];
+                }
+            }
+            
+            NSArray *keyArray = [allKeyArray sortedArrayUsingFunction:intSort context:NULL];
             
             for (int j = 0;  j< [keyArray count]; j++) {
                 NSString * KEY = [keyArray objectAtIndex:j];
@@ -93,31 +121,18 @@ NSInteger intSort(id num1, id num2, void *context)
                 [tempArray addObject:item];
             }
             self.dataArray  = tempArray;
+            self.agg = [responseDict objectForKey:@"agg"];
             
             [self refreshNoticeView];
             
             [self.tableView reloadData];
         }else{
             [HUD hide:YES];
-            
-            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            HUD.mode = MBProgressHUDModeText;
-            HUD.delegate = self;
-            HUD.labelText = T(@"网络错误,无法获取信息");
-            [HUD hide:YES afterDelay:1];
+            [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"网络错误,无法获取信息") andHideAfterDelay:1];
         }
     }];
-    
-    // get from parent info 
 
 }
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    [self refreshNoticeView];
-}
-
 
 
 - (void)refreshNoticeView
@@ -131,20 +146,23 @@ NSInteger intSort(id num1, id num2, void *context)
     
     
     NSString * noticeString = @"";
+    NSString * checkInSum = @"";
     if (self.isTodayChecked == NO) {
-        noticeString = T(@"你今天还没签到呢");
+        noticeString = T(@"你今天还没签到呢.");
     }else{
-        noticeString = T(@"你今天已经签到过了");
+        noticeString = T(@"你今天已经签到过了.");
     }
 
     if (self.checkinDays == 0) {
-        noticeString = T(@"还没签到过,摇动手机签到");
+        noticeString = T(@"还没签到过,摇动手机签到.");
     }else{
-        noticeString = [NSString stringWithFormat:T(@"你已经连续签到 %i 天,看看都能获得那些奖品吧"), self.checkinDays ];
+        noticeString = [NSString stringWithFormat:T(@"你已经连续签到 %i 天,看看都能获得那些奖品吧."), self.checkinDays ];
     }
     
+    checkInSum = [NSString stringWithFormat:T(@"已经有 %@ 人签到过了."), self.agg ];
     
-    self.noticeLabel.text = noticeString;
+    
+    self.noticeLabel.text = [NSString stringWithFormat:@"%@ \n%@",noticeString,checkInSum];
 }
 
 
@@ -188,6 +206,7 @@ NSInteger intSort(id num1, id num2, void *context)
                     if ( bait_type == BaitTypeCode) {
                         ShakeCodeViewController *controller = [[ShakeCodeViewController alloc]initWithNibName:nil bundle:nil];
                         controller.codeString = [responseDict objectForKey:@"code"];
+                        controller.managedObjectContext = self.managedObjectContext;
                         [controller setHidesBottomBarWhenPushed:YES];
                         [self.navigationController pushViewController:controller animated:YES];
                         
@@ -215,13 +234,8 @@ NSInteger intSort(id num1, id num2, void *context)
             
             
         }else{
-            [HUD hide:YES];
-            
-            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            HUD.mode = MBProgressHUDModeText;
-            HUD.delegate = self;
-            HUD.labelText = T(@"网络错误,无法获取信息");
-            [HUD hide:YES afterDelay:1];
+            //[HUD hide:YES];
+            [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"网络错误,无法获取信息") andHideAfterDelay:1];
         }
     }];
 
@@ -235,19 +249,19 @@ NSInteger intSort(id num1, id num2, void *context)
 //////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)initNoticeView
 {
-    self.noticeView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 320, ROW_HEIGHT)];
+    self.noticeView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 320, ROW_HEIGHT+20)];
     
-    self.noticeView.backgroundColor = RGBCOLOR(233, 163, 136);
+    self.noticeView.backgroundColor = RGBCOLOR(235, 147, 109);
     
-    UIImageView *checkinButtonImage = [[ UIImageView alloc]initWithFrame:CGRectMake(6, 6, 36, 36)];
+    UIImageView *checkinButtonImage = [[ UIImageView alloc]initWithFrame:CGRectMake(16, 16, 36, 36)];
     [checkinButtonImage setImage:[UIImage imageNamed:@"metro_icon_3.png"]];
     
-    self.noticeLabel = [[UILabel alloc]initWithFrame:CGRectMake(100, 5, 200, 40)];
+    self.noticeLabel = [[UILabel alloc]initWithFrame:CGRectMake(100, 5, 220, 60)];
     self.noticeLabel.numberOfLines = 0;
     self.noticeLabel.textColor = RGBCOLOR(255, 255, 255);
     self.noticeLabel.backgroundColor = [UIColor clearColor];
     self.noticeLabel.font = [ UIFont systemFontOfSize:14.0f];
-    self.noticeLabel.textAlignment = NSTextAlignmentCenter;
+    self.noticeLabel.textAlignment = NSTextAlignmentLeft;
     
     [self.noticeView addSubview:checkinButtonImage];
     [self.noticeView addSubview:self.noticeLabel];
@@ -281,9 +295,12 @@ NSInteger intSort(id num1, id num2, void *context)
 {
     if (motion == UIEventSubtypeMotionShake)
     {
+        
+        AudioServicesPlaySystemSound (_completeSound);
+        
         if (self.isTodayChecked) {
             [self MBPShow:T(@"今天已经签过了")];
-        }else{
+        }else {
             [self updateShakeInfo];
         }
     }
@@ -291,12 +308,12 @@ NSInteger intSort(id num1, id num2, void *context)
 
 - (void)MBPShow:(NSString *)_string
 {
-    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    MBProgressHUD* HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     UIImageView *custom =  [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"metro_icon_3.png"]];
     [custom setFrame:CGRectMake(0, 0, 50, 50)];
     HUD.customView = custom;
+    HUD.removeFromSuperViewOnHide = YES;
     HUD.mode = MBProgressHUDModeCustomView;
-    HUD.delegate = self;
     HUD.labelText = _string;
     [HUD hide:YES afterDelay:1];
 }
@@ -345,12 +362,17 @@ NSInteger intSort(id num1, id num2, void *context)
     return cell;
 }
 
+- (void) tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    cell.backgroundColor = [UIColor whiteColor];
+}
+
 - (UITableViewCell *)tableViewCellWithReuseIdentifier:(NSString *)identifier
 {
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     
-    UIImageView *cellBgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell_bg.png"]];
-    cell.backgroundView = cellBgView;
+//    UIImageView *cellBgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell_bg.png"]];
+//    cell.backgroundView = cellBgView;
     cell.textLabel.font = [UIFont systemFontOfSize:18];
     cell.textLabel.textColor = RGBCOLOR(195, 70, 21);
     cell.textLabel.backgroundColor = [UIColor clearColor];

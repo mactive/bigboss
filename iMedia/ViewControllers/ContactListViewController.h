@@ -9,16 +9,11 @@
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
 
-#import "ContactDetailController.h"
 #import "ChatWithIdentity.h"
 
 @class Identity;
 
-@interface ContactListViewController : UITableViewController <ChatWithIdentityDelegate>
-{
-    NSFetchedResultsController *fetchedResultsController;
-}
-
+@interface ContactListViewController : UITableViewController <NSFetchedResultsControllerDelegate, ChatWithIdentityDelegate,UISearchBarDelegate,UISearchDisplayDelegate>
 
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 

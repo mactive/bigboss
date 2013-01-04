@@ -7,7 +7,7 @@
 //
 
 #import "AboutUsViewController.h"
-
+#import "AppDefs.h"
 @interface AboutUsViewController ()
 
 @property(strong, nonatomic)UIImageView *usLogo;
@@ -33,8 +33,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     self.view.backgroundColor = BGCOLOR;
-    self.title = T(@"关于春水堂");
+    self.title = T(@"关于芥末");
 	// Do any additional setup after loading the view.
     self.usLogo = [[UIImageView alloc] initWithFrame:CGRectMake(50, 20, 220, 100)];
     [self.usLogo setImage:[UIImage imageNamed:@"oyeah_logo.png"]];
@@ -56,7 +57,7 @@
     self.usLabel.shadowColor = [UIColor whiteColor];
     self.usLabel.shadowOffset = CGSizeMake(0, 1);
     self.usLabel.numberOfLines = 0;
-    self.usLabel.text = @"春水堂，中国情趣生活文化的倡导者，中国情趣用品行业的改良者，中国最具品牌影响力的情趣用品零售企业。以“情趣百变，真爱永恒”的经营理念，“绿色材质，人性设计”的产品采购核心原则，“以人为本，尊重原创”的人才引进理念，正在向中国情趣文化的领导者迈进。";
+    self.usLabel.text = @"芥末，有情趣。一群富有生活情趣的人，在这里相识，以阳光而坦诚的心态，探讨两性情趣，提升两性关系，让自己从蒙昧者变身为情趣达人。这里并非放纵者的聚集所，而是热爱生活者的修炼地—生活，芥末有味道。";
     
     
     

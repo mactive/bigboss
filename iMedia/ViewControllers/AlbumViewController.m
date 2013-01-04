@@ -10,7 +10,8 @@
 #import "Avatar.h"
 #import "ImageRemote.h"
 #import "UIImageView+AFNetworking.h"
-#import "UIImage+Resize.h"
+#import "UIImage+ProportionalFill.h"
+#import "MBProgressHUD.h"
 
 @interface AlbumViewController ()
 - (UIView*) createViewForObj:(id)obj;
@@ -22,16 +23,12 @@
 
 #pragma mark - View lifecycle
 
-- (void)loadView {
-    [super loadView];
+- (void)viewDidLoad {
+    [super viewDidLoad];
     
     GCPagedScrollView* scrollView = [[GCPagedScrollView alloc] initWithFrame:self.view.frame];
     scrollView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
     self.view = scrollView;
-}
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
     
     self.scrollView.backgroundColor = [UIColor blackColor];
 
@@ -88,27 +85,34 @@
             [imageView setImage:singleAvatar.image];
         } else {
             [imageView setImageWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:singleAvatar.imageRemoteURL]] placeholderImage:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+
                 singleAvatar.image = image;
                 if (singleAvatar.thumbnail == nil) {
-                    singleAvatar.thumbnail = [image resizedImageToSize:CGSizeMake(75, 75)];
+                    singleAvatar.thumbnail = [image imageCroppedToFitSize:CGSizeMake(75, 75)];
                 }
             } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
                 
             }];
         }
-    
     } else if ([obj isKindOfClass:[ImageRemote class]]) {
         ImageRemote *imageRemote = obj;
         [imageView setImageWithURL:[NSURL URLWithString:imageRemote.imageThumbnailURL] placeholderImage:nil];
     } else if ([obj isKindOfClass:[NSString class]]) {
-        [imageView setImageWithURL:[NSURL URLWithString:obj] placeholderImage:nil];
+#warning when is this being used? would the use of HUD causing the user stuck in there waiting for load finish?
+        // HUD
+        MBProgressHUD *hud2 = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud2.removeFromSuperViewOnHide = YES;
+        
+        [imageView setImageWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:obj]] placeholderImage:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+            [hud2 hide:YES];
+        } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+            [hud2 hide:YES];
+        }];
     }
     
     [imageView setContentMode:UIViewContentModeScaleAspectFit];
 
     [view addSubview:imageView];
-    
-    
     return view;
 }
 

@@ -15,16 +15,20 @@
 #import <QuartzCore/QuartzCore.h>
 #import "UIImageView+AFNetworking.h"
 #import "MBProgressHUD.h"
+#import "ConvenienceMethods.h"
 #import "ServerDataTransformer.h"
 #import "AppNetworkAPIClient.h"
 #import "AppDelegate.h"
 #import "ContactListViewController.h"
+#import "DDLog.h"
+// Log levels: off, error, warn, info, verbose
+#if DEBUG
+static const int ddLogLevel = LOG_LEVEL_VERBOSE;
+#else
+static const int ddLogLevel = LOG_LEVEL_OFF;
+#endif
 
-@interface ChannelViewController ()<MBProgressHUDDelegate>
-{
-    MBProgressHUD *HUD;
-}
-
+@interface ChannelViewController ()
 @property (strong, nonatomic) UIView *contentView;
 @property (strong, nonatomic) UIButton *confirmButton;
 @property (strong, nonatomic) UIButton *cancelButton;
@@ -91,9 +95,7 @@
     CALayer *avatarLayer = [avatarImage layer];
     [avatarLayer setMasksToBounds:YES];
     [avatarLayer setCornerRadius:5.0];
-    [avatarLayer setBorderWidth:1.0];
-    [avatarLayer setBorderColor:[[UIColor whiteColor] CGColor]];
-
+    
     [self.requestView addSubview:avatarImage];
     
     
@@ -130,6 +132,7 @@
         [self.confirmButton setTitle:T(@"订阅此频道") forState:UIControlStateNormal];
         [self.confirmButton addTarget:self action:@selector(subscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
         [self.cancelButton setTitle:T(@"取消") forState:UIControlStateNormal];
+        [self.cancelButton removeTarget:self action:@selector(unSubscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
         [self.cancelButton addTarget:self action:@selector(cancelRequest:) forControlEvents:UIControlEventTouchUpInside];
     } else {
         self.title = self.channel.displayName;
@@ -151,6 +154,7 @@
         
         if (self.channel.isMandatory.intValue == 0) {
             [self.cancelButton setTitle:T(@"取消订阅") forState:UIControlStateNormal];
+            [self.cancelButton removeTarget:self action:@selector(cancelRequest:) forControlEvents:UIControlEventTouchUpInside];
             [self.cancelButton addTarget:self action:@selector(unSubscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
         } else {
             [self.cancelButton setHidden:YES];
@@ -163,11 +167,6 @@
     [self.requestView addSubview:self.cancelButton];
     
     [self.view addSubview:self.requestView];
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    
 }
 
 - (void)cancelRequest
@@ -208,18 +207,10 @@
     } else if (newChannel.state == IdentityStateInactive) {
         newChannel.state = IdentityStatePendingAddSubscription;
     } else if (newChannel.state == IdentityStatePendingRemoveSubscription) {
-        HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
-        HUD.mode = MBProgressHUDModeCustomView;
-        HUD.labelText = T(@"网络错误，请稍候重试");
-        [HUD hide:YES afterDelay:2];
-        return;
+        newChannel.state = IdentityStatePendingAddSubscription;
     } else if (newChannel.state == IdentityStateActive) {
-        HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
-        HUD.mode = MBProgressHUDModeCustomView;
-        HUD.labelText = T(@"已订阅");
-        [HUD hide:YES afterDelay:2];
+        [ConvenienceMethods showHUDAddedTo:self.view animated:YES customView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]] text:T(@"已订阅") andHideAfterDelay:2];
+        
         [self.confirmButton setTitle:T(@"查看信息") forState:UIControlStateNormal];
         [self.confirmButton removeTarget:self action:@selector(subscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
         [self.confirmButton addTarget:self action:@selector(sendMsgButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
@@ -229,34 +220,32 @@
     } else if (newChannel.state == IdentityStatePendingAddSubscription){
     
     } else {
-        NSLog(@"CRITICAL ERROR: new channel STATE wrong (%@)", newChannel);
+        DDLogVerbose(@"CRITICAL ERROR: new channel STATE wrong (%@)", newChannel);
         return;
     }
     
     newChannel.subrequestID = [[XMPPNetworkCenter sharedClient] subscribeToChannel:nodeStr withCallbackBlock:^(NSError *error) {
         
-        HUD = [[MBProgressHUD alloc] initWithView:self.view];
+        MBProgressHUD* HUD = [[MBProgressHUD alloc] initWithView:self.view];
         [self.view addSubview:HUD];
+        HUD.removeFromSuperViewOnHide = YES;
         HUD.labelText = T(@"订阅中");
         
         [HUD showAnimated:YES whileExecutingBlock:^{
             sleep(2);
             [HUD hide:YES];
         } completionBlock:^{
-            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
-            HUD.mode = MBProgressHUDModeCustomView;
-            HUD.labelText = T(@"订阅信息已发送");
-            [HUD hide:YES afterDelay:2];
-
+            [ConvenienceMethods showHUDAddedTo:self.view animated:YES customView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]] text:T(@"订阅信息已发送") andHideAfterDelay:2];
+            
+            
             [self.confirmButton setTitle:T(@"查看信息") forState:UIControlStateNormal];
             [self.confirmButton removeTarget:self action:@selector(subscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
             [self.confirmButton addTarget:self action:@selector(sendMsgButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
-            /*
+            
             [self.cancelButton setTitle:T(@"取消订阅") forState:UIControlStateNormal];
+            [self.cancelButton removeTarget:self action:@selector(cancelRequest:) forControlEvents:UIControlEventTouchUpInside];
             [self.cancelButton addTarget:self action:@selector(unSubscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
-*/
-            [self.cancelButton setHidden:YES];
+            [self.cancelButton setHidden:NO];
         }];
 
     }];
@@ -265,23 +254,21 @@
 -(void)unSubscribeButtonPushed:(id)sender
 {
     if (self.channel == nil) {
-        NSLog(@"CRITICAL ERROR: Display unsubscribe button with empty channel object");
+        DDLogVerbose(@"CRITICAL ERROR: Display unsubscribe button with empty channel object");
         return;
     }
     
     if (self.channel.state != IdentityStateActive && self.channel.state != IdentityStatePendingRemoveSubscription) {
-        HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
-        HUD.mode = MBProgressHUDModeCustomView;
-        HUD.labelText = T(@"已退订");
-        [HUD hide:YES afterDelay:1];
+        [ConvenienceMethods showHUDAddedTo:self.view animated:YES customView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]] text:T(@"已退订") andHideAfterDelay:1];
+        
         return;
         
     }
     self.channel.subrequestID = [[XMPPNetworkCenter sharedClient] unsubscribeToChannel:self.channel.node withCallbackBlock:^(NSError *error) {
 
-        HUD = [[MBProgressHUD alloc] initWithView:self.view];
+        MBProgressHUD* HUD = [[MBProgressHUD alloc] initWithView:self.view];
         [self.view addSubview:HUD];
+        HUD.removeFromSuperViewOnHide = YES;
         HUD.labelText = T(@"退定中");
         
         channel.state = IdentityStatePendingRemoveSubscription;
@@ -291,12 +278,8 @@
             sleep(2);
             [HUD hide:YES];
         } completionBlock:^{
-            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]];
-            HUD.mode = MBProgressHUDModeCustomView;
-            HUD.labelText = T(@"退订信息已发送");
-            [HUD hide:YES afterDelay:1];
-
+            [ConvenienceMethods showHUDAddedTo:self.view animated:YES customView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]] text:T(@"退订信息已发送") andHideAfterDelay:1];
+            
             [self.confirmButton setTitle:T(@"订阅此频道") forState:UIControlStateNormal];
             [self.confirmButton removeTarget:self action:@selector(unSubscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
             [self.confirmButton addTarget:self action:@selector(subscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
