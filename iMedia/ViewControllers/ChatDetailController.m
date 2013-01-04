@@ -355,6 +355,14 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [super viewWillDisappear:animated];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillChangeFrameNotification object:nil];
+    
+    // 让键盘和中文选择消失
+    [self.textView resignFirstResponder];
+    UIView *messageInputBar = _textView.superview;
+    UIViewSetFrameY(messageInputBar, self.view.frame.size.height - messageInputBar.frame.size.height);
+    
+    self.keyboardBoundHeight = 0;
+    [self scrollToBottomBubble:YES];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
