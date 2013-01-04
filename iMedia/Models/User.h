@@ -18,10 +18,15 @@
 @property (nonatomic, retain) NSString * career;
 @property (nonatomic, retain) NSString * gender;
 @property (nonatomic, retain) NSString * hometown;
+@property (nonatomic, retain) NSString * alwaysbeen;
+@property (nonatomic, retain) NSString * interest;
+@property (nonatomic, retain) NSString * school;
+@property (nonatomic, retain) NSString * company;
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * selfIntroduction;
 @property (nonatomic, retain) NSString * signature;
 @property (nonatomic, retain) NSSet *inConversations;
+@property (nonatomic, retain) NSString * sinaWeiboID;
 @end
 
 @interface User (CoreDataGeneratedAccessors)

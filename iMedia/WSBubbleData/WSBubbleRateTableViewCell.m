@@ -8,7 +8,7 @@
 
 #import "WSBubbleRateTableViewCell.h"
 #import "WSBubbleData.h"
-
+#import "AppDefs.h"
 
 @interface WSBubbleRateTableViewCell ()
 

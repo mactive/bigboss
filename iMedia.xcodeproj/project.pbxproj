@@ -137,6 +137,8 @@
 		260971871696BAC500D0E785 /* welcome_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2609710B1696BAC500D0E785 /* welcome_bg@2x.png */; };
 		260971881696BAC500D0E785 /* welcome_btn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2609710C1696BAC500D0E785 /* welcome_btn@2x.png */; };
 		260971891696BAC500D0E785 /* welcome_title@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2609710D1696BAC500D0E785 /* welcome_title@2x.png */; };
+		260971901696BBBE00D0E785 /* CuteData.m in Sources */ = {isa = PBXBuildFile; fileRef = 2609718C1696BBBE00D0E785 /* CuteData.m */; };
+		260971911696BBBE00D0E785 /* PageViewLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 2609718F1696BBBE00D0E785 /* PageViewLogger.m */; };
 		2625096D16428282009ED7D8 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2625096C16428282009ED7D8 /* AssetsLibrary.framework */; };
 		2631C52A16313033004DE7FB /* NSDate+timesince.m in Sources */ = {isa = PBXBuildFile; fileRef = 2631C52916313033004DE7FB /* NSDate+timesince.m */; };
 		263ACBC4166DA9AF00D61725 /* WSBubbleNoticationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 263ACBC3166DA9AF00D61725 /* WSBubbleNoticationTableViewCell.m */; };
@@ -535,6 +537,11 @@
 		2609710B1696BAC500D0E785 /* welcome_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "welcome_bg@2x.png"; sourceTree = "<group>"; };
 		2609710C1696BAC500D0E785 /* welcome_btn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "welcome_btn@2x.png"; sourceTree = "<group>"; };
 		2609710D1696BAC500D0E785 /* welcome_title@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "welcome_title@2x.png"; sourceTree = "<group>"; };
+		2609718B1696BBBE00D0E785 /* CuteData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CuteData.h; sourceTree = "<group>"; };
+		2609718C1696BBBE00D0E785 /* CuteData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CuteData.m; sourceTree = "<group>"; };
+		2609718D1696BBBE00D0E785 /* LogEventConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogEventConstants.h; sourceTree = "<group>"; };
+		2609718E1696BBBE00D0E785 /* PageViewLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PageViewLogger.h; sourceTree = "<group>"; };
+		2609718F1696BBBE00D0E785 /* PageViewLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PageViewLogger.m; sourceTree = "<group>"; };
 		2625096C16428282009ED7D8 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		2631C52816313033004DE7FB /* NSDate+timesince.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDate+timesince.h"; path = "contrib/NSDate+timesince.h"; sourceTree = "<group>"; };
 		2631C52916313033004DE7FB /* NSDate+timesince.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDate+timesince.m"; path = "contrib/NSDate+timesince.m"; sourceTree = "<group>"; };
@@ -1114,6 +1121,18 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		2609718A1696BBBE00D0E785 /* CuteData */ = {
+			isa = PBXGroup;
+			children = (
+				2609718B1696BBBE00D0E785 /* CuteData.h */,
+				2609718C1696BBBE00D0E785 /* CuteData.m */,
+				2609718D1696BBBE00D0E785 /* LogEventConstants.h */,
+				2609718E1696BBBE00D0E785 /* PageViewLogger.h */,
+				2609718F1696BBBE00D0E785 /* PageViewLogger.m */,
+			);
+			path = CuteData;
+			sourceTree = "<group>";
+		};
 		2631C5271631301E004DE7FB /* contrib */ = {
 			isa = PBXGroup;
 			children = (
@@ -1345,6 +1364,7 @@
 		566E80A91609A24C00A333EA /* iMedia */ = {
 			isa = PBXGroup;
 			children = (
+				2609718A1696BBBE00D0E785 /* CuteData */,
 				260970911696BAC500D0E785 /* Resources */,
 				2631C5271631301E004DE7FB /* contrib */,
 				56B4CD0616267A2A00E046CC /* Vendor */,
@@ -2596,6 +2616,8 @@
 				04D9B83C16652BD4009DB832 /* ShakeAddressViewController.m in Sources */,
 				267B678516689BB000CF25C2 /* WSBubbleTemplateBTableViewCell.m in Sources */,
 				263ACBC4166DA9AF00D61725 /* WSBubbleNoticationTableViewCell.m in Sources */,
+				260971901696BBBE00D0E785 /* CuteData.m in Sources */,
+				260971911696BBBE00D0E785 /* PageViewLogger.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

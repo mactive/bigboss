@@ -16,7 +16,8 @@ typedef enum _WSBubbleType
     BubbleTypeRateview = 2,
     BubbleTypeNoticationview = 3,
     BubbleTypeTemplateAview = 4,
-    BubbleTypeTemplateBview = 5
+    BubbleTypeTemplateBview = 5,
+    BubbleTypeSectionHeader = 6
 } WSBubbleType;
 
 @interface WSBubbleData : NSObject
@@ -43,8 +44,11 @@ typedef enum _WSBubbleType
 - (id)initWithTemplateB:(NSString *)xmlString date:(NSDate *)date type:(WSBubbleType)type;
 + (id)dataWithTemplateB:(NSString *)xmlString date:(NSDate *)date type:(WSBubbleType)type;
 
-- (id)initWithNotication:(NSString *)xmlString date:(NSDate *)date type:(WSBubbleType)type;
-+ (id)dataWithNotication:(NSString *)xmlString date:(NSDate *)date type:(WSBubbleType)type;
+- (id)initWithSectionHeader:(NSDate *)date type:(WSBubbleType)type;
++ (id)dataWithSectionHeader:(NSDate *)date type:(WSBubbleType)type;
+
+- (id)initWithNotication:(NSString *)content date:(NSDate *)date type:(WSBubbleType)type;
++ (id)dataWithNotication:(NSString *)content date:(NSDate *)date type:(WSBubbleType)type;
 
 - (id)initWithView:(UIView *)view date:(NSDate *)date content:(NSString *)content type:(WSBubbleType)type insets:(UIEdgeInsets)insets;
 

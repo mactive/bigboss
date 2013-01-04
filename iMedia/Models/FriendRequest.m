@@ -16,5 +16,6 @@
 @dynamic requestDate;
 @dynamic state;
 @dynamic requesterEPostalID;
+@dynamic guid;
 
 @end

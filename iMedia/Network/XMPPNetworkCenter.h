@@ -39,6 +39,7 @@
 
 -(void)addBuddy:(NSString *)jidStr withCallbackBlock:(void (^)(NSError *error))block;
 -(void)removeBuddy:(NSString *)jidStr withCallbackBlock:(void (^)(NSError *erro))block;
+- (BOOL)isBuddyWithJIDString:(NSString *)jid;
 
 - (void)acceptPresenceSubscriptionRequestFrom:(NSString *)jidStr andAddToRoster:(BOOL)flag;
 - (void)rejectPresenceSubscriptionRequestFrom:(NSString *)jidStr;

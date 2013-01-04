@@ -10,6 +10,7 @@
 
 #define CONFIG_PLUGGIN_FRIEND_RECOMMENDATION    (1 << 0) // 0...00001
 #define CONFIG_PLUGGIN_SHAKE                    (1 << 1) // 0...00010
+#define CONFIG_PRIVACY_REQUIRED                 (1 << 2) // 0...00100
 
 @interface ConfigSetting : NSObject
 

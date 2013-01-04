@@ -14,11 +14,12 @@
 #import "NSData+Godzippa.h"
 #import "ServerDataTransformer.h"
 #import "DDLog.h"
+#import "UIImage+ProportionalFill.h"
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 #else
-static const int ddLogLevel = LOG_LEVEL_INFO;
+static const int ddLogLevel = LOG_LEVEL_OFF;
 #endif
 
 #import "Avatar.h"
@@ -30,23 +31,24 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 #import "ImageRemote.h"
 #import "AppDelegate.h" 
 #import "ContactListViewController.h"
-#import "UIImage+Resize.h"
 #import "XMPPJID.h"
+#import <Foundation/NSTimer.h>
+#import "NSDate-Utilities.h"
 
 #define USE_UYUN_SERVICE YES
 #ifdef USE_UYUN_SERVICE
 #import "UpYun.h"
 #endif
 
-//static NSString * const kAppNetworkAPIBaseURLString = @"http://192.168.1.104:8000/";//
+//static NSString * const kAppNetworkAPIBaseURLString = @"http://192.168.1.104:8000/";
 static NSString * const kAppNetworkAPIBaseURLString = @"http://media.wingedstone.com:8000/";
-
 
 
 NSString *const kXMPPmyJID = @"kXMPPmyJID";
 NSString *const kXMPPmyJIDPassword = @"kXMPPmyJIDPassword";
 NSString *const kXMPPmyPassword = @"kXMPPmyPassword";
 NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
+
 
 #ifdef USE_UYUN_SERVICE
 @interface AppNetworkAPIClient () <UpYunDelegate>
@@ -57,10 +59,11 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 }
 
 @property (nonatomic, strong) NSMutableDictionary *imageUploadOperationsInProgress;
-@property (nonatomic) BOOL isLoggedIn;
+@property (nonatomic, strong) id storedLoginResponseObject;
 @property (nonatomic, strong) NSMutableArray *queuedOperations;
 @property (nonatomic, strong) NSMutableDictionary *upYunRequests;
 @property (nonatomic, strong) AFHTTPRequestOperation *updateLocationOperation;
+@property (nonatomic, strong) NSDate* lastLoginDate;
 
 - (void)networkChangeReceived:(NSNotification *)notification;
 - (void)upYun:(UpYun *)upYun requestDidFailWithError:(NSError *)error;
@@ -75,6 +78,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 @property (nonatomic) BOOL isLoggedIn;
 @property (nonatomic, strong) NSMutableArray *queuedOperations;
 @property (nonatomic, strong) AFHTTPRequestOperation *updateLocationOperation;
+@property (nonatomic, strong) NSDate* lastLoginDate;
 
 - (void)networkChangeReceived:(NSNotification *)notification;
 
@@ -86,8 +90,10 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 @synthesize kNetworkStatus;
 @synthesize imageUploadOperationsInProgress;
 @synthesize isLoggedIn = _isLoggedIn;
+@synthesize storedLoginResponseObject;
 @synthesize queuedOperations;
 @synthesize updateLocationOperation;
+@synthesize lastLoginDate;
 #ifdef USE_UYUN_SERVICE
 @synthesize upYunRequests;
 #endif  
@@ -97,6 +103,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _sharedClient = [[AppNetworkAPIClient alloc] initWithBaseURL:[NSURL URLWithString:kAppNetworkAPIBaseURLString]];
+        [_sharedClient setDefaultHeader:@"Accept-Language" value:nil];
     });
     
     return _sharedClient;
@@ -128,12 +135,14 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     
     self.imageUploadOperationsInProgress = [[NSMutableDictionary alloc] initWithCapacity:5];
     self.isLoggedIn = NO;
-    self.queuedOperations = [[NSMutableArray alloc] initWithCapacity:5];;
+    self.lastLoginDate = [NSDate dateWithTimeIntervalSince1970:0];
+    self.queuedOperations = [[NSMutableArray alloc] initWithCapacity:5];
     self.updateLocationOperation = nil;
     
     _upYunLock = [[NSLock alloc] init];
     _imageQueueLock = [[NSLock alloc] init];
     _queuedOperationLock = [[NSLock alloc] init];
+
 
 #ifdef USE_UYUN_SERVICE
     self.upYunRequests = [[NSMutableDictionary alloc] initWithCapacity:5];
@@ -142,6 +151,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(networkChangeReceived:)
                                                  name:AFNetworkingReachabilityDidChangeNotification object:nil];
+
     
     [self registerHTTPOperationClass:[AFJSONRequestOperation class]];
     // Accept HTTP Header; see http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.1
@@ -150,8 +160,28 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     return self;
 }
 
--(void)loginWithUsername:(NSString *)username andPassword:(NSString *)passwd withBlock:(void (^)(id responseObject, NSError *))block
+- (void)dealloc
 {
+    NotificationsUnobserve();
+}
+
+
+-(void)loginWithRetryCount:(NSInteger)count username:(NSString *)username andPassword:(NSString *)passwd withBlock:(void (^)(id, NSError *))block
+{
+    NSDate *oneDayAgo = [NSDate dateWithDaysBeforeNow:1];
+    if (self.isLoggedIn && ([self.lastLoginDate isLaterThanDate:oneDayAgo])) {
+        if (block) {
+            block (self.storedLoginResponseObject, nil);
+        }
+        return;
+    }
+    
+    if (count < 0) {
+        // retry fails we don't have not work
+        DDLogError(@"Cannot login after multiple retries");
+        return;
+    }
+    
     self.isLoggedIn = NO;
     
     NSMutableURLRequest *loginRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"GET" path:GET_CONFIG_PATH parameters:nil];
@@ -160,10 +190,11 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
         DDLogVerbose(@"get config JSON received: %@", JSON);
         [[NSUserDefaults standardUserDefaults] setObject:[JSON valueForKey:@"logintypes"] forKey:@"logintypes"];
         [[NSUserDefaults standardUserDefaults] setObject:[JSON valueForKey:@"csrfmiddlewaretoken"] forKey:@"csrfmiddlewaretoken"];
+        [[NSUserDefaults standardUserDefaults] setObject:[JSON valueForKey:@"ios_ver"] forKey:@"ios_ver"];
         
         NSDictionary *loginDict = [NSDictionary dictionaryWithObjectsAndKeys: username, @"username", passwd, @"password", [JSON valueForKey:@"csrfmiddlewaretoken"], @"csrfmiddlewaretoken", nil];
         NSMutableURLRequest *postRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"POST" path:LOGIN_PATH parameters:loginDict];
-        AFJSONRequestOperation *loginOperation = [AFJSONRequestOperation JSONRequestOperationWithRequest:postRequest success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        AFJSONRequestOperation *loginOperation2 = [AFJSONRequestOperation JSONRequestOperationWithRequest:postRequest success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
             DDLogVerbose(@"login JSON received: %@", JSON);
             
             NSString* status = [JSON valueForKey:@"status"];
@@ -177,11 +208,14 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
                 [[NSUserDefaults standardUserDefaults] setObject:username forKey:kXMPPmyUsername];
                 [[NSUserDefaults standardUserDefaults] setObject:passwd forKey:kXMPPmyPassword];
                 
+                self.storedLoginResponseObject = JSON;
+                
                 if (block ) {
                     block(JSON, nil);
                 }
                 
                 self.isLoggedIn = YES;
+                self.lastLoginDate = [NSDate date];
             } else {
                 NSError *error = [[NSError alloc] initWithDomain:@"wingedstone.com" code:403 userInfo:nil];
                 if (block) {
@@ -193,16 +227,18 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
             if (block) {
                 block(nil, error);
             }
+            
+            [self loginWithRetryCount:(count -1) username:username andPassword:passwd withBlock:block];
 
         }];
-        [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:loginOperation];
+        [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:loginOperation2];
             
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
         DDLogVerbose(@"get config failed: %@", error);
         if (block) {
             block(nil, error);
         }
-
+        [self loginWithRetryCount:(count-1) username:username andPassword:passwd withBlock:block];
     }];
     
     [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:loginOperation];
@@ -371,10 +407,15 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 
 - (void)updateIdentity:(Identity *)identity withBlock:(void (^)(id, NSError *))block
 {
+    DDLogInfo(@"Update Identity: %@", identity.ePostalID);
+    
+    [XFox logEvent:TIMER_UPDATE_IDENTITY withParameters:[NSDictionary dictionaryWithObjectsAndKeys:identity.guid, @"guid", nil] timed:YES];
+    
     // define a minimum time period to throttle call to server
     const NSTimeInterval min_time_gap = -10;
     NSDate *now = [NSDate dateWithTimeIntervalSinceNow:min_time_gap];
-    if ([now compare:identity.last_serverupdate_on] == NSOrderedAscending) {
+    if ([now compare:identity.last_serverupdate_on] == NSOrderedAscending && (block == nil)) {
+        [XFox endTimedEvent:TIMER_UPDATE_IDENTITY withParameters:nil];
         return;
     }
     
@@ -389,7 +430,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     NSMutableURLRequest *getRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"GET" path:GET_DATA_PATH parameters:getDict];
     AFJSONRequestOperation *getOperation = [AFJSONRequestOperation JSONRequestOperationWithRequest:getRequest success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
         
-        DDLogVerbose(@"get user %@ data received: %@", identity, JSON);
+//        DDLogVerbose(@"get user %@ data received: %@", identity, JSON);
         
         NSString* type = [JSON valueForKey:@"type"];
         
@@ -424,6 +465,11 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
             
             [[ModelHelper sharedInstance] populateIdentity:identity withJSONData:JSON];
             
+            if (identity.state == IdentityStatePendingServerDataUpdate) {
+                identity.state = IdentityStateActive;
+            }
+            identity.last_serverupdate_on = [NSDate date];
+
             // Fix some inconsistent issues if it exists
             
             // if identity is Me, we need to check local avatar against the server. If local doesn't have the image
@@ -438,23 +484,20 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
                         AFImageRequestOperation *oper = [AFImageRequestOperation imageRequestOperationWithRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:avatar.imageRemoteURL]] success:^(UIImage *image) {
                             DDLogInfo(@"load me thumbnail image received response: %@", JSON);
                             avatar.image = image;
-                            avatar.thumbnail= [image resizedImageToSize:CGSizeMake(75, 75)];
+                            avatar.thumbnail= [image imageCroppedToFitSize:CGSizeMake(75, 75)];
                         }];
                         [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:oper];
                     }
                 }
-                
             }
-            if (identity.state == IdentityStatePendingServerDataUpdate) {
-                identity.state = IdentityStateActive;
-            }
-            [[self appDelegate].contactListController contentChanged];
             
-            identity.last_serverupdate_on = [NSDate date];
             
             if (block) {
                 block (JSON, nil);
             }
+            
+            [[self appDelegate] saveContextInDefaultLoop];
+            [[self appDelegate].contactListController contentChanged];
             
         } else {
             if (block) {
@@ -462,6 +505,8 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
                 block (nil, error);
             }
         }
+        
+        [XFox endTimedEvent:TIMER_UPDATE_IDENTITY withParameters:nil];
 
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
         //
@@ -470,6 +515,8 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
         if (block) {
             block(nil, error);
         }
+        
+        [XFox endTimedEvent:TIMER_UPDATE_IDENTITY withParameters:nil];
 
     }];
     
@@ -486,7 +533,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 -(void)uploadMe:(Me *)me withBlock:(void (^)(id, NSError *))block
 {
     NSString* csrfToken = [[NSUserDefaults standardUserDefaults] valueForKey:@"csrfmiddlewaretoken"];
-  
+    
     NSMutableDictionary *postDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                               csrfToken, @"csrfmiddlewaretoken",
                               @"3", @"op", 
@@ -502,7 +549,12 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
                               [ServerDataTransformer dateStrfromNSDate:me.birthdate], @"birthdate",
                               [ServerDataTransformer datetimeStrfromNSDate:me.lastGPSUpdated], @"last_gps_updated",
                               me.lastGPSLocation, @"last_gps_loc",
-                              nil];
+                              me.sinaWeiboID , @"sina_weibo_id",
+                              me.alwaysbeen , @"alwaysbeen",
+                              me.interest , @"interest",
+                              me.school , @"school",
+                              me.company , @"company",
+                                nil];
     NSArray *imagesURLArray = [me getOrderedAvatars];
     for (int i = 0; i < [imagesURLArray count]; i++) {
         Avatar* avatar = [imagesURLArray objectAtIndex:i];
@@ -514,13 +566,13 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     
     NSMutableURLRequest *postRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"POST" path:POST_DATA_PATH parameters:postDict];
     
-    // Compress data
-    /*
-    NSData *originalData = [postRequest HTTPBody];
-    NSData *compressedData = [originalData dataByGZipCompressingWithError:nil];
-    [postRequest setHTTPBody:compressedData];
-    [postRequest setValue:@"gzip" forHTTPHeaderField:@"Content-Encoding"];
-    */
+    // no gzip in local network
+//    NSRange range = [kAppNetworkAPIBaseURLString rangeOfString:@"http://192.168"];
+//    if (range.location == NSNotFound) {
+//        NSData *originalData = [postRequest HTTPBody];
+//        NSData *compressedData = [originalData dataByGZipCompressingWithError:nil];
+//        [postRequest setHTTPBody:compressedData];
+//    }
     
     AFHTTPRequestOperation *operation = [[AppNetworkAPIClient sharedClient] HTTPRequestOperationWithRequest:postRequest success:nil failure:nil];
     
@@ -586,7 +638,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: me.guid, @"guid", @"8", @"op", nil];
     NSMutableURLRequest *getRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"GET" path:GET_DATA_PATH parameters:getDict];
     AFJSONRequestOperation *getOperation = [AFJSONRequestOperation JSONRequestOperationWithRequest:getRequest success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-        DDLogVerbose(@"get channel %@ data received: %@", me, JSON);
+//        DDLogVerbose(@"get channel %@ data received: %@", me, JSON);
         
         NSString* type = [JSON valueForKey:@"type"];
         
@@ -620,7 +672,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: @"9", @"op", nil];
     NSMutableURLRequest *getRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"GET" path:GET_DATA_PATH parameters:getDict];
     AFJSONRequestOperation *getOperation = [AFJSONRequestOperation JSONRequestOperationWithRequest:getRequest success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-        DDLogVerbose(@"get preset channel %@ data received: %@", me, JSON);
+//        DDLogVerbose(@"get preset channel %@ data received: %@", me, JSON);
         
         NSString* type = [JSON valueForKey:@"type"];
         
@@ -697,6 +749,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
                                      desc, @"note",
                                      otherInfo, @"other_info",
                                      nil];
+    DDLogInfo(@"%@",postDict);
     
     [[AppNetworkAPIClient sharedClient] postPath:POST_DATA_PATH parameters:postDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
         DDLogInfo(@"upload report received response: %@", responseObject);
@@ -747,17 +800,24 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     }
 }
 
-- (void)getNearestPeopleWithGender:(NSUInteger)gender start:(NSUInteger)start querysize:(NSUInteger)querySize andBlock:(void (^)(id, NSError *))block
-{    
+- (void)getNearestPeopleWithGender:(NSUInteger)gender start:(NSUInteger)start latitude:(double)latitude longitude:(double)longitude andBlock:(void (^)(id, NSError *))block
+{
+    [XFox logEvent:TIMER_GET_NEARBY_USER timed:YES];
+    
     NSString * genderString = [NSString stringWithFormat:@"%i",gender];
     NSString * startString = [NSString stringWithFormat:@"%i",start];
-    NSString * querySizeStr = [NSString stringWithFormat:@"%i", querySize];
+    NSString * latitudeStr = [NSString stringWithFormat:@"%f", latitude];
+    NSString * longitudeStr = [NSString stringWithFormat:@"%f", longitude];
     
-    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: @"10", @"op", querySizeStr, @"querysize", startString, @"start", genderString, @"gender", nil];
+
+    
+    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: @"10", @"op", latitudeStr, @"lat", longitudeStr, @"lon", startString, @"start", genderString, @"gender", nil];
     NSMutableURLRequest *getRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"GET" path:GET_DATA_PATH parameters:getDict];
     
     AFHTTPRequestOperation *getOperation = [[AppNetworkAPIClient sharedClient] HTTPRequestOperationWithRequest:getRequest success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        DDLogVerbose(@"get nearest user data received: %@", responseObject);
+       // DDLogVerbose(@"get nearest user data received: %@", responseObject);
+        
+        [XFox endTimedEvent:TIMER_GET_NEARBY_USER withParameters:nil];
         
         NSString* type = [responseObject valueForKey:@"type"];
         
@@ -773,6 +833,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         //
+        [XFox endTimedEvent:TIMER_GET_NEARBY_USER withParameters:nil];
         if (block) {
             block (nil, error);
         }
@@ -851,6 +912,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         //
+        DDLogVerbose(@"%@",error);
         if (block) {
             block (nil, error);
         }
@@ -859,7 +921,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:getOperation];
 }
 
-// 签到奖励列表
+// 发送签到列表
 - (void)sendCheckinMessageWithBlock:(void (^)(id, NSError *))block
 {
     NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: @"13", @"op", nil];
@@ -1026,9 +1088,60 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     }];
 }
 
+// op22 上传devicetoken
+- (void)postDeviceToken{
+    
+    NSString* csrfToken = [[NSUserDefaults standardUserDefaults] valueForKey:@"csrfmiddlewaretoken"];
+    NSString* dToken = [[NSUserDefaults standardUserDefaults] valueForKey:@"deviceToken"];
+    
+    NSMutableDictionary *postDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                     csrfToken, @"csrfmiddlewaretoken",
+                                     @"22", @"op",
+                                     dToken, @"dt",
+                                     nil];
+    
+    NSMutableURLRequest *postRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"POST" path:POST_DATA_PATH parameters:postDict];
+    AFHTTPRequestOperation *oper = [[AppNetworkAPIClient sharedClient] HTTPRequestOperationWithRequest:postRequest success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        DDLogInfo(@"device successfully uploaded");
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        DDLogInfo(@"device failed uploaded");
+    }];
+    
+    if (self.isLoggedIn) {
+        [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:oper];
+    } else {
+        [_queuedOperationLock lock];
+        [self.queuedOperations addObject:oper];
+        [_queuedOperationLock unlock];
+    }
+
+}
 
 
+- (void)uploadLog:(NSData *)log withBlock:(void (^)(id, NSError *))block
+{
+    NSString* csrfToken = [[NSUserDefaults standardUserDefaults] valueForKey:@"csrfmiddlewaretoken"];
+    NSDictionary *paramDict = [NSDictionary dictionaryWithObjectsAndKeys: csrfToken, @"csrfmiddlewaretoken", nil];
+    
+    NSMutableURLRequest *postRequest = [[AppNetworkAPIClient sharedClient] multipartFormRequestWithMethod:@"POST" path:DATA_SERVER_PATH parameters:paramDict constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        [formData appendPartWithFileData:log name:@"ih" fileName:@"flu.gz" mimeType:@"application/octet-stream"];
+    }];
 
+    AFHTTPRequestOperation *operation = [[AppNetworkAPIClient sharedClient] HTTPRequestOperationWithRequest:postRequest success:nil failure:nil];
+    
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        if (block) {
+            block(responseObject, nil);
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        if (block) {
+            block(nil, error);
+        }
+    }];
+    
+    [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:operation];
+}
 
 - (BOOL)isConnectable
 {

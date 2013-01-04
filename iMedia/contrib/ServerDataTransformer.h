@@ -19,6 +19,11 @@
 + (NSString *)getSelfIntroductionFromServerJSON:(id)jsonData;
 + (NSString *)getCareerFromServerJSON:(id)jsonData;
 + (NSString *)getHometownFromServerJSON:(id)jsonData;
++ (NSString *)getAlwaysbeenFromServerJSON:(id)jsonData;
++ (NSString *)getInterestFromServerJSON:(id)jsonData;
++ (NSString *)getSchoolFromServerJSON:(id)jsonData;
++ (NSString *)getCompanyFromServerJSON:(id)jsonData;
++ (NSString *)getSinaWeiboIDFromServerJSON:(id)jsonData;
 + (NSString *)getCellFromServerJSON:(id)jsonData;
 + (NSString *)getNodeFromServerJSON:(id)jsonData;
 + (NSString *)getCSContactIDFromServerJSON:(id)jsonData;

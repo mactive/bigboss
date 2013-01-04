@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "WSBubbleTableViewCell.h"
 
-@interface WSBubbleSectionHeader : UIView
+@interface WSBubbleSectionHeaderTableViewCell :WSBubbleTableViewCell
 
 
-@property (nonatomic, strong) NSDate *date;
+@property (nonatomic, strong) WSBubbleData *data;
 
 @end

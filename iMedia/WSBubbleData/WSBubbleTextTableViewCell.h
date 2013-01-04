@@ -13,5 +13,6 @@
 @interface WSBubbleTextTableViewCell : WSBubbleTableViewCell
 
 @property (nonatomic, strong) WSBubbleData *data;
+//- (void)setNewData:(WSBubbleData *)cellData;
 
 @end

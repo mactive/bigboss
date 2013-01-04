@@ -9,10 +9,16 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
+typedef enum _InformationType
+{
+    WinnerCodeFromShake = 1
+    
+} InformationType;
+
 
 @interface Information : NSManagedObject
 
-@property (nonatomic, retain) NSNumber * type;
+@property (nonatomic) u_int16_t type;
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * value;
 @property (nonatomic, retain) NSDate * createdOn;

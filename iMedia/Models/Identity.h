@@ -16,12 +16,13 @@
 @interface Identity : NSManagedObject
 
 @property (nonatomic, retain) NSString * avatarURL;
-@property (nonatomic, retain) NSString * displayName;
 @property (nonatomic, retain) NSString * ePostalID;
 @property (nonatomic, retain) NSString * guid;
 @property (nonatomic, retain) NSDate * last_serverupdate_on;
 @property (nonatomic, retain) NSString * lastGPSLocation;
 @property (nonatomic, retain) NSDate * lastGPSUpdated;
+@property (nonatomic, retain) NSString * displayName;
+@property (nonatomic, retain) NSString * sectionName;
 @property (nonatomic)           u_int16_t state;
 @property (nonatomic, retain) UIImage * thumbnailImage;
 @property (nonatomic, retain) NSString * thumbnailURL;
@@ -31,6 +32,7 @@
 
 -(NSArray *)getOrderedImages;
 -(NSArray *)getOrderedNonNilImages;
+
 @end
 
 @interface Identity (CoreDataGeneratedAccessors)

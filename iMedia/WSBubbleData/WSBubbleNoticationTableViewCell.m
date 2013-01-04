@@ -15,13 +15,16 @@
 
 @interface WSBubbleNoticationTableViewCell ()
 
+@property (nonatomic, strong) UIView *templateView;
 @property (nonatomic, strong) UILabel *templateTitle;
+
 
 - (void) setupInternalData:(WSBubbleData *)cellData;
 
 @end
 
 @implementation WSBubbleNoticationTableViewCell
+@synthesize templateView = _templateView;
 @synthesize templateTitle = _templateTitle;
 @synthesize data = _data;
 
@@ -34,16 +37,20 @@
         // Initialization code
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         
-        
-        self.templateTitle = [[UILabel alloc] initWithFrame:CGRectMake((320-TEMPLATEB_RESIZE_WIDTH)/2, 10, TEMPLATEB_RESIZE_WIDTH, 30)];
+        self.templateView = [[UIView alloc]initWithFrame:CGRectMake((320-TEMPLATEB_RESIZE_WIDTH)/2, 10, TEMPLATEB_RESIZE_WIDTH, 30)];
+        self.templateView.backgroundColor = RGBACOLOR(0, 0, 0, 0.05);
+        self.templateView.layer.cornerRadius = 5.0f;
+
+        self.templateTitle = [[UILabel alloc] initWithFrame:CGRectMake( 5, 5, TEMPLATEB_RESIZE_WIDTH, 30)];
         self.templateTitle.numberOfLines = 0;
-        self.templateTitle.backgroundColor = RGBACOLOR(0, 0, 0, 0.2);
-        self.templateTitle.font = [UIFont systemFontOfSize:16];
-        self.templateTitle.textColor = RGBCOLOR(85, 85, 85);
+        self.templateTitle.backgroundColor = [UIColor clearColor];
+        self.templateTitle.font = [UIFont systemFontOfSize:14];
+        self.templateTitle.textColor = RGBCOLOR(145, 145, 145);
         self.templateTitle.textAlignment = NSTextAlignmentCenter;
-        self.templateTitle.layer.cornerRadius = 5.0f;
         
-        [self.contentView addSubview:self.templateTitle];
+        [self.templateView addSubview:self.templateTitle];
+        [self.contentView addSubview:self.templateView];
+        
     }
     return self;
 }
@@ -57,20 +64,19 @@
 - (void) setupInternalData:(WSBubbleData *)cellData
 {
     [super setupInternalData:cellData];
+                
+    NSString* titleString = cellData.content;
     
-    CGFloat height = cellData.view.frame.size.height;
+    CGSize titleSize = [(titleString ? titleString : @"") sizeWithFont:self.templateTitle.font constrainedToSize:CGSizeMake(TEMPLATEB_RESIZE_WIDTH-OFFSET_CONTENT, 9999) lineBreakMode:UILineBreakModeWordWrap];
     
-    NSXMLElement *element = [[NSXMLElement alloc] initWithXMLString:cellData.content error:nil];
-        
-    NSString* titleString = [[element elementForName:@"title9"] stringValue];
+    [self.templateTitle setFrame:CGRectMake(OFFSET_CONTENT/2, OFFSET_CONTENT/2,
+                                            TEMPLATEB_RESIZE_WIDTH-OFFSET_CONTENT, titleSize.height)];
     
-    
-    CGSize titleSize = [(titleString ? titleString : @"") sizeWithFont:self.templateTitle.font constrainedToSize:CGSizeMake(TEMPLATEB_RESIZE_WIDTH, 9999) lineBreakMode:UILineBreakModeWordWrap];
-    
-    [self.templateTitle setFrame:CGRectMake(self.templateTitle.frame.origin.x, self.templateTitle.frame.origin.y,
-                                            TEMPLATEB_RESIZE_WIDTH, titleSize.height)];
+    [self.templateView setFrame:CGRectMake(self.templateView.frame.origin.x, cellData.insets.top,
+                                            TEMPLATEB_RESIZE_WIDTH, titleSize.height+OFFSET_CONTENT)];
     
     self.templateTitle.text = titleString;
+    
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated

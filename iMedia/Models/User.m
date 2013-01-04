@@ -16,9 +16,13 @@
 @dynamic career;
 @dynamic gender;
 @dynamic hometown;
+@dynamic alwaysbeen;
+@dynamic interest;
+@dynamic school;
+@dynamic company;
 @dynamic name;
 @dynamic selfIntroduction;
 @dynamic signature;
 @dynamic inConversations;
-
+@dynamic sinaWeiboID;
 @end

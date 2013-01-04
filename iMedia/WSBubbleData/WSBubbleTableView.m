@@ -8,7 +8,7 @@
 
 #import "WSBubbleTableView.h"
 #import "WSBubbleData.h"
-#import "WSBubbleSectionHeader.h"
+#import "WSBubbleSectionHeaderTableViewCell.h"
 #import "RateViewController.h"
 #import "WebViewController.h"
 #import "AppDelegate.h"
@@ -22,10 +22,24 @@
 #import "WSBubbleTemplateATableViewCell.h"
 #import "WSBubbleTemplateBTableViewCell.h"
 #import "WSBubbleRateTableViewCell.h"
+#import "WSBubbleNoticationTableViewCell.h"
 #import "ContactDetailController.h"
 #import "ProfileMeController.h"
 
+#import "DDLog.h"
+#import "ModelHelper.h"
+#import "MBProgressHUD.h"
+#import "AppNetworkAPIClient.h"
+#import "ConvenienceMethods.h"
+#import "ServerDataTransformer.h"
 
+
+// Log levels: off, error, warn, info, verbose
+#if DEBUG
+static const int ddLogLevel = LOG_LEVEL_VERBOSE;
+#else
+static const int ddLogLevel = LOG_LEVEL_OFF;
+#endif
 
 
 @implementation WSBubbleTableView
@@ -34,11 +48,12 @@
 @synthesize showAvatars;
 @synthesize bubbleSection;
 
-#define SECTION_HEIGHT 28
 static NSString *CellText = @"CellText";
 static NSString *CellTemplateA = @"CellTemplateA";
 static NSString *CellTemplateB = @"CellTemplateB";
 static NSString *CellRate = @"CellRate";
+static NSString *CellNotification = @"CellNotification";
+static NSString *CellSectionHeader = @"CellSectionHeader";
 
 
 - (id)initWithFrame:(CGRect)frame
@@ -49,29 +64,10 @@ static NSString *CellRate = @"CellRate";
         self.dataSource = self;
         self.delegate = self;
         self.snapInterval = 120;
+        self.showsVerticalScrollIndicator = NO;
+        self.showsHorizontalScrollIndicator = NO;
     }
     return self;
-}
-
-- (void)reloadData
-{
-    [super reloadData];
-
-    self.showsVerticalScrollIndicator = NO;
-    self.showsHorizontalScrollIndicator = NO;
-    
-    // Cleaning up
-//	self.bubbleSection = nil;
-//  self.bubbleSection = [[NSMutableArray alloc] init];
-    
-    for (int i = 0; i < [self.bubbleSection count]; i++) {
-        NSMutableArray *myarray = [self.bubbleSection  objectAtIndex:i];
-
-        for (int j = 0; j < [myarray count]; j++) {
-            WSBubbleData *tmp = [myarray objectAtIndex:j];
-            NSLog(@"%i - %i   %@", i,j, tmp.content);
-        }
-    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -79,33 +75,14 @@ static NSString *CellRate = @"CellRate";
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (section >= [self.bubbleSection count]) return 1;
+//    if (section >= [self.bubbleSection count]) return 1;
     
-    return [[self.bubbleSection objectAtIndex:section ] count];
+    return [[self.bubbleSection objectAtIndex:section ] count] ;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    int result = [self.bubbleSection count];
-    if (result > 0 ) {
-        return result;
-    }else{
-        return 1;
-    }
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    return SECTION_HEIGHT;
-}
-
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
-    WSBubbleSectionHeader *sectionView = [[WSBubbleSectionHeader alloc]initWithFrame:CGRectMake(0, 0, self.frame.size.width, SECTION_HEIGHT)];
-    WSBubbleData *firstRowData = [[self.bubbleSection objectAtIndex:section] objectAtIndex:0];
-    
-    sectionView.date = firstRowData.date;
-    return sectionView;
+    return [self.bubbleSection count];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -115,7 +92,15 @@ static NSString *CellRate = @"CellRate";
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     WSBubbleData *rowData = [[self.bubbleSection objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-    CGFloat cellHeight = MAX(rowData.insets.top + rowData.cellHeight + rowData.insets.bottom, self.showAvatars ? 55 : 0);
+    CGFloat cellHeight = 0.0f;
+    if (rowData.type == BubbleTypeMine || rowData.type == BubbleTypeSomeoneElse)
+    {
+        cellHeight = MAX(rowData.insets.top + rowData.cellHeight + rowData.insets.bottom, 65);
+    }else if(rowData.type == BubbleTypeRateview){
+        cellHeight = 70.0f;
+    }else{
+        cellHeight = rowData.insets.top + rowData.cellHeight + rowData.insets.bottom;
+    }
     return  cellHeight;
 }
 
@@ -133,6 +118,10 @@ static NSString *CellRate = @"CellRate";
         cell = [tableView dequeueReusableCellWithIdentifier:CellTemplateB];
     }else if ( rowData.type == BubbleTypeRateview){
         cell = [tableView dequeueReusableCellWithIdentifier:CellRate];
+    }else if (rowData.type == BubbleTypeNoticationview) {
+        cell = [tableView dequeueReusableCellWithIdentifier:CellNotification];
+    }else if (rowData.type == BubbleTypeSectionHeader){
+        cell = [tableView dequeueReusableCellWithIdentifier:CellSectionHeader];
     }
     
     if (cell == nil) {
@@ -144,22 +133,17 @@ static NSString *CellRate = @"CellRate";
             cell = [[WSBubbleTemplateBTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellTemplateB];
         }else if ( rowData.type == BubbleTypeRateview){
             cell = [[WSBubbleRateTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellRate];
+        }else if (rowData.type == BubbleTypeNoticationview) {
+            cell = [[WSBubbleNoticationTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellNotification];
+        }else if (rowData.type == BubbleTypeSectionHeader){
+            cell = [[WSBubbleSectionHeaderTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellSectionHeader];
         }
     }
     
+
     cell.data = rowData;
+
     return cell;
-}
-
-
-- (UITableViewCell *)tableViewCellWithReuseIdentifier:(NSString *)identifier andIndexPath:(NSIndexPath *)indexPath{
-    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
-    
-    cell.backgroundColor = [UIColor clearColor];
-    
-    WSBubbleData *data = [[self.bubbleSection objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-    cell.textLabel.text = data.content;
-    return  cell;
 }
 
 
@@ -177,12 +161,22 @@ static NSString *CellRate = @"CellRate";
             ProfileMeController *controller = [[ProfileMeController alloc] initWithNibName:nil bundle:nil];
             [[self appDelegate].conversationController.chatDetailController.navigationController pushViewController:controller animated:YES];
         }else{
-            ContactDetailController *controller = [[ContactDetailController alloc]initWithNibName:nil bundle:nil];
-            controller.user = (User *)data.msg.from;
-            [[self appDelegate].conversationController.chatDetailController.navigationController pushViewController:controller animated:YES];
+            if ([data.msg.from isKindOfClass:[User class]]) {
+                ContactDetailController *controller = [[ContactDetailController alloc]initWithNibName:nil bundle:nil];
+                controller.user = (User *)data.msg.from;
+                controller.GUIDString = [(User *)data.msg.from guid];
+                [[self appDelegate].conversationController.chatDetailController.navigationController pushViewController:controller animated:YES];
+            }
         }
-        
     }
+    
+    if(data.type == BubbleTypeNoticationview)
+    {
+        
+        User *tt = (User *)data.msg.from;
+        [self getDict:[tt ePostalID]];
+    }
+    
     
     if (data.type == BubbleTypeRateview) {
         RateViewController *rateViewController = [[RateViewController alloc]initWithNibName:nil bundle:nil];
@@ -199,30 +193,17 @@ static NSString *CellRate = @"CellRate";
         NSXMLElement *element = [[NSXMLElement alloc] initWithXMLString:data.content error:nil];
         NSString* imageString = [[element elementForName:@"link9"] stringValue];
         
-        WebViewController *controller = [[WebViewController alloc]initWithNibName:nil bundle:nil];
-        controller.urlString = imageString;
-        
-        [[self appDelegate].conversationController.chatDetailController.navigationController setHidesBottomBarWhenPushed:YES];
-        [[self appDelegate].conversationController.chatDetailController.navigationController pushViewController:controller animated:YES];
+        if (StringHasValue(imageString)) {
+            WebViewController *controller = [[WebViewController alloc]initWithNibName:nil bundle:nil];
+            controller.urlString = imageString;
+            
+            [[self appDelegate].conversationController.chatDetailController.navigationController setHidesBottomBarWhenPushed:YES];
+            [[self appDelegate].conversationController.chatDetailController.navigationController pushViewController:controller animated:YES];
+        }
+
     }
 }
 
-
-
-////////////////////////////////////////////////////////////////////////
-//  Change Default Scrolling Behavior of UITableView Section Header
-//  如何让 UITableView 的 headerView跟随 cell一起滚动
-////////////////////////////////////////////////////////////////////////
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    CGFloat sectionHeaderHeight = SECTION_HEIGHT;
-    UIEdgeInsets insets = scrollView.contentInset;
-    if (scrollView.contentOffset.y <= sectionHeaderHeight && scrollView.contentOffset.y >= 0) {
-        scrollView.contentInset = UIEdgeInsetsMake(-scrollView.contentOffset.y, 0, insets.bottom, 0);
-    } else if (scrollView.contentOffset.y >= sectionHeaderHeight) {
-        scrollView.contentInset = UIEdgeInsetsMake(-sectionHeaderHeight, 0, insets.bottom, 0);
-    }
-}
 
 - (AppDelegate *)appDelegate
 {
@@ -230,13 +211,55 @@ static NSString *CellRate = @"CellRate";
 }
 
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
+- (void)getDict:(NSString *)jidString
 {
-    // Drawing code
+    
+    // if the user already exist - then show the user
+    User* aUser = [[ModelHelper sharedInstance] findUserWithEPostalID:jidString];
+    
+    if (aUser != nil && aUser.state == IdentityStateActive) {
+        // it is a buddy on our contact list
+        ContactDetailController *controller = [[ContactDetailController alloc] initWithNibName:nil bundle:nil];
+        controller.user = aUser;
+        controller.GUIDString = jidString;
+        controller.managedObjectContext = [self appDelegate].context;
+        
+        // Pass the selected object to the new view controller.
+        [controller setHidesBottomBarWhenPushed:YES];
+        [[self appDelegate].conversationController.chatDetailController.navigationController pushViewController:controller animated:YES];
+    } else {
+        // get user info from web and display as if it is searched
+        NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: jidString, @"jid", @"2", @"op", nil];
+        
+        MBProgressHUD* HUD = [MBProgressHUD showHUDAddedTo:self animated:YES];
+        HUD.removeFromSuperViewOnHide = YES;
+        
+        [[AppNetworkAPIClient sharedClient] getPath:GET_DATA_PATH parameters:getDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            DDLogVerbose(@"get config JSON received: %@", responseObject);
+            
+            [HUD hide:YES];
+            NSString* type = [responseObject valueForKey:@"type"];
+            if ([type isEqualToString:@"user"]) {
+                ContactDetailController *controller = [[ContactDetailController alloc] initWithNibName:nil bundle:nil];
+                controller.jsonData = responseObject;
+                controller.managedObjectContext = [self appDelegate].context;
+                controller.GUIDString = [ServerDataTransformer getGUIDFromServerJSON:responseObject];
+                // Pass the selected object to the new view controller.
+                [controller setHidesBottomBarWhenPushed:YES];
+                [[self appDelegate].conversationController.chatDetailController.navigationController pushViewController:controller animated:YES];
+                
+            }
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            //
+            DDLogVerbose(@"error received: %@", error);
+            [HUD hide:YES];
+            [ConvenienceMethods showHUDAddedTo:self animated:YES text:T(@"网络错误，无法获取用户数据") andHideAfterDelay:1];
+        }];
+        
+    }
 }
-*/
+
+
 
 @end

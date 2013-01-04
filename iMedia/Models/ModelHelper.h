@@ -24,6 +24,7 @@
 - (User *)findUserWithGUID:(NSString *)guid;
 - (Channel *)findChannelWithNode:(NSString *)node;
 - (Channel *)findChannelWithSubrequestID:(NSString *)subID;
+- (Pluggin *)findFriendRequestPluggin;
 
 - (void)populateIdentity:(Identity *)identity withJSONData:(id)json;
 

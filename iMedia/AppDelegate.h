@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "AppDefs.h"
 
 @class NearbyViewController;
 @class ContactListViewController;
@@ -38,6 +39,7 @@
 // Here is a list of all available pluggins;
 @property (strong, nonatomic) Pluggin *friendRequestPluggin;
 
+- (void)transformPrivacyLogin;
 - (void)startMainSession;
 - (void)startIntroSession;
 - (void)createMeAndOtherOneTimeObjectsWithUsername:(NSString *)username password:(NSString *)passwd jid:(NSString *)jidStr jidPasswd:(NSString *)jidPass andGUID:(NSString *)guid withBlock:(void (^)(id responseObject, NSError *error))block;
@@ -45,6 +47,7 @@
 - (void) disableLeftBarButtonItemOnNavbar:(BOOL)disable;
 - (void)clearSession;
 
+- (void)saveContextInDefaultLoop;
 @end
 
 

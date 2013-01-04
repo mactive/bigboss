@@ -23,23 +23,25 @@ extern NSString *const kXMPPmyUsername;
 #define GET_DATA_PATH           @"/base/getjsondata/"
 #define POST_DATA_PATH          @"/base/setdata/"
 #define IMAGE_SERVER_PATH       @"/upload/image/"
-
+#define DATA_SERVER_PATH        @"/upload/imagehead/"
 
 @interface AppNetworkAPIClient : AFHTTPClient
 
 @property (nonatomic) NSNumber * kNetworkStatus;
+@property (nonatomic) BOOL isLoggedIn;
 
 + (AppNetworkAPIClient *)sharedClient;
 
 //- (void)updateChannelInfo:(Channel *)channel withBlock:(void (^)(NSError *error))block;
 
-- (void)loginWithUsername:(NSString *)username andPassword:(NSString *)passwd withBlock:(void (^)(id responseObject, NSError *error))block;
+- (void)loginWithRetryCount:(NSInteger)count username:(NSString *)username andPassword:(NSString *)passwd withBlock:(void (^)(id responseObject, NSError *error))block;
 
 - (void)storeImage:(UIImage *)image thumbnail:(UIImage *)thumbnail forMe:(Me *)me andAvatar:(Avatar *)avatar withBlock:(void (^)(id responseObject, NSError *error))block;
 
 - (void)updateIdentity:(Identity *)identity withBlock:(void (^)(id responseObject, NSError *error))block;
 
 - (void)uploadMe:(Me *)me withBlock:(void (^)(id responseObject, NSError *error))block;
+- (void)uploadLog:(NSData *)log withBlock:(void (^)(id responseObject, NSError *error))block;
 
 - (void)loadImage:(NSString *)urlPath withBlock:(void (^)(UIImage *image, NSError *error))block;
 
@@ -52,8 +54,7 @@ extern NSString *const kXMPPmyUsername;
 
 - (void)updateLocation:(double)latitude andLongitude:(double)longitude;
 
-- (void)getNearestPeopleWithGender:(NSUInteger)gender start:(NSUInteger)start querysize:(NSUInteger)querySize andBlock:(void (^)(id, NSError *))block;
-
+- (void)getNearestPeopleWithGender:(NSUInteger)gender start:(NSUInteger)start latitude:(double)latitude longitude:(double)longitude andBlock:(void (^)(id, NSError *))block;
 
 
 // op11 频道信息
@@ -67,6 +68,8 @@ extern NSString *const kXMPPmyUsername;
 // op15 获取摇一摇活动列表
 - (void)getShakeDashboardInfoWithBlock:(void (^)(id, NSError *))block;
 
+// op22 上传devicetoken
+- (void)postDeviceToken;
 
 
 // op16 获取地址

@@ -22,14 +22,19 @@
 #import "AppNetworkAPIClient.h"
 #import "ContactListViewController.h"
 #import "AppDelegate.h"
+#import "ConvenienceMethods.h"
 
+// Log levels: off, error, warn, info, verbose
+#if DEBUG
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
-
+#else
+static const int ddLogLevel = LOG_LEVEL_OFF;
+#endif
 //#define BANDWIDTH_MONITOR
 
 
 //static NSString * const pubsubhost = @"pubsub.192.168.1.104";
-static NSString * const pubsubhost = @"pubsub.121.12.104.95";
+static NSString * const pubsubhost = @"pubsub.p.wingedstone.com";
 
 @interface XMPPNetworkCenter () <XMPPRosterDelegate, XMPPPubSubDelegate, XMPPRosterMemoryStorageDelegate, XMPPPrivacyDelegate>
 {
@@ -57,6 +62,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 //@property (nonatomic, strong) XMPPMessageArchivingCoreDataStorage *xmppMessageArchivingStorage;
 //@property (nonatomic, strong) XMPPMessageArchiving *xmppMessageArchiving;
 @property (nonatomic, strong, readonly) XMPPPrivacy *xmppPrivacy;
+@property (nonatomic) BOOL isXMPPConnected;
 
 
 @end
@@ -72,6 +78,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 @synthesize xmppBandwidthMonitor;
 @synthesize useSSL;
 @synthesize xmppPrivacy;
+@synthesize isXMPPConnected;
 
 + (XMPPNetworkCenter *)sharedClient {
     static XMPPNetworkCenter *_sharedClient = nil;
@@ -143,9 +150,9 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 	xmppRoster.autoAcceptKnownPresenceSubscriptionRequests = NO;
     xmppRoster.allowRosterlessOperation = NO;
     
-    // Setup XMPP PubSub
+/*    // Setup XMPP PubSub
 #warning Pubsub needs to be moved to later stage where serviceJiD is available
-    xmppPubsub = [[XMPPPubSub alloc] initWithServiceJID:[XMPPJID jidWithString:pubsubhost] dispatchQueue:dispatch_get_main_queue()];
+    xmppPubsub = [[XMPPPubSub alloc] initWithServiceJID:[XMPPJID jidWithString:pubsubhost] dispatchQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
     
 #ifdef BANDWIDTH_MONITOR
     // bandwidth monitor
@@ -155,7 +162,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 #endif
     
     //XMPP privacy
-    xmppPrivacy = [[XMPPPrivacy alloc] initWithDispatchQueue:dispatch_get_main_queue()];
+    xmppPrivacy = [[XMPPPrivacy alloc] initWithDispatchQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
     xmppPrivacy.autoClearPrivacyListInfo = NO;
     xmppPrivacy.autoRetrievePrivacyListItems = NO;
     
@@ -167,11 +174,38 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     [xmppPrivacy           activate:xmppStream];
     
 	// Add ourself as a delegate to anything we may be interested in    
+	[xmppStream addDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+	[xmppRoster addDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+    [xmppPubsub addDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+    [xmppPrivacy addDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+*/
+#warning Pubsub needs to be moved to later stage where serviceJiD is available
+    xmppPubsub = [[XMPPPubSub alloc] initWithServiceJID:[XMPPJID jidWithString:pubsubhost] dispatchQueue:dispatch_get_main_queue()];
+    
+#ifdef BANDWIDTH_MONITOR
+    // bandwidth monitor
+    self.xmppBandwidthMonitor = [[XMPPBandwidthMonitor alloc] init];
+    [xmppBandwidthMonitor  activate:xmppStream];
+    [xmppBandwidthMonitor addDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+#endif
+    
+    //XMPP privacy
+    xmppPrivacy = [[XMPPPrivacy alloc] initWithDispatchQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
+    xmppPrivacy.autoClearPrivacyListInfo = NO;
+    xmppPrivacy.autoRetrievePrivacyListItems = NO;
+    
+	// Activate xmpp modules
+    
+	[xmppReconnect         activate:xmppStream];
+	[xmppRoster            activate:xmppStream];
+    [xmppPubsub            activate:xmppStream];
+    [xmppPrivacy           activate:xmppStream];
+    
+	// Add ourself as a delegate to anything we may be interested in
 	[xmppStream addDelegate:self delegateQueue:dispatch_get_main_queue()];
 	[xmppRoster addDelegate:self delegateQueue:dispatch_get_main_queue()];
     [xmppPubsub addDelegate:self delegateQueue:dispatch_get_main_queue()];
-    [xmppPrivacy addDelegate:self delegateQueue:dispatch_get_main_queue()];
-    
+    [xmppPrivacy addDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
     
 	// Optional:
 	//
@@ -193,6 +227,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 	allowSSLHostNameMismatch = YES;
     
     self.useSSL = YES;
+    self.isXMPPConnected = NO;
     
     return YES;
 }
@@ -221,7 +256,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 
 -(BOOL)isConnected
 {
-    return ![xmppStream isDisconnected];
+    return (![xmppStream isDisconnected]) && self.isXMPPConnected ;
 }
 
 - (BOOL)connectWithUsername:(NSString *)username andPassword:(NSString *)passwd
@@ -229,7 +264,6 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 	if (![xmppStream isDisconnected]) {
 		return YES;
 	}
-    
     
     //  myJID = @"customer2@192.168.1.104";
     //	myPassword = @"111";
@@ -246,15 +280,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 	NSError *error = nil;
 	if (![xmppStream connect:&error])
 	{
-		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error connecting"
-		                                                    message:@"See console for error details."
-		                                                   delegate:nil
-		                                          cancelButtonTitle:@"Ok"
-		                                          otherButtonTitles:nil];
-		[alertView show];
-        
-		DDLogError(@"Error connecting: %@", error);
-        
+        DDLogError(@"Error connecting: %@", error);
 		return NO;
 	}
     
@@ -273,6 +299,8 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 -(BOOL)sendMessage:(Message *)message
 {
     DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
+    
+    
     
     XMPPMessage* msg = [NetMessageConverter newXMPPMessageFromMessage:message];
     [self.xmppStream sendElement:msg];
@@ -313,9 +341,16 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 }
 
 -(void)addBuddy:(NSString *)jidStr withCallbackBlock:(void (^)(NSError *))block
-{
+{/*
     DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-    [xmppRoster addUser:[XMPPJID jidWithString:jidStr] withNickname:nil];
+    XMPPUserMemoryStorageObject* user = [self.xmppRosterStorage userForJID:[XMPPJID jidWithString:jidStr]];
+    if (user != nil && [user isPendingApproval]) {
+        [self acceptPresenceSubscriptionRequestFrom:jidStr andAddToRoster:YES];
+    } else {
+        [xmppRoster addUser:[XMPPJID jidWithString:jidStr] withNickname:nil];
+    }*/
+    
+    [self acceptPresenceSubscriptionRequestFrom:jidStr andAddToRoster:YES];
 }
 
 -(void)removeBuddy:(NSString *)jidStr withCallbackBlock:(void (^)(NSError *))block
@@ -447,8 +482,9 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 	[self goOnline];
     
     //fetch roster
-#warning "Here needs some condition check, otherwise rosters are fetched everytime. ideally it only fetch first time
     [xmppRoster fetchRoster];
+    
+    self.isXMPPConnected = YES;
 }
 
 - (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error
@@ -469,27 +505,12 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 
     if ([message isChatMessage])
 	{
-		XMPPUserMemoryStorageObject *user = [xmppRosterStorage userForJID:[[message from] bareJID]];
-        
-		NSString *body = [[message elementForName:@"body"] stringValue];
-		NSString *displayName = [user displayName];
-        
-		if ([[UIApplication sharedApplication] applicationState] != UIApplicationStateActive)
-		{
-            // We are not active, so use a local notification instead
-			UILocalNotification *localNotification = [[UILocalNotification alloc] init];
-			localNotification.alertAction = @"Ok";
-			localNotification.alertBody = [NSString stringWithFormat:@"From: %@\n\n%@",displayName,body];
-            
-			[[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
-
-        }
-        
         Message *msg = [NetMessageConverter newMessageFromXMPPMessage:message inContext:_managedObjectContext];
         
         if (msg == nil) {
             return;
         }
+        
         // MyNotificationName defined globally
         NSNotification *myNotification =
         [NSNotification notificationWithName:NEW_MESSAGE_NOTIFICATION object:msg.conversation];
@@ -498,7 +519,6 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
          postingStyle:NSPostWhenIdle
          coalesceMask:NSNotificationNoCoalescing
          forModes:nil];
-
 	}
     
 }
@@ -516,7 +536,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
         User* thisUser = [[ModelHelper sharedInstance] findUserWithEPostalID:ePostalID];
         if (user != nil && [user isBuddy]) {
             if (thisUser != nil && thisUser.state == IdentityStateActive) {
-                [self acceptPresenceSubscriptionRequestFrom:ePostalID andAddToRoster:NO];
+                [self acceptPresenceSubscriptionRequestFrom:ePostalID andAddToRoster:YES];
             } else {
                 [self acceptPresenceSubscriptionRequestFrom:ePostalID andAddToRoster:YES];
             }
@@ -530,7 +550,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
              forModes:nil];
         } else if (thisUser.state == IdentityStateActive) {
             // this is the case that the contact have removed user, and subscriptions are revoked both ways
-            thisUser.state = IdentityStatePendingAddFriend;
+            thisUser.state = IdentityStatePendingServerDataUpdate;
             [self acceptPresenceSubscriptionRequestFrom:ePostalID andAddToRoster:YES];
         }
         
@@ -557,6 +577,8 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 	{
 		DDLogError(@"Unable to connect to server. Check xmppStream.hostName");
 	}
+    
+    self.isXMPPConnected = NO;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark XMPPPrivacyDelegate
@@ -595,6 +617,11 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark XMPPRosterMemoryStoargeDelegate
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+- (BOOL)isBuddyWithJIDString:(NSString *)jid
+{
+    XMPPUserMemoryStorageObject *user = [xmppRosterStorage userForJID:[XMPPJID jidWithString:jid]];
+    return [self isBuddy:user];
+}
 
 //helper function to determine roster user status:
 - (BOOL)isBuddy:(XMPPUserMemoryStorageObject *)user
@@ -696,45 +723,43 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
             continue;
         }
         
+        NSString* ePostalID = [obj.jid bare];
+        User* thisUser = [[ModelHelper sharedInstance] findUserWithEPostalID:ePostalID];
+        if ([obj isPendingApproval]) {
+            // from roster - a pending approval friend request
+            // from roster - pendign other's approval - send again
+            if (thisUser == nil) {
+                thisUser = [[ModelHelper sharedInstance] createNewUser];
+            }
+            
+            thisUser.state = IdentityStatePendingAddFriend;
+            
+            // send sub request anyway - idempotent requests all the way
+            [[XMPPNetworkCenter sharedClient] addBuddy:ePostalID withCallbackBlock:nil];
+        }
+
         if (![self isBuddy:obj]) {
-            return;
+            continue;
         }
         
-        NSString* ePostalID = [obj.jid bare];
-        
-        NSManagedObjectContext *moc = _managedObjectContext;
-        NSEntityDescription *entityDescription = [NSEntityDescription
-                                                  entityForName:@"User" inManagedObjectContext:moc];
-        NSFetchRequest *request = [[NSFetchRequest alloc] init];
-        [request setEntity:entityDescription];
-        
-        // Set example predicate and sort orderings...
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:
-                                  @"(ePostalID = %@)", ePostalID];
-        [request setPredicate:predicate];
-        
-        NSError *error = nil;
-        NSArray *array = [moc executeFetchRequest:request error:&error];
-        
         // insert user if it doesn't exist
-        if ([array count] == 0) {
-            User *userNS = [[ModelHelper sharedInstance] createNewUser];
-            userNS.name = obj.nickname;
-            userNS.ePostalID = [obj.jid bare];
-            userNS.displayName = [userNS.ePostalID substringToIndex:[userNS.ePostalID rangeOfString: @"@"].location];
-            userNS.type = IdentityTypeUser;
-            userNS.state = IdentityStatePendingServerDataUpdate;
+        if (thisUser == nil) {
+            thisUser = [[ModelHelper sharedInstance] createNewUser];
+            thisUser.name = obj.nickname;
+            thisUser.ePostalID = [obj.jid bare];
+            thisUser.displayName = [thisUser.ePostalID substringToIndex:[thisUser.ePostalID rangeOfString: @"@"].location];
+            thisUser.type = IdentityTypeUser;
+            thisUser.state = IdentityStatePendingServerDataUpdate;
             
-            [[AppNetworkAPIClient sharedClient] updateIdentity:userNS withBlock:nil];
-        } else if ([array count] == 1) {
-            User *user = [array objectAtIndex:0];
-            if (user.state == IdentityStatePendingServerDataUpdate) {
-                [[AppNetworkAPIClient sharedClient] updateIdentity:user withBlock:nil];
+            [[AppNetworkAPIClient sharedClient] updateIdentity:thisUser withBlock:nil];
+        } else {
+            if (thisUser.state == IdentityStatePendingServerDataUpdate) {
+                [[AppNetworkAPIClient sharedClient] updateIdentity:thisUser withBlock:nil];
             }
         }
     }
     
-    MOCSave(_managedObjectContext);
+    [[self appDelegate] saveContextInDefaultLoop];
 }
 
 
@@ -763,7 +788,9 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     
     User* thisUser = [[ModelHelper sharedInstance] findUserWithEPostalID:ePostalID];
     
-    if (![self isBuddy:user]) {
+    if ([user isPendingApproval]) {
+        // doing nothing and wait for the approval
+    } else if (![self isBuddy:user]) {
         // if the user is marked active in our contact list, we will remove it
         if (thisUser == nil) {
             // weird - log an error
@@ -778,17 +805,35 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
             thisUser = [[ModelHelper sharedInstance] createNewUser];
         }
         
+        // if this user is in pending add friend state, then send a friend add message
+        if (thisUser.state == IdentityStatePendingAddFriend) {
+            //who approved you as a friend
+            Message *msg = [NetMessageConverter createFriendRequestApprovedMessageFromUser:thisUser inContext:_managedObjectContext];
+            
+            if (msg == nil) {
+                return;
+            }
+            
+            // MyNotificationName defined globally
+            NSNotification *myNotification =
+            [NSNotification notificationWithName:NEW_MESSAGE_NOTIFICATION object:msg.conversation];
+            [[NSNotificationQueue defaultQueue]
+             enqueueNotification:myNotification
+             postingStyle:NSPostWhenIdle
+             coalesceMask:NSNotificationNoCoalescing
+             forModes:nil];
+        }
         
         if ( thisUser.state != IdentityStateActive)
         {
             thisUser.ePostalID = [user.jid bare];
-            thisUser.displayName = [thisUser.ePostalID substringToIndex:[thisUser.ePostalID rangeOfString: @"@"].location];
             thisUser.state = IdentityStatePendingServerDataUpdate;
             
             [[AppNetworkAPIClient sharedClient] updateIdentity:thisUser withBlock:nil];
         }
     }
 
+    [[self appDelegate] saveContextInDefaultLoop];
 }
 
 /*
@@ -824,33 +869,21 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
         return;
     }
     
-    if ([[UIApplication sharedApplication] applicationState] != UIApplicationStateActive)
-    {
-        // We are not active, so use a local notification instead
-        UILocalNotification *localNotification = [[UILocalNotification alloc] init];
-        localNotification.alertAction = @"Ok";
-        localNotification.alertBody = [NSString stringWithFormat:@"From: "];
         
-        [[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
-    }
-    
     Message *msg = [NetMessageConverter newMessageFromXMPPPubsubMessage:message inContext:_managedObjectContext];
     
     if (msg == nil) {
         return;
     }
     
-    if (msg) {
-        // MyNotificationName defined globally
-        NSNotification *myNotification =
-        [NSNotification notificationWithName:NEW_MESSAGE_NOTIFICATION object:msg.conversation];
-        [[NSNotificationQueue defaultQueue]
-         enqueueNotification:myNotification
-         postingStyle:NSPostWhenIdle
-         coalesceMask:NSNotificationNoCoalescing
-         forModes:nil];
-    }
-    
+    // MyNotificationName defined globally
+    NSNotification *myNotification =
+    [NSNotification notificationWithName:NEW_MESSAGE_NOTIFICATION object:msg.conversation];
+    [[NSNotificationQueue defaultQueue]
+     enqueueNotification:myNotification
+     postingStyle:NSPostWhenIdle
+     coalesceMask:NSNotificationNoCoalescing
+     forModes:nil];
 }
 
 - (void)xmppPubSub:(XMPPPubSub *)sender didSubscribe:(XMPPIQ *)iq
@@ -877,6 +910,10 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
     else
         channel = [[ModelHelper sharedInstance] findChannelWithNode:nodeStr];
     
+    if (!channel || channel.state == IdentityStateActive) {
+        return;
+    }
+    
     
     NSString* csrftoken = [[NSUserDefaults standardUserDefaults] valueForKey:@"csrfmiddlewaretoken"];
     
@@ -890,7 +927,7 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
             channel.state = IdentityStateActive;
             channel.subID = subID;
             [[self appDelegate].contactListController contentChanged];
-            MOCSave(_managedObjectContext);
+            [[self appDelegate] saveContextInDefaultLoop];
         }
             
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -946,12 +983,12 @@ static NSString * const pubsubhost = @"pubsub.121.12.104.95";
             channel.state = IdentityStateInactive;
             channel.subID = subID;
             [[self appDelegate].contactListController contentChanged];
-            MOCSave(_managedObjectContext);
+            [[self appDelegate] saveContextInDefaultLoop];;
         }
-
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         //
+#warning Need to handle grace period - don't upload all the time
         if (channel != nil) {
             channel.subrequestID = [self unsubscribeToChannel:channel.node withCallbackBlock:nil];
         } else if (StringHasValue(nodeStr)) {

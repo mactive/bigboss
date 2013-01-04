@@ -19,6 +19,11 @@
 @dynamic ePostalPassword;
 @dynamic gender;
 @dynamic hometown;
+@dynamic privacyPass;
+@dynamic alwaysbeen;
+@dynamic interest;
+@dynamic school;
+@dynamic company;
 @dynamic lastSearchPreference;
 @dynamic name;
 @dynamic password;
@@ -26,6 +31,7 @@
 @dynamic signature;
 @dynamic username;
 @dynamic fullEPostalID;
+@dynamic sinaWeiboID;
 @dynamic config;
 @dynamic avatars;
 @dynamic channels;

@@ -10,12 +10,15 @@
 #import "WSBubbleData.h"
 #import "UIImageView+AFNetworking.h"
 #import <QuartzCore/QuartzCore.h>
+#import "Me.h"
+#import "AppDelegate.h"
 
 @interface WSBubbleTextTableViewCell ()
 
-@property (nonatomic, strong) UIImageView *bubbleImage;
-@property (nonatomic, strong) UIImageView *avatarImage;
+@property (nonatomic, strong) UIImage *bubbleImage;
+@property (nonatomic, strong) UIImage *avatarImage;
 @property (nonatomic, strong) UILabel *bubbleLabel;
+@property (nonatomic, strong) WSBubbleData *rowData;
 
 - (void) setupInternalData:(WSBubbleData *)cellData;
 
@@ -27,6 +30,7 @@
 @synthesize bubbleImage;
 @synthesize avatarImage;
 @synthesize bubbleLabel;
+@synthesize rowData;
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -34,74 +38,108 @@
     if (self) {
         self.selectionStyle = UITableViewCellSelectionStyleNone;
         
-
-        self.bubbleImage = [[UIImageView alloc] init];
+        self.avatarImage = nil;
+        self.bubbleImage = nil;
+        self.rowData = [[WSBubbleData alloc]init];
         
-        self.avatarImage = [[UIImageView alloc] init];
-        self.avatarImage.layer.cornerRadius = 9.0;
-        self.avatarImage.layer.masksToBounds = YES;
-        self.avatarImage.layer.borderColor = [[UIColor whiteColor] CGColor];
-        self.avatarImage.layer.borderWidth = 1.0;
-        
-        self.bubbleLabel = [[UILabel alloc]init];
-        self.bubbleLabel.numberOfLines = 0;
-        self.bubbleLabel.lineBreakMode = UILineBreakModeWordWrap;
-        self.bubbleLabel.font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
-        self.bubbleLabel.backgroundColor = [UIColor clearColor];
-        
-        [self.contentView addSubview:self.avatarImage];
-        [self.contentView addSubview:self.bubbleImage];
-        [self.contentView addSubview:self.bubbleLabel];
-
-
     }
     return self;
 }
-
 
 - (void)setData:(WSBubbleData *)data
 {
     [super setData:data];
 }
 
-
-- (void) setupInternalData:(WSBubbleData *)cellData
+- (void)setupInternalData:(WSBubbleData *)cellData
 {
     [super setupInternalData:cellData];
+
+    // set rowdata and redraw
+    self.rowData = cellData;
+    [self setNeedsDisplay];
+}
+
+- (void)drawRect:(CGRect)rect
+{
     // count size and x y
-    WSBubbleType type = cellData.type;
+    WSBubbleType type = self.rowData.type;
     
-    CGFloat width = cellData.view.frame.size.width;
-    CGFloat height = cellData.view.frame.size.height;
-    CGFloat x = (type == BubbleTypeSomeoneElse) ? 0 : self.frame.size.width - width - cellData.insets.left - cellData.insets.right;
-    CGFloat y = 5;
-    
-    // avatar
-    [self.avatarImage setImage:(cellData.avatar ? cellData.avatar : [UIImage imageNamed:@"placeholder_user.png"])];
-    CGFloat avatarX = (type == BubbleTypeSomeoneElse) ? 2 : self.frame.size.width - 52;
-    CGFloat avatarY = 0 ;// self.frame.size.height - 50;
-    self.avatarImage.frame = CGRectMake(avatarX, avatarY, 50, 50);
+    CGFloat width = self.rowData.view.frame.size.width;
+    CGFloat height = self.rowData.view.frame.size.height;
+    CGFloat x = (type == BubbleTypeSomeoneElse) ? 2 : self.frame.size.width - width - self.rowData.insets.left - self.rowData.insets.right-3;
+    CGFloat y = self.rowData.insets.top / 4 ;
     
     if (type == BubbleTypeSomeoneElse) x += 54;
     if (type == BubbleTypeMine) x -= 54;
     
-    // text label
-    NSLog(@"CELL - %@",cellData.content);
-    self.bubbleLabel.text = cellData.content;
-    self.bubbleLabel.frame = CGRectMake(x + cellData.insets.left, y + cellData.insets.top, width, height);
-    
     // bubbleimage bg
     if (type == BubbleTypeSomeoneElse)
     {
-        self.bubbleImage.image = [[UIImage imageNamed:@"bubbleSomeone.png"] stretchableImageWithLeftCapWidth:21 topCapHeight:14];
+        self.bubbleImage = [[UIImage imageNamed:@"bubbleSomeone.png"]resizableImageWithCapInsets:UIEdgeInsetsMake(14, 7, 4, 4) resizingMode:UIImageResizingModeStretch];
+//        self.bubbleImage = [[UIImage imageNamed:@"bubbleSomeone.png"] stretchableImageWithLeftCapWidth:20 topCapHeight:15];
     }else if(type == BubbleTypeMine) {
-        self.bubbleImage.image = [[UIImage imageNamed:@"bubbleMine.png"] stretchableImageWithLeftCapWidth:15 topCapHeight:14];
+//        self.bubbleImage = [[UIImage imageNamed:@"bubbleMine.png"] stretchableImageWithLeftCapWidth:20 topCapHeight:15];
+        self.bubbleImage = [[UIImage imageNamed:@"bubbleMine.png"]resizableImageWithCapInsets:UIEdgeInsetsMake(14, 4, 4, 7) resizingMode:UIImageResizingModeStretch];
     }
     
-    self.bubbleImage.frame = CGRectMake(x, y, width + cellData.insets.left + cellData.insets.right, height + cellData.insets.top + cellData.insets.bottom);
+    [self.bubbleImage drawInRect:CGRectMake(x, y, width + self.rowData.insets.left + self.rowData.insets.right, height + self.rowData.insets.top/2 + self.rowData.insets.bottom/2)];
     
+    // avatar XY
+    CGFloat avatarX = (type == BubbleTypeSomeoneElse) ? 4 : self.frame.size.width - 54;
+    CGFloat avatarY = 0 ;
+    CGRect avatarRect = CGRectMake(avatarX, avatarY, 50, 50);
+
+    // avatar border //
+    
+    // get the contect
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSaveGState(context);    
+    //now draw the rounded rectangle
+    CGContextSetStrokeColorWithColor(context, [[UIColor whiteColor] CGColor]);
+    CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 1.0);
+    
+
+    //since I need room in my rect for the shadow, make the rounded rectangle a little smaller than frame
+    CGFloat radius = 5.0;
+    // the rest is pretty much copied from Apples example
+    CGFloat minx = CGRectGetMinX(avatarRect), midx = CGRectGetMidX(avatarRect), maxx = CGRectGetMaxX(avatarRect);
+    CGFloat miny = CGRectGetMinY(avatarRect), midy = CGRectGetMidY(avatarRect), maxy = CGRectGetMaxY(avatarRect);
+    
+    // Start at 1
+    CGContextMoveToPoint(context, minx, midy);
+    // Add an arc through 2 to 3
+    CGContextAddArcToPoint(context, minx, miny, midx, miny, radius);
+    // Add an arc through 4 to 5
+    CGContextAddArcToPoint(context, maxx, miny, maxx, midy, radius);
+    // Add an arc through 6 to 7
+    CGContextAddArcToPoint(context, maxx, maxy, midx, maxy, radius);
+    // Add an arc through 8 to 9
+    CGContextAddArcToPoint(context, minx, maxy, minx, midy, radius);
+    // Close the path
+    CGContextClosePath(context);
+    // Fill & stroke the path
+    CGContextDrawPath(context, kCGPathFillStroke);
+//    CGContextRestoreGState(context);
+    
+    // avatar
+    self.avatarImage = self.rowData.avatar ? self.rowData.avatar : [UIImage imageNamed:@"placeholder_user.png"];
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    CGContextSaveGState(ctx);
+    CGPathRef clippath = [UIBezierPath bezierPathWithRoundedRect:avatarRect cornerRadius:5].CGPath;
+    CGContextAddPath(ctx, clippath);
+    CGContextClip(ctx);
+    [self.avatarImage drawInRect:avatarRect];
+    CGContextRestoreGState(ctx);
+
+    
+    // bubblestring
+    NSString *bubbleString = self.rowData.content;
+    UIColor *bubbleMagentaColor = RGBCOLOR(20, 20, 20);
+    [bubbleMagentaColor set];
+    UIFont *bubbleFont = [UIFont systemFontOfSize:14.0f];
+    CGRect bubbleRect =  CGRectMake(x + self.rowData.insets.left, floorf(self.rowData.insets.top/3*2), width, height);
+    [bubbleString drawInRect:bubbleRect withFont:bubbleFont];
 }
-
-
 
 @end

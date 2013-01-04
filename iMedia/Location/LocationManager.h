@@ -13,7 +13,7 @@
 
 @interface LocationManager : NSObject
 
-@property (nonatomic, strong) CLLocation *lastLocation;
+@property (nonatomic, strong) CLLocation *location;
 @property (nonatomic) BOOL               isAllowed;
 
 @property (nonatomic, strong) NSMutableArray *pastLocations;

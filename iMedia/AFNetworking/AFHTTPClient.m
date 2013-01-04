@@ -424,6 +424,10 @@ static void AFNetworkReachabilityReleaseCallback(const void *info) {}
     if (!path) {
         path = @"";
     }
+#warning setdata 403
+//    if ([method isEqualToString:@"POST"]) {
+//        NSDictionary *tt = parameters;
+//    }
     
     NSURL *url = [NSURL URLWithString:path relativeToURL:self.baseURL];
 	NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];

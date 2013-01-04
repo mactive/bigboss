@@ -22,6 +22,11 @@
 @property (nonatomic, retain) NSString * ePostalPassword;
 @property (nonatomic, retain) NSString * gender;
 @property (nonatomic, retain) NSString * hometown;
+@property (nonatomic, retain) NSString * privacyPass;
+@property (nonatomic, retain) NSString * alwaysbeen;
+@property (nonatomic, retain) NSString * interest;
+@property (nonatomic, retain) NSString * school;
+@property (nonatomic, retain) NSString * company;
 @property (nonatomic, retain) NSString * lastSearchPreference;
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * password;
@@ -29,6 +34,7 @@
 @property (nonatomic, retain) NSString * signature;
 @property (nonatomic, retain) NSString * username;
 @property (nonatomic, retain) NSString * fullEPostalID;
+@property (nonatomic, retain) NSString * sinaWeiboID;
 @property (nonatomic, retain) NSSet *avatars;
 @property (nonatomic, retain) NSSet *channels;
 @property (nonatomic) u_int64_t config;

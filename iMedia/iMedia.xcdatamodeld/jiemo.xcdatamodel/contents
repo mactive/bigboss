@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model name="" userDefinedModelVersionIdentifier="0.1" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1810" systemVersion="11G63b" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+    <entity name="Channel" representedClassName="Channel" parentEntity="Identity" syncable="YES">
+        <attribute name="csContactPostalID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isMandatory" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="node" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="selfIntroduction" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="subID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="subrequestID" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="owner" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Me" inverseName="channels" inverseEntity="Me" syncable="YES"/>
+    </entity>
+    <entity name="Conversation" representedClassName="Conversation" syncable="YES">
+        <attribute name="draft" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastMessageSentDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="lastMessageText" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="messagesLength" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="Integer 16" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <attribute name="unreadMessagesCount" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <relationship name="attendees" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="User" inverseName="inConversations" inverseEntity="User" syncable="YES"/>
+        <relationship name="messages" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Message" inverseName="conversation" inverseEntity="Message" syncable="YES"/>
+        <relationship name="ownerEntity" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Identity" inverseName="ownedConversations" inverseEntity="Identity" syncable="YES"/>
+    </entity>
+    <entity name="FriendRequest" representedClassName="FriendRequest" syncable="YES">
+        <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="requestDate" attributeType="Date" syncable="YES"/>
+        <attribute name="requesterEPostalID" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="state" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="userJSONData" optional="YES" attributeType="String" valueTransformerName="JSONToDataTransformer" syncable="YES"/>
+    </entity>
+    <entity name="Identity" representedClassName="Identity" isAbstract="YES" syncable="YES">
+        <attribute name="avatarURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="displayName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="ePostalID" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="guid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="last_serverupdate_on" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="lastGPSLocation" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastGPSUpdated" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="sectionName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="state" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="thumbnailImage" optional="YES" attributeType="Transformable" valueTransformerName="ImageToDataTransformer" syncable="YES"/>
+        <attribute name="thumbnailURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="type" attributeType="Integer 16" defaultValueString="0" indexed="YES" syncable="YES"/>
+        <relationship name="images" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ImageRemote" inverseName="owner" inverseEntity="ImageRemote" syncable="YES"/>
+        <relationship name="ownedConversations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Conversation" inverseName="ownerEntity" inverseEntity="Conversation" syncable="YES"/>
+    </entity>
+    <entity name="ImageLocal" representedClassName="Avatar" syncable="YES">
+        <attribute name="image" optional="YES" attributeType="Transformable" valueTransformerName="ImageToDataTransformer" syncable="YES"/>
+        <attribute name="imageRemoteThumbnailURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="imageRemoteURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sequence" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="thumbnail" optional="YES" attributeType="Transformable" valueTransformerName="ImageToDataTransformer" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="me" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Me" inverseName="avatars" inverseEntity="Me" syncable="YES"/>
+    </entity>
+    <entity name="ImageRemote" representedClassName="ImageRemote" syncable="YES">
+        <attribute name="imageThumbnailURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="imageURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sequence" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="owner" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Identity" inverseName="images" inverseEntity="Identity" syncable="YES"/>
+    </entity>
+    <entity name="Information" representedClassName="Information" syncable="YES">
+        <attribute name="createdOn" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="Me" representedClassName="Me" parentEntity="Identity" syncable="YES">
+        <attribute name="alwaysbeen" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="birthdate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="career" optional="YES" attributeType="String" defaultValueString="@&quot;&quot;" syncable="YES"/>
+        <attribute name="cell" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="company" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="config" optional="YES" attributeType="Integer 64" syncable="YES"/>
+        <attribute name="ePostalPassword" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="fullEPostalID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="gender" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="hometown" optional="YES" attributeType="String" defaultValueString="@&quot;&quot;" syncable="YES"/>
+        <attribute name="interest" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="lastSearchPreference" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="password" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="privacyPass" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="school" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="selfIntroduction" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="signature" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sinaWeiboID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="avatars" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ImageLocal" inverseName="me" inverseEntity="ImageLocal" syncable="YES"/>
+        <relationship name="channels" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Channel" inverseName="owner" inverseEntity="Channel" syncable="YES"/>
+    </entity>
+    <entity name="Message" representedClassName="Message" syncable="YES">
+        <attribute name="sentDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="summary" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="transportID" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <relationship name="conversation" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Conversation" inverseName="messages" inverseEntity="Conversation" syncable="YES"/>
+        <relationship name="from" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Identity" syncable="YES"/>
+    </entity>
+    <entity name="Pluggin" representedClassName="Pluggin" parentEntity="Identity" syncable="YES">
+        <attribute name="plugginID" attributeType="Integer 16" defaultValueString="0" indexed="YES" syncable="YES"/>
+    </entity>
+    <entity name="ShakeInfo" representedClassName="ShakeInfo" syncable="YES">
+        <attribute name="daysContinued" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="lastShakeDate" optional="YES" attributeType="Date" syncable="YES"/>
+    </entity>
+    <entity name="User" representedClassName="User" parentEntity="Identity" syncable="YES">
+        <attribute name="alwaysbeen" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="birthdate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="career" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="company" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="gender" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="hometown" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="interest" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="school" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="selfIntroduction" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="signature" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="sinaWeiboID" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="inConversations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Conversation" inverseName="attendees" inverseEntity="Conversation" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Channel" positionX="160" positionY="192" width="128" height="150"/>
+        <element name="Conversation" positionX="-9" positionY="114" width="128" height="180"/>
+        <element name="FriendRequest" positionX="241" positionY="-9" width="128" height="120"/>
+        <element name="Identity" positionX="-92" positionY="-513" width="128" height="255"/>
+        <element name="ImageLocal" positionX="-83" positionY="318" width="128" height="150"/>
+        <element name="ImageRemote" positionX="394" positionY="51" width="128" height="120"/>
+        <element name="Information" positionX="160" positionY="192" width="128" height="105"/>
+        <element name="Me" positionX="-63" positionY="-171" width="128" height="375"/>
+        <element name="Message" positionX="-324" positionY="-78" width="128" height="150"/>
+        <element name="Pluggin" positionX="160" positionY="192" width="128" height="60"/>
+        <element name="ShakeInfo" positionX="160" positionY="192" width="128" height="75"/>
+        <element name="User" positionX="-234" positionY="141" width="128" height="240"/>
+    </elements>
+</model>

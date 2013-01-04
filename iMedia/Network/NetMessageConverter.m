@@ -14,6 +14,7 @@
 #import "Channel.h"
 #import "AppNetworkAPIClient.h"
 #import "XMPPNetworkCenter.h"
+#import "XMPPElement+Delay.h"
 
 @interface NetMessageConverter ()
 
@@ -73,10 +74,13 @@
     }
   
     message = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:context];
-    message.sentDate = [NSDate date];
+    if ([msg wasDelayed]) {
+        message.sentDate = [msg delayedDeliveryDate];
+    } else {
+        message.sentDate = [NSDate date];
+    }
     if (StringHasValue(rateKey)) {
-        // is a final rate message
-#warning ratekey will display as lastmessage
+        // is a final rate message, rate key is sent to the handler via message.text
         message.text = rateKey;
         message.type = [NSNumber numberWithInt:MessageTypeRate];
     } else {
@@ -99,6 +103,7 @@
         {
             conv = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:context];
             [conv addAttendeesObject:from];
+            conv.ownerEntity = from;
             conv.type = ConversationTypeSingleUserChat;
         } else {
             conv = [results anyObject];
@@ -140,12 +145,10 @@
     NSXMLElement *item = [items elementForName:@"item"];
     NSXMLElement *entry = [item elementForName:@"entry"];
     NSXMLElement *link = [entry elementForName:@"link"];
-    NSString* linkValue = [link attributeStringValueForName:@"href"];
-    NSString* summary = [[entry elementForName:@"title9"] stringValue];
+    NSString* summary = [[entry elementForName:@"title1"] stringValue];
     NSString *nodeStr = [items attributeStringValueForName:@"node"];
     NSString *itemID = [item attributeStringValueForName:@"id"];
     NSString *template = [[entry elementForName:@"template"] stringValue];
-    
     
     if (item == nil) {
         return nil;
@@ -180,13 +183,19 @@
 
 #warning Hasn't handle the rich text storage yet
     msg.from = channel;
-    msg.sentDate = [NSDate date];
     msg.text = [entry XMLString];
+    if ([message wasDelayed]) {
+        msg.sentDate = [message delayedDeliveryDate];
+    } else {
+        msg.sentDate = [NSDate date];
+    }
     
     if ([template isEqual:@"templateA"]) {
         msg.type = [NSNumber numberWithInt:MessageTypeTemplateA];
     }else if ([template isEqual:@"templateB"]){
         msg.type = [NSNumber numberWithInt:MessageTypeTemplateB];
+    }else{
+        msg.type = [NSNumber numberWithInt:MessageTypeTemplateA];
     }
     msg.transportID = itemID;
     
@@ -241,6 +250,46 @@
     }
     
     return msg;
+}
+
++ (Message *)createFriendRequestApprovedMessageFromUser:(User *)user inContext:(NSManagedObjectContext *)context
+{
+    Message* message = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:context];
+    
+    message.sentDate = [NSDate date];
+    
+    message.type = [NSNumber numberWithInt:MessageTypeChat];
+    message.text = [NSString stringWithFormat:@"我通过了你的好友请求，我们可以开始对话啦"];
+    
+    message.from = user;
+    
+    Conversation *conv;
+
+    NSSet *results = [user.inConversations objectsPassingTest:^(id obj, BOOL *stop){
+        Conversation *conv = (Conversation *)obj;
+        if ([conv.attendees count] == 1) {
+            return YES;
+        }
+        return NO;
+    }];
+    
+    if ([results count] == 0)
+    {
+        conv = [NSEntityDescription insertNewObjectForEntityForName:@"Conversation" inManagedObjectContext:context];
+        [conv addAttendeesObject:user];
+        conv.ownerEntity = user;
+        conv.type = ConversationTypeSingleUserChat;
+    } else {
+        conv = [results anyObject];
+    }
+    
+        // Find a conversation that this message belongs. That is judged by the conversation's user list.
+    conv.lastMessageSentDate = message.sentDate;
+    conv.lastMessageText = message.text;
+    
+    [conv addMessagesObject:message];
+    
+    return message;
 }
 
 @end

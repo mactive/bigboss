@@ -5,7 +5,6 @@
 //  Created by Li Xiaosi on 9/19/12.
 //  Copyright (c) 2012 Li Xiaosi. All rights reserved.
 //
-
 #import "AppDelegate.h"
 #import <AudioToolbox/AudioToolbox.h>
 #import "DDLog.h"
@@ -18,7 +17,6 @@
 #import "Channel.h"
 #import "Conversation.h"
 #import "Pluggin.h"
-#import "AppDefs.h"
 #import <CocoaPlant/NSManagedObject+CocoaPlant.h>
 #import "AFNetworkActivityIndicatorManager.h"
 #import "XMPPNetworkCenter.h"
@@ -28,6 +26,7 @@
 #import "FunctionListViewController.h"
 #import "SettingViewController.h"
 #import "LoginViewController.h"
+#import "ConfigSetting.h"
 
 #import "AppNetworkAPIClient.h"
 #import "LocationManager.h"
@@ -37,17 +36,18 @@
 #import <QuartzCore/QuartzCore.h>
 #import <Foundation/NSTimer.h>
 #import "ConfigSetting.h"
+#import "PrivacyLoginViewController.h"
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 #else
-static const int ddLogLevel = LOG_LEVEL_INFO;
+static const int ddLogLevel = LOG_LEVEL_OFF;
 #endif
 
 #define NAVIGATION_CONTROLLER() ((UINavigationController *)_window.rootViewController)
 
-@interface AppDelegate()
+@interface AppDelegate()<UIAlertViewDelegate>
 {
     NSManagedObjectContext *_managedObjectContext;
     Conversation  *_conversation; // this is a mock
@@ -60,9 +60,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 @property (nonatomic, strong) NSTimer* updateChannelTimer;
 @property (nonatomic, strong) NSTimer* loginTimer;
-
+@property (nonatomic, strong) PrivacyLoginViewController *privacyLoginViewController;
+@property (nonatomic, strong) UIViewController *transController;
+@property (nonatomic, strong) UIAlertView *versionAlertView;
 @end
-
 
 @implementation AppDelegate
 
@@ -75,17 +76,27 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 @synthesize settingController;
 @synthesize updateChannelTimer;
 @synthesize loginTimer;
+@synthesize privacyLoginViewController;
+@synthesize transController;
+@synthesize versionAlertView;
 
 @synthesize me = _me;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {    
 	[DDLog addLogger:[DDTTYLogger sharedInstance]];
+    // start log session
+    [XFox startSession:@"cst0.1_201212"];
+    [XFox setAppVersion:@"cst0.1"];
+    
     application.statusBarHidden = NO;
     // Set up Core Data stack.
-    NSPersistentStoreCoordinator *persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[[NSManagedObjectModel alloc] initWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"iMedia" withExtension:@"momd"]]];
+    NSPersistentStoreCoordinator *persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[[NSManagedObjectModel alloc] initWithContentsOfURL:[[NSBundle mainBundle] URLForResource:@"jiemo" withExtension:@"momd"]]];
     NSError *error;
-    NSAssert([persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:[[[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject] URLByAppendingPathComponent:@"iMedia.sqlite"] options:nil error:&error], @"Add-Persistent-Store Error: %@", error);
+    NSPersistentStore *store = [persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:[[[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject] URLByAppendingPathComponent:@"jiemo.sqlite"] options:nil error:&error];
+    if (store == nil) {
+        DDLogVerbose(@"Add-Persistent-Store Error: %@", error);
+    }
     _managedObjectContext = [[NSManagedObjectContext alloc] init];
     [_managedObjectContext setPersistentStoreCoordinator:persistentStoreCoordinator];
     [ModelHelper sharedInstance].managedObjectContext = _managedObjectContext;
@@ -108,14 +119,19 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         [self startIntroSession];
     } else if ([fetchedUsers count] == 1) {
         self.me = [fetchedUsers objectAtIndex:0];
-        [self connect];
-        [self startMainSession];
+        if (!StringHasValue(self.me.displayName) || !StringHasValue(self.me.gender)) {
+            [self startIntroSession];
+        } else {
+            [self connect];
+            [self startMainSession];
+        }
     } else {
         DDLogVerbose(@"%@: %@ multiple ME instance", THIS_FILE, THIS_METHOD);
     }
 
     // Global UINavigationBar style 
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleBlackOpaque animated:NO];
+    
     [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"navigationBar_bg.png"] forBarMetrics:UIBarMetricsDefault];
     [[UINavigationBar appearance] setTintColor:[UIColor colorWithRed:121/255 green:123/255 blue:126/255 alpha:1.0] ];
     [[UIBarButtonItem appearance] setTintColor:RGBACOLOR(55, 61, 70, 1)];
@@ -128,13 +144,51 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     //
     _updateChannelRetryCount = 0 ;
     _loginRetryCount = 0;
-    self.updateChannelTimer = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow:2000] interval:5 target:self selector:@selector(updateMyChannelInformation:) userInfo:nil repeats:YES];
-    self.loginTimer = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow:2000] interval:5 target:self selector:@selector(reLogin:) userInfo:nil repeats:YES];
+    self.updateChannelTimer = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow:10] interval:60 target:self selector:@selector(updateMyChannelInformation:) userInfo:nil repeats:YES];
+  //  self.loginTimer = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow:2000] interval:5 target:self selector:@selector(reLogin:) userInfo:nil repeats:YES];
     [[NSRunLoop currentRunLoop] addTimer:self.updateChannelTimer forMode:NSDefaultRunLoopMode];
-    [[NSRunLoop currentRunLoop] addTimer:self.loginTimer forMode:NSDefaultRunLoopMode];
+  //  [[NSRunLoop currentRunLoop] addTimer:self.loginTimer forMode:NSDefaultRunLoopMode];
     
+    // monitor for network status change
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(networkChangeReceived:)
+                                                 name:AFNetworkingReachabilityDidChangeNotification object:nil];
+    
+   // NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
+    
+    self.privacyLoginViewController = [[PrivacyLoginViewController alloc]initWithNibName:nil bundle:nil];
+    self.transController = [[UIViewController alloc]init];
+
     return YES;
 }
+
+
+
+//////////////////////////////////
+#pragma mark - didRegisterForRemoteNotificationsWithDeviceToken
+//////////////////////////////////
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+    NSString *deviceTokenStr = [NSString stringWithFormat:@"%@",deviceToken];
+    NSString *deviceTokenString = [[deviceTokenStr substringWithRange:NSMakeRange(0, 72)] substringWithRange:NSMakeRange(1, 71)];
+    [[NSUserDefaults standardUserDefaults] setObject:deviceTokenString forKey:@"deviceToken"];
+    [[AppNetworkAPIClient sharedClient] postDeviceToken];
+}
+
+- (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
+    
+    NSString *str = [NSString stringWithFormat: @"Error: %@", err];
+    DDLogVerbose(@"token %@",str);
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    
+    for (id key in userInfo) {
+        DDLogVerbose(@"key: %@, value: %@", key, [userInfo objectForKey:key]);
+    }
+    
+}
+
 
 - (void)startIntroSession
 {
@@ -144,6 +198,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     LoginViewController *loginViewController = [[LoginViewController alloc]initWithNibName:nil bundle:nil];
     UINavigationController *tt  = [[UINavigationController alloc]initWithRootViewController:loginViewController];
     
+    [XFox logAllPageViews:tt];
 
     [self.window setRootViewController:tt];
     [self.window makeKeyAndVisible];
@@ -151,6 +206,15 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 
 - (void)startMainSession
 {
+    // badge back to zero 
+    [UIApplication sharedApplication].applicationIconBadgeNumber=0;
+
+    [[UIApplication sharedApplication]
+     registerForRemoteNotificationTypes:
+     (UIRemoteNotificationTypeAlert |
+      UIRemoteNotificationTypeBadge |
+      UIRemoteNotificationTypeSound)];
+    
     // Update local data with latest server info
     [self updateMeWithBlock:nil];    
     //
@@ -178,8 +242,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     self.functionListController = [[FunctionListViewController alloc] init];
     UINavigationController *navController4 = [[UINavigationController alloc] initWithRootViewController:self.functionListController];
     self.functionListController.managedObjectContext = _managedObjectContext;
-    self.functionListController.title = T(@"朋友们");
-    self.functionListController.tabBarItem = [[UITabBarItem alloc] initWithTitle:T(@"朋友们") image:[UIImage imageNamed:@"tabbar_item_4.png"] tag:1004];
+    self.functionListController.title = T(@"百宝箱");
+    self.functionListController.tabBarItem = [[UITabBarItem alloc] initWithTitle:T(@"百宝箱") image:[UIImage imageNamed:@"tabbar_item_4.png"] tag:1004];
     
     self.settingController = [[SettingViewController alloc] init];
     self.settingController.managedObjectContext = _managedObjectContext;
@@ -190,12 +254,18 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     NSArray* controllers = [NSArray arrayWithObjects:navController1, navController2, navController3, navController4, navController5, nil];
     self.tabController.viewControllers = controllers;
 
+    [XFox logAllPageViews:navController1];
+    [XFox logAllPageViews:navController2];
+    [XFox logAllPageViews:navController3];
+    [XFox logAllPageViews:navController4];
+    [XFox logAllPageViews:navController5];
+    
     // tabtar style
     [self.tabController.tabBar setFrame:CGRectMake(0, 430.0, 320.0, 50.0)];
     UIImageView *tabbarBgView  = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tabbar_bg.png"]];
     [self.tabController.tabBar insertSubview:tabbarBgView atIndex:1];
     [self.tabController.tabBar setTintColor:[UIColor grayColor]];
-    [self.tabController.tabBar setSelectedImageTintColor:[UIColor whiteColor]];
+    [self.tabController.tabBar setSelectedImageTintColor:RGBCOLOR(151, 206, 45)];
     [self.tabController.tabBar setSelectionIndicatorImage:[UIImage imageNamed:@"tabbar_overlay.png"]];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -203,12 +273,41 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [self.window addSubview:self.tabController.view];
     [self.window setRootViewController:self.tabController];
 
+    [self checkIOSVersion];
     [self.window makeKeyAndVisible];
 }
 
+// check version
+- (void)checkIOSVersion
+{
+    NSString *iOSVersion =  [[NSUserDefaults standardUserDefaults] objectForKey:@"ios_ver"];
+    NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+    self.versionAlertView = [[UIAlertView alloc]initWithTitle:T(@"目前有新版本，是否升级") message:T(@"更多新功能，运行更流畅") delegate:self cancelButtonTitle:T(@"否") otherButtonTitles:T(@"是"), nil];
+    
+    if (StringHasValue(iOSVersion) && ![iOSVersion isEqualToString:version]) {
+        [self.versionAlertView show];
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if ([alertView isEqual:self.versionAlertView]) {
+        if (buttonIndex == 0){
+            //cancel clicked ...do your action
+        }else if (buttonIndex == 1){
+            NSString *str = [NSString stringWithFormat:
+                             @"itms-apps://phobos.apple.com/WebObjects/MZStore.woa/wa/viewSoftware?id=%d",
+                             M_APPLEID ];
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:str]];
+
+        }
+    }
+}
+
+/*
 - (void)reLogin:(NSNotification *)notification
 {
-    [[AppNetworkAPIClient sharedClient]loginWithUsername:self.me.username andPassword:self.me.password withBlock:^(id responseObject, NSError *error) {
+    [[AppNetworkAPIClient sharedClient] loginWithRetryCount:1 username:self.me.username andPassword:self.me.password withBlock:^(id responseObject, NSError *error) {
         //
         // login only succeeded with non-nil responseObject and nil error
         if (responseObject != nil && error == nil) {
@@ -232,9 +331,15 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         }
     }];
 }
+ */
 
 - (void)updateMyChannelInformation:(NSNotification *)notification
 {
+    if ([[XMPPNetworkCenter sharedClient] isConnected] != YES) {
+        // wait for the XMPPServer connection, otherwise do nothing
+        return;
+    }
+    
     [[AppNetworkAPIClient sharedClient] updateMyChannel:self.me withBlock:^(id responseObject, NSError *error) {
         if (responseObject != nil) {
             // When Sync local channel information from Server, there are a couple scenarios
@@ -395,6 +500,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 {
     [LocationManager sharedInstance].me = self.me;
     
+    if (self.friendRequestPluggin == nil) {
+        self.friendRequestPluggin = [[ModelHelper sharedInstance] findFriendRequestPluggin];
+    }
+    
     [self updateMyChannelInformation:nil];
     
     [[AppNetworkAPIClient sharedClient] updateIdentity:self.me withBlock:block];
@@ -428,19 +537,18 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         self.me.career = @"";
         self.me.config = [ConfigSetting getDefaultConfig];
         self.me.lastSearchPreference = @"";
-        
-        [self updateMeWithBlock:block];
-        
+        self.me.sinaWeiboID = @"";
+
         self.friendRequestPluggin = [NSEntityDescription insertNewObjectForEntityForName:@"Pluggin" inManagedObjectContext:_managedObjectContext];
         self.friendRequestPluggin.displayName = T(@"好友请求消息");
         self.friendRequestPluggin.state = IdentityStatePlugginIsEnabled;
         self.friendRequestPluggin.type = IdentityTypePlugginFriendRequest;
-        self.friendRequestPluggin.thumbnailImage = [UIImage imageNamed:@"company_face.png"];
-        
+        self.friendRequestPluggin.thumbnailImage = [UIImage imageNamed:@"plugin_request.png"];
+        self.friendRequestPluggin.plugginID = IdentityTypePlugginFriendRequest;
         
         MOCSave(_managedObjectContext);
-    }
-
+    }    
+    [self updateMeWithBlock:block];
 }
 
 - (NSManagedObjectContext *)context
@@ -459,7 +567,8 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         DDLogVerbose(@"%@: %@ cannot connect to XMPP server", THIS_FILE, THIS_METHOD);
         return NO;
     }
-    [self reLogin:nil];
+    [[AppNetworkAPIClient sharedClient] loginWithRetryCount:3 username:self.me.username andPassword:self.me.password withBlock:nil];
+    
     return YES;
 }
 
@@ -473,8 +582,11 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-
+    //[[XMPPNetworkCenter sharedClient] disconnect];
     [self saveContext];
+    [UIApplication sharedApplication].applicationIconBadgeNumber = self.conversationController.unreadMessageCount;
+    [XFox logEvent:EVENT_ENTER_BACKGROUND];
+    
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
@@ -482,11 +594,29 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     _messagesSending = [NSMutableDictionary dictionary];
     [self connect];
+    [XFox logEvent:EVENT_ENTER_FOREGROUND];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    if([ConfigSetting isSettingEnabled:self.me.config withSetting:CONFIG_PRIVACY_REQUIRED] && StringHasValue(self.me.privacyPass) ){
+        if (![self.window.rootViewController isKindOfClass:[privacyLoginViewController class]]) {
+            self.transController = self.window.rootViewController;
+            self.window.rootViewController = self.privacyLoginViewController;
+        }
+        [self.privacyLoginViewController initInterface];
+    }else{
+        if ([self.window.rootViewController isKindOfClass:[privacyLoginViewController class]]) {
+            self.window.rootViewController = self.transController;
+        }
+
+    }
+}
+
+- (void)transformPrivacyLogin
+{
+    self.window.rootViewController = self.transController;
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -496,6 +626,10 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     [self saveContext];
 }
 
+- (void)saveContextInDefaultLoop
+{
+    [self performSelectorOnMainThread:@selector(saveContext) withObject:nil waitUntilDone:NO modes:[NSArray arrayWithObject:NSDefaultRunLoopMode]];
+}
 - (void)saveContext
 {
     NSError *error = nil;
@@ -503,7 +637,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         if ([_managedObjectContext hasChanges] && ![_managedObjectContext save:&error]) {
              // Replace this implementation with code to handle the error appropriately.
              // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-            NSLog(@"Unresolved error saving object context s%@, %@", error, [error userInfo]);
+            DDLogVerbose(@"Unresolved error saving object context s%@, %@", error, [error userInfo]);
         } 
     }
 }
@@ -539,7 +673,19 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     self.nearbyViewController = nil;
     self.settingController = nil;
     self.functionListController = nil;
+    self.me = nil;
+    self.friendRequestPluggin = nil;
+    [AppNetworkAPIClient sharedClient].isLoggedIn = NO;
 }
 
+- (void)networkChangeReceived:(NSNotification *)notification
+{
+    NSNumber *status = (NSNumber *)[notification.userInfo valueForKey:AFNetworkingReachabilityNotificationStatusItem];
+    if ((status.intValue == AFNetworkReachabilityStatusReachableViaWiFi || status.intValue == AFNetworkReachabilityStatusReachableViaWWAN) && (self.me != nil)) {
+        [self connect];
+    } else {
+
+    }
+}
 
 @end

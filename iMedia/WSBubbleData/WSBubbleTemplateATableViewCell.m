@@ -31,7 +31,7 @@
 @synthesize templateContent = _templateContent;
 @synthesize data = _data;
 
-#define OFFSET_CONTENT 20
+#define OFFSET_CONTENT 15
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
 {
@@ -41,10 +41,10 @@
         self.selectionStyle = UITableViewCellSelectionStyleNone;
 
         self.templateBackView = [[UIView alloc] initWithFrame:CGRectMake(10, 0, 300, 100)];
-        self.templateContent = [[UILabel alloc] initWithFrame:CGRectMake(12, 180, 275, 100)];
-        self.templateTitle = [[UILabel alloc] initWithFrame:CGRectMake(12, 10, 275, 30)];
+        self.templateContent = [[UILabel alloc] initWithFrame:CGRectMake(12, 180, TEMPLATE_IMAGE_WIDTH, 100)];
+        self.templateTitle = [[UILabel alloc] initWithFrame:CGRectMake(12, 15, TEMPLATE_IMAGE_WIDTH, 30)];
         self.templateTitle.numberOfLines = 0;
-        self.templateImage = [[UIImageView alloc]initWithFrame:CGRectMake(12, 40, 275, TEMPLATE_IMAGE_HEIGHT)];
+        self.templateImage = [[UIImageView alloc]initWithFrame:CGRectMake(12, 40, TEMPLATE_IMAGE_WIDTH, TEMPLATE_IMAGE_HEIGHT)];
         
         self.templateTitle.backgroundColor = [UIColor clearColor];
         self.templateTitle.font = [UIFont boldSystemFontOfSize:18];
@@ -84,26 +84,25 @@
     NSXMLElement *element = [[NSXMLElement alloc] initWithXMLString:cellData.content error:nil];
     
     [self.templateBackView setFrame:CGRectMake(10, 0, 300, height +TEMPLATE_TITLE_HEIGHT)];
-    [self.templateContent setFrame:CGRectMake(12, 180, 275, height)];
-    [self.templateImage setFrame:CGRectMake(12, 40, 275, TEMPLATE_IMAGE_HEIGHT)];
     
-    NSString* titleString = [[element elementForName:@"title9"] stringValue];
+    NSString* titleString = [[element elementForName:@"title1"] stringValue];
     NSString* imageString = [[element elementForName:@"image9"] stringValue];
     NSString* contentString = [[element elementForName:@"content9"] stringValue];
     
     self.templateImage.contentMode = UIViewContentModeScaleAspectFit;
     
-    CGSize titleSize = [(titleString ? titleString : @"") sizeWithFont:self.templateTitle.font constrainedToSize:CGSizeMake(275, 9999) lineBreakMode:UILineBreakModeWordWrap];
-    CGSize contentSize = [(contentString ? contentString : @"") sizeWithFont:self.templateContent.font constrainedToSize:CGSizeMake(275, 9999) lineBreakMode:UILineBreakModeWordWrap];
+    CGSize titleSize = [(titleString ? titleString : @"") sizeWithFont:self.templateTitle.font constrainedToSize:CGSizeMake(TEMPLATE_IMAGE_WIDTH, 9999) lineBreakMode:UILineBreakModeWordWrap];
+    CGSize contentSize = [(contentString ? contentString : @"") sizeWithFont:self.templateContent.font constrainedToSize:CGSizeMake(TEMPLATE_IMAGE_WIDTH, 9999) lineBreakMode:UILineBreakModeWordWrap];
     
-    [self.templateTitle setFrame:CGRectMake(12, 10, 275, titleSize.height)];
+    [self.templateTitle setFrame:CGRectMake(12, 15, TEMPLATE_IMAGE_WIDTH, titleSize.height)];
     
     if (imageString == nil || [imageString length] == 0) {
-        [self.templateContent setFrame:CGRectMake(12, titleSize.height + OFFSET_CONTENT, 275, contentSize.height)];
+        [self.templateContent setFrame:CGRectMake(12, titleSize.height + OFFSET_CONTENT, TEMPLATE_IMAGE_WIDTH, contentSize.height)];
         [self.templateImage setHidden:YES];
     }else{
-        [self.templateContent setFrame:CGRectMake(12, titleSize.height + OFFSET_CONTENT + TEMPLATE_IMAGE_HEIGHT, 275, contentSize.height) ];
+        [self.templateImage setFrame:CGRectMake(12, titleSize.height + OFFSET_CONTENT, TEMPLATE_IMAGE_WIDTH, TEMPLATE_IMAGE_HEIGHT)];
         [self.templateImage setHidden:NO];
+        [self.templateContent setFrame:CGRectMake(12, titleSize.height + OFFSET_CONTENT + TEMPLATE_IMAGE_HEIGHT, TEMPLATE_IMAGE_WIDTH, contentSize.height) ];
         [self.templateImage setImageWithURL:[NSURL URLWithString:imageString] placeholderImage:[UIImage imageNamed:@"template_placeholder.png"]];
     }
     

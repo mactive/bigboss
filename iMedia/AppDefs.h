@@ -9,10 +9,10 @@
 #ifndef iMedia_LayoutConst_h
 #define iMedia_LayoutConst_h
 
-
 #define DBNAME @"xiangyuansms.sqlite"
 #define DBVERSION @"1"
 #define URL_TEMPLATE @"http://www.source3g.com/sms/template.txt"
+#define M_APPLEID 583758495
 
 #define TINY_FONT_HEIGHT 12
 #define SMALL_FONT_HEIGHT 14
@@ -32,26 +32,47 @@
 #define NAV_MAX_BUTTON 80
 
 #define TEMPLATE_IMAGE_HEIGHT 150
+#define TEMPLATE_IMAGE_WIDTH 275
 #define TEMPLATE_TITLE_HEIGHT 30
+#define SECTION_HEIGHT 15
 
-// PROFILE ME EDIT INDEX
-#define NICKNAME_ITEM_INDEX     0
-#define SEX_ITEM_INDEX          1
-#define BIRTH_ITEM_INDEX        2
-#define SIGNATURE_ITEM_INDEX    3
-#define CELL_ITEM_INDEX         4
-#define CAREER_ITEM_INDEX       5
-#define HOMETOWN_ITEM_INDEX     6
-#define SELF_INTRO_ITEM_INDEX   7
+
+// PROFILE ME EDIT INDEX AREA
+#define SIGNATURE_ITEM_INDEX    10
+
+#define NICKNAME_ITEM_INDEX     20
+#define BIRTH_ITEM_INDEX        21
+
+#define CELL_ITEM_INDEX         30
+#define CAREER_ITEM_INDEX       31
+#define COMPANY_ITEM_INDEX      32
+#define SCHOOL_ITEM_INDEX       33
+
+#define INTEREST_ITEM_INDEX     40
+#define ALWAYSBEEN_ITEM_INDEX   41
+#define SELF_INTRO_ITEM_INDEX   42
+
+#define SINAWEIBO_ITEM_INDEX    51
+#define HOMETOWN_ITEM_INDEX     52
+
+
 #define JPEG_QUALITY 0.6
 
-#define NICKNAME_MAX_LENGTH 20
-#define SIGNATURE_MAX_LENGTH 40
-#define SELF_INTRO_MAX_LENGTH 128
-#define CELL_MAX_LENGTH 11
-#define HOMETOWN_MAX_LENGTH 10
+#define NICKNAME_MAX_LENGTH     20
+#define SIGNATURE_MAX_LENGTH    40
+#define SELF_INTRO_MAX_LENGTH   128
+#define CELL_MAX_LENGTH         11
+#define HOMETOWN_MAX_LENGTH     10
 
-#define TEMPLATE_CELL_OFFSET 10
+#define DEFAULT_MAX_LENGTH       20
+#define SCHOOL_MAX_LENGTH       20
+#define INTEREST_MAX_LENGTH     20
+#define COMPANY_MAX_LENGTH      20
+#define AlWAYSBEEN_MAX_LENGTH   20
+
+
+
+#define TEMPLATE_CELL_OFFSET 16
 #define TEMPLATE_CELL_IHEIGHT 50
 #define TEMPLATEB_RESIZE_WIDTH 250
 
@@ -93,6 +114,7 @@ typedef enum _MessageType
     MessageTypeNotification = 3,
     MessageTypeTemplateA= 4,
     MessageTypeTemplateB = 5,
+    MessageTypeSectionHeader = 6,
     MessageTypeNone = 10
 } MessageType;
 
@@ -161,10 +183,20 @@ alpha:(a)]
 #define HSVACOLOR(h,s,v,a) [UIColor colorWithHue:(h) saturation:(s) value:(v) alpha:(a)]
 
 #define RGBA(r,g,b,a) (r)/255.0f, (g)/255.0f, (b)/255.0f, (a)
-#define BGCOLOR [UIColor colorWithRed:222.0f/255.0f green:224.0f/255.0f blue:227.0f/255.0f alpha:1]
+#define BGCOLOR [UIColor colorWithRed:226.0/255.0 green:231.0/255.0 blue:237.0/255.0 alpha:1.0]
+#define SEPCOLOR [UIColor colorWithRed:225.0f/255.0f green:225.0f/255.0f blue:225.0f/255.0f alpha:1]
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 #define NAMEFIRSTLATTER	@"&ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+///////////////////
+
+#define SNS_ARRAY [NSArray arrayWithObjects:@"新浪微博",  nil]; //@"wechat", @"kaixin", @"douban",
+
+
+#define kAppKey             @"1385880205"
+#define kAppSecret          @"3ffadca893746dd77bbb5bd505913238"
+#define kAppRedirectURI     @"https://api.weibo.com/oauth2/default.html"
 
 /*
 #define MOCFetch(managedObjectContext, fetchRequest) \

@@ -24,10 +24,12 @@
 @synthesize textLabel = _textLabel;
 @synthesize templateView = _templateView;
 
-const UIEdgeInsets textInsetsMine = {5, 10, 11, 17};
-const UIEdgeInsets textInsetsSomeone = {5, 15, 11, 10};
+const UIEdgeInsets textInsetsMine = {15, 10, 15, 17};
+const UIEdgeInsets textInsetsSomeone = {15, 15, 15, 10};
 const UIEdgeInsets templateAInsetsMine = {20, 20, 20, 20};
 const UIEdgeInsets templateBInsetsMine = {12, 20, 12, 20};
+const UIEdgeInsets textInsetsCommon = {7, 0, 7, 0};
+
 
 #define MAX_WIDTH 220
 
@@ -50,7 +52,7 @@ const UIEdgeInsets templateBInsetsMine = {12, 20, 12, 20};
     self.textLabel.text = (text ? text : @"");
     self.textLabel.font = font;
     self.textLabel.backgroundColor = [UIColor clearColor];
-    
+        
     UIEdgeInsets insets = (type == BubbleTypeMine ? textInsetsMine : textInsetsSomeone);
     return [self initWithView:self.textLabel date:date content:text type:type insets:insets];
 }
@@ -68,7 +70,7 @@ const UIEdgeInsets templateBInsetsMine = {12, 20, 12, 20};
 {
     NSXMLElement *element =[[NSXMLElement alloc] initWithXMLString:xmlString error:nil];    
     
-    NSString *title = [[element elementForName:@"title9"] stringValue];
+    NSString *title = [[element elementForName:@"title1"] stringValue];
     NSString *image = [[element elementForName:@"image9"] stringValue];
     NSString *content = [[element elementForName:@"content9"] stringValue];
     
@@ -133,30 +135,40 @@ const UIEdgeInsets templateBInsetsMine = {12, 20, 12, 20};
 #pragma mark - web bubble templateA
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
-+ (id)dataWithNotication:(NSString *)xmlString date:(NSDate *)date type:(WSBubbleType)type
++ (id)dataWithNotication:(NSString *)content date:(NSDate *)date type:(WSBubbleType)type
 {
-    return [[WSBubbleData alloc] initWithTemplateA:xmlString date:date type:type];
+    return [[WSBubbleData alloc] initWithNotication:content date:date type:type];
 }
 
-- (id)dataWithNotication:(NSString *)xmlString date:(NSDate *)date type:(WSBubbleType)type
+- (id)initWithNotication:(NSString *)content date:(NSDate *)date type:(WSBubbleType)type
 {
-    NSXMLElement *element =[[NSXMLElement alloc] initWithXMLString:xmlString error:nil];
-    
-    NSString *content = [[element elementForName:@"content9"] stringValue];
-    
-    
+
     UIFont *font = [UIFont systemFontOfSize:[UIFont systemFontSize]];
     
     CGSize size = [(content ? content : @"") sizeWithFont:font constrainedToSize:CGSizeMake(TEMPLATEB_RESIZE_WIDTH, 9999) lineBreakMode:UILineBreakModeWordWrap];
     
     self.templateView = [[UIView alloc]init];
 
-    self.templateView.frame = CGRectMake(0, 0, 250,  size.height);
+    self.templateView.frame = CGRectMake(0, 0, 250,  size.height + 20);
 
+    UIEdgeInsets insets = textInsetsMine;
+    return [self initWithView:self.templateView date:date content:content type:type insets:insets];    
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - web bubble section header
+//////////////////////////////////////////////////////////////////////////////////////////////////
++ (id)dataWithSectionHeader:(NSDate *)date type:(WSBubbleType)type
+{
+    return [[WSBubbleData alloc] initWithSectionHeader:date type:type];
+}
+
+- (id)initWithSectionHeader:(NSDate *)date type:(WSBubbleType)type
+{
+    self.templateView = [[UIView alloc]init];
+    self.templateView.frame = CGRectMake(0, 0, 320,  SECTION_HEIGHT);
+    UIEdgeInsets insets = textInsetsCommon;
     
-    UIEdgeInsets insets = templateAInsetsMine;
-    return [self initWithView:self.templateView date:date content:xmlString type:type insets:insets];
-    
+    return [self initWithView:self.templateView date:date content:nil type:type insets:insets];
 }
 
 

@@ -8,6 +8,7 @@
 
 #import "ServerDataTransformer.h"
 #import "SBJson.h"
+#import "AppDefs.h"
 
 #define DATETIME_FORMATE @"yyyy-MM-dd hh:mm:ss"
 #define DATE_FORMATE @"yyyy-MM-dd"
@@ -36,8 +37,8 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _sharedClient = [[NSDictionary alloc] initWithObjectsAndKeys:
-                         T(@"男滴"),   @"m",
-                         T(@"女滴"),   @"f",
+                         T(@"男"),   @"m",
+                         T(@"女"),   @"f",
                          nil];
     });
     
@@ -81,6 +82,22 @@
 + (NSString *)getHometownFromServerJSON:(id)jsonData {
     return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"hometown"];
 }
++ (NSString *)getSinaWeiboIDFromServerJSON:(id)jsonData
+{
+    return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"sina_weibo_id"];
+}
++ (NSString *)getAlwaysbeenFromServerJSON:(id)jsonData{
+    return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"alwaysbeen"];
+}
++ (NSString *)getInterestFromServerJSON:(id)jsonData{
+    return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"interest"];
+}
++ (NSString *)getSchoolFromServerJSON:(id)jsonData{
+    return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"school"];
+}
++ (NSString *)getCompanyFromServerJSON:(id)jsonData{
+    return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"company"];
+}
 + (NSString *)getCellFromServerJSON:(id)jsonData {
     return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"cell"];
 }
@@ -103,11 +120,12 @@
 {
     NSString *dateStr = [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"birthdate"];
     NSDate *date = [self dateFromNSDateStr:dateStr];
-    if (date == nil) {
+/*    if (date == nil) {
         return [NSDate dateWithTimeIntervalSince1970:0];
     }else{
         return date;
-    }
+    }*/
+    return date;
 }
 + (NSDate *)getLastGPSUpdatedFromServerJSON:(id)jsonData
 {

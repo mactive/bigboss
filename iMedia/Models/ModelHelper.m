@@ -23,7 +23,7 @@
 #if DEBUG
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 #else
-static const int ddLogLevel = LOG_LEVEL_INFO;
+static const int ddLogLevel = LOG_LEVEL_ERROR;
 #endif
 
 @interface ModelHelper ()
@@ -68,7 +68,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
     if ([array count] == 0)
     {
-        DDLogError(@"User doesn't exist: %@", error);
+//        DDLogVerbose(@"User doesn't exist: %@", error);
         return nil;
     } else {
         if ([array count] > 1) {
@@ -96,7 +96,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     
     if ([array count] == 0)
     {
-        DDLogError(@"User doesn't exist: %@", error);
+//        DDLogVerbose(@"User doesn't exist: %@", error);
         return nil;
     } else {
         if ([array count] > 1) {
@@ -162,6 +162,33 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     }
 }
 
+- (Pluggin *)findFriendRequestPluggin
+{
+    NSManagedObjectContext *moc = self.managedObjectContext;
+    NSEntityDescription *entityDescription = [NSEntityDescription
+                                              entityForName:@"Pluggin" inManagedObjectContext:moc];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDescription];
+    
+    // Set example predicate and sort orderings...
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:
+                              @"(plugginID = %d)", IdentityTypePlugginFriendRequest];
+    [request setPredicate:predicate];
+    
+    NSError *error = nil;
+    NSArray *array = [moc executeFetchRequest:request error:&error];
+    
+    if ([array count] == 0)
+    {
+        return nil;
+    } else {
+        if ([array count] > 1) {
+            DDLogError(@"More than one pluggin object with same pluggin id: %d", IdentityTypePlugginFriendRequest);
+        }
+        return [array objectAtIndex:0];
+    }
+}
+
 - (void)populateIdentity:(Identity *)identity withJSONData:(id)json
 {
     
@@ -189,6 +216,12 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     user.cell = [ServerDataTransformer getCellFromServerJSON:json];
     user.name = [ServerDataTransformer getNicknameFromServerJSON:json];
     user.type = IdentityTypeMe;
+    user.alwaysbeen = [ServerDataTransformer getAlwaysbeenFromServerJSON:json];
+    user.school = [ServerDataTransformer getSchoolFromServerJSON:json];
+    user.company = [ServerDataTransformer getCompanyFromServerJSON:json];
+    user.interest = [ServerDataTransformer getInterestFromServerJSON:json];
+    user.sinaWeiboID = [ServerDataTransformer getSinaWeiboIDFromServerJSON:json];
+
     
     NSMutableDictionary *imageURLDict = [[NSMutableDictionary alloc] initWithCapacity:8];
     for (int i = 1; i <=8; i++) {
@@ -257,6 +290,11 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
     user.avatarURL = [ServerDataTransformer getAvatarFromServerJSON:json];
     user.thumbnailURL = [ServerDataTransformer getThumbnailFromServerJSON:json];
     user.lastGPSUpdated = [ServerDataTransformer getLastGPSUpdatedFromServerJSON:json];
+    user.alwaysbeen = [ServerDataTransformer getAlwaysbeenFromServerJSON:json];
+    user.school = [ServerDataTransformer getSchoolFromServerJSON:json];
+    user.company = [ServerDataTransformer getCompanyFromServerJSON:json];
+    user.interest = [ServerDataTransformer getInterestFromServerJSON:json];
+    user.sinaWeiboID = [ServerDataTransformer getSinaWeiboIDFromServerJSON:json];
 
     NSMutableDictionary *imageURLDict = [[NSMutableDictionary alloc] initWithCapacity:8];
     for (int i = 1; i <=8; i++) {
@@ -328,6 +366,7 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
 {
     FriendRequest *newFriendRequest = [NSEntityDescription insertNewObjectForEntityForName:@"FriendRequest" inManagedObjectContext:self.managedObjectContext];
     newFriendRequest.requesterEPostalID = jid;
+    newFriendRequest.guid = [ServerDataTransformer getGUIDFromServerJSON:jsonData];
     newFriendRequest.requestDate = [NSDate date];
     newFriendRequest.userJSONData = [jsonData JSONRepresentation];
     newFriendRequest.state = FriendRequestUnprocessed;
@@ -345,8 +384,6 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
         newUser = [self createNewUser];
     }
     
-    NSLog(@"NewUSer created or found %@",newUser);
-    
     if (newUser.state != IdentityStateActive) {
         [self populateIdentity:newUser withJSONData:jsonData];
         newUser.state = IdentityStateActive;
@@ -362,12 +399,12 @@ static const int ddLogLevel = LOG_LEVEL_INFO;
             AFImageRequestOperation *imageOper = [AFImageRequestOperation imageRequestOperationWithRequest:[NSURLRequest requestWithURL:url] imageProcessingBlock:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                 newUser.thumbnailImage = image;
             } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
-                NSLog(@"Failed to get thumbnail at first time url: %@, response :%@, trying again", thumbnailURL, jsonData);
+                DDLogError(@"Failed to get thumbnail at first time url: %@, response :%@, trying again", thumbnailURL, jsonData);
                 AFImageRequestOperation  *imageOperAgain = [AFImageRequestOperation imageRequestOperationWithRequest:[NSURLRequest requestWithURL:url] imageProcessingBlock:nil success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                     newUser.thumbnailImage = image;
                     
                 } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
-                    NSLog(@"ERROR: Failed again to get thumbnail at first time url: %@, response :%@", thumbnailURL, jsonData);
+                    DDLogError(@"ERROR: Failed again to get thumbnail at first time url: %@, response :%@", thumbnailURL, jsonData);
                 }];
                 
                 [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:imageOperAgain];

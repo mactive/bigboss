@@ -9,7 +9,13 @@
 #import "Identity.h"
 #import "Conversation.h"
 #import "ImageRemote.h"
+#import "pinyin.h"
+#import "POAPinyin.h"
+#import "Channel.h"
 
+@interface Identity ()
+- (void)setPrimitiveDisplayName:(NSString *)newName;
+@end
 
 @implementation Identity
 
@@ -20,12 +26,39 @@
 @dynamic last_serverupdate_on;
 @dynamic lastGPSLocation;
 @dynamic lastGPSUpdated;
+@dynamic sectionName;
 @dynamic state;
 @dynamic thumbnailImage;
 @dynamic thumbnailURL;
 @dynamic type;
 @dynamic images;
 @dynamic ownedConversations;
+
+- (void)setDisplayName:(NSString *)displayName
+{
+    [self willChangeValueForKey:@"displayName"];
+    [self setPrimitiveDisplayName:displayName];
+   
+    
+    // update section here
+    NSString* _pinyin = [POAPinyin quickConvert:displayName];
+        
+    if (_pinyin == nil || [_pinyin isEqualToString:@""]) {
+        self.sectionName = @"[";
+    } else {
+        self.sectionName = [[NSString stringWithFormat:@"%c", [_pinyin characterAtIndex:0] ] uppercaseString];
+        unichar letter = [self.sectionName characterAtIndex:0];
+        if (letter < 'A' || letter > 'Z') {
+            self.sectionName = @"[";
+        }
+    }
+    
+    if ([self isKindOfClass:[Channel class]]) {
+        self.sectionName = @"@";
+    }
+    
+    [self didChangeValueForKey:@"displayName"];
+}
 
 -(NSArray *)getOrderedImages
 {

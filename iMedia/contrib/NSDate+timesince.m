@@ -16,6 +16,7 @@
 
 #import "NSDate+timesince.h"
 #import "NSDate-Utilities.h"
+#import "AppDefs.h"
 
 @implementation NSDate (timesince)
 
@@ -56,7 +57,7 @@
         if (self.isThisWeek) {
             //星期X
             NSArray *weekdayAry = [NSArray arrayWithObjects:T(@"星期天"),T(@"星期一"),T(@"星期二"),T(@"星期三"),T(@"星期四"),T(@"星期五"),T(@"星期六"),nil];
-            [dateFormatter setDateFormat:NSLocalizedString(@"eee", nil)];
+            [dateFormatter setDateFormat:T(@"eee")];
             // 此处更改显示的大写字母的星期几
             [dateFormatter setShortWeekdaySymbols:weekdayAry];
             result = [dateFormatter stringFromDate:self];
