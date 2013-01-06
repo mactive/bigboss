@@ -15,6 +15,7 @@
 #import "ShakeCodeViewController.h"
 #import "ShakeEntityViewController.h"
 #import "ShakeViewController.h"
+#import "ServerDataTransformer.h"
 
 #define ROW_HEIGHT 50
 
@@ -76,7 +77,6 @@ NSInteger intSort(id num1, id num2, void *context)
 
     self.title = T(@"连续签到奖励");
     [self initNoticeView];
-    
     // get from parent info
     
     NSURL *audioPath = [[NSBundle mainBundle] URLForResource:@"message_3" withExtension:@"wav"];
@@ -88,7 +88,6 @@ NSInteger intSort(id num1, id num2, void *context)
 {
     [super viewWillAppear:animated];
     [self populateData];
-    [self refreshNoticeView];
 }
 
 
@@ -121,7 +120,7 @@ NSInteger intSort(id num1, id num2, void *context)
                 [tempArray addObject:item];
             }
             self.dataArray  = tempArray;
-            self.agg = [responseDict objectForKey:@"agg"];
+            self.agg = [ServerDataTransformer getStringObjFromServerJSON:responseObject byName:@"agg"];
             
             [self refreshNoticeView];
             
@@ -159,8 +158,9 @@ NSInteger intSort(id num1, id num2, void *context)
         noticeString = [NSString stringWithFormat:T(@"你已经连续签到 %i 天,看看都能获得那些奖品吧."), self.checkinDays ];
     }
     
-    checkInSum = [NSString stringWithFormat:T(@"已经有 %@ 人签到过了."), self.agg ];
-    
+    if (StringHasValue(self.agg)) {
+        checkInSum = [NSString stringWithFormat:T(@"已经有 %@ 人签到过了."), self.agg ];
+    }
     
     self.noticeLabel.text = [NSString stringWithFormat:@"%@ \n%@",noticeString,checkInSum];
 }
