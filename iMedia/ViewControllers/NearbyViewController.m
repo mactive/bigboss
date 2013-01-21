@@ -61,10 +61,10 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
         // Custom initialization
         _lock = [[NSLock alloc] init];
         self.filterButton = [[UIButton alloc] init];
-        self.filterButton.frame=CGRectMake(0, 0, 50, 30);
-        [self.filterButton setBackgroundImage:[UIImage imageNamed: @"barbutton_gender.png"] forState:UIControlStateNormal];
+        self.filterButton.frame=CGRectMake(0, 0, 50, 29);
+        [self.filterButton setBackgroundImage:[UIImage imageNamed: @"barbutton_bg.png"] forState:UIControlStateNormal];
         [self.filterButton setTitle:T(@"筛选") forState:UIControlStateNormal];
-        [self.filterButton setFont:[UIFont boldSystemFontOfSize:14.0]];
+        [self.filterButton.titleLabel setFont:[UIFont boldSystemFontOfSize:14.0]];
         [self.filterButton addTarget:self action:@selector(filterAction) forControlEvents:UIControlEventTouchUpInside];
         
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.filterButton];

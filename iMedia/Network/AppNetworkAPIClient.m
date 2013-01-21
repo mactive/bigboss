@@ -631,7 +631,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     }];
     [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:operation];
 }
-
+// 我的频道
 - (void)updateMyChannel:(Me *)me withBlock:(void (^)(id, NSError *))block
 {
     // proceed to make server updates
@@ -666,6 +666,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
         [_queuedOperationLock unlock];
     }
 }
+// 默认订阅
 - (void)updateMyPresetChannel:(Me *)me withBlock:(void (^)(id, NSError *))block
 {
     // proceed to make server updates

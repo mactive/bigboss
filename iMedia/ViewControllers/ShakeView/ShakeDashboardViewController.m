@@ -117,7 +117,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     
     // refresh button
     UIButton *button1 = [[UIButton alloc] init];
-    button1.frame=CGRectMake(0, 0, 50, 30);
+    button1.frame=CGRectMake(0, 0, 50, 29);
     [button1 setBackgroundImage:[UIImage imageNamed: @"barbutton_refresh.png"] forState:UIControlStateNormal];
     [button1 addTarget:self action:@selector(populateData) forControlEvents:UIControlEventTouchUpInside];
     
