@@ -160,6 +160,8 @@
 		2631C52A16313033004DE7FB /* NSDate+timesince.m in Sources */ = {isa = PBXBuildFile; fileRef = 2631C52916313033004DE7FB /* NSDate+timesince.m */; };
 		263ACBC4166DA9AF00D61725 /* WSBubbleNoticationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 263ACBC3166DA9AF00D61725 /* WSBubbleNoticationTableViewCell.m */; };
 		2640031F1642B45E00A1B779 /* WelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2640031E1642B45E00A1B779 /* WelcomeViewController.m */; };
+		264668B716AD248C003146AA /* BBCustomBackButtonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 264668B616AD248C003146AA /* BBCustomBackButtonViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		264668B916AD25B6003146AA /* back-button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 264668B816AD25B6003146AA /* back-button@2x.png */; };
 		264A389C165DF75200FA0123 /* ShakeDashboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 264A389B165DF75200FA0123 /* ShakeDashboardViewController.m */; };
 		264A389F165DF8D800FA0123 /* TrapezoidLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 264A389E165DF8D800FA0123 /* TrapezoidLabel.m */; };
 		264AA538163E534A00607861 /* RequestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 264AA537163E534A00607861 /* RequestViewController.m */; };
@@ -599,6 +601,9 @@
 		263ACBC3166DA9AF00D61725 /* WSBubbleNoticationTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WSBubbleNoticationTableViewCell.m; path = WSBubbleData/WSBubbleNoticationTableViewCell.m; sourceTree = "<group>"; };
 		2640031D1642B45E00A1B779 /* WelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WelcomeViewController.h; path = ViewControllers/Welcome/WelcomeViewController.h; sourceTree = "<group>"; };
 		2640031E1642B45E00A1B779 /* WelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WelcomeViewController.m; path = ViewControllers/Welcome/WelcomeViewController.m; sourceTree = "<group>"; };
+		264668B516AD248C003146AA /* BBCustomBackButtonViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BBCustomBackButtonViewController.h; path = contrib/BBCustomBackButtonViewController.h; sourceTree = "<group>"; };
+		264668B616AD248C003146AA /* BBCustomBackButtonViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BBCustomBackButtonViewController.m; path = contrib/BBCustomBackButtonViewController.m; sourceTree = "<group>"; };
+		264668B816AD25B6003146AA /* back-button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back-button@2x.png"; sourceTree = "<group>"; };
 		264A389A165DF75200FA0123 /* ShakeDashboardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShakeDashboardViewController.h; path = ViewControllers/ShakeView/ShakeDashboardViewController.h; sourceTree = "<group>"; };
 		264A389B165DF75200FA0123 /* ShakeDashboardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShakeDashboardViewController.m; path = ViewControllers/ShakeView/ShakeDashboardViewController.m; sourceTree = "<group>"; };
 		264A389D165DF8D800FA0123 /* TrapezoidLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrapezoidLabel.h; path = ViewControllers/ShakeView/TrapezoidLabel.h; sourceTree = "<group>"; };
@@ -1039,6 +1044,7 @@
 			isa = PBXGroup;
 			children = (
 				260970921696BAC500D0E785 /* 37x-Checkmark.png */,
+				264668B816AD25B6003146AA /* back-button@2x.png */,
 				260970931696BAC500D0E785 /* 37x-Checkmark@2x.png */,
 				260970941696BAC500D0E785 /* add_icon@2x.png */,
 				260970951696BAC500D0E785 /* arraw_icon@2x.png */,
@@ -1216,6 +1222,8 @@
 			children = (
 				26E58873165A2A2200180A9D /* RefreshTableHeaderView */,
 				2674B850164A51950092D980 /* NSDate-Utilities.h */,
+				264668B516AD248C003146AA /* BBCustomBackButtonViewController.h */,
+				264668B616AD248C003146AA /* BBCustomBackButtonViewController.m */,
 				260971A71696BD5700D0E785 /* ConvenienceMethods.h */,
 				260971A81696BD5700D0E785 /* ConvenienceMethods.m */,
 				260971A91696BD5700D0E785 /* CustomBadge.h */,
@@ -2494,6 +2502,7 @@
 				260971881696BAC500D0E785 /* welcome_btn@2x.png in Resources */,
 				260971891696BAC500D0E785 /* welcome_title@2x.png in Resources */,
 				2612418E1696C4F7003A2D59 /* SinaWeibo.bundle in Resources */,
+				264668B916AD25B6003146AA /* back-button@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2730,6 +2739,7 @@
 				261241901696C4F7003A2D59 /* SinaWeiboAuthorizeView.m in Sources */,
 				261241911696C4F7003A2D59 /* SinaWeiboRequest.m in Sources */,
 				261241951696C5A2003A2D59 /* iMedia.xcdatamodeld in Sources */,
+				264668B716AD248C003146AA /* BBCustomBackButtonViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

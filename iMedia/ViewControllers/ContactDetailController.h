@@ -7,12 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "BBCustomBackButtonViewController.h"
 
 @class User;
 @class AlbumViewController;
 @class FriendRequest;
 
-@interface ContactDetailController : UIViewController<UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate,UIActionSheetDelegate>
+@interface ContactDetailController : BBCustomBackButtonViewController<UITableViewDataSource, UITableViewDelegate, UIImagePickerControllerDelegate,UIActionSheetDelegate>
 {
     User  *_user;
     id    jsonData;
