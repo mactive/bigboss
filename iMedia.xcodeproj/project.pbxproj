@@ -163,6 +163,7 @@
 		264668B916AD25B6003146AA /* back-button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 264668B816AD25B6003146AA /* back-button@2x.png */; };
 		264668BB16AD43C2003146AA /* barbutton_index@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 264668BA16AD43C2003146AA /* barbutton_index@2x.png */; };
 		264668BE16AE6643003146AA /* UserAgreementViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 264668BD16AE6643003146AA /* UserAgreementViewController.m */; };
+		264668C116AE71B9003146AA /* RegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 264668C016AE71B9003146AA /* RegisterViewController.m */; };
 		264A389C165DF75200FA0123 /* ShakeDashboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 264A389B165DF75200FA0123 /* ShakeDashboardViewController.m */; };
 		264A389F165DF8D800FA0123 /* TrapezoidLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 264A389E165DF8D800FA0123 /* TrapezoidLabel.m */; };
 		264AA538163E534A00607861 /* RequestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 264AA537163E534A00607861 /* RequestViewController.m */; };
@@ -607,6 +608,8 @@
 		264668BA16AD43C2003146AA /* barbutton_index@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "barbutton_index@2x.png"; sourceTree = "<group>"; };
 		264668BC16AE6643003146AA /* UserAgreementViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserAgreementViewController.h; path = ViewControllers/Welcome/UserAgreementViewController.h; sourceTree = "<group>"; };
 		264668BD16AE6643003146AA /* UserAgreementViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserAgreementViewController.m; path = ViewControllers/Welcome/UserAgreementViewController.m; sourceTree = "<group>"; };
+		264668BF16AE71B9003146AA /* RegisterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RegisterViewController.h; path = ViewControllers/Welcome/RegisterViewController.h; sourceTree = "<group>"; };
+		264668C016AE71B9003146AA /* RegisterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RegisterViewController.m; path = ViewControllers/Welcome/RegisterViewController.m; sourceTree = "<group>"; };
 		264A389A165DF75200FA0123 /* ShakeDashboardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShakeDashboardViewController.h; path = ViewControllers/ShakeView/ShakeDashboardViewController.h; sourceTree = "<group>"; };
 		264A389B165DF75200FA0123 /* ShakeDashboardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShakeDashboardViewController.m; path = ViewControllers/ShakeView/ShakeDashboardViewController.m; sourceTree = "<group>"; };
 		264A389D165DF8D800FA0123 /* TrapezoidLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrapezoidLabel.h; path = ViewControllers/ShakeView/TrapezoidLabel.h; sourceTree = "<group>"; };
@@ -2213,6 +2216,8 @@
 				26F3BF22164294AC00E2899C /* LoginViewController.m */,
 				264668BC16AE6643003146AA /* UserAgreementViewController.h */,
 				264668BD16AE6643003146AA /* UserAgreementViewController.m */,
+				264668BF16AE71B9003146AA /* RegisterViewController.h */,
+				264668C016AE71B9003146AA /* RegisterViewController.m */,
 			);
 			name = WelcomeScreenPart;
 			sourceTree = "<group>";
@@ -2746,6 +2751,7 @@
 				261241951696C5A2003A2D59 /* iMedia.xcdatamodeld in Sources */,
 				264668B716AD248C003146AA /* BBCustomBackButtonViewController.m in Sources */,
 				264668BE16AE6643003146AA /* UserAgreementViewController.m in Sources */,
+				264668C116AE71B9003146AA /* RegisterViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

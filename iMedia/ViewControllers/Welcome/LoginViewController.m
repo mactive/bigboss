@@ -18,6 +18,7 @@
 #import "CuteData.h"
 #import "LogEventConstants.h"
 #import "UserAgreementViewController.h"
+#import "RegisterViewController.h"
 
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
@@ -32,12 +33,12 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 @property(strong,nonatomic) UITextField *usernameField;
 @property(strong,nonatomic) UITextField *passwordField;
-@property(strong, nonatomic)UIButton *loginButton;
 @property(strong, nonatomic)UIImageView *logoImage;
 @property(strong, nonatomic) UILabel *userAgreementLabel;
 @property(strong, nonatomic) id handle;
 @property(strong, nonatomic)UIButton *barButton;
 @property(strong, nonatomic) UIButton *userAgreementButton;
+@property(strong, nonatomic) UITapGestureRecognizer *tapGestureRecognizer;
 
 @end
 
@@ -45,11 +46,11 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 @synthesize usernameField;
 @synthesize passwordField;
-@synthesize loginButton;
 @synthesize logoImage;
 @synthesize userAgreementLabel;
 @synthesize barButton;
 @synthesize userAgreementButton;
+@synthesize tapGestureRecognizer;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -71,13 +72,6 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 - (AppDelegate *)appDelegate
 {
 	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    self.usernameField.text = [[NSUserDefaults standardUserDefaults] stringForKey:kXMPPmyUsername];
-//    self.passwordField.text = [[NSUserDefaults standardUserDefaults] stringForKey:kXMPPmyPassword];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
@@ -181,8 +175,6 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 }
 
 
-
-
 #define LOGO_HEIGHT 30
 #define TEXTFIELD_Y 90
 #define TEXTFIELD_X 25
@@ -201,7 +193,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [backgroundView setImage:[UIImage imageNamed:@"login_bg.png"]];
     [self.view addSubview:backgroundView];
     
-    self.logoImage = [[UIImageView alloc]initWithFrame:CGRectMake(60, TEXTFIELD_OFFSET, 200, 75)];
+    self.logoImage = [[UIImageView alloc]initWithFrame:CGRectMake(60, 131, 200, 75)];
     [self.logoImage setImage:[UIImage imageNamed:@"logo.png"]];
 
 
@@ -267,12 +259,78 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [self.view addSubview:self.userAgreementLabel];
     
 	// Do any additional setup after loading the view.
+    
+    self.tapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(handleTap:)];
+    self.tapGestureRecognizer.numberOfTapsRequired = 1;
+    self.tapGestureRecognizer.numberOfTouchesRequired = 1;
+    
+    // animation
+    [self.usernameField setAlpha:0.0f];
+    [self.passwordField setAlpha:0.0f];
+    [self.userAgreementLabel setAlpha:0.0f];
+    [self.userAgreementButton setAlpha:0.0f];
 }
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    self.usernameField.text = [[NSUserDefaults standardUserDefaults] stringForKey:kXMPPmyUsername];
+    //    self.passwordField.text = [[NSUserDefaults standardUserDefaults] stringForKey:kXMPPmyPassword];
+    UIKeyboardNotificationsObserve();
+    
+    [UIView animateWithDuration:0.8 animations:^{
+        [self.logoImage setFrame:CGRectMake(60, TEXTFIELD_OFFSET, 200, 75)];
+    }];
+    
+    [UIView animateWithDuration:0.5 delay:1.0 options:UIViewAnimationCurveLinear animations:^{
+        [self.usernameField setAlpha:1.0f];
+        [self.passwordField setAlpha:1.0f];
+        [self.userAgreementLabel setAlpha:1.0f];
+        [self.userAgreementButton setAlpha:1.0f];
+    } completion:^(BOOL finished) {
+        //
+    }];
+    
+    
+
+}
+
+
+// keyboard hide and show 
+- (void)keyboardWillShow:(NSNotification*)notification
+{
+    [self.view addGestureRecognizer:self.tapGestureRecognizer];
+}
+
+- (void)keyboardWillHide:(NSNotification*)notification
+{
+    [self.view removeGestureRecognizer:self.tapGestureRecognizer];
+}
+
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
     self.handle = textField;
 }
+
+// actions
+
+- (void)registerAction
+{
+    RegisterViewController *controller = [[RegisterViewController alloc] initWithNibName:nil bundle:[NSBundle mainBundle]];
+    
+    [UIView beginAnimations:@"View Flip" context:nil];
+    [UIView setAnimationDuration:0.80];
+    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+    
+    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight
+                           forView:self.navigationController.view cache:NO];
+    
+    [self.navigationController  pushViewController:controller animated:YES];
+
+    [UIView commitAnimations];
+}
+
 
 - (void)userAgreementAction
 {
@@ -281,6 +339,14 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [controller setHidesBottomBarWhenPushed:YES];
     [self.navigationController pushViewController:controller animated:YES];
 }
+
+- (void)handleTap:(UITapGestureRecognizer *)paramSender
+{
+    [(UITextField *)self.handle resignFirstResponder];
+}
+
+
+
 
 
 - (void)didReceiveMemoryWarning
