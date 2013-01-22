@@ -138,7 +138,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 {
     self.passField.text = @"";
     self.passField.placeholder = T(@"芥末登录密码");
-    self.noticeLabel.text = T(@"请输入你的芥末登录密码,如果忘记可以去春水堂网站找回密码");
+    self.noticeLabel.text = T(@"请输入你的芥末登录密码,如果忘记可以去大掌柜网站找回密码");
     [self.doneButton removeTarget:self action:@selector(doneButtonAction) forControlEvents:UIControlEventTouchUpInside];
     [self.doneButton addTarget:self action:@selector(forgetRequest) forControlEvents:UIControlEventTouchUpInside];
     self.state = @"forgetButtonAction";

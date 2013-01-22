@@ -17,6 +17,7 @@
 #import "MBProgressHUD.h"
 #import "CuteData.h"
 #import "LogEventConstants.h"
+#import "UserAgreementViewController.h"
 
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
@@ -33,9 +34,10 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @property(strong,nonatomic) UITextField *passwordField;
 @property(strong, nonatomic)UIButton *loginButton;
 @property(strong, nonatomic)UIImageView *logoImage;
-@property(strong, nonatomic)UIView *loginView;
 @property(strong, nonatomic) UILabel *userAgreementLabel;
 @property(strong, nonatomic) id handle;
+@property(strong, nonatomic)UIButton *barButton;
+@property(strong, nonatomic) UIButton *userAgreementButton;
 
 @end
 
@@ -45,14 +47,23 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @synthesize passwordField;
 @synthesize loginButton;
 @synthesize logoImage;
-@synthesize loginView;
 @synthesize userAgreementLabel;
+@synthesize barButton;
+@synthesize userAgreementButton;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        self.barButton = [[UIButton alloc] init];
+        self.barButton.frame=CGRectMake(0, 0, 50, 29);
+        [self.barButton setBackgroundImage:[UIImage imageNamed: @"barbutton_bg.png"] forState:UIControlStateNormal];
+        [self.barButton setTitle:T(@"注册") forState:UIControlStateNormal];
+        [self.barButton.titleLabel setFont:[UIFont boldSystemFontOfSize:14.0]];
+        [self.barButton addTarget:self action:@selector(registerAction) forControlEvents:UIControlEventTouchUpInside];
+        
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.barButton];
     }
     return self;
 }
@@ -173,8 +184,10 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 
 #define LOGO_HEIGHT 30
-#define TEXTFIELD_OFFSET 15
-#define TEXTFIELD_WIDTH 270
+#define TEXTFIELD_Y 90
+#define TEXTFIELD_X 25
+#define TEXTFIELD_OFFSET 12
+#define TEXTFIELD_WIDTH  270
 #define TEXTFIELD_HEIGHT 40
 
 
@@ -184,57 +197,38 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     
     self.title = T(@"登录");
     
-    self.loginView = [[UIView alloc] initWithFrame:CGRectMake(10, 10, 300,125)];
-    [self.loginView setBackgroundColor:[UIColor whiteColor]];
-    [self.loginView.layer setMasksToBounds:YES];
-    [self.loginView.layer setCornerRadius:10.0];
-    
-    
     UIImageView *backgroundView = [[UIImageView alloc]initWithFrame:self.view.bounds];
     [backgroundView setImage:[UIImage imageNamed:@"login_bg.png"]];
     [self.view addSubview:backgroundView];
     
-    self.logoImage = [[UIImageView alloc]initWithFrame:CGRectMake(87.5, 270, 145, 75)];
-    [self.logoImage setImage:[UIImage imageNamed:@"login_intro_oyeah.png"]];
+    self.logoImage = [[UIImageView alloc]initWithFrame:CGRectMake(60, TEXTFIELD_OFFSET, 200, 75)];
+    [self.logoImage setImage:[UIImage imageNamed:@"logo.png"]];
 
 
-    self.usernameField = [[UITextField alloc]initWithFrame:CGRectMake(TEXTFIELD_OFFSET , TEXTFIELD_OFFSET, TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT)];
+    self.usernameField = [[UITextField alloc]initWithFrame:CGRectMake(TEXTFIELD_X , TEXTFIELD_Y + TEXTFIELD_OFFSET, TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT)];
     self.usernameField.font = [UIFont systemFontOfSize:18.0];
     self.usernameField.textColor = [UIColor grayColor];
     self.usernameField.delegate = self;
-    self.usernameField.placeholder = T(@"用户名");
-    self.usernameField.backgroundColor = RGBCOLOR(240, 240, 240);
-    self.usernameField.layer.borderColor = [RGBCOLOR(147, 150, 157) CGColor];
+    self.usernameField.placeholder = T(@"邮箱");
+    self.usernameField.backgroundColor = TEXTFIELD_BGCOLOR;
+    self.usernameField.layer.borderColor = [TEXTFIELD_BORDERCOLOR CGColor];
     self.usernameField.layer.borderWidth  = 1.0f;
     self.usernameField.layer.cornerRadius = 5.0f;
     self.usernameField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     self.usernameField.textAlignment = UITextAlignmentCenter;
     
     
-    self.passwordField = [[UITextField alloc]initWithFrame:CGRectMake(TEXTFIELD_OFFSET , TEXTFIELD_OFFSET*2 + TEXTFIELD_HEIGHT, TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT)];
+    self.passwordField = [[UITextField alloc]initWithFrame:CGRectMake(TEXTFIELD_X , TEXTFIELD_Y + TEXTFIELD_OFFSET*2 + TEXTFIELD_HEIGHT, TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT)];
     self.passwordField.font = [UIFont systemFontOfSize:18.0];
     self.passwordField.textColor = [UIColor grayColor];
     self.passwordField.delegate = self;
     self.passwordField.placeholder = T(@"密码");
-    self.passwordField.backgroundColor = RGBCOLOR(240, 240, 240);
-    self.passwordField.layer.borderColor = [RGBCOLOR(147, 150, 157) CGColor];
+    self.passwordField.backgroundColor = TEXTFIELD_BGCOLOR;
+    self.passwordField.layer.borderColor = [TEXTFIELD_BORDERCOLOR CGColor];
     self.passwordField.layer.borderWidth  = 1.0f;
     self.passwordField.layer.cornerRadius = 5.0f;
     self.passwordField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
     self.passwordField.textAlignment = UITextAlignmentCenter;
-
-    
-    self.loginButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [self.loginButton setFrame:CGRectMake(TEXTFIELD_OFFSET +10 ,TEXTFEILD_HEIGHT*3+TEXTFIELD_HEIGHT-10, TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT)];
-    [self.loginButton.titleLabel setFont:[UIFont boldSystemFontOfSize:18.0]];
-    [self.loginButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [self.loginButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-//    [self.loginButton.titleLabel.layer setShadowColor:[[UIColor whiteColor] CGColor]];
-//    [self.loginButton.titleLabel.layer setShadowOffset:CGSizeMake(0, 1)];
-    [self.loginButton.titleLabel setTextAlignment:UITextAlignmentCenter];
-    [self.loginButton setTitle:T(@"登录") forState:UIControlStateNormal];
-    [self.loginButton setBackgroundImage:[UIImage imageNamed:@"button_cancel_bg.png"] forState:UIControlStateNormal];
-    [self.loginButton addTarget:self action:@selector(loginAction:) forControlEvents:UIControlEventTouchUpInside];
     
     // set thekeyboard type and color and first letter
     self.usernameField.keyboardType = UIKeyboardTypeEmailAddress;
@@ -248,18 +242,27 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     self.passwordField.autocorrectionType = UITextAutocorrectionTypeNo;
     self.passwordField.secureTextEntry = YES;
     
-    self.userAgreementLabel = [[UILabel alloc]initWithFrame:CGRectMake(TEXTFIELD_OFFSET +25 ,TEXTFEILD_HEIGHT*5, TEXTFIELD_WIDTH*0.9, TEXTFIELD_HEIGHT)];
-    self.userAgreementLabel.numberOfLines  = 2;
-    self.userAgreementLabel.text = T(@"使用春水堂注册账户才可以登录. 登录即表示你接受芥末用户协议");
+    self.userAgreementLabel = [[UILabel alloc]initWithFrame:CGRectMake(TEXTFIELD_X ,TEXTFEILD_HEIGHT*5, TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT)];
+    self.userAgreementLabel.numberOfLines  = 1;
+    self.userAgreementLabel.text = T(@"请使用大掌柜注册账户登录. 登录即表示你接受");
     self.userAgreementLabel.backgroundColor = [UIColor clearColor];
-    self.userAgreementLabel.textAlignment = NSTextAlignmentLeft;
+    self.userAgreementLabel.textAlignment = NSTextAlignmentCenter;
     self.userAgreementLabel.font = [UIFont systemFontOfSize:12.0f];
     self.userAgreementLabel.textColor = RGBCOLOR(66, 66, 66);
     
-    [self.loginView addSubview:self.usernameField];
-    [self.loginView addSubview:self.passwordField];
-    [self.view addSubview:self.loginView];
-    [self.view addSubview:self.loginButton];
+    // 用户协议
+    self.userAgreementButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.userAgreementButton.enabled = YES;
+    [self.userAgreementButton setFrame:CGRectMake(TEXTFIELD_X ,TEXTFEILD_HEIGHT*5.5, TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT)];
+    [self.userAgreementButton.titleLabel setFont:[UIFont boldSystemFontOfSize:12.0]];
+    [self.userAgreementButton setTitleColor:BIGBOSS_BLUE forState:UIControlStateNormal];
+    [self.userAgreementButton.titleLabel setTextAlignment:UITextAlignmentCenter];
+    [self.userAgreementButton setTitle:T(@"大掌柜协议") forState:UIControlStateNormal];
+    [self.userAgreementButton addTarget:self action:@selector(userAgreementAction) forControlEvents:UIControlEventTouchUpInside];
+    
+    [self.view addSubview:self.userAgreementButton];
+    [self.view addSubview:self.usernameField];
+    [self.view addSubview:self.passwordField];
     [self.view addSubview:self.logoImage];
     [self.view addSubview:self.userAgreementLabel];
     
@@ -269,6 +272,14 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
     self.handle = textField;
+}
+
+- (void)userAgreementAction
+{
+    // jump to userAgreement
+    UserAgreementViewController *controller = [[UserAgreementViewController alloc]initWithNibName:nil bundle:nil];
+    [controller setHidesBottomBarWhenPushed:YES];
+    [self.navigationController pushViewController:controller animated:YES];
 }
 
 
