@@ -110,10 +110,8 @@
     [self.loginButton.titleLabel setFont:[UIFont boldSystemFontOfSize:18.0]];
     [self.loginButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [self.loginButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-    [self.loginButton.titleLabel.layer setShadowColor:[[UIColor whiteColor] CGColor]];
-    [self.loginButton.titleLabel.layer setShadowOffset:CGSizeMake(0, 1)];
     [self.loginButton.titleLabel setTextAlignment:UITextAlignmentCenter];
-    [self.loginButton setTitle:T(@"登录") forState:UIControlStateNormal];
+    [self.loginButton setTitle:T(@"注册") forState:UIControlStateNormal];
     [self.loginButton setBackgroundImage:[UIImage imageNamed:@"button_cancel_bg.png"] forState:UIControlStateNormal];
     [self.loginButton addTarget:self action:@selector(registerAction:) forControlEvents:UIControlEventTouchUpInside];
     
@@ -128,7 +126,7 @@
 // loginAction
 - (void)loginAction
 {
-    LoginViewController *controller = [[LoginViewController alloc] initWithNibName:nil bundle:[NSBundle mainBundle]];
+    LoginViewController *controller = [[LoginViewController alloc] initWithNibName:nil bundle:nil];
     
     [UIView beginAnimations:@"View Flip" context:nil];
     [UIView setAnimationDuration:0.80];
