@@ -157,13 +157,13 @@
 		261241951696C5A2003A2D59 /* iMedia.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 261241921696C5A2003A2D59 /* iMedia.xcdatamodeld */; };
 		2625096D16428282009ED7D8 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2625096C16428282009ED7D8 /* AssetsLibrary.framework */; };
 		2631C52A16313033004DE7FB /* NSDate+timesince.m in Sources */ = {isa = PBXBuildFile; fileRef = 2631C52916313033004DE7FB /* NSDate+timesince.m */; };
+		2637277A16AE8CE100C77FA4 /* RegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2637277916AE8CE100C77FA4 /* RegisterViewController.m */; };
 		263ACBC4166DA9AF00D61725 /* WSBubbleNoticationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 263ACBC3166DA9AF00D61725 /* WSBubbleNoticationTableViewCell.m */; };
 		2640031F1642B45E00A1B779 /* WelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2640031E1642B45E00A1B779 /* WelcomeViewController.m */; };
 		264668B716AD248C003146AA /* BBCustomBackButtonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 264668B616AD248C003146AA /* BBCustomBackButtonViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		264668B916AD25B6003146AA /* back-button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 264668B816AD25B6003146AA /* back-button@2x.png */; };
 		264668BB16AD43C2003146AA /* barbutton_index@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 264668BA16AD43C2003146AA /* barbutton_index@2x.png */; };
 		264668BE16AE6643003146AA /* UserAgreementViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 264668BD16AE6643003146AA /* UserAgreementViewController.m */; };
-		264668C116AE71B9003146AA /* RegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 264668C016AE71B9003146AA /* RegisterViewController.m */; };
 		264A389C165DF75200FA0123 /* ShakeDashboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 264A389B165DF75200FA0123 /* ShakeDashboardViewController.m */; };
 		264A389F165DF8D800FA0123 /* TrapezoidLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 264A389E165DF8D800FA0123 /* TrapezoidLabel.m */; };
 		264AA538163E534A00607861 /* RequestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 264AA537163E534A00607861 /* RequestViewController.m */; };
@@ -598,6 +598,8 @@
 		2625096C16428282009ED7D8 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		2631C52816313033004DE7FB /* NSDate+timesince.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDate+timesince.h"; path = "contrib/NSDate+timesince.h"; sourceTree = "<group>"; };
 		2631C52916313033004DE7FB /* NSDate+timesince.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDate+timesince.m"; path = "contrib/NSDate+timesince.m"; sourceTree = "<group>"; };
+		2637277816AE8CE100C77FA4 /* RegisterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RegisterViewController.h; path = ViewControllers/Welcome/RegisterViewController.h; sourceTree = "<group>"; };
+		2637277916AE8CE100C77FA4 /* RegisterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RegisterViewController.m; path = ViewControllers/Welcome/RegisterViewController.m; sourceTree = "<group>"; };
 		263ACBC2166DA9AF00D61725 /* WSBubbleNoticationTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WSBubbleNoticationTableViewCell.h; path = WSBubbleData/WSBubbleNoticationTableViewCell.h; sourceTree = "<group>"; };
 		263ACBC3166DA9AF00D61725 /* WSBubbleNoticationTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WSBubbleNoticationTableViewCell.m; path = WSBubbleData/WSBubbleNoticationTableViewCell.m; sourceTree = "<group>"; };
 		2640031D1642B45E00A1B779 /* WelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WelcomeViewController.h; path = ViewControllers/Welcome/WelcomeViewController.h; sourceTree = "<group>"; };
@@ -608,8 +610,6 @@
 		264668BA16AD43C2003146AA /* barbutton_index@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "barbutton_index@2x.png"; sourceTree = "<group>"; };
 		264668BC16AE6643003146AA /* UserAgreementViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserAgreementViewController.h; path = ViewControllers/Welcome/UserAgreementViewController.h; sourceTree = "<group>"; };
 		264668BD16AE6643003146AA /* UserAgreementViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserAgreementViewController.m; path = ViewControllers/Welcome/UserAgreementViewController.m; sourceTree = "<group>"; };
-		264668BF16AE71B9003146AA /* RegisterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RegisterViewController.h; path = ViewControllers/Welcome/RegisterViewController.h; sourceTree = "<group>"; };
-		264668C016AE71B9003146AA /* RegisterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RegisterViewController.m; path = ViewControllers/Welcome/RegisterViewController.m; sourceTree = "<group>"; };
 		264A389A165DF75200FA0123 /* ShakeDashboardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShakeDashboardViewController.h; path = ViewControllers/ShakeView/ShakeDashboardViewController.h; sourceTree = "<group>"; };
 		264A389B165DF75200FA0123 /* ShakeDashboardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShakeDashboardViewController.m; path = ViewControllers/ShakeView/ShakeDashboardViewController.m; sourceTree = "<group>"; };
 		264A389D165DF8D800FA0123 /* TrapezoidLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TrapezoidLabel.h; path = ViewControllers/ShakeView/TrapezoidLabel.h; sourceTree = "<group>"; };
@@ -2216,8 +2216,8 @@
 				26F3BF22164294AC00E2899C /* LoginViewController.m */,
 				264668BC16AE6643003146AA /* UserAgreementViewController.h */,
 				264668BD16AE6643003146AA /* UserAgreementViewController.m */,
-				264668BF16AE71B9003146AA /* RegisterViewController.h */,
-				264668C016AE71B9003146AA /* RegisterViewController.m */,
+				2637277816AE8CE100C77FA4 /* RegisterViewController.h */,
+				2637277916AE8CE100C77FA4 /* RegisterViewController.m */,
 			);
 			name = WelcomeScreenPart;
 			sourceTree = "<group>";
@@ -2751,7 +2751,7 @@
 				261241951696C5A2003A2D59 /* iMedia.xcdatamodeld in Sources */,
 				264668B716AD248C003146AA /* BBCustomBackButtonViewController.m in Sources */,
 				264668BE16AE6643003146AA /* UserAgreementViewController.m in Sources */,
-				264668C116AE71B9003146AA /* RegisterViewController.m in Sources */,
+				2637277A16AE8CE100C77FA4 /* RegisterViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

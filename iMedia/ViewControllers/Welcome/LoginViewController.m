@@ -326,7 +326,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight
                            forView:self.navigationController.view cache:NO];
     
-    [self.navigationController  pushViewController:controller animated:YES];
+    [self.navigationController pushViewController:controller animated:YES];
 
     [UIView commitAnimations];
 }

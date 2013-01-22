@@ -9,10 +9,10 @@
 #import "RegisterViewController.h"
 #import "AppDelegate.h"
 #import "AppNetworkAPIClient.h"
-#import "LoginViewController.m"
 #import <QuartzCore/QuartzCore.h>
 
-@interface RegisterViewController ()<UITextFieldDelegate>
+@interface RegisterViewController ()
+
 @property(strong, nonatomic)UIButton *barButton;
 @property(strong,nonatomic) UITextField *usernameField;
 @property(strong,nonatomic) UITextField *passwordField;
@@ -32,20 +32,10 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        self.barButton = [[UIButton alloc] init];
-        self.barButton.frame=CGRectMake(0, 0, 50, 29);
-        [self.barButton setBackgroundImage:[UIImage imageNamed: @"barbutton_bg.png"] forState:UIControlStateNormal];
-        [self.barButton setTitle:T(@"登录") forState:UIControlStateNormal];
-        [self.barButton.titleLabel setFont:[UIFont boldSystemFontOfSize:14.0]];
-        [self.barButton addTarget:self action:@selector(loginAction) forControlEvents:UIControlEventTouchUpInside];
-        
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.barButton];
-        self.navigationItem.hidesBackButton = YES;
 
     }
     return self;
 }
-
 
 #define LOGO_HEIGHT 30
 #define TEXTFIELD_Y 90
@@ -64,7 +54,7 @@
     [backgroundView setImage:[UIImage imageNamed:@"login_bg.png"]];
     [self.view addSubview:backgroundView];
     
-    self.logoImage = [[UIImageView alloc]initWithFrame:CGRectMake(60, 131, 200, 75)];
+    self.logoImage = [[UIImageView alloc]initWithFrame:CGRectMake(60, TEXTFIELD_X, 200, 75)];
     [self.logoImage setImage:[UIImage imageNamed:@"logo.png"]];
     
     
@@ -106,7 +96,7 @@
     self.passwordField.secureTextEntry = YES;
     
     self.loginButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [self.loginButton setFrame:CGRectMake(TEXTFIELD_OFFSET +10 ,TEXTFEILD_HEIGHT*3+TEXTFIELD_HEIGHT-10, TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT)];
+    [self.loginButton setFrame:CGRectMake(TEXTFIELD_X ,TEXTFIELD_Y+TEXTFEILD_HEIGHT*3+TEXTFIELD_HEIGHT-10, TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT)];
     [self.loginButton.titleLabel setFont:[UIFont boldSystemFontOfSize:18.0]];
     [self.loginButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [self.loginButton setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
@@ -115,29 +105,11 @@
     [self.loginButton setBackgroundImage:[UIImage imageNamed:@"button_cancel_bg.png"] forState:UIControlStateNormal];
     [self.loginButton addTarget:self action:@selector(registerAction:) forControlEvents:UIControlEventTouchUpInside];
     
+    [self.view addSubview:self.logoImage];
     [self.view addSubview:self.usernameField];
     [self.view addSubview:self.passwordField];
-    [self.view addSubview:self.logoImage];
     [self.view addSubview:self.loginButton];
     
-}
-
-
-// loginAction
-- (void)loginAction
-{
-    LoginViewController *controller = [[LoginViewController alloc] initWithNibName:nil bundle:nil];
-    
-    [UIView beginAnimations:@"View Flip" context:nil];
-    [UIView setAnimationDuration:0.80];
-    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-    
-    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight
-                           forView:self.navigationController.view cache:NO];
-    
-    [self.navigationController pushViewController:controller animated:YES];
-    
-    [UIView commitAnimations];
 }
 
 - (void)didReceiveMemoryWarning
