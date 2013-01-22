@@ -28,15 +28,14 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 static const int ddLogLevel = LOG_LEVEL_OFF;
 #endif
 
-
 @interface LoginViewController ()
 
 @property(strong,nonatomic) UITextField *usernameField;
 @property(strong,nonatomic) UITextField *passwordField;
-@property(strong, nonatomic)UIImageView *logoImage;
+@property(strong, nonatomic) UIImageView *logoImage;
 @property(strong, nonatomic) UILabel *userAgreementLabel;
 @property(strong, nonatomic) id handle;
-@property(strong, nonatomic)UIButton *barButton;
+@property(strong, nonatomic) UIButton *barButton;
 @property(strong, nonatomic) UIButton *userAgreementButton;
 @property(strong, nonatomic) UITapGestureRecognizer *tapGestureRecognizer;
 
@@ -317,6 +316,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 - (void)registerAction
 {
+    [(UITextField *)self.handle resignFirstResponder];
+    
     RegisterViewController *controller = [[RegisterViewController alloc] initWithNibName:nil bundle:[NSBundle mainBundle]];
     
     [UIView beginAnimations:@"View Flip" context:nil];
@@ -326,9 +327,11 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight
                            forView:self.navigationController.view cache:NO];
     
-    [self.navigationController pushViewController:controller animated:YES];
 
     [UIView commitAnimations];
+    
+    [self.navigationController pushViewController:controller animated:YES];
+
 }
 
 

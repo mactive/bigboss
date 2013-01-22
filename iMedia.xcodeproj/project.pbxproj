@@ -2214,10 +2214,10 @@
 				2640031E1642B45E00A1B779 /* WelcomeViewController.m */,
 				26F3BF21164294AC00E2899C /* LoginViewController.h */,
 				26F3BF22164294AC00E2899C /* LoginViewController.m */,
-				264668BC16AE6643003146AA /* UserAgreementViewController.h */,
-				264668BD16AE6643003146AA /* UserAgreementViewController.m */,
 				2637277816AE8CE100C77FA4 /* RegisterViewController.h */,
 				2637277916AE8CE100C77FA4 /* RegisterViewController.m */,
+				264668BC16AE6643003146AA /* UserAgreementViewController.h */,
+				264668BD16AE6643003146AA /* UserAgreementViewController.m */,
 			);
 			name = WelcomeScreenPart;
 			sourceTree = "<group>";

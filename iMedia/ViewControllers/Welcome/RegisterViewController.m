@@ -10,6 +10,15 @@
 #import "AppDelegate.h"
 #import "AppNetworkAPIClient.h"
 #import <QuartzCore/QuartzCore.h>
+#import "ConvenienceMethods.h"
+
+#import "DDLog.h"
+// Log levels: off, error, warn, info, verbose
+#if DEBUG
+static const int ddLogLevel = LOG_LEVEL_VERBOSE;
+#else
+static const int ddLogLevel = LOG_LEVEL_OFF;
+#endif
 
 @interface RegisterViewController ()
 
@@ -17,7 +26,8 @@
 @property(strong,nonatomic) UITextField *usernameField;
 @property(strong,nonatomic) UITextField *passwordField;
 @property(strong, nonatomic)UIButton *loginButton;
-@property(strong, nonatomic)UIImageView *logoImage;
+@property(strong, nonatomic) UITapGestureRecognizer *tapGestureRecognizer;
+@property(strong, nonatomic) id handle;
 
 @end
 
@@ -26,7 +36,9 @@
 @synthesize usernameField;
 @synthesize passwordField;
 @synthesize loginButton;
-@synthesize logoImage;
+@synthesize tapGestureRecognizer;
+@synthesize handle;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -38,7 +50,7 @@
 }
 
 #define LOGO_HEIGHT 30
-#define TEXTFIELD_Y 90
+#define TEXTFIELD_Y 0
 #define TEXTFIELD_X 25
 #define TEXTFIELD_OFFSET 12
 #define TEXTFIELD_WIDTH  270
@@ -53,10 +65,7 @@
     UIImageView *backgroundView = [[UIImageView alloc]initWithFrame:self.view.bounds];
     [backgroundView setImage:[UIImage imageNamed:@"login_bg.png"]];
     [self.view addSubview:backgroundView];
-    
-    self.logoImage = [[UIImageView alloc]initWithFrame:CGRectMake(60, TEXTFIELD_X, 200, 75)];
-    [self.logoImage setImage:[UIImage imageNamed:@"logo.png"]];
-    
+
     
     self.usernameField = [[UITextField alloc]initWithFrame:CGRectMake(TEXTFIELD_X , TEXTFIELD_Y + TEXTFIELD_OFFSET, TEXTFIELD_WIDTH, TEXTFIELD_HEIGHT)];
     self.usernameField.font = [UIFont systemFontOfSize:18.0];
@@ -105,11 +114,60 @@
     [self.loginButton setBackgroundImage:[UIImage imageNamed:@"button_cancel_bg.png"] forState:UIControlStateNormal];
     [self.loginButton addTarget:self action:@selector(registerAction:) forControlEvents:UIControlEventTouchUpInside];
     
-    [self.view addSubview:self.logoImage];
     [self.view addSubview:self.usernameField];
     [self.view addSubview:self.passwordField];
     [self.view addSubview:self.loginButton];
     
+    self.tapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(handleTap:)];
+    self.tapGestureRecognizer.numberOfTapsRequired = 1;
+    self.tapGestureRecognizer.numberOfTouchesRequired = 1;
+    
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    UIKeyboardNotificationsObserve();
+}
+
+
+// keyboard hide and show
+- (void)keyboardWillShow:(NSNotification*)notification
+{
+    [self.view addGestureRecognizer:self.tapGestureRecognizer];
+}
+
+- (void)keyboardWillHide:(NSNotification*)notification
+{
+    [self.view removeGestureRecognizer:self.tapGestureRecognizer];
+}
+
+- (void)handleTap:(UITapGestureRecognizer *)paramSender
+{
+    [(UITextField *)self.handle resignFirstResponder];
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    self.handle = textField;
+}
+
+
+- (void)registerAction:(id)sender
+{
+    [(UITextField *)self.handle resignFirstResponder];
+    
+    if (StringHasValue(self.usernameField.text) && [self validateEmailWithString:self.usernameField.text]) {
+        DDLogVerbose(@"Done");
+    }else{
+        [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"邮箱输入有误") andHideAfterDelay:1];
+    }
+}
+
+- (BOOL)validateEmailWithString:(NSString*)email
+{
+    NSString *emailRegex = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
+    NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegex];
+    return [emailTest evaluateWithObject:email];
 }
 
 - (void)didReceiveMemoryWarning
