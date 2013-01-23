@@ -93,7 +93,7 @@
     self.settingTitleArray = [[NSArray alloc] initWithObjects:
                               [[NSArray alloc] initWithObjects:@"个人设置",nil],
                               [[NSArray alloc] initWithObjects:@"隐私保护",@"优惠码备忘录", nil],
-                              [[NSArray alloc] initWithObjects:@"去芥末打个分吧",@"帮助与反馈",@"关于芥末", nil],
+                              [[NSArray alloc] initWithObjects:@"去大掌柜打个分吧",@"帮助与反馈",@"关于大掌柜", nil],
                               [[NSArray alloc] initWithObjects:@"退出登录",nil],
                               nil ];
     //,@"我的相册",@"新浪微博",@"微信朋友圈"

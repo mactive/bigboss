@@ -51,20 +51,6 @@
     [backgroundView setImage:[UIImage imageNamed:@"welcome_bg.png"]];
     [self.view addSubview:backgroundView];
     
-//    self.welcomeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//    [self.welcomeButton setFrame:CGRectMake(80, 115, 160, 41)];
-//    [self.welcomeButton.titleLabel setFont:[UIFont boldSystemFontOfSize:20]];
-//    [self.welcomeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-//    [self.welcomeButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
-//    [self.welcomeButton.titleLabel setTextAlignment:UITextAlignmentCenter];
-//    [self.welcomeButton setTitle:T(@"芥末") forState:UIControlStateNormal];
-//    [self.welcomeButton setBackgroundImage:[UIImage imageNamed:@"welcome_btn.png"] forState:UIControlStateNormal];
-//    [self.welcomeButton addTarget:self action:@selector(welcomeAction:) forControlEvents:UIControlEventTouchUpInside];
-//    self.welcomeTitleView = [[UIImageView alloc]initWithFrame:CGRectMake(21, 32 , 278, 86)];
-//    [self.welcomeTitleView setImage:[UIImage imageNamed:@"welcome_title.png"]];
-
-//    [self.view addSubview:self.welcomeButton];
-//    [self.view addSubview:self.welcomeTitleView];
 //    Do any additional setup after loading the view.
     if ([self.me.gender isEqualToString:@""] || [self.me.displayName isEqualToString:@""] || self.me.gender == nil || self.me.displayName == nil ) {
         LoginSettingViewController *settingViewController = [[LoginSettingViewController alloc]initWithNibName:nil bundle:nil];

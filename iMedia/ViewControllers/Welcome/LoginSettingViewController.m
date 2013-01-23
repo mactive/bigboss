@@ -170,7 +170,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [self.welcomeButton setTitleColor:RGBCOLOR(230, 230, 230) forState:UIControlStateHighlighted];
     [self.welcomeButton.titleLabel setTextAlignment:UITextAlignmentCenter];
     [self.welcomeButton setAlpha:0.3];
-    [self.welcomeButton setTitle:T(@"欢迎来到芥末") forState:UIControlStateNormal];
+    [self.welcomeButton setTitle:T(@"欢迎来到大掌柜") forState:UIControlStateNormal];
     [self.welcomeButton setEnabled:NO];
     [self.welcomeButton setBackgroundImage:[UIImage imageNamed:@"button_blue_bg.png"] forState:UIControlStateNormal];
     [self.welcomeButton addTarget:self action:@selector(welcomeAction) forControlEvents:UIControlEventTouchUpInside];

@@ -65,7 +65,7 @@
     self.noticeLabel.shadowColor = [UIColor whiteColor];
     self.noticeLabel.numberOfLines = 0;
     self.noticeLabel.shadowOffset = CGSizeMake(0, 1);
-    self.noticeLabel.text = T(@"为芥末创建一个屏幕解锁密码，这样他人在借用你的手机时，无法打开芥末。");
+    self.noticeLabel.text = T(@"为大掌柜创建一个屏幕解锁密码，这样他人在借用你的手机时，无法打开大掌柜。");
     
     
     // passfield

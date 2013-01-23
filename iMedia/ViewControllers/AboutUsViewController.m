@@ -35,7 +35,7 @@
     [super viewDidLoad];
     
     self.view.backgroundColor = BGCOLOR;
-    self.title = T(@"关于芥末");
+    self.title = T(@"关于大掌柜");
 	// Do any additional setup after loading the view.
     self.usLogo = [[UIImageView alloc] initWithFrame:CGRectMake(50, 20, 220, 100)];
     [self.usLogo setImage:[UIImage imageNamed:@"oyeah_logo.png"]];
@@ -57,7 +57,7 @@
     self.usLabel.shadowColor = [UIColor whiteColor];
     self.usLabel.shadowOffset = CGSizeMake(0, 1);
     self.usLabel.numberOfLines = 0;
-    self.usLabel.text = @"芥末，有情趣。一群富有生活情趣的人，在这里相识，以阳光而坦诚的心态，探讨两性情趣，提升两性关系，让自己从蒙昧者变身为情趣达人。这里并非放纵者的聚集所，而是热爱生活者的修炼地—生活，芥末有味道。";
+    self.usLabel.text = @"大掌柜,客服随行";
     
     
     

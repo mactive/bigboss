@@ -27,7 +27,6 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @property(strong,nonatomic) UITextField *usernameField;
 @property(strong,nonatomic) UITextField *passwordField;
 @property(strong, nonatomic)UIButton *loginButton;
-@property(strong, nonatomic) UITapGestureRecognizer *tapGestureRecognizer;
 @property(strong, nonatomic) id handle;
 
 @end
@@ -37,7 +36,6 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @synthesize usernameField;
 @synthesize passwordField;
 @synthesize loginButton;
-@synthesize tapGestureRecognizer;
 @synthesize handle;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -128,32 +126,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     
 
 }
-/*
-- (void)viewWillAppear:(BOOL)animated
-{
-    self.tapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(handleTap:)];
-    self.tapGestureRecognizer.numberOfTapsRequired = 1;
-    self.tapGestureRecognizer.numberOfTouchesRequired = 1;
-    
-    UIKeyboardNotificationsObserve();
-}
 
-// keyboard hide and show
-- (void)keyboardWillShow:(NSNotification*)notification
-{
-    [self.view addGestureRecognizer:self.tapGestureRecognizer];
-}
-
-- (void)keyboardWillHide:(NSNotification*)notification
-{
-    [self.view removeGestureRecognizer:self.tapGestureRecognizer];
-}
-
-- (void)handleTap:(UITapGestureRecognizer *)paramSender
-{
-    [(UITextField *)self.handle resignFirstResponder];
-}
-*/
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
@@ -187,6 +160,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
                 NSString *status = [ServerDataTransformer getStringObjFromServerJSON:responseObject byName:@"status"];
                 if ([status isEqualToString:@"0"]) {
                     [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"注册成功") andHideAfterDelay:1];
+                    [self dismissModalViewControllerAnimated:YES];
 
                 }else if([status isEqualToString:@"1"]){
                     [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"邮箱已经被使用") andHideAfterDelay:1];
