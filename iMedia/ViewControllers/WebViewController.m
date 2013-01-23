@@ -17,6 +17,7 @@
 
 @synthesize urlString;
 @synthesize webView;
+@synthesize titleString;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -30,6 +31,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.title = self.titleString;
     
     self.webView  = [[UIWebView alloc]initWithFrame:self.view.bounds];
     NSURL *url = [NSURL URLWithString:self.urlString];

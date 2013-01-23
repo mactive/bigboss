@@ -223,10 +223,10 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     self.tabController = [[UITabBarController alloc] init];
     
     
-    self.nearbyViewController = [[NearbyViewController alloc]init];
-    UINavigationController *navController1 = [[UINavigationController alloc] initWithRootViewController:self.nearbyViewController];
-    self.nearbyViewController.title = T(@"附近");
-    self.nearbyViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:T(@"附近") image:[UIImage imageNamed:@"tabbar_item_1.png"] tag:1001];
+//    self.nearbyViewController = [[NearbyViewController alloc]init];
+//    UINavigationController *navController1 = [[UINavigationController alloc] initWithRootViewController:self.nearbyViewController];
+//    self.nearbyViewController.title = T(@"附近");
+//    self.nearbyViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:T(@"附近") image:[UIImage imageNamed:@"tabbar_item_1.png"] tag:1001];
     
     self.conversationController = [[ConversationsController alloc] init];
     UINavigationController *navController2 = [[UINavigationController alloc] initWithRootViewController:self.conversationController];
@@ -251,10 +251,9 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     self.settingController.title = T(@"设置");
     self.settingController.tabBarItem = [[UITabBarItem alloc] initWithTitle:T(@"设置") image:[UIImage imageNamed:@"tabbar_item_5.png"] tag:1005];
     
-    NSArray* controllers = [NSArray arrayWithObjects:navController1, navController2, navController3, navController4, navController5, nil];
+    NSArray* controllers = [NSArray arrayWithObjects: navController2, navController3, navController4, navController5, nil];
     self.tabController.viewControllers = controllers;
 
-    [XFox logAllPageViews:navController1];
     [XFox logAllPageViews:navController2];
     [XFox logAllPageViews:navController3];
     [XFox logAllPageViews:navController4];

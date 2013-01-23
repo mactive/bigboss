@@ -1,21 +1,18 @@
 //
-//  UserAgreementViewController.m
+//  IntroViewController.m
 //  iMedia
 //
-//  Created by meng qian on 13-1-22.
+//  Created by meng qian on 13-1-23.
 //  Copyright (c) 2013年 Li Xiaosi. All rights reserved.
 //
 
-#import "UserAgreementViewController.h"
+#import "IntroViewController.h"
 
-@interface UserAgreementViewController ()
-@property(strong, nonatomic)UIWebView *webView;
+@interface IntroViewController ()
 
 @end
 
-@implementation UserAgreementViewController
-@synthesize webView;
-
+@implementation IntroViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -30,11 +27,6 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    self.title = T(@"用户协议");
-    
-    self.webView = [[UIWebView alloc]initWithFrame:self.view.bounds];
-    [self.view addSubview:self.webView];
-
 }
 
 - (void)didReceiveMemoryWarning

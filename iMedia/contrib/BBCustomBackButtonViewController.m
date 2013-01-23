@@ -131,8 +131,9 @@
 // @see http://stackoverflow.com/a/7068222/53653
 - (void)addCustomBackButtonWithTitle:(NSString *)title
 {
-    UIImage *image = [UIImage imageNamed:@"back-button"];
-    image = [image stretchableImageWithLeftCapWidth:14.0f topCapHeight:0.0f];
+    UIImage *image = [[UIImage alloc]init];
+    image = [[UIImage imageNamed:@"back-button.png"]
+                        resizableImageWithCapInsets:UIEdgeInsetsMake(14, 16, 14, 20) ];
     UIFont *font = [UIFont boldSystemFontOfSize:12.0f];
 
     CGSize textSize = [title sizeWithFont:font];

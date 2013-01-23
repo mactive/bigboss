@@ -17,7 +17,7 @@
 #import "MBProgressHUD.h"
 #import "CuteData.h"
 #import "LogEventConstants.h"
-#import "UserAgreementViewController.h"
+#import "WebViewController.h"
 #import "RegisterViewController.h"
 
 #import "DDLog.h"
@@ -344,8 +344,10 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 - (void)userAgreementAction
 {
     // jump to userAgreement
-    UserAgreementViewController *controller = [[UserAgreementViewController alloc]initWithNibName:nil bundle:nil];
+    WebViewController *controller = [[WebViewController alloc]initWithNibName:nil bundle:nil];
     [controller setHidesBottomBarWhenPushed:YES];
+    controller.titleString = T(@"用户协议");
+    controller.urlString = @"http://113.11.199.42/ota/user_agreement.html";
     [self.navigationController pushViewController:controller animated:YES];
 }
 

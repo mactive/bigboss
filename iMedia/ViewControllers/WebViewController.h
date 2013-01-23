@@ -7,9 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "BBCustomBackButtonViewController.h"
 
-@interface WebViewController : UIViewController
+@interface WebViewController : BBCustomBackButtonViewController
 
 @property(strong, nonatomic)NSString *urlString;
+@property(strong, nonatomic)NSString *titleString;
 
 @end
