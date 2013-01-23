@@ -318,19 +318,25 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 {
     [(UITextField *)self.handle resignFirstResponder];
     
-    RegisterViewController *controller = [[RegisterViewController alloc] initWithNibName:nil bundle:[NSBundle mainBundle]];
+    RegisterViewController *controller = [[RegisterViewController alloc] initWithNibName:nil bundle:nil];
     
-    [UIView beginAnimations:@"View Flip" context:nil];
-    [UIView setAnimationDuration:0.80];
-    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+//    [UIView beginAnimations:@"View Flip" context:nil];
+//    [UIView setAnimationDuration:0.80];
+//    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
+//    
+//    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight
+//                           forView:self.navigationController.view cache:NO];
+//    
+//
+//    [UIView commitAnimations];
+//
     
-    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight
-                           forView:self.navigationController.view cache:NO];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
+    [self presentModalViewController: navController animated: YES];
     
-
-    [UIView commitAnimations];
-    
-    [self.navigationController pushViewController:controller animated:YES];
+//    [self.navigationController presentModalViewController:controller animated:YES];
+//
+//    [self.navigationController presentModalViewController:controller animated:YES];
 
 }
 

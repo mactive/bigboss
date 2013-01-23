@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "BBCustomBackButtonViewController.h"
 
-@interface RegisterViewController : BBCustomBackButtonViewController<UITextFieldDelegate>
+@interface RegisterViewController : UIViewController<UITextFieldDelegate>
 
 @end

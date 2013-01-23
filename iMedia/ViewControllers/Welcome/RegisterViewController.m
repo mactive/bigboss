@@ -45,7 +45,14 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-
+        self.barButton = [[UIButton alloc] init];
+        self.barButton.frame=CGRectMake(0, 0, 50, 29);
+        [self.barButton setBackgroundImage:[UIImage imageNamed: @"barbutton_bg.png"] forState:UIControlStateNormal];
+        [self.barButton setTitle:T(@"登录") forState:UIControlStateNormal];
+        [self.barButton.titleLabel setFont:[UIFont boldSystemFontOfSize:14.0]];
+        [self.barButton addTarget:self action:@selector(backToLoginAction) forControlEvents:UIControlEventTouchUpInside];
+        
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.barButton];
     }
     return self;
 }
@@ -113,23 +120,23 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [self.loginButton.titleLabel setTextAlignment:UITextAlignmentCenter];
     [self.loginButton setTitle:T(@"注册") forState:UIControlStateNormal];
     [self.loginButton setBackgroundImage:[UIImage imageNamed:@"button_cancel_bg.png"] forState:UIControlStateNormal];
-    
+    [self.loginButton addTarget:self action:@selector(registerAction) forControlEvents:UIControlEventTouchUpInside];
+
     [self.view addSubview:self.usernameField];
     [self.view addSubview:self.passwordField];
     [self.view addSubview:self.loginButton];
     
-}
 
+}
+/*
 - (void)viewWillAppear:(BOOL)animated
 {
     self.tapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(handleTap:)];
     self.tapGestureRecognizer.numberOfTapsRequired = 1;
     self.tapGestureRecognizer.numberOfTouchesRequired = 1;
+    
     UIKeyboardNotificationsObserve();
-    [self.loginButton addTarget:self action:@selector(registerAction) forControlEvents:UIControlEventTouchUpInside];
-
 }
-
 
 // keyboard hide and show
 - (void)keyboardWillShow:(NSNotification*)notification
@@ -146,12 +153,25 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 {
     [(UITextField *)self.handle resignFirstResponder];
 }
+*/
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
     self.handle = textField;
 }
 
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    if ([self.passwordField isEqual:textField]) {
+        [self registerAction];
+        return [textField resignFirstResponder];
+    }
+}
+
+- (void)backToLoginAction
+{
+    [self dismissModalViewControllerAnimated:YES];
+}
 
 - (void)registerAction
 {
@@ -167,9 +187,12 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
                 NSString *status = [ServerDataTransformer getStringObjFromServerJSON:responseObject byName:@"status"];
                 if ([status isEqualToString:@"0"]) {
                     [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"注册成功") andHideAfterDelay:1];
+
                 }else if([status isEqualToString:@"1"]){
                     [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"邮箱已经被使用") andHideAfterDelay:1];
-                }else if([status isEqualToString:@"1"]){
+                }else if([status isEqualToString:@"2"]){
+                    [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"注册不合法") andHideAfterDelay:1];
+                }else if([status isEqualToString:@"3"]){
                     [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"邮箱格式不正确") andHideAfterDelay:1];
                 }
             }else{
