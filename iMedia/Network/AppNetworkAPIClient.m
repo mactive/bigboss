@@ -40,8 +40,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 #import "UpYun.h"
 #endif
 
-//static NSString * const kAppNetworkAPIBaseURLString = @"http://192.168.1.104:8000/";
-static NSString * const kAppNetworkAPIBaseURLString = @"http://media.wingedstone.com:8000/";
+static NSString * const kAppNetworkAPIBaseURLString = @"http://192.168.1.104:8000/";
+//static NSString * const kAppNetworkAPIBaseURLString = @"http://media.wingedstone.com:8000/";
 
 
 NSString *const kXMPPmyJID = @"kXMPPmyJID";
@@ -242,6 +242,57 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     }];
     
     [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:loginOperation];
+}
+
+//  用户注册
+- (void)registerWithUsername:(NSString *)username andPassword:(NSString *)password withBlock:(void (^)(id , NSError *))block
+{
+    
+    NSMutableURLRequest *getconfigRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"GET" path:GET_CONFIG_PATH parameters:nil];
+    AFJSONRequestOperation *getconfigOperation = [AFJSONRequestOperation JSONRequestOperationWithRequest:getconfigRequest success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        DDLogVerbose(@"getconfig JSON received: %@", JSON);
+        NSDictionary *registerDict = [NSDictionary dictionaryWithObjectsAndKeys: username, @"u", password, @"p", [JSON valueForKey:@"csrfmiddlewaretoken"], @"csrfmiddlewaretoken",@"iOS App",@"s", nil];
+
+        NSMutableURLRequest *postRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"POST" path:REGISTER_PATH parameters:registerDict];
+
+        AFJSONRequestOperation *registerOperation = [AFJSONRequestOperation JSONRequestOperationWithRequest:postRequest success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+            //
+            NSString* status = [JSON valueForKey:@"status"];
+            
+            DDLogVerbose(@"register JSON received: %@", JSON);
+            if ([status isEqualToString:@"0"]) {
+                [[NSUserDefaults standardUserDefaults] setObject:username forKey:kXMPPmyUsername];
+
+                if (block ) {
+                    block(JSON, nil);
+                }
+            }else{
+                NSError *error = [[NSError alloc] initWithDomain:@"wingedstone.com" code:403 userInfo:nil];
+                if (block) {
+                    block(JSON, error);
+                }
+            }
+
+        } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+            DDLogVerbose(@"register failed: %@", error);
+            if (block) {
+                block(nil, error);
+            }
+        }];
+        
+        [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:registerOperation];
+
+
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        DDLogVerbose(@"getconfig failed: %@", error);
+        if (block) {
+            block(nil, error);
+        }
+    }];
+    
+    [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:getconfigOperation];
+
+
 }
 
 #ifdef USE_UYUN_SERVICE
@@ -854,6 +905,8 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 
     
 }
+
+
 
 // 频道列表
 - (void)getChannelListWithBlock:(void (^)(id, NSError *))block

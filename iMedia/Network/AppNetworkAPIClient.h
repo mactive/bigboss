@@ -24,6 +24,7 @@ extern NSString *const kXMPPmyUsername;
 #define POST_DATA_PATH          @"/base/setdata/"
 #define IMAGE_SERVER_PATH       @"/upload/image/"
 #define DATA_SERVER_PATH        @"/upload/imagehead/"
+#define REGISTER_PATH           @"/base/register/"
 
 @interface AppNetworkAPIClient : AFHTTPClient
 
@@ -55,7 +56,8 @@ extern NSString *const kXMPPmyUsername;
 - (void)updateLocation:(double)latitude andLongitude:(double)longitude;
 
 - (void)getNearestPeopleWithGender:(NSUInteger)gender start:(NSUInteger)start latitude:(double)latitude longitude:(double)longitude andBlock:(void (^)(id, NSError *))block;
-
+// 用户注册
+- (void)registerWithUsername:(NSString *)username andPassword:(NSString *)password withBlock:(void (^)(id responseObject, NSError *error))block;
 
 // op11 频道信息
 - (void)getChannelListWithBlock:(void (^)(id, NSError *))block;

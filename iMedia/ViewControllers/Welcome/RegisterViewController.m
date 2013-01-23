@@ -11,6 +11,7 @@
 #import "AppNetworkAPIClient.h"
 #import <QuartzCore/QuartzCore.h>
 #import "ConvenienceMethods.h"
+#import "ServerDataTransformer.h"
 
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
@@ -112,21 +113,21 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [self.loginButton.titleLabel setTextAlignment:UITextAlignmentCenter];
     [self.loginButton setTitle:T(@"注册") forState:UIControlStateNormal];
     [self.loginButton setBackgroundImage:[UIImage imageNamed:@"button_cancel_bg.png"] forState:UIControlStateNormal];
-    [self.loginButton addTarget:self action:@selector(registerAction:) forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:self.usernameField];
     [self.view addSubview:self.passwordField];
     [self.view addSubview:self.loginButton];
     
-    self.tapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(handleTap:)];
-    self.tapGestureRecognizer.numberOfTapsRequired = 1;
-    self.tapGestureRecognizer.numberOfTouchesRequired = 1;
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    self.tapGestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(handleTap:)];
+    self.tapGestureRecognizer.numberOfTapsRequired = 1;
+    self.tapGestureRecognizer.numberOfTouchesRequired = 1;
     UIKeyboardNotificationsObserve();
+    [self.loginButton addTarget:self action:@selector(registerAction) forControlEvents:UIControlEventTouchUpInside];
+
 }
 
 
@@ -152,12 +153,31 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 }
 
 
-- (void)registerAction:(id)sender
+- (void)registerAction
 {
     [(UITextField *)self.handle resignFirstResponder];
     
-    if (StringHasValue(self.usernameField.text) && [self validateEmailWithString:self.usernameField.text]) {
+    if (StringHasValue(self.usernameField.text) && [self validateEmailWithString:self.usernameField.text] && StringHasValue(self.passwordField.text)) {
+       
         DDLogVerbose(@"Done");
+        [[AppNetworkAPIClient sharedClient] registerWithUsername:self.usernameField.text andPassword:self.passwordField.text withBlock:^(id responseObject, NSError *error)
+        {
+            if (responseObject) {
+                DDLogVerbose(@"%@",responseObject);
+                NSString *status = [ServerDataTransformer getStringObjFromServerJSON:responseObject byName:@"status"];
+                if ([status isEqualToString:@"0"]) {
+                    [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"注册成功") andHideAfterDelay:1];
+                }else if([status isEqualToString:@"1"]){
+                    [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"邮箱已经被使用") andHideAfterDelay:1];
+                }else if([status isEqualToString:@"1"]){
+                    [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"邮箱格式不正确") andHideAfterDelay:1];
+                }
+            }else{
+                [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"网络错误,无法获取信息") andHideAfterDelay:1];
+            }
+            
+        }];
+        
     }else{
         [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"邮箱输入有误") andHideAfterDelay:1];
     }
