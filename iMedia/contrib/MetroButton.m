@@ -22,10 +22,12 @@
         // Initialization code
         self.layer.cornerRadius = 0;
         self.colorArray = [[NSArray alloc] initWithObjects:
-                           RGBCOLOR(151, 206, 45),
-                           RGBCOLOR(117, 198, 231),
-                           RGBCOLOR(238, 175, 212),
-                           RGBCOLOR(253, 152, 113),nil];
+                           RGBCOLOR(231,117,117),
+                           RGBCOLOR(151,206,45),
+                           RGBCOLOR(117,198,231),
+                           RGBCOLOR(238,175,212),
+                           RGBCOLOR(251,176,147),
+                           RGBCOLOR(136,143,154),nil];
         
         self.iconView  = [[UIImageView alloc]initWithFrame:CGRectMake((frame.size.height-75)/2, (frame.size.height-75)/2, 75, 75)];
         

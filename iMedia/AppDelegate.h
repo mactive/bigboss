@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "AppDefs.h"
+#import "MainMenuViewController.h"
 
 @class NearbyViewController;
 @class ContactListViewController;
@@ -21,6 +22,7 @@
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
+@property (strong, nonatomic) MainMenuViewController *mainMenuViewController;
 @property (strong, nonatomic) UITabBarController *tabController;
 @property (strong, nonatomic) NearbyViewController *nearbyViewController;
 @property (strong, nonatomic) ConversationsController *conversationController;

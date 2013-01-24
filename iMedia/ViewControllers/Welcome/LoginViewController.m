@@ -8,7 +8,7 @@
 
 #import "LoginViewController.h"
 #import "AppDelegate.h"
-#import "WelcomeViewController.h"
+#import "MainMenuViewController.h"
 #import "AppNetworkAPIClient.h"
 #import "XMPPNetworkCenter.h"
 #import <unistd.h>
@@ -139,8 +139,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
                 if (responseObject != nil) {
                     [XFox endTimedEvent:EVENT_LOGIN_TIMER withParameters:nil];
                     
-                    WelcomeViewController *welcomeController = [[WelcomeViewController alloc]initWithNibName:nil bundle:nil];
-                    [self.navigationController pushViewController:welcomeController animated:YES];
+                    MainMenuViewController *mainMenuController = [[MainMenuViewController alloc]initWithNibName:nil bundle:nil];
+                    [self.navigationController pushViewController:mainMenuController animated:YES];
                 } else {
                     [XFox endTimedEvent:EVENT_LOGIN_TIMER withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"failure", @"status", error, @"error", nil]];
                     [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:[responseObject valueForKey:@"status"] andHideAfterDelay:2];

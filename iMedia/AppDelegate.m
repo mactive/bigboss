@@ -26,6 +26,7 @@
 #import "FunctionListViewController.h"
 #import "SettingViewController.h"
 #import "LoginViewController.h"
+#import "MainMenuViewController.h"
 #import "ConfigSetting.h"
 
 #import "AppNetworkAPIClient.h"
@@ -79,6 +80,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @synthesize privacyLoginViewController;
 @synthesize transController;
 @synthesize versionAlertView;
+@synthesize mainMenuViewController;
 
 @synthesize me = _me;
 
@@ -222,12 +224,6 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     //
     self.tabController = [[UITabBarController alloc] init];
     
-    
-//    self.nearbyViewController = [[NearbyViewController alloc]init];
-//    UINavigationController *navController1 = [[UINavigationController alloc] initWithRootViewController:self.nearbyViewController];
-//    self.nearbyViewController.title = T(@"附近");
-//    self.nearbyViewController.tabBarItem = [[UITabBarItem alloc] initWithTitle:T(@"附近") image:[UIImage imageNamed:@"tabbar_item_1.png"] tag:1001];
-    
     self.conversationController = [[ConversationsController alloc] init];
     UINavigationController *navController2 = [[UINavigationController alloc] initWithRootViewController:self.conversationController];
     self.conversationController.managedObjectContext = _managedObjectContext;
@@ -267,10 +263,16 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [self.tabController.tabBar setSelectedImageTintColor:RGBCOLOR(151, 206, 45)];
     [self.tabController.tabBar setSelectionIndicatorImage:[UIImage imageNamed:@"tabbar_overlay.png"]];
     
+    // mainMenuViewController
+
+    self.mainMenuViewController = [[MainMenuViewController alloc]initWithNibName:nil bundle:nil];
+    UINavigationController *mainController = [[UINavigationController alloc] initWithRootViewController:self.mainMenuViewController];
+
+    
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];
-    [self.window addSubview:self.tabController.view];
-    [self.window setRootViewController:self.tabController];
+    [self.window addSubview:self.mainMenuViewController.view];
+    [self.window setRootViewController:mainController];
 
     [self checkIOSVersion];
     [self.window makeKeyAndVisible];
