@@ -71,6 +71,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 }
 @property(strong, nonatomic) UILabel *titleLabel;
 @property(strong,nonatomic)NSIndexPath *editingIndexPath;
+@property(strong, nonatomic)UIButton *barButton;
 // Notication to receive new message
 - (void)newMessageReceived:(NSNotification *)notification;
 
@@ -84,6 +85,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @synthesize unreadMessageCount;
 @synthesize chatDetailController = _detailController;
 @synthesize friendRequestArray;
+@synthesize barButton;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -104,8 +106,21 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         NSURL *audioPath = [[NSBundle mainBundle] URLForResource:@"sms-received" withExtension:@"wav"];
         AudioServicesCreateSystemSoundID((__bridge CFURLRef)audioPath, &_newMessageSoundID);
         _lock = [[NSLock alloc] init];
+        
+        // Custom initialization
+        self.barButton = [[UIButton alloc] init];
+        self.barButton.frame=CGRectMake(0, 0, 50, 29);
+        [self.barButton setBackgroundImage:[UIImage imageNamed: @"barbutton_index.png"] forState:UIControlStateNormal];
+        [self.barButton addTarget:self action:@selector(mainMenuAction) forControlEvents:UIControlEventTouchUpInside];
+        [self.navigationItem setHidesBackButton:YES];
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.barButton];
     }
     return self;
+}
+
+- (void)mainMenuAction
+{
+    [self.navigationController popViewControllerAnimated:NO];
 }
 
 - (void)dealloc {

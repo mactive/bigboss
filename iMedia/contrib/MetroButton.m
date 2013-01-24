@@ -9,12 +9,19 @@
 #import "MetroButton.h"
 #import <QuartzCore/QuartzCore.h>
 #import "AppDefs.h"
+
+@interface MetroButton()
+@property(readwrite, nonatomic)CGRect mainframe;
+
+@end
+
 @implementation MetroButton
 
 @synthesize iconView;
 @synthesize titleLabel;
 @synthesize colorArray;
-
+@synthesize mainframe;
+#define LABEL_HEIGHT 20.0f
 - (id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
@@ -29,24 +36,35 @@
                            RGBCOLOR(251,176,147),
                            RGBCOLOR(136,143,154),nil];
         
-        self.iconView  = [[UIImageView alloc]initWithFrame:CGRectMake((frame.size.height-75)/2, (frame.size.height-75)/2, 75, 75)];
+        self.iconView  = [[UIImageView alloc]initWithFrame:CGRectZero];
         
         self.titleLabel = [[UILabel alloc] init];
         [self.titleLabel setBackgroundColor:[UIColor clearColor]];
-        [self.titleLabel setFrame:CGRectMake(120, (frame.size.height-20)/2 , frame.size.width /2, 20)];
         [self.titleLabel setTextAlignment:NSTextAlignmentCenter];
         [self.titleLabel setTextColor:[UIColor whiteColor]];
         [self.titleLabel setFont:[UIFont boldSystemFontOfSize:20.0f]];
-        
         [self addSubview:self.iconView];
         [self addSubview:self.titleLabel];
+        self.mainframe = frame;
     }
     return self;
 }
 
 - (void)initMetroButton:(UIImage *)image andText:(NSString *)titleString andIndex:(NSUInteger)index
 {
+    if (self.mainframe.size.height < 100) {
+        [self.iconView setFrame:CGRectMake(10, (self.mainframe.size.height-image.size.height)/2, image.size.width, image.size.height)];
+        [self.titleLabel setFrame:CGRectMake(image.size.width+30, (self.mainframe.size.height-LABEL_HEIGHT)/2 , self.mainframe.size.width, LABEL_HEIGHT)];
+        [self.titleLabel setTextAlignment:NSTextAlignmentLeft];
+
+    }else{
+        [self.iconView setFrame:CGRectMake((self.mainframe.size.width-image.size.width)/2, (self.mainframe.size.height-image.size.height)/3*1, image.size.width, image.size.height)];
+        [self.titleLabel setFrame:CGRectMake(0, (self.mainframe.size.height-LABEL_HEIGHT*2) , self.mainframe.size.width, LABEL_HEIGHT)];
+    }
+    
     [self.iconView setImage:image];
+    
+    
     self.titleLabel.text = titleString;
     UIImage *normalImage = [self createImageWithColor:[self.colorArray objectAtIndex:index]];
     UIImage *selectedImage = [self createImageWithColor:RGBCOLOR(195, 195, 195)];

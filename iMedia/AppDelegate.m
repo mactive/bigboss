@@ -219,9 +219,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     
     // Update local data with latest server info
     [self updateMeWithBlock:nil];    
-    //
-    // Creating all the initial controllers
-    //
+    
+    /*
     self.tabController = [[UITabBarController alloc] init];
     
     self.conversationController = [[ConversationsController alloc] init];
@@ -262,19 +261,19 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [self.tabController.tabBar setTintColor:[UIColor grayColor]];
     [self.tabController.tabBar setSelectedImageTintColor:RGBCOLOR(151, 206, 45)];
     [self.tabController.tabBar setSelectionIndicatorImage:[UIImage imageNamed:@"tabbar_overlay.png"]];
-    
+    */
     // mainMenuViewController
 
     self.mainMenuViewController = [[MainMenuViewController alloc]initWithNibName:nil bundle:nil];
     UINavigationController *mainController = [[UINavigationController alloc] initWithRootViewController:self.mainMenuViewController];
-
+    self.mainMenuViewController.managedObjectContext = _managedObjectContext;
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window addSubview:self.mainMenuViewController.view];
     [self.window setRootViewController:mainController];
 
-    [self checkIOSVersion];
+    // [self checkIOSVersion];
     [self.window makeKeyAndVisible];
 }
 
