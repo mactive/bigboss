@@ -169,7 +169,6 @@
 		2640031F1642B45E00A1B779 /* WelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2640031E1642B45E00A1B779 /* WelcomeViewController.m */; };
 		264668B716AD248C003146AA /* BBCustomBackButtonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 264668B616AD248C003146AA /* BBCustomBackButtonViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		264668B916AD25B6003146AA /* back-button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 264668B816AD25B6003146AA /* back-button@2x.png */; };
-		264668BB16AD43C2003146AA /* barbutton_index@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 264668BA16AD43C2003146AA /* barbutton_index@2x.png */; };
 		264668BE16AE6643003146AA /* UserAgreementViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 264668BD16AE6643003146AA /* UserAgreementViewController.m */; };
 		264A389C165DF75200FA0123 /* ShakeDashboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 264A389B165DF75200FA0123 /* ShakeDashboardViewController.m */; };
 		264A389F165DF8D800FA0123 /* TrapezoidLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 264A389E165DF8D800FA0123 /* TrapezoidLabel.m */; };
@@ -193,6 +192,9 @@
 		2692532016353F6E000D7AFB /* POAPinyin.m in Sources */ = {isa = PBXBuildFile; fileRef = 2692531E16353F6E000D7AFB /* POAPinyin.m */; };
 		269DDE071650F21C00320B02 /* WSBubbleData.m in Sources */ = {isa = PBXBuildFile; fileRef = 269DDE061650F21C00320B02 /* WSBubbleData.m */; };
 		269EB9D116522D80000048F7 /* WSBubbleTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 269EB9D016522D80000048F7 /* WSBubbleTableViewCell.m */; };
+		26A2099616B12C4500F52636 /* barbutton_mainmenu@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26A2099516B12C4500F52636 /* barbutton_mainmenu@2x.png */; };
+		26A2099916B12FFF00F52636 /* CompanyListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 26A2099816B12FFF00F52636 /* CompanyListViewController.m */; };
+		26A2099B16B1334900F52636 /* barbutton_notification@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26A2099A16B1334900F52636 /* barbutton_notification@2x.png */; };
 		26A587781649199600009968 /* RateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 26A587771649199600009968 /* RateViewController.m */; };
 		26BA7EF21653908E0094D030 /* WSBubbleTextTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 26BA7EF11653908E0094D030 /* WSBubbleTextTableViewCell.m */; };
 		26BA7EF5165390C00094D030 /* WSBubbleTemplateATableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 26BA7EF4165390C00094D030 /* WSBubbleTemplateATableViewCell.m */; };
@@ -622,7 +624,6 @@
 		264668B516AD248C003146AA /* BBCustomBackButtonViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BBCustomBackButtonViewController.h; path = contrib/BBCustomBackButtonViewController.h; sourceTree = "<group>"; };
 		264668B616AD248C003146AA /* BBCustomBackButtonViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BBCustomBackButtonViewController.m; path = contrib/BBCustomBackButtonViewController.m; sourceTree = "<group>"; };
 		264668B816AD25B6003146AA /* back-button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back-button@2x.png"; sourceTree = "<group>"; };
-		264668BA16AD43C2003146AA /* barbutton_index@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "barbutton_index@2x.png"; sourceTree = "<group>"; };
 		264668BC16AE6643003146AA /* UserAgreementViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UserAgreementViewController.h; path = ViewControllers/Welcome/UserAgreementViewController.h; sourceTree = "<group>"; };
 		264668BD16AE6643003146AA /* UserAgreementViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = UserAgreementViewController.m; path = ViewControllers/Welcome/UserAgreementViewController.m; sourceTree = "<group>"; };
 		264A389A165DF75200FA0123 /* ShakeDashboardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShakeDashboardViewController.h; path = ViewControllers/ShakeView/ShakeDashboardViewController.h; sourceTree = "<group>"; };
@@ -668,6 +669,10 @@
 		269DDE061650F21C00320B02 /* WSBubbleData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WSBubbleData.m; path = WSBubbleData/WSBubbleData.m; sourceTree = "<group>"; };
 		269EB9CF16522D80000048F7 /* WSBubbleTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WSBubbleTableViewCell.h; path = WSBubbleData/WSBubbleTableViewCell.h; sourceTree = "<group>"; };
 		269EB9D016522D80000048F7 /* WSBubbleTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WSBubbleTableViewCell.m; path = WSBubbleData/WSBubbleTableViewCell.m; sourceTree = "<group>"; };
+		26A2099516B12C4500F52636 /* barbutton_mainmenu@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "barbutton_mainmenu@2x.png"; sourceTree = "<group>"; };
+		26A2099716B12FFF00F52636 /* CompanyListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CompanyListViewController.h; path = ViewControllers/CompanyListViewController.h; sourceTree = "<group>"; };
+		26A2099816B12FFF00F52636 /* CompanyListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CompanyListViewController.m; path = ViewControllers/CompanyListViewController.m; sourceTree = "<group>"; };
+		26A2099A16B1334900F52636 /* barbutton_notification@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "barbutton_notification@2x.png"; sourceTree = "<group>"; };
 		26A587761649199600009968 /* RateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RateViewController.h; path = ViewControllers/RateViewController.h; sourceTree = "<group>"; };
 		26A587771649199600009968 /* RateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RateViewController.m; path = ViewControllers/RateViewController.m; sourceTree = "<group>"; };
 		26BA7EF01653908E0094D030 /* WSBubbleTextTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WSBubbleTextTableViewCell.h; path = WSBubbleData/WSBubbleTextTableViewCell.h; sourceTree = "<group>"; };
@@ -1067,12 +1072,13 @@
 				260970921696BAC500D0E785 /* 37x-Checkmark.png */,
 				2637278D16B103C100C77FA4 /* main_menu_icon_5@2x.png */,
 				2637278E16B103C100C77FA4 /* main_menu_icon_4@2x.png */,
+				26A2099A16B1334900F52636 /* barbutton_notification@2x.png */,
 				2637278F16B103C100C77FA4 /* main_menu_icon_3@2x.png */,
 				2637279016B103C100C77FA4 /* main_menu_icon_2@2x.png */,
 				2637279116B103C100C77FA4 /* main_menu_icon_1@2x.png */,
 				2637279216B103C100C77FA4 /* main_menu_icon_0@2x.png */,
-				264668BA16AD43C2003146AA /* barbutton_index@2x.png */,
 				264668B816AD25B6003146AA /* back-button@2x.png */,
+				26A2099516B12C4500F52636 /* barbutton_mainmenu@2x.png */,
 				260970931696BAC500D0E785 /* 37x-Checkmark@2x.png */,
 				260970941696BAC500D0E785 /* add_icon@2x.png */,
 				260970951696BAC500D0E785 /* arraw_icon@2x.png */,
@@ -2136,6 +2142,8 @@
 				56B4CD551628126A00E046CC /* WelcomeScreenPart */,
 				260971951696BCFE00D0E785 /* MemoViewController.h */,
 				260971961696BCFE00D0E785 /* MemoViewController.m */,
+				26A2099716B12FFF00F52636 /* CompanyListViewController.h */,
+				26A2099816B12FFF00F52636 /* CompanyListViewController.m */,
 				260971971696BCFE00D0E785 /* PrivacyLoginViewController.h */,
 				260971981696BCFE00D0E785 /* PrivacyLoginViewController.m */,
 				260971991696BCFE00D0E785 /* PrivacyViewController.h */,
@@ -2535,13 +2543,14 @@
 				260971891696BAC500D0E785 /* welcome_title@2x.png in Resources */,
 				2612418E1696C4F7003A2D59 /* SinaWeibo.bundle in Resources */,
 				264668B916AD25B6003146AA /* back-button@2x.png in Resources */,
-				264668BB16AD43C2003146AA /* barbutton_index@2x.png in Resources */,
 				2637279316B103C100C77FA4 /* main_menu_icon_5@2x.png in Resources */,
 				2637279416B103C100C77FA4 /* main_menu_icon_4@2x.png in Resources */,
 				2637279516B103C100C77FA4 /* main_menu_icon_3@2x.png in Resources */,
 				2637279616B103C100C77FA4 /* main_menu_icon_2@2x.png in Resources */,
 				2637279716B103C100C77FA4 /* main_menu_icon_1@2x.png in Resources */,
 				2637279816B103C100C77FA4 /* main_menu_icon_0@2x.png in Resources */,
+				26A2099616B12C4500F52636 /* barbutton_mainmenu@2x.png in Resources */,
+				26A2099B16B1334900F52636 /* barbutton_notification@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2782,6 +2791,7 @@
 				264668BE16AE6643003146AA /* UserAgreementViewController.m in Sources */,
 				2637277A16AE8CE100C77FA4 /* RegisterViewController.m in Sources */,
 				2637278C16B0E57A00C77FA4 /* MainMenuViewController.m in Sources */,
+				26A2099916B12FFF00F52636 /* CompanyListViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

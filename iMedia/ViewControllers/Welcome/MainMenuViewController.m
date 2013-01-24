@@ -8,11 +8,25 @@
 
 #import "MainMenuViewController.h"
 #import "MetroButton.h"
+#import <QuartzCore/QuartzCore.h>
 
+#import "DDLog.h"
+// Log levels: off, error, warn, info, verbose
+#if DEBUG
+static const int ddLogLevel = LOG_LEVEL_VERBOSE;
+#else
+static const int ddLogLevel = LOG_LEVEL_OFF;
+#endif
+@interface MainMenuViewController ()<UITableViewDataSource,UITableViewDelegate,UISearchBarDelegate>
 
-@interface MainMenuViewController ()
 @property(nonatomic, strong)NSArray *menuTitleArray;
 @property(strong, nonatomic)UIView *menuView;
+@property(strong, nonatomic)CATransition* transition;
+@property(strong, nonatomic)UISearchBar *searchBar;
+@property(strong, nonatomic)UIButton *barButton;
+@property(strong, nonatomic)UITableView *searchTableView;
+@property(strong, nonatomic)NSArray *dataArray;
+@property(strong, nonatomic)NSMutableArray *fetchArray;
 
 @end
 
@@ -23,12 +37,26 @@
 @synthesize contactListViewController;
 @synthesize functionListViewController;
 @synthesize settingViewController;
+@synthesize companyListViewController;
+@synthesize transition;
+@synthesize searchTableView;
+@synthesize searchBar;
+@synthesize barButton;
+@synthesize dataArray;
+@synthesize fetchArray;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        self.barButton = [[UIButton alloc] init];
+        self.barButton.frame=CGRectMake(0, 0, 50, 29);
+        [self.barButton setBackgroundImage:[UIImage imageNamed: @"barbutton_bg.png"] forState:UIControlStateNormal];
+        [self.barButton setTitle:T(@"返回") forState:UIControlStateNormal];
+        [self.barButton.titleLabel setFont:[UIFont boldSystemFontOfSize:14.0]];
+        [self.barButton addTarget:self action:@selector(cancelSearchAction) forControlEvents:UIControlEventTouchUpInside];
+        [self.navigationItem setHidesBackButton:YES];
     }
     return self;
 }
@@ -106,30 +134,181 @@
         }
         [self.view addSubview:button];
     }
+    
+    // init all viewcontroller
+    [self initViewControllers];
+    [self initSearchTableView];
+    // transition animation
+    self.transition = [CATransition animation];
+    self.transition.duration = 0.3;
+    self.transition.type = kCATransitionFade;
+    self.transition.timingFunction = UIViewAnimationCurveEaseInOut;
+    self.transition.subtype = kCATransitionFromLeft;
+}
+
+- (void)initViewControllers
+{
+    self.conversationController = [[ConversationsController alloc] initWithStyle:UITableViewStylePlain];
+    self.conversationController.managedObjectContext = self.managedObjectContext;
+    
+    self.contactListViewController = [[ContactListViewController alloc] initWithNibName:nil bundle:nil];
+    self.contactListViewController.managedObjectContext = self.managedObjectContext;
+    
+    self.functionListViewController = [[FunctionListViewController alloc]initWithNibName:nil bundle:nil];
+    self.functionListViewController.managedObjectContext = self.managedObjectContext;
+    
+    self.settingViewController = [[SettingViewController alloc]initWithNibName:nil bundle:nil];
+    self.settingViewController.managedObjectContext = self.managedObjectContext;
+    
+    self.companyListViewController = [[CompanyListViewController alloc] initWithStyle:UITableViewStylePlain];
+    self.companyListViewController.managedObjectContext = self.managedObjectContext;
+
+}
+
+- (void)initSearchTableView
+{
+    // uisearchbar
+    self.searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0, 0, 320, 40)];
+    self.searchBar.delegate = self;
+    self.searchBar.tintColor = RGBCOLOR(170, 170, 170);
+    self.searchBar.showsCancelButton = YES;
+    
+    UIButton *cancelButton = nil;
+    for(id subView in self.searchBar.subviews){
+        if([subView isKindOfClass:[UIButton class]]){
+            cancelButton = (UIButton*)subView;
+        }
+    }
+    [cancelButton setTitle:@"搜索" forState:UIControlStateNormal];
+    
+    // table
+    self.dataArray = [[NSArray alloc]init];
+    self.searchTableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
+    [self.view addSubview:self.searchTableView];
+    self.searchTableView.dataSource = self;
+    self.searchTableView.delegate = self;
+    self.searchTableView.tableHeaderView = self.searchBar;
+
+    [self.searchTableView setHidden:YES];
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark uisearchbar delegate
+//////////////////////////////////////////////////////////////////////////////////////////
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
+{
+    DDLogVerbose(@"%@",searchBar.text);
+    if (StringHasValue(searchBar.text)) {
+        // post to search to display
+        self.fetchArray = [[NSMutableArray alloc]initWithObjects:@"mac",@"tube",@"google",@"ttu",@"bob",@"mhanzi", nil];
+        NSMutableArray *tmp = [[NSMutableArray alloc]init];
+        for (int i = 0 ; i< [self.fetchArray count]; i++  ) {
+            
+            NSString *name = [self.fetchArray objectAtIndex:i];
+            
+            NSRange range = [name rangeOfString:searchBar.text];
+            
+            if (range.location != NSNotFound)
+            {
+                [tmp addObject:name];
+            }
+            
+        }
+        self.dataArray = [[NSArray alloc]initWithArray:tmp];
+        [self.searchTableView reloadData];
+    }
+
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark tablevie delegate
+//////////////////////////////////////////////////////////////////////////////////////////
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return [self.dataArray count];
+}
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 50.0f;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *CellIdentifier = @"CompanySearchCell";
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+
+    if (cell == nil) {
+        cell = [self tableViewCellWithReuseIdentifier:CellIdentifier];
+    }
+    
+    [self configureCell:cell forIndexPath:indexPath];
+
+    return cell;
+}
+- (UITableViewCell *)tableViewCellWithReuseIdentifier:(NSString *)identifier
+{
+    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
+    return cell;
+}
+
+- (void)configureCell:(UITableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath
+{
+    cell.textLabel.text = [self.dataArray objectAtIndex:indexPath.row];
+
 }
 //////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark actions
 //////////////////////////////////////////////////////////////////////////////////////////
+- (void)searchAction
+{
+    [self.searchTableView setHidden:NO];
+    [self.searchBar becomeFirstResponder];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.barButton];
+}
+
+- (void)cancelSearchAction
+{
+    [self.searchTableView setHidden:YES];
+    [self.searchBar resignFirstResponder];
+    self.navigationItem.rightBarButtonItem = nil;
+}
+
 - (void)conversationAction
 {
-    self.conversationController = [[ConversationsController alloc] initWithStyle:UITableViewStylePlain];
-    self.conversationController.managedObjectContext = self.managedObjectContext;
-
+    [self.navigationController.view.layer addAnimation:self.transition forKey:kCATransition];
     [self.navigationController pushViewController:self.conversationController animated:NO];
 }
 
 - (void)contactAction
 {
-    self.contactListViewController = [[ContactListViewController alloc] initWithNibName:nil bundle:nil];
-    self.contactListViewController.managedObjectContext = self.managedObjectContext;
+
+    [self.navigationController.view.layer addAnimation:self.transition forKey:kCATransition];
     [self.navigationController pushViewController:self.contactListViewController animated:NO];
+    
 }
 
 - (void)functionAction
 {
-    self.functionListViewController = [[FunctionListViewController alloc]initWithNibName:nil bundle:nil];
-    self.functionListViewController.managedObjectContext = self.managedObjectContext;
+
+    [self.navigationController.view.layer addAnimation:self.transition forKey:kCATransition];
     [self.navigationController pushViewController:self.functionListViewController animated:NO];
+}
+- (void)settingAction
+{
+    [self.navigationController.view.layer addAnimation:self.transition forKey:kCATransition];
+    [self.navigationController pushViewController:self.settingViewController animated:NO];
+}
+- (void)companyAction
+{
+    [self.navigationController.view.layer addAnimation:self.transition forKey:kCATransition];
+    [self.navigationController pushViewController:self.companyListViewController animated:NO];
 }
 
 

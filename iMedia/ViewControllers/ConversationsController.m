@@ -110,7 +110,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         // Custom initialization
         self.barButton = [[UIButton alloc] init];
         self.barButton.frame=CGRectMake(0, 0, 50, 29);
-        [self.barButton setBackgroundImage:[UIImage imageNamed: @"barbutton_index.png"] forState:UIControlStateNormal];
+        [self.barButton setBackgroundImage:[UIImage imageNamed: @"barbutton_mainmenu.png"] forState:UIControlStateNormal];
         [self.barButton addTarget:self action:@selector(mainMenuAction) forControlEvents:UIControlEventTouchUpInside];
         [self.navigationItem setHidesBackButton:YES];
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.barButton];
