@@ -347,7 +347,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     WebViewController *controller = [[WebViewController alloc]initWithNibName:nil bundle:nil];
     [controller setHidesBottomBarWhenPushed:YES];
     controller.titleString = T(@"用户协议");
-    controller.urlString = @"http://113.11.199.42/ota/user_agreement.html";
+    controller.urlString = @"http://www.wingedstone.com/user_agreement.html";
     [self.navigationController pushViewController:controller animated:YES];
 }
 
