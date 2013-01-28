@@ -14,6 +14,7 @@
 #import "Me.h"
 #import "Channel.h"
 #import "Me.h"
+#import "Identity.h"
 #import "ConversationsController.h"
 #import "AddFriendController.h"
 #import "AddFriendByIDController.h"

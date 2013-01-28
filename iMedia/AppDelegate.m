@@ -121,12 +121,9 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         [self startIntroSession];
     } else if ([fetchedUsers count] == 1) {
         self.me = [fetchedUsers objectAtIndex:0];
-        if (!StringHasValue(self.me.displayName) || !StringHasValue(self.me.gender)) {
-            [self startIntroSession];
-        } else {
             [self connect];
             [self startMainSession];
-        }
+
     } else {
         DDLogVerbose(@"%@: %@ multiple ME instance", THIS_FILE, THIS_METHOD);
     }

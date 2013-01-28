@@ -70,6 +70,15 @@ extern NSString *const kXMPPmyUsername;
 // op15 获取摇一摇活动列表
 - (void)getShakeDashboardInfoWithBlock:(void (^)(id, NSError *))block;
 
+// op33
+- (void)getCompanyWithName:(NSString *)name withBlock:(void (^)(id, NSError *))block;
+// op35 公司分类列表 分类名称, 数量
+- (void)getCompanyCategoryWithBlock:(void (^)(id, NSError *))block;
+// op37 按分类请求公司 codename
+- (void)getCompanyWithCategory:(NSString *)codename withBlock:(void(^)(id, NSError *))block;
+// op39 公司的详细信息 by cid
+- (void)getcompanyWithCatID:(NSString *)catID withBlock:(void(^)(id, NSError *))block;
+
 // op22 上传devicetoken
 - (void)postDeviceToken;
 

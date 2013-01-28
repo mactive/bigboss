@@ -9,6 +9,7 @@
 #import "MainMenuViewController.h"
 #import "MetroButton.h"
 #import <QuartzCore/QuartzCore.h>
+#import "AppNetworkAPIClient.h"
 
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
@@ -17,7 +18,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 #else
 static const int ddLogLevel = LOG_LEVEL_OFF;
 #endif
-@interface MainMenuViewController ()<UITableViewDataSource,UITableViewDelegate,UISearchBarDelegate>
+@interface MainMenuViewController ()<UITableViewDataSource,UITableViewDelegate,UISearchBarDelegate,UITextFieldDelegate>
 
 @property(nonatomic, strong)NSArray *menuTitleArray;
 @property(strong, nonatomic)UIView *menuView;
@@ -25,9 +26,9 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @property(strong, nonatomic)UISearchBar *searchBar;
 @property(strong, nonatomic)UIButton *barButton;
 @property(strong, nonatomic)UITableView *searchTableView;
-@property(strong, nonatomic)NSArray *dataArray;
+@property(strong, nonatomic)NSArray *sourceData;
 @property(strong, nonatomic)NSMutableArray *fetchArray;
-
+@property(strong, nonatomic)NSMutableDictionary *fetchDict;
 @end
 
 @implementation MainMenuViewController
@@ -42,8 +43,10 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @synthesize searchTableView;
 @synthesize searchBar;
 @synthesize barButton;
-@synthesize dataArray;
+@synthesize sourceData;
 @synthesize fetchArray;
+@synthesize fetchDict;
+@synthesize managedObjectContext = _managedObjectContext;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -144,6 +147,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     self.transition.type = kCATransitionFade;
     self.transition.timingFunction = UIViewAnimationCurveEaseInOut;
     self.transition.subtype = kCATransitionFromLeft;
+    self.fetchArray = [[NSMutableArray alloc]init];
+    self.fetchDict = [[NSMutableDictionary alloc]init];
 }
 
 - (void)initViewControllers
@@ -182,7 +187,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [cancelButton setTitle:@"搜索" forState:UIControlStateNormal];
     
     // table
-    self.dataArray = [[NSArray alloc]init];
+    self.sourceData = [[NSArray alloc]init];
     self.searchTableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
     [self.view addSubview:self.searchTableView];
     self.searchTableView.dataSource = self;
@@ -192,6 +197,22 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [self.searchTableView setHidden:YES];
 }
 
+
+- (void)populateData:(NSString *)keyword
+{
+    [[AppNetworkAPIClient sharedClient]getCompanyWithName:keyword withBlock:^(id responseObject, NSError *error) {
+        //
+        if (responseObject) {
+            self.fetchDict = responseObject;
+            self.sourceData = [self.fetchDict allValues];
+            [self.searchTableView reloadData];
+        }else{
+            
+        }
+    }];
+}
+
+
 //////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark uisearchbar delegate
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -200,24 +221,17 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     DDLogVerbose(@"%@",searchBar.text);
     if (StringHasValue(searchBar.text)) {
         // post to search to display
-        self.fetchArray = [[NSMutableArray alloc]initWithObjects:@"mac",@"tube",@"google",@"ttu",@"bob",@"mhanzi", nil];
-        NSMutableArray *tmp = [[NSMutableArray alloc]init];
-        for (int i = 0 ; i< [self.fetchArray count]; i++  ) {
-            
-            NSString *name = [self.fetchArray objectAtIndex:i];
-            
-            NSRange range = [name rangeOfString:searchBar.text];
-            
-            if (range.location != NSNotFound)
-            {
-                [tmp addObject:name];
-            }
-            
-        }
-        self.dataArray = [[NSArray alloc]initWithArray:tmp];
-        [self.searchTableView reloadData];
+        [self populateData:searchBar.text];
     }
+}
 
+-(void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+{
+    DDLogVerbose(@"%@",searchBar.text);
+    if (StringHasValue(searchBar.text)) {
+        // post to search to display
+        [self populateData:searchBar.text];
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -229,7 +243,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.dataArray count];
+    return [self.sourceData count];
 }
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -260,7 +274,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 - (void)configureCell:(UITableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
-    cell.textLabel.text = [self.dataArray objectAtIndex:indexPath.row];
+    NSDictionary *dataDict = [self.sourceData objectAtIndex:indexPath.row];
+    cell.textLabel.text = [dataDict objectForKey:@"company_name"];
 
 }
 //////////////////////////////////////////////////////////////////////////////////////////

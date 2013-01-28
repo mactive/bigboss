@@ -907,6 +907,36 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 }
 
 
+// 关键字搜索公司
+- (void)getCompanyWithName:(NSString *)name withBlock:(void (^)(id, NSError *))block
+{
+    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: name, @"kw", @"33", @"op", nil];
+    NSMutableURLRequest *getRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"GET" path:GET_DATA_PATH parameters:getDict];
+    AFHTTPRequestOperation *getOperation = [[AppNetworkAPIClient sharedClient]HTTPRequestOperationWithRequest:getRequest success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        //
+        DDLogVerbose(@"getCompanyWithName: %@", responseObject);
+        
+        NSString* type = [responseObject valueForKey:@"type"];
+        
+        if (![@"error" isEqualToString:type]) {
+            if (block) {
+                block (responseObject, nil);
+            }
+        } else {
+            if (block) {
+                NSError *error = [[NSError alloc] initWithDomain:@"wingedstone.com" code:403 userInfo:nil];
+                block (nil, error);
+            }
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        if (block) {
+            block (nil, error);
+        }
+    }];
+    [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:getOperation];
+
+}
+
 
 // 频道列表
 - (void)getChannelListWithBlock:(void (^)(id, NSError *))block

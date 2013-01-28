@@ -150,8 +150,9 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
                 if (responseObject != nil) {
                     [XFox endTimedEvent:EVENT_LOGIN_TIMER withParameters:nil];
                     
-                    MainMenuViewController *mainMenuController = [[MainMenuViewController alloc]initWithNibName:nil bundle:nil];
-                    [self.navigationController pushViewController:mainMenuController animated:YES];
+                    // 进入mainmenu
+                    [[self appDelegate] startMainSession];
+
                 } else {
                     [XFox endTimedEvent:EVENT_LOGIN_TIMER withParameters:[NSDictionary dictionaryWithObjectsAndKeys:@"failure", @"status", error, @"error", nil]];
                     [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:[responseObject valueForKey:@"status"] andHideAfterDelay:2];
