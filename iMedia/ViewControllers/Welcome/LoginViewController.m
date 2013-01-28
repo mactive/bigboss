@@ -134,7 +134,6 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         if (responseObject!= nil &&  error == nil) {
             NSString* barejid = [responseObject valueForKey:@"jid"];
             NSString *jPassword = [responseObject valueForKey:@"jpass"];
-            NSString *returnPassword = [responseObject valueForKey:@"pwd"];
             NSString *guid= [[responseObject valueForKey:@"guid"] stringValue];
             NSString *fulljid = [NSString stringWithFormat:@"%@/%@", barejid, guid];
                         
@@ -143,7 +142,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
                 DDLogVerbose(@"%@: %@ cannot connect to XMPP server", THIS_FILE, THIS_METHOD);
             }
             
-            [[self appDelegate] createMeAndOtherOneTimeObjectsWithUsername:usernameField.text password:returnPassword jid:fulljid jidPasswd:jPassword andGUID:guid withBlock:^(id responseObject, NSError *error) {
+            [[self appDelegate] createMeAndOtherOneTimeObjectsWithUsername:usernameField.text password:passwordField.text jid:fulljid jidPasswd:jPassword andGUID:guid withBlock:^(id responseObject, NSError *error) {
             
                 [HUD hide:YES];
                 

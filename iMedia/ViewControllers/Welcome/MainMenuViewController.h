@@ -11,7 +11,7 @@
 #import "ContactListViewController.h"
 #import "FunctionListViewController.h"
 #import "SettingViewController.h"
-#import "CompanyListViewController.h"
+#import "CompanyCategoryViewController.h"
 
 @interface MainMenuViewController : UIViewController
 
@@ -19,7 +19,7 @@
 @property(strong, nonatomic) ContactListViewController *contactListViewController;
 @property(strong, nonatomic) FunctionListViewController *functionListViewController;
 @property(strong, nonatomic) SettingViewController *settingViewController;
-@property(strong, nonatomic) CompanyListViewController *companyListViewController;
+@property(strong, nonatomic) CompanyCategoryViewController *companyCategoryViewController;
 @property(strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
 @end

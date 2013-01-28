@@ -10,7 +10,8 @@
 #import "MetroButton.h"
 #import <QuartzCore/QuartzCore.h>
 #import "AppNetworkAPIClient.h"
-
+#import "MBProgressHUD.h"
+#import "ConvenienceMethods.h"
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -38,7 +39,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @synthesize contactListViewController;
 @synthesize functionListViewController;
 @synthesize settingViewController;
-@synthesize companyListViewController;
+@synthesize companyCategoryViewController;
 @synthesize transition;
 @synthesize searchTableView;
 @synthesize searchBar;
@@ -114,9 +115,6 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         NSString *image = [NSString stringWithFormat:@"main_menu_icon_%d.png",index];
         [button initMetroButton:[UIImage imageNamed:image] andText:title andIndex:index];
         
-        //        if (index == 0) {
-        //            [button addTarget:self action:@selector(sayhiAction) forControlEvents:UIControlEventTouchUpInside];
-        //        }
         if (index == 0) {
             [button addTarget:self action:@selector(searchAction) forControlEvents:UIControlEventTouchUpInside];
         }
@@ -165,9 +163,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     self.settingViewController = [[SettingViewController alloc]initWithNibName:nil bundle:nil];
     self.settingViewController.managedObjectContext = self.managedObjectContext;
     
-    self.companyListViewController = [[CompanyListViewController alloc] initWithStyle:UITableViewStylePlain];
-    self.companyListViewController.managedObjectContext = self.managedObjectContext;
-
+    self.companyCategoryViewController = [[CompanyCategoryViewController alloc] initWithNibName:nil bundle:nil];
 }
 
 - (void)initSearchTableView
@@ -177,7 +173,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     self.searchBar.delegate = self;
     self.searchBar.tintColor = RGBCOLOR(170, 170, 170);
     self.searchBar.showsCancelButton = YES;
-    
+    self.searchBar.placeholder = T(@"搜索公司");
+
     UIButton *cancelButton = nil;
     for(id subView in self.searchBar.subviews){
         if([subView isKindOfClass:[UIButton class]]){
@@ -197,17 +194,34 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [self.searchTableView setHidden:YES];
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark populatedata
+//////////////////////////////////////////////////////////////////////////////////////////
 
 - (void)populateData:(NSString *)keyword
 {
-    [[AppNetworkAPIClient sharedClient]getCompanyWithName:keyword withBlock:^(id responseObject, NSError *error) {
+    [self.searchBar resignFirstResponder];
+    
+    MBProgressHUD* HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    HUD.removeFromSuperViewOnHide = YES;
+    HUD.labelText = T(@"正在加载");
+    
+    [[AppNetworkAPIClient sharedClient]getCompanyWithName:keyword withBlock:^(id responseDict, NSError *error) {
         //
-        if (responseObject) {
-            self.fetchDict = responseObject;
-            self.sourceData = [self.fetchDict allValues];
-            [self.searchTableView reloadData];
+        [HUD hide:YES];
+
+        if (responseDict != nil) {
+            if([responseDict count] == 0) {
+                [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"没有符合的数据") andHideAfterDelay:1];
+                self.sourceData = [[NSArray alloc]init];
+                [self.searchTableView reloadData];
+            }else{
+                self.fetchDict = responseDict;
+                self.sourceData = [self.fetchDict allValues];
+                [self.searchTableView reloadData];
+            }
         }else{
-            
+            [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"网络错误 暂时无法刷新") andHideAfterDelay:1];
         }
     }];
 }
@@ -323,7 +337,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 - (void)companyAction
 {
     [self.navigationController.view.layer addAnimation:self.transition forKey:kCATransition];
-    [self.navigationController pushViewController:self.companyListViewController animated:NO];
+    [self.navigationController pushViewController:self.companyCategoryViewController animated:NO];
 }
 
 

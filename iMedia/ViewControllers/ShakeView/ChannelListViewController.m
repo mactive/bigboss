@@ -311,7 +311,7 @@ NSInteger intSort2(id num1, id num2, void *context)
         HUD.removeFromSuperViewOnHide = YES;
         
         [[AppNetworkAPIClient sharedClient] getPath:GET_DATA_PATH parameters:getDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
-            DDLogVerbose(@"get config JSON received: %@", responseObject);
+            DDLogVerbose(@"get dict: %@", responseObject);
             
             [HUD hide:YES];
             NSString* type = [responseObject valueForKey:@"type"];
