@@ -362,7 +362,12 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     UIViewSetFrameY(messageInputBar, self.view.frame.size.height - messageInputBar.frame.size.height);
     
     self.keyboardBoundHeight = 0;
+
     [self scrollToBottomBubble:YES];
+    
+    [self.swipeView removeGestureRecognizer:self.swipeGestureRecognizer];
+    [self.swipeView removeGestureRecognizer:self.tapGestureRecognizer];
+    [self.swipeView removeFromSuperview];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -407,9 +412,9 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 }
 
 - (void)keyboardWillHide:(NSNotification*)notification {
-    [self.swipeView removeFromSuperview];
     [self.swipeView removeGestureRecognizer:self.swipeGestureRecognizer];
     [self.swipeView removeGestureRecognizer:self.tapGestureRecognizer];
+    [self.swipeView removeFromSuperview];
 
     NSTimeInterval animationDuration;
     UIViewAnimationCurve animationCurve;

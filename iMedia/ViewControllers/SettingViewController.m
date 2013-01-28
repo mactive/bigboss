@@ -98,7 +98,7 @@
                               nil ];
     //,@"我的相册",@"新浪微博",@"微信朋友圈"
     
-    CGRect rect = CGRectMake(0, 0, 320, 370);
+    CGRect rect = CGRectMake(0, 0, 320, self.view.bounds.size.height-90);
     self.settingTableView = [[UITableView alloc] initWithFrame:rect style:UITableViewStyleGrouped];
     self.settingTableView.dataSource = self;
     self.settingTableView.delegate = self;

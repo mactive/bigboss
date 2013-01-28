@@ -75,9 +75,17 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
+    
     if ([passwordField isEqual:textField]) {
         [self loginAction:nil];
         return [textField resignFirstResponder];
+    }
+    
+    if (StringHasValue(self.passwordField.text) && StringHasValue(self.usernameField.text)) {
+        if ([passwordField isEqual:textField]) {
+            [self loginAction:nil];
+            return [textField resignFirstResponder];
+        }
     }
 }
 
@@ -103,6 +111,9 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 - (void)loginAction:(id)sender
 {
+    if (!StringHasValue(self.passwordField.text) || !StringHasValue(self.usernameField.text)) {
+        return ;
+    }
     if (self.handle != nil) {
         if ([self.handle isKindOfClass:[UITextField class]]) {
             [(UITextField *)self.handle resignFirstResponder];

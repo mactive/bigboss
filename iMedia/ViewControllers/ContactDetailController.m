@@ -65,8 +65,8 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
 @property (strong, nonatomic) UIButton *cancelButton;
 @property (strong, nonatomic) UIButton *helloButton;
 @property (strong, nonatomic) UIButton *friendReqestStateButton;
-
-
+@property (strong, nonatomic) NSMutableArray *albumButtonArray;
+@property (readwrite, nonatomic) NSUInteger albumCount;
 
 
 // could contain ImageRemote object or NSString for url
@@ -123,6 +123,7 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
 @synthesize cancelButton;
 @synthesize friendReqestStateButton;
 @synthesize helloButton;
+@synthesize albumButtonArray;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -188,6 +189,20 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
 ////////////////////////////////////////////////////////////////////////////////
 #pragma mark -  ablum view
 ////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - actionsheet when add album
+/////////////////////////////////////////////////////////////////////////////////////////
+#define MAX_ALBUN_COUNT 8
+#define VIEW_ALBUM_WIDTH 75
+#define VIEW_ALBUM_WIDTH 75
+#define VIEW_ALBUM_OFFSET 2.5
+
+- (CGRect)calcRect:(NSInteger)index
+{
+    CGFloat x = VIEW_ALBUM_OFFSET * (index % 4 * 2 + 1) + VIEW_ALBUM_WIDTH * (index % 4) ;
+    CGFloat y = VIEW_ALBUM_OFFSET * (floor(index / 4) * 2 + 1) + VIEW_ALBUM_WIDTH * floor(index / 4);
+    return  CGRectMake( x, y, VIEW_ALBUM_WIDTH, VIEW_ALBUM_WIDTH);
+}
 
 - (void)initAlbumView
 {
@@ -196,73 +211,17 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
     [self.albumView addSubview:albumViewBg];
     
     UIButton *albumButton;
-    
-    if (self.user != nil) {
-        self.albumArray = [[NSMutableArray alloc] initWithArray:[self.user getOrderedNonNilImages]];
-        
-        for (int i = 0; i< [self.albumArray count]; i++) {
-            albumButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-            ImageRemote* remote = [self.albumArray objectAtIndex:i];
-            
-            [[AppNetworkAPIClient sharedClient] loadImage:remote.imageThumbnailURL withBlock:^(UIImage *image, NSError *error) {
-                if (image) {
-                    [albumButton setImage:image forState:UIControlStateNormal];
-                }
-            }];
+    self.albumButtonArray = [[NSMutableArray alloc] init];
 
-            [albumButton setFrame:CGRectMake(VIEW_ALBUM_OFFSET * (i%4*2 + 1) + VIEW_ALBUM_WIDTH * (i%4), VIEW_ALBUM_OFFSET * (floor(i/4)*2+1) + VIEW_ALBUM_WIDTH * floor(i/4), VIEW_ALBUM_WIDTH, VIEW_ALBUM_WIDTH)];
-            [albumButton.layer setMasksToBounds:YES];
-            [albumButton.layer setCornerRadius:3.0];
-            albumButton.tag = i;
-            
-            [albumButton addTarget:self action:@selector(albumClick:) forControlEvents:UIControlEventTouchUpInside];
-            
-            [self.albumView addSubview:albumButton];
-        }
-    } else {
-        self.albumArray = [NSMutableArray arrayWithCapacity:8];
-                           
-        NSMutableDictionary *imageURLDict = [[NSMutableDictionary alloc] initWithCapacity:8];
-        for (int i = 1; i <=8; i++) {
-            NSString *key = [NSString stringWithFormat:@"avatar%d", i];
-            NSString *url = [ServerDataTransformer getStringObjFromServerJSON:self.jsonData byName:key];
-            if (url != nil && ![url isEqualToString:@""]) {
-                [imageURLDict setValue:url forKey:[NSString stringWithFormat:@"%d", i]];
-            }
-        }
-        NSMutableDictionary *imageThumbnailURLDict = [[NSMutableDictionary alloc] initWithCapacity:8];
-        for (int i = 1; i <=8; i++) {
-            NSString *key = [NSString stringWithFormat:@"thumbnail%d", i];
-            NSString *url = [ServerDataTransformer getStringObjFromServerJSON:self.jsonData byName:key];
-            if (url != nil && ![url isEqualToString:@""]) {
-                [imageThumbnailURLDict setValue:url forKey:[NSString stringWithFormat:@"%d", i]];
-            }
-        }
-        for (int i = 1; i <= 8 ; i++) {
-            NSString *key = [NSString stringWithFormat:@"%d", i];
-            if ([imageURLDict objectForKey:key] != nil && [imageThumbnailURLDict objectForKey:key] != nil) {
-                NSString* imageThumbnailURL = [imageThumbnailURLDict objectForKey:key];
-                albumButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-                
-                [[AppNetworkAPIClient sharedClient] loadImage:imageThumbnailURL withBlock:^(UIImage *image, NSError *error) {
-                    if (image) {
-                        [albumButton setImage:image forState:UIControlStateNormal];
-                    }
-                }];
-                
-                int pos = i - 1;
-                [albumButton setFrame:CGRectMake(VIEW_ALBUM_OFFSET * (pos%4*2 + 1) + VIEW_ALBUM_WIDTH * (pos%4), VIEW_ALBUM_OFFSET * (floor(pos/4)*2+1) + VIEW_ALBUM_WIDTH * floor(pos/4), VIEW_ALBUM_WIDTH, VIEW_ALBUM_WIDTH)];
-                [albumButton.layer setMasksToBounds:YES];
-                [albumButton.layer setCornerRadius:3.0];
-                albumButton.tag = i - 1;
-                [albumButton addTarget:self action:@selector(albumClick:) forControlEvents:UIControlEventTouchUpInside];
-                
-                [self.albumView addSubview:albumButton];                
-                [self.albumArray setObject:[imageURLDict objectForKey:key] atIndexedSubscript:(i-1)];
-            } else {
-                [self.albumArray setObject:@"" atIndexedSubscript:(i-1)];
-            }
-        }
+    for (int i = 0; i< MAX_ALBUN_COUNT; i++) {
+        albumButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [albumButton setFrame:[self calcRect:i]];
+        [albumButton.layer setMasksToBounds:YES];
+        [albumButton.layer setCornerRadius:3.0];
+        albumButton.tag = i ;
+        
+        [self.albumView addSubview:albumButton];
+        [self.albumButtonArray addObject:albumButton];
     }
     
     [self.contentView addSubview:self.albumView];
@@ -271,7 +230,75 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
 
 - (void)refreshAlbumView
 {
-    
+    self.albumCount = 0;
+    // 从我的联系人进来
+    if (self.user != nil) {
+        NSArray *avatars = [[NSMutableArray alloc] initWithArray:[self.user getOrderedImages]];
+        self.albumArray = [[NSMutableArray alloc]init];
+        for (int i = 0; i< [avatars count]; i++) {
+            ImageRemote* avatar = [avatars objectAtIndex:i];
+            
+            if (StringHasValue(avatar.imageThumbnailURL) && StringHasValue(avatar.imageURL)) {
+                UIButton *albumButton = [self.albumButtonArray objectAtIndex:self.albumCount];
+                
+                [[AppNetworkAPIClient sharedClient] loadImage:avatar.imageThumbnailURL withBlock:^(UIImage *image, NSError *error){
+                    if (image) {
+                        [albumButton setImage:image forState:UIControlStateNormal];
+                    }}];
+                
+                [albumButton setHidden:NO];
+#warning  avatar can't pass to albumView so use avatar.imageURl
+                [self.albumArray setObject:avatar.imageURL atIndexedSubscript:self.albumCount];
+                [albumButton addTarget:self action:@selector(albumClick:) forControlEvents:UIControlEventTouchUpInside];
+                self.albumCount += 1;
+            }else{
+                int index = [avatars count] - (i - self.albumCount) - 1;
+                UIButton *albumButton = [self.albumButtonArray objectAtIndex:index];
+                [albumButton setHidden:YES];
+            }
+        }
+    }
+    // 从附近的人进来
+    else{
+        self.albumArray = [NSMutableArray arrayWithCapacity:MAX_ALBUN_COUNT];
+        NSMutableDictionary *imageURLDict = [[NSMutableDictionary alloc] initWithCapacity:MAX_ALBUN_COUNT];
+        NSMutableDictionary *imageThumbnailURLDict = [[NSMutableDictionary alloc] initWithCapacity:MAX_ALBUN_COUNT];
+        for (int i = 1; i <= MAX_ALBUN_COUNT; i++) {
+            NSString *avatarKey = [NSString stringWithFormat:@"avatar%d", i];
+            NSString *avatarUrl = [ServerDataTransformer getStringObjFromServerJSON:self.jsonData byName:avatarKey];
+            if (avatarUrl != nil && ![avatarUrl isEqualToString:@""]) {
+                [imageURLDict setValue:avatarUrl forKey:[NSString stringWithFormat:@"%d", i]];
+            }
+            
+            NSString *thumbnailKey = [NSString stringWithFormat:@"thumbnail%d", i];
+            NSString *thumbnailUrl = [ServerDataTransformer getStringObjFromServerJSON:self.jsonData byName:thumbnailKey];
+            if (thumbnailUrl != nil && ![thumbnailUrl isEqualToString:@""]) {
+                [imageThumbnailURLDict setValue:thumbnailUrl forKey:[NSString stringWithFormat:@"%d", i]];
+            }
+        }
+        
+        for (int i = 1; i <= 8 ; i++) {
+            NSString *key = [NSString stringWithFormat:@"%d", i];
+            NSString* imageThumbnailURL = [imageThumbnailURLDict objectForKey:key];
+            UIButton *albumButton = [self.albumButtonArray objectAtIndex:i-1];
+
+            if ( StringHasValue([imageURLDict objectForKey:key]) && StringHasValue([imageThumbnailURLDict objectForKey:key]) ) {
+                [[AppNetworkAPIClient sharedClient] loadImage:imageThumbnailURL withBlock:^(UIImage *image, NSError *error) {
+                    if (image) {
+                        [albumButton setImage:image forState:UIControlStateNormal];
+                    }
+                }];
+                [self.albumArray setObject:[imageURLDict objectForKey:key] atIndexedSubscript:(i-1)];
+                
+                [albumButton addTarget:self action:@selector(albumClick:) forControlEvents:UIControlEventTouchUpInside];
+                [albumButton setHidden:NO];
+            }else{
+                [self.albumArray setObject:@"" atIndexedSubscript:(i-1)];
+                [albumButton setHidden:YES];
+            }
+        
+        }
+    }
 }
 
 - (void)albumClick:(UIButton *)sender
