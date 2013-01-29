@@ -937,6 +937,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 
 }
 
+// op 35 获取公司分类
 - (void)getCompanyCategoryWithBlock:(void (^)(id, NSError *))block
 {
     NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys: @"35", @"op", nil];
@@ -963,6 +964,66 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
         }
     }];
     [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:getOperation];
+}
+
+// op 37 获取公司分类
+- (void)getCompanyWithCategory:(NSString *)codename withBlock:(void(^)(id, NSError *))block
+{
+    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys:codename, @"cg", @"37", @"op", nil];
+    NSMutableURLRequest *getRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"GET" path:GET_DATA_PATH parameters:getDict];
+    AFHTTPRequestOperation *getOperation = [[AppNetworkAPIClient sharedClient]HTTPRequestOperationWithRequest:getRequest success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        //
+        DDLogVerbose(@"getCompanyWithCategory: %@", responseObject);
+        
+        NSString* type = [responseObject valueForKey:@"type"];
+        
+        if (![@"error" isEqualToString:type]) {
+            if (block) {
+                block (responseObject, nil);
+            }
+        } else {
+            if (block) {
+                NSError *error = [[NSError alloc] initWithDomain:@"wingedstone.com" code:403 userInfo:nil];
+                block (nil, error);
+            }
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        if (block) {
+            block (nil, error);
+        }
+    }];
+    [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:getOperation];
+
+}
+
+// op 39 获取公司详情
+- (void)getcompanyWithCatID:(NSString *)catID withBlock:(void (^)(id, NSError *))block
+{
+    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys:catID, @"cid", @"39", @"op", nil];
+    NSMutableURLRequest *getRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"GET" path:GET_DATA_PATH parameters:getDict];
+    AFHTTPRequestOperation *getOperation = [[AppNetworkAPIClient sharedClient]HTTPRequestOperationWithRequest:getRequest success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        //
+        DDLogVerbose(@"getcompanyWithCatID: %@", responseObject);
+        
+        NSString* type = [responseObject valueForKey:@"type"];
+        
+        if (![@"error" isEqualToString:type]) {
+            if (block) {
+                block (responseObject, nil);
+            }
+        } else {
+            if (block) {
+                NSError *error = [[NSError alloc] initWithDomain:@"wingedstone.com" code:403 userInfo:nil];
+                block (nil, error);
+            }
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        if (block) {
+            block (nil, error);
+        }
+    }];
+    [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:getOperation];
+    
 }
 
 

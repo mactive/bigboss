@@ -32,7 +32,7 @@
 @property(nonatomic, strong) NSArray *settingTitleArray;
 @property (strong, nonatomic) Me *me;
 @property (nonatomic, strong) UIImageView *myAvatar;
-
+@property(nonatomic, strong) UIButton *barButton;
 @end
 
 
@@ -48,7 +48,7 @@
 @synthesize myAvatar;
 @synthesize privacySwitch;
 @synthesize privacyAlert;
-
+@synthesize barButton;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -59,8 +59,20 @@
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(thumbnailChanged:)
                                                      name:THUMBNAIL_IMAGE_CHANGE_NOTIFICATION object:self.me];
+        
+        self.barButton = [[UIButton alloc] init];
+        self.barButton.frame=CGRectMake(0, 0, 50, 29);
+        [self.barButton setBackgroundImage:[UIImage imageNamed: @"barbutton_mainmenu.png"] forState:UIControlStateNormal];
+        [self.barButton addTarget:self action:@selector(mainMenuAction) forControlEvents:UIControlEventTouchUpInside];
+        [self.navigationItem setHidesBackButton:YES];
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.barButton];
     }
     return self;
+}
+
+- (void)mainMenuAction
+{
+    [self.navigationController popViewControllerAnimated:NO];
 }
 
 - (void)dealloc

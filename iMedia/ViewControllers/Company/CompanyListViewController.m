@@ -1,56 +1,49 @@
 //
-//  CompanyCategoryViewController.m
+//  CompanyListViewController.m
 //  iMedia
 //
-//  Created by meng qian on 13-1-28.
+//  Created by meng qian on 13-1-24.
 //  Copyright (c) 2013年 Li Xiaosi. All rights reserved.
 //
 
-#import "CompanyCategoryViewController.h"
+#import "CompanyListViewController.h"
 #import "AppNetworkAPIClient.h"
 #import "MBProgressHUD.h"
 #import "ConvenienceMethods.h"
 #import <QuartzCore/QuartzCore.h>
 #import "ServerDataTransformer.h"
 #import "UIImageView+AFNetworking.h"
-#import "CompanyListViewController.h"
+#import "CompanyDetailViewController.h"
 
-@interface CompanyCategoryViewController ()<UITableViewDataSource,UITableViewDelegate,UISearchBarDelegate>
+@interface CompanyListViewController ()<UITableViewDataSource,UITableViewDelegate,UISearchBarDelegate>
+
 @property(strong,nonatomic)NSArray *sourceData;
 @property(strong, nonatomic)NSMutableDictionary * sourceDict;
 @property(strong, nonatomic)UITableView * tableView;
-@property(nonatomic, strong) UIButton *barButton;
+
 @end
 
-@implementation CompanyCategoryViewController
+@implementation CompanyListViewController
 @synthesize sourceData;
 @synthesize sourceDict;
 @synthesize tableView;
-@synthesize barButton;
+@synthesize categoryName;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.barButton = [[UIButton alloc] init];
-        self.barButton.frame=CGRectMake(0, 0, 50, 29);
-        [self.barButton setBackgroundImage:[UIImage imageNamed:@"barbutton_mainmenu.png"] forState:UIControlStateNormal];
-        [self.barButton addTarget:self action:@selector(mainMenuAction) forControlEvents:UIControlEventTouchUpInside];
-        [self.navigationItem setHidesBackButton:YES];
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.barButton];
+        
     }
-    return self;
+    return self;    
 }
 
-- (void)mainMenuAction
-{
-    [self.navigationController popViewControllerAnimated:NO];
-}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = T(@"公司分类列表");
+    
+    self.title = self.categoryName;
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
  
@@ -61,7 +54,7 @@
     self.tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
     self.tableView.backgroundColor = BGCOLOR;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-//    self.tableView.separatorColor = SEPCOLOR;
+    //    self.tableView.separatorColor = SEPCOLOR;
     [self.tableView setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero]];
     
     self.tableView.delegate = self;
@@ -83,10 +76,10 @@
     MBProgressHUD* HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     HUD.removeFromSuperViewOnHide = YES;
     HUD.labelText = T(@"正在加载");
-    [[AppNetworkAPIClient sharedClient]getCompanyCategoryWithBlock:^(id responseDict, NSError *error) {
+    [[AppNetworkAPIClient sharedClient]getCompanyWithCategory:self.categoryName withBlock:^(id responseDict, NSError *error) {
         //
         [HUD hide:YES];
-
+        
         if (responseDict != nil) {
             self.sourceDict = responseDict;
             self.sourceData = [self.sourceDict allValues];
@@ -96,6 +89,7 @@
         }
     }];
 }
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -127,7 +121,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"CompanyCategoryCell";
+    static NSString *CellIdentifier = @"CompanyListCell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
@@ -139,12 +133,13 @@
     
     return cell;
 }
+
 #define AVATAR_HEIGHT 36
 #define AVATAR_X    (CELL_HEIGHT - AVATAR_HEIGHT)/2
 #define NAME_X      75
 #define NAME_HEIGHT 16
 #define NAME_Y      (CELL_HEIGHT - NAME_HEIGHT)/2
-#define NAME_WIDTH  80
+#define NAME_WIDTH  200
 
 #define COUNT_X     230
 #define COUNT_WIDTH 33
@@ -159,9 +154,9 @@
 - (UITableViewCell *)tableViewCellWithReuseIdentifier:(NSString *)identifier
 {
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
-    cell.selectionStyle = UITableViewCellSelectionStyleGray;
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.backgroundView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"cell_H50_bg.png"]];
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator ;
+    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 
     
     UIImageView *avatarView = [[UIImageView alloc]initWithFrame:CGRectMake(AVATAR_X*2, AVATAR_X, AVATAR_HEIGHT, AVATAR_HEIGHT)];
@@ -176,9 +171,6 @@
     nameLabel.textColor = RGBCOLOR(107, 107, 107);
     nameLabel.tag = NAME_TAG;
     
-    UIImageView *countBG = [[UIImageView alloc]initWithFrame:CGRectMake(COUNT_X, COUNT_Y, COUNT_WIDTH, COUNT_HEIGHT)];
-    [countBG setImage:[UIImage imageNamed:@"countBg.png"]];
-    
     UILabel *countLabel = [[UILabel alloc]initWithFrame:CGRectMake(COUNT_X, COUNT_Y, COUNT_WIDTH, COUNT_HEIGHT)];
     countLabel.backgroundColor = [UIColor clearColor];
     countLabel.font = [UIFont boldSystemFontOfSize:14.0f];
@@ -188,7 +180,6 @@
     
     [cell addSubview:avatarView];
     [cell addSubview:nameLabel];
-    [cell addSubview:countBG];
     [cell addSubview:countLabel];
     return cell;
 }
@@ -202,7 +193,7 @@
     [avatarView setImageWithURL:url placeholderImage:[UIImage imageNamed:@"company_face.png"]];
     
     UILabel *nameLabel = (UILabel *)[cell viewWithTag:NAME_TAG];
-    nameLabel.text = [dataDict objectForKey:@"vn"];
+    nameLabel.text = [dataDict objectForKey:@"company_name"];
     
     UILabel *countLabel = (UILabel *)[cell viewWithTag:COUNT_TAG];
     countLabel.text = [ServerDataTransformer getStringObjFromServerJSON:dataDict byName:@"c"];
@@ -218,10 +209,11 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSDictionary *dataDict = [self.sourceData objectAtIndex:indexPath.row];
-    CompanyListViewController *controller = [[CompanyListViewController alloc]initWithNibName:nil bundle:nil];
-    controller.categoryName = [dataDict objectForKey:@"cn"];
+    CompanyDetailViewController *controller = [[CompanyDetailViewController alloc]initWithNibName:nil bundle:nil];
+    controller.companyID = [ServerDataTransformer getStringObjFromServerJSON:dataDict byName:@"cid"];
     [self.navigationController pushViewController:controller animated:YES];
-
+    
 }
+
 
 @end

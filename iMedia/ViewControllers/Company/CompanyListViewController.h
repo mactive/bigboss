@@ -7,8 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "BBCustomBackButtonViewController.h"
+@interface CompanyListViewController : BBCustomBackButtonViewController
 
-@interface CompanyListViewController : UITableViewController
-@property(nonatomic,strong)NSManagedObjectContext *managedObjectContext;
+@property(nonatomic,strong)NSString *categoryName;
+
 
 @end

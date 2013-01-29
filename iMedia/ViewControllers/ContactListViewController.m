@@ -43,6 +43,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @property (nonatomic, strong) NSMutableArray *filteredListContent;
 @property (nonatomic, strong) UISearchDisplayController *searchController;
 @property (nonatomic, strong) UISearchBar *searchBar;
+@property (nonatomic, strong) UIButton *barButton;
+@property (nonatomic, strong) UIButton *addButton;
 
 @end
 
@@ -53,6 +55,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @synthesize filteredListContent;
 @synthesize searchController;
 @synthesize searchBar;
+@synthesize barButton;
+@synthesize addButton;
 
 
 - (id)initWithStyle:(UITableViewStyle)style andManagementContext:(NSManagedObjectContext *)context
@@ -66,8 +70,29 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         _indexArray = [NSArray arrayWithObjects:@"&", @"A", @"B", @"C", @"D", @"E", @"F", @"G", @"H", @"I", @"J",
                            @"K", @"L", @"M", @"N", @"O", @"P", @"Q", @"R", @"S", @"T", @"U", @"V", @"W", @"X",
                            @"Y", @"Z", @"#", nil];*/
+        // Custom initialization
+        self.barButton = [[UIButton alloc] init];
+        self.barButton.frame=CGRectMake(0, 0, 50, 29);
+        [self.barButton setBackgroundImage:[UIImage imageNamed: @"barbutton_mainmenu.png"] forState:UIControlStateNormal];
+        [self.barButton addTarget:self action:@selector(mainMenuAction) forControlEvents:UIControlEventTouchUpInside];
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.barButton];
+        
+        self.addButton = [[UIButton alloc] init];
+        self.addButton.frame=CGRectMake(0, 0, 50, 29);
+        [self.addButton setBackgroundImage:[UIImage imageNamed: @"barbutton_add.png"] forState:UIControlStateNormal];
+        [self.addButton addTarget:self action:@selector(add:) forControlEvents:UIControlEventTouchUpInside];
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.addButton];
+        
+        [self.navigationItem setHidesBackButton:YES];
+
+
     }
     return self;
+}
+
+- (void)mainMenuAction
+{
+    [self.navigationController popViewControllerAnimated:NO];
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Accessors & selectors
@@ -104,7 +129,6 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [super viewDidLoad];
     
     self.title = T(@"联系人");
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(add:)];
 
     NSError *error;
     if (![[self fetchedResultsController] performFetch:&error]) {

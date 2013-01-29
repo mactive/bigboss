@@ -72,6 +72,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @property(strong, nonatomic) UILabel *titleLabel;
 @property(strong,nonatomic)NSIndexPath *editingIndexPath;
 @property(strong, nonatomic)UIButton *barButton;
+@property(strong, nonatomic)UIButton *sidemenuButton;
 // Notication to receive new message
 - (void)newMessageReceived:(NSNotification *)notification;
 
@@ -85,6 +86,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @synthesize unreadMessageCount;
 @synthesize chatDetailController = _detailController;
 @synthesize friendRequestArray;
+@synthesize sidemenuButton;
 @synthesize barButton;
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -114,6 +116,12 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         [self.barButton addTarget:self action:@selector(mainMenuAction) forControlEvents:UIControlEventTouchUpInside];
         [self.navigationItem setHidesBackButton:YES];
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.barButton];
+        
+        self.sidemenuButton = [[UIButton alloc] init];
+        self.sidemenuButton.frame=CGRectMake(0, 0, 50, 29);
+        [self.sidemenuButton setBackgroundImage:[UIImage imageNamed: @"barbutton_sidemenu.png"] forState:UIControlStateNormal];
+        [self.sidemenuButton addTarget:self action:@selector(sidemenuAction) forControlEvents:UIControlEventTouchUpInside];
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.sidemenuButton];
     }
     return self;
 }

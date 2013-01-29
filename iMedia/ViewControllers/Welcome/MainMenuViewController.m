@@ -154,8 +154,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     self.conversationController = [[ConversationsController alloc] initWithStyle:UITableViewStylePlain];
     self.conversationController.managedObjectContext = self.managedObjectContext;
     
-    self.contactListViewController = [[ContactListViewController alloc] initWithNibName:nil bundle:nil];
-    self.contactListViewController.managedObjectContext = self.managedObjectContext;
+    self.contactListViewController = [[ContactListViewController alloc] initWithStyle:UITableViewStylePlain andManagementContext:self.managedObjectContext];
     
     self.functionListViewController = [[FunctionListViewController alloc]initWithNibName:nil bundle:nil];
     self.functionListViewController.managedObjectContext = self.managedObjectContext;
