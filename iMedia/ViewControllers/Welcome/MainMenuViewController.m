@@ -26,6 +26,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @property(strong, nonatomic)CATransition* transition;
 @property(strong, nonatomic)UISearchBar *searchBar;
 @property(strong, nonatomic)UIButton *barButton;
+@property(strong, nonatomic)UIButton *settingButton;
 @property(strong, nonatomic)UITableView *searchTableView;
 @property(strong, nonatomic)NSArray *sourceData;
 @property(strong, nonatomic)NSMutableArray *fetchArray;
@@ -40,10 +41,12 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @synthesize functionListViewController;
 @synthesize settingViewController;
 @synthesize companyCategoryViewController;
+@synthesize myCompanyController;
 @synthesize transition;
 @synthesize searchTableView;
 @synthesize searchBar;
 @synthesize barButton;
+@synthesize settingButton;
 @synthesize sourceData;
 @synthesize fetchArray;
 @synthesize fetchDict;
@@ -61,6 +64,14 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         [self.barButton.titleLabel setFont:[UIFont boldSystemFontOfSize:14.0]];
         [self.barButton addTarget:self action:@selector(cancelSearchAction) forControlEvents:UIControlEventTouchUpInside];
         [self.navigationItem setHidesBackButton:YES];
+        
+        
+        self.settingButton = [[UIButton alloc] init];
+        self.settingButton.frame=CGRectMake(0, 0, 50, 29);
+        [self.settingButton setBackgroundImage:[UIImage imageNamed: @"barbutton_setting.png"] forState:UIControlStateNormal];
+        [self.settingButton addTarget:self action:@selector(settingAction) forControlEvents:UIControlEventTouchUpInside];
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.barButton];
+
     }
     return self;
 }
@@ -128,10 +139,10 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
             [button addTarget:self action:@selector(functionAction) forControlEvents:UIControlEventTouchUpInside];
         }
         if (index == 4) {
-            [button addTarget:self action:@selector(settingAction) forControlEvents:UIControlEventTouchUpInside];
+            [button addTarget:self action:@selector(myCompanyAction) forControlEvents:UIControlEventTouchUpInside];
         }
         if (index == 5) {
-            [button addTarget:self action:@selector(companyAction) forControlEvents:UIControlEventTouchUpInside];
+            [button addTarget:self action:@selector(companyCategoryAction) forControlEvents:UIControlEventTouchUpInside];
         }
         [self.view addSubview:button];
     }
@@ -163,6 +174,9 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     self.settingViewController.managedObjectContext = self.managedObjectContext;
     
     self.companyCategoryViewController = [[CompanyCategoryViewController alloc] initWithNibName:nil bundle:nil];
+    
+    self.myCompanyController = [[MyCompanyViewController alloc]initWithStyle:UITableViewStylePlain];
+    
 }
 
 - (void)initSearchTableView
@@ -333,10 +347,15 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [self.navigationController.view.layer addAnimation:self.transition forKey:kCATransition];
     [self.navigationController pushViewController:self.settingViewController animated:NO];
 }
-- (void)companyAction
+- (void)companyCategoryAction
 {
     [self.navigationController.view.layer addAnimation:self.transition forKey:kCATransition];
     [self.navigationController pushViewController:self.companyCategoryViewController animated:NO];
+}
+- (void)myCompanyAction
+{
+    [self.navigationController.view.layer addAnimation:self.transition forKey:kCATransition];
+    [self.navigationController pushViewController:self.myCompanyController animated:NO];
 }
 
 

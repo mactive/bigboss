@@ -12,6 +12,7 @@
 #import "FunctionListViewController.h"
 #import "SettingViewController.h"
 #import "CompanyCategoryViewController.h"
+#import "MyCompanyViewController.h"
 
 @interface MainMenuViewController : UIViewController
 
@@ -20,6 +21,7 @@
 @property(strong, nonatomic) FunctionListViewController *functionListViewController;
 @property(strong, nonatomic) SettingViewController *settingViewController;
 @property(strong, nonatomic) CompanyCategoryViewController *companyCategoryViewController;
+@property(strong, nonatomic) MyCompanyViewController *myCompanyController;
 @property(strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
 @end
