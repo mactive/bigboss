@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "BBCustomBackButtonViewController.h"
 
-@interface CompanyDetailViewController : UIViewController
+@interface CompanyDetailViewController : BBCustomBackButtonViewController
 
-@property(nonatomic, strong)NSString *companyID;
+@property(strong, nonatomic) id   jsonData;
 @end

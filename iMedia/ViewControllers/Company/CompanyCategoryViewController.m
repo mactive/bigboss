@@ -159,7 +159,7 @@
 - (UITableViewCell *)tableViewCellWithReuseIdentifier:(NSString *)identifier
 {
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
-    cell.selectionStyle = UITableViewCellSelectionStyleGray;
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.backgroundView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"cell_H50_bg.png"]];
     cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator ;
 

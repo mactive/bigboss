@@ -209,11 +209,29 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSDictionary *dataDict = [self.sourceData objectAtIndex:indexPath.row];
-    CompanyDetailViewController *controller = [[CompanyDetailViewController alloc]initWithNibName:nil bundle:nil];
-    controller.companyID = [ServerDataTransformer getStringObjFromServerJSON:dataDict byName:@"cid"];
-    [self.navigationController pushViewController:controller animated:YES];
+    NSString *companyID = [ServerDataTransformer getStringObjFromServerJSON:dataDict byName:@"cid"];
+
+
+    MBProgressHUD* HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    HUD.removeFromSuperViewOnHide = YES;
+    HUD.labelText = T(@"正在加载");
+    
+    [[AppNetworkAPIClient sharedClient]getcompanyWithCompanyID:companyID withBlock:^(id responseDict, NSError *error) {
+        //
+        [HUD hide:YES];
+        
+        if (responseDict != nil) {
+            CompanyDetailViewController *controller = [[CompanyDetailViewController alloc]initWithNibName:nil bundle:nil];\
+            controller.jsonData = responseDict;
+            [self.navigationController pushViewController:controller animated:YES];
+        }else{
+            [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"网络错误 暂时无法刷新") andHideAfterDelay:1];
+        }
+                
+    }];
     
 }
+
 
 
 @end

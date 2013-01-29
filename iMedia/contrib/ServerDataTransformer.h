@@ -32,6 +32,15 @@
 + (NSString *)getRealNameFromServerJSON:(id)jsonData;
 + (NSDate *)getBirthdateFromServerJSON:(id)jsonData;
 + (NSDate *)getLastGPSUpdatedFromServerJSON:(id)jsonData;
+// company
++ (NSString *)getCompanyIDFromServerJSON:(id)jsonData;
++ (NSString *)getServerbotJIDFromServerJSON:(id)jsonData;
++ (NSString *)getCompanyNameFromServerJSON:(id)jsonData;
++ (NSString *)getLogoFromServerJSON:(id)jsonData;
++ (NSString *)getEmailFromServerJSON:(id)jsonData;
++ (NSString *)getWebsiteFromServerJSON:(id)jsonData;
++ (NSString *)getDescriptionFromServerJSON:(id)jsonData;
++ (BOOL)getPrivateFromServerJSON:(id)jsonData;
 
 // static dict
 + (NSDictionary *)sexDict;

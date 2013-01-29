@@ -188,6 +188,7 @@ alpha:(a)]
 #define TEXTFIELD_BGCOLOR [UIColor colorWithRed:238.0f/255.0f green:238.0f/255.0f blue:238.0f/255.0f alpha:1]
 #define TEXTFIELD_BORDERCOLOR [UIColor colorWithRed:147.0f/255.0f green:150.0f/255.0f blue:157.0f/245.0f alpha:1]
 #define BIGBOSS_BLUE [UIColor colorWithRed:50.0f/255.0f green:135.0f/255.0f blue:193.0f/245.0f alpha:1]
+#define LIVID_COLOR [UIColor colorWithRed:76.0f/255.0f green:84.0f/255.0f blue:94.0f/245.0f alpha:1]
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 #define NAMEFIRSTLATTER	@"&ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 

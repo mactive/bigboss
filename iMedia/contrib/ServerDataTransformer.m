@@ -133,7 +133,39 @@
     return [self dateFromNSDatetimeStr:dateStr];
 }
 
+// Company
 
++ (NSString *)getCompanyIDFromServerJSON:(id)jsonData{
+    return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"cid"];
+}
++ (NSString *)getServerbotJIDFromServerJSON:(id)jsonData{
+    return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"serverbot_jid"];
+}
++ (NSString *)getCompanyNameFromServerJSON:(id)jsonData{
+    return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"company_name"];
+}
++ (NSString *)getLogoFromServerJSON:(id)jsonData{
+    return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"logo"];
+}
++ (NSString *)getEmailFromServerJSON:(id)jsonData{
+    return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"email"];
+}
++ (NSString *)getWebsiteFromServerJSON:(id)jsonData{
+    return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"website"];
+}
++ (NSString *)getDescriptionFromServerJSON:(id)jsonData{
+    return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"description"];
+}
++ (BOOL)getPrivateFromServerJSON:(id)jsonData{
+    NSString *privateString = [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"private"];
+    if ([privateString isEqualToString:@"False"]) {
+        return NO;
+    }else if ([privateString isEqualToString:@"True"]){
+        return YES;
+    }else{
+        return NO;
+    }
+}
 
 +(NSString *)getStringObjFromServerJSON:(id)jsonData byName:(id)name
 {

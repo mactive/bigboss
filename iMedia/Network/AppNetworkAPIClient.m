@@ -1026,13 +1026,13 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 }
 
 // op 39 获取公司详情
-- (void)getcompanyWithCatID:(NSString *)catID withBlock:(void (^)(id, NSError *))block
+- (void)getcompanyWithCompanyID:(NSString *)companyID withBlock:(void (^)(id, NSError *))block
 {
-    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys:catID, @"cid", @"39", @"op", nil];
+    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys:companyID, @"cid", @"39", @"op", nil];
     NSMutableURLRequest *getRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"GET" path:GET_DATA_PATH parameters:getDict];
     AFHTTPRequestOperation *getOperation = [[AppNetworkAPIClient sharedClient]HTTPRequestOperationWithRequest:getRequest success:^(AFHTTPRequestOperation *operation, id responseObject) {
         //
-        DDLogVerbose(@"getcompanyWithCatID: %@", responseObject);
+        DDLogVerbose(@"getcompanyWithCompanyID: %@", responseObject);
         
         NSString* type = [responseObject valueForKey:@"type"];
         
@@ -1055,6 +1055,64 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     
 }
 
+// op 30 follow company
+- (void)followCompanyWithCompanyID:(NSString *)companyID withBlock:(void(^)(id, NSError *))block
+{
+    NSMutableDictionary *postDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                     companyID, @"cid",
+                                     @"30", @"op",
+                                     nil];
+    
+    [[AppNetworkAPIClient sharedClient] postPath:POST_DATA_PATH parameters:postDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        DDLogInfo(@"followCompanyWithCompanyID: %@", responseObject);
+        NSString* status = [responseObject valueForKey:@"status"];
+        if ([status isEqualToString:@"success"]) {
+            if (block ) {
+                block(responseObject, nil);
+            }
+        }
+        else {
+            if (block) {
+                NSError *error = [[NSError alloc] initWithDomain:@"wingedstone.com" code:403 userInfo:nil];
+                block (nil, error);
+            }
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        DDLogError(@"followCompanyWithCompanyID failed: %@", error);
+        if (block) {
+            block(nil, error);
+        }
+    }];
+}
+// op 32 unfollow company
+- (void)unfollowCompanyWithCompanyID:(NSString *)companyID withBlock:(void(^)(id, NSError *))block
+{
+    NSMutableDictionary *postDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                     companyID, @"cid",
+                                     @"32", @"op",
+                                     nil];
+    
+    [[AppNetworkAPIClient sharedClient] postPath:POST_DATA_PATH parameters:postDict success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        DDLogInfo(@"followCompanyWithCompanyID: %@", responseObject);
+        NSString* status = [responseObject valueForKey:@"status"];
+        if ([status isEqualToString:@"success"]) {
+            if (block ) {
+                block(responseObject, nil);
+            }
+        }
+        else {
+            if (block) {
+                NSError *error = [[NSError alloc] initWithDomain:@"wingedstone.com" code:403 userInfo:nil];
+                block (nil, error);
+            }
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        DDLogError(@"followCompanyWithCompanyID failed: %@", error);
+        if (block) {
+            block(nil, error);
+        }
+    }];
+}
 
 
 // 频道列表

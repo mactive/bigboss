@@ -182,7 +182,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 - (void)initSearchTableView
 {
     // uisearchbar
-    self.searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0, 0, 320, 40)];
+    self.searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0, 0, 320, 50)];
     self.searchBar.delegate = self;
     self.searchBar.tintColor = RGBCOLOR(170, 170, 170);
     self.searchBar.showsCancelButton = YES;
@@ -311,8 +311,11 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 - (void)searchAction
 {
     [self.searchTableView setHidden:NO];
+    [self.searchTableView.layer addAnimation:self.transition forKey:kCATransition];
+
     [self.searchBar becomeFirstResponder];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.barButton];
+    self.navigationItem.leftBarButtonItem = nil;
 }
 
 - (void)cancelSearchAction
@@ -320,6 +323,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [self.searchTableView setHidden:YES];
     [self.searchBar resignFirstResponder];
     self.navigationItem.rightBarButtonItem = nil;
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.settingButton];
 }
 
 - (void)conversationAction
@@ -330,10 +334,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 - (void)contactAction
 {
-
     [self.navigationController.view.layer addAnimation:self.transition forKey:kCATransition];
     [self.navigationController pushViewController:self.contactListViewController animated:NO];
-    
 }
 
 - (void)functionAction
