@@ -273,7 +273,7 @@
         [self.view addSubview:self.restCountLabel];
     }
     else {
-        if (self.valueIndex == NICKNAME_ITEM_INDEX || self.valueIndex == CAREER_ITEM_INDEX) {
+        if (self.valueIndex == NICKNAME_ITEM_INDEX) {
             self.noticeLabel.text = [NSString stringWithFormat:T(@"不能超过%i个字符."),NICKNAME_MAX_LENGTH];
             self.restCountLabel.text = [NSString stringWithFormat:@"%i",NICKNAME_MAX_LENGTH - [self.valueText length]];
         }else if (self.valueIndex == CELL_ITEM_INDEX){
@@ -310,7 +310,7 @@
 
     if (self.valueTextField == textField)
     {
-        if (self.valueIndex == NICKNAME_ITEM_INDEX || self.valueIndex  == CAREER_ITEM_INDEX) {
+        if (self.valueIndex == NICKNAME_ITEM_INDEX) {
             
             NSInteger countInt = (NICKNAME_MAX_LENGTH > [toBeString length]) ? NICKNAME_MAX_LENGTH - [toBeString length]: 0;
             self.restCountLabel.text = [NSString stringWithFormat:@"%i",countInt];
@@ -363,7 +363,7 @@
             
             if ([toBeString length] > DEFAULT_MAX_LENGTH) {
                 textField.text = [toBeString substringToIndex:DEFAULT_MAX_LENGTH];
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:T(@"字数有点多") delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:T(@"超过最大字数不能输入") delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil, nil];
                 [alert show];
                 return NO;
             }
