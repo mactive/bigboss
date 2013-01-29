@@ -70,7 +70,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         self.settingButton.frame=CGRectMake(0, 0, 50, 29);
         [self.settingButton setBackgroundImage:[UIImage imageNamed: @"barbutton_setting.png"] forState:UIControlStateNormal];
         [self.settingButton addTarget:self action:@selector(settingAction) forControlEvents:UIControlEventTouchUpInside];
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.barButton];
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.settingButton];
 
     }
     return self;
@@ -116,7 +116,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
     self.title = T(@"大掌柜");
-    self.menuTitleArray = [[NSArray alloc] initWithObjects:@"搜索公司",@"消息",@"联系人",@"福利",@"设置",@"公司列表", nil];
+    self.menuTitleArray = [[NSArray alloc] initWithObjects:@"搜索公司",@"消息",@"联系人",@"福利",@"我的公司",@"公司列表", nil];
     self.view.backgroundColor = BGCOLOR;
     [self.view addSubview:self.menuView];
     

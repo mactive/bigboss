@@ -70,6 +70,8 @@ extern NSString *const kXMPPmyUsername;
 // op15 获取摇一摇活动列表
 - (void)getShakeDashboardInfoWithBlock:(void (^)(id, NSError *))block;
 
+// op31 我的公司
+- (void)getMyCompanyWithBlock:(void (^)(id, NSError *))block;
 // op33
 - (void)getCompanyWithName:(NSString *)name withBlock:(void (^)(id, NSError *))block;
 // op35 公司分类列表 分类名称, 数量

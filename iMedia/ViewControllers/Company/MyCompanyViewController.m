@@ -9,18 +9,30 @@
 #import "MyCompanyViewController.h"
 
 @interface MyCompanyViewController ()
+@property(strong, nonatomic)UIButton *barButton;
 
 @end
 
 @implementation MyCompanyViewController
+@synthesize barButton;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
     if (self) {
         // Custom initialization
+        self.barButton = [[UIButton alloc] init];
+        self.barButton.frame=CGRectMake(0, 0, 50, 29);
+        [self.barButton setBackgroundImage:[UIImage imageNamed:@"barbutton_mainmenu.png"] forState:UIControlStateNormal];
+        [self.barButton addTarget:self action:@selector(mainMenuAction) forControlEvents:UIControlEventTouchUpInside];
+        [self.navigationItem setHidesBackButton:YES];
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.barButton];
     }
     return self;
+}
+- (void)mainMenuAction
+{
+    [self.navigationController popViewControllerAnimated:NO];
 }
 
 - (void)viewDidLoad
