@@ -178,6 +178,7 @@
 		264419A116B7C6300024C0EA /* main_menu_icon_6@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2644199F16B7C6300024C0EA /* main_menu_icon_6@2x.png */; };
 		264419A416B7C66D0024C0EA /* MyCompanyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 264419A316B7C66D0024C0EA /* MyCompanyViewController.m */; };
 		264419A616B7ECF30024C0EA /* green_btn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 264419A516B7ECF30024C0EA /* green_btn@2x.png */; };
+		264419A916B804C80024C0EA /* Company.m in Sources */ = {isa = PBXBuildFile; fileRef = 264419A816B804C70024C0EA /* Company.m */; };
 		264668B716AD248C003146AA /* BBCustomBackButtonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 264668B616AD248C003146AA /* BBCustomBackButtonViewController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		264668B916AD25B6003146AA /* back-button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 264668B816AD25B6003146AA /* back-button@2x.png */; };
 		264A389C165DF75200FA0123 /* ShakeDashboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 264A389B165DF75200FA0123 /* ShakeDashboardViewController.m */; };
@@ -645,6 +646,8 @@
 		264419A216B7C66D0024C0EA /* MyCompanyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyCompanyViewController.h; path = ViewControllers/Company/MyCompanyViewController.h; sourceTree = "<group>"; };
 		264419A316B7C66D0024C0EA /* MyCompanyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MyCompanyViewController.m; path = ViewControllers/Company/MyCompanyViewController.m; sourceTree = "<group>"; };
 		264419A516B7ECF30024C0EA /* green_btn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "green_btn@2x.png"; sourceTree = "<group>"; };
+		264419A716B804C70024C0EA /* Company.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Company.h; path = Models/Company.h; sourceTree = "<group>"; };
+		264419A816B804C70024C0EA /* Company.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Company.m; path = Models/Company.m; sourceTree = "<group>"; };
 		264668B516AD248C003146AA /* BBCustomBackButtonViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BBCustomBackButtonViewController.h; path = contrib/BBCustomBackButtonViewController.h; sourceTree = "<group>"; };
 		264668B616AD248C003146AA /* BBCustomBackButtonViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BBCustomBackButtonViewController.m; path = contrib/BBCustomBackButtonViewController.m; sourceTree = "<group>"; };
 		264668B816AD25B6003146AA /* back-button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "back-button@2x.png"; sourceTree = "<group>"; };
@@ -2155,6 +2158,8 @@
 				56039E7E166389C700BC8065 /* Information.m */,
 				56039E7A1663865300BC8065 /* ShakeInfo.h */,
 				56039E7B1663865300BC8065 /* ShakeInfo.m */,
+				264419A716B804C70024C0EA /* Company.h */,
+				264419A816B804C70024C0EA /* Company.m */,
 				56EDEFCA164C06EB003B0E9D /* Channel.h */,
 				56EDEFCB164C06EB003B0E9D /* Channel.m */,
 				564A6F32164BE78D00B04A00 /* Message.h */,
@@ -2840,6 +2845,7 @@
 				2644199616B79E730024C0EA /* CompanyListViewController.m in Sources */,
 				2644199916B7A0760024C0EA /* CompanyDetailViewController.m in Sources */,
 				264419A416B7C66D0024C0EA /* MyCompanyViewController.m in Sources */,
+				264419A916B804C80024C0EA /* Company.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

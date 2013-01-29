@@ -1058,7 +1058,10 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 // op 30 follow company
 - (void)followCompanyWithCompanyID:(NSString *)companyID withBlock:(void(^)(id, NSError *))block
 {
+    NSString* csrfToken = [[NSUserDefaults standardUserDefaults] valueForKey:@"csrfmiddlewaretoken"];
+    
     NSMutableDictionary *postDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                     csrfToken, @"csrfmiddlewaretoken",
                                      companyID, @"cid",
                                      @"30", @"op",
                                      nil];
@@ -1087,7 +1090,10 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 // op 32 unfollow company
 - (void)unfollowCompanyWithCompanyID:(NSString *)companyID withBlock:(void(^)(id, NSError *))block
 {
+    NSString* csrfToken = [[NSUserDefaults standardUserDefaults] valueForKey:@"csrfmiddlewaretoken"];
+
     NSMutableDictionary *postDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                     csrfToken, @"csrfmiddlewaretoken",
                                      companyID, @"cid",
                                      @"32", @"op",
                                      nil];

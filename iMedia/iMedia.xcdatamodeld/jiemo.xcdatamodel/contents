@@ -9,6 +9,17 @@
         <attribute name="subrequestID" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="owner" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Me" inverseName="channels" inverseEntity="Me" syncable="YES"/>
     </entity>
+    <entity name="Company" representedClassName="Company" syncable="YES">
+        <attribute name="cid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isPrivate" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="logo" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="serverbotJID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="website" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="owner" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Me" inverseName="companys" inverseEntity="Me" syncable="YES"/>
+    </entity>
     <entity name="Conversation" representedClassName="Conversation" syncable="YES">
         <attribute name="draft" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="lastMessageSentDate" optional="YES" attributeType="Date" syncable="YES"/>
@@ -88,6 +99,7 @@
         <attribute name="username" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="avatars" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ImageLocal" inverseName="me" inverseEntity="ImageLocal" syncable="YES"/>
         <relationship name="channels" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Channel" inverseName="owner" inverseEntity="Channel" syncable="YES"/>
+        <relationship name="companys" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Company" inverseName="owner" inverseEntity="Company" syncable="YES"/>
     </entity>
     <entity name="Message" representedClassName="Message" syncable="YES">
         <attribute name="sentDate" optional="YES" attributeType="Date" syncable="YES"/>
@@ -121,17 +133,18 @@
         <relationship name="inConversations" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Conversation" inverseName="attendees" inverseEntity="Conversation" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Channel" positionX="160" positionY="192" width="128" height="150"/>
-        <element name="Conversation" positionX="-9" positionY="114" width="128" height="180"/>
+        <element name="Channel" positionX="151" positionY="180" width="128" height="150"/>
+        <element name="Conversation" positionX="-666" positionY="153" width="128" height="180"/>
         <element name="FriendRequest" positionX="241" positionY="-9" width="128" height="120"/>
         <element name="Identity" positionX="-92" positionY="-513" width="128" height="255"/>
         <element name="ImageLocal" positionX="-83" positionY="318" width="128" height="150"/>
         <element name="ImageRemote" positionX="394" positionY="51" width="128" height="120"/>
-        <element name="Information" positionX="160" positionY="192" width="128" height="105"/>
-        <element name="Me" positionX="-63" positionY="-171" width="128" height="375"/>
+        <element name="Information" positionX="297" positionY="216" width="128" height="105"/>
+        <element name="Me" positionX="-63" positionY="-171" width="128" height="390"/>
         <element name="Message" positionX="-324" positionY="-78" width="128" height="150"/>
-        <element name="Pluggin" positionX="160" positionY="192" width="128" height="60"/>
-        <element name="ShakeInfo" positionX="160" positionY="192" width="128" height="75"/>
+        <element name="Pluggin" positionX="250" positionY="-342" width="128" height="60"/>
+        <element name="ShakeInfo" positionX="304" positionY="-189" width="128" height="75"/>
         <element name="User" positionX="-234" positionY="141" width="128" height="240"/>
+        <element name="Company" positionX="126" positionY="351" width="128" height="180"/>
     </elements>
 </model>
