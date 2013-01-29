@@ -14,8 +14,9 @@
 @interface Company : NSManagedObject
 
 @property (nonatomic, retain) NSString * name;
-@property (nonatomic, retain) NSString * cid;
+@property (nonatomic, retain) NSString * companyID;
 @property (nonatomic, retain) NSString * serverbotJID;
+@property (nonatomic, retain) NSNumber * isFollow;
 @property (nonatomic, retain) NSNumber * isPrivate;
 @property (nonatomic, retain) NSString * website;
 @property (nonatomic, retain) NSString * email;

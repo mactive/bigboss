@@ -14,6 +14,17 @@
 #import "ServerDataTransformer.h"
 #import "UIImageView+AFNetworking.h"
 #import "CompanyListViewController.h"
+#import "Company.h"
+#import "ModelHelper.h"
+#import "AppDelegate.h"
+
+#import "DDLog.h"
+// Log levels: off, error, warn, info, verbose
+#if DEBUG
+static const int ddLogLevel = LOG_LEVEL_VERBOSE;
+#else
+static const int ddLogLevel = LOG_LEVEL_OFF;
+#endif
 
 
 @interface CompanyDetailViewController ()<UITableViewDataSource,UITableViewDelegate,UISearchBarDelegate>
@@ -25,7 +36,7 @@
 @property(strong, nonatomic)UIImageView *avatarView;
 @property(strong, nonatomic)UILabel *nameLabel;
 @property(strong, nonatomic)UIButton *joinButton;
-@property(readwrite, nonatomic)BOOL isPrivate;
+@property(strong, nonatomic)NSNumber *isPrivate;
 @property(readwrite, nonatomic)BOOL isFollow;
 
 @property(strong, nonatomic)UITableView * tableView;
@@ -42,6 +53,7 @@
 @synthesize nameLabel;
 @synthesize joinButton;
 @synthesize isPrivate;
+@synthesize managedObjectContext;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -50,6 +62,11 @@
         // Custom initialization
     }
     return self;
+}
+
+- (AppDelegate *)appDelegate
+{
+	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
 #define FACE_HEIGHT 125
@@ -107,6 +124,8 @@
     self.isFollow = FALSE;
     [self.view addSubview:self.tableView];
     [self initFaceView];
+    
+    self.managedObjectContext = [self appDelegate].context;
     
 }
 
@@ -172,12 +191,10 @@
     if (self.isFollow){
         [self.joinButton setHidden:YES];
     }else{
-        if (self.isPrivate) {
-            [self.joinButton setTitle:T(@"请求已发送") forState:UIControlStateNormal];
-        }
         [self.joinButton setHidden:NO];
     }
 }
+
 
 
 
@@ -295,12 +312,53 @@
             [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"加入公司成功") andHideAfterDelay:1];
             self.isFollow = YES;
             [self refreshFaceView];
+            [self subscribeButtonPushed];
         }else{
             [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"加入公司失败") andHideAfterDelay:1];
         }
     }];
 }
 
+
+-(void)subscribeButtonPushed
+{
+    Company *newCompany = [[ModelHelper sharedInstance] findCompanyWithCompanyID:
+                            [ServerDataTransformer getCompanyIDFromServerJSON:self.jsonData]];
+    if (newCompany == nil) {
+        newCompany = [NSEntityDescription insertNewObjectForEntityForName:@"Company" inManagedObjectContext:self.managedObjectContext];
+        newCompany.owner = [self appDelegate].me;
+        [[ModelHelper sharedInstance] populateCompany:newCompany withServerJSONData:self.jsonData];
+        newCompany.isFollow  = [NSNumber numberWithBool:YES];
+    }
+    
+//    NSString *nodeStr = [jsonData valueForKey:@"node_address"];
+//    Channel *newChannel = [[ModelHelper sharedInstance] findChannelWithNode:nodeStr];
+//    if (newChannel == nil) {
+//        newChannel = [NSEntityDescription insertNewObjectForEntityForName:@"Channel" inManagedObjectContext:self.managedObjectContext];
+//        newChannel.owner = [self appDelegate].me;
+//        [[ModelHelper sharedInstance] populateIdentity:newChannel withJSONData:jsonData];
+//        newChannel.state = IdentityStatePendingAddSubscription;
+//    } else if (newChannel.state == IdentityStateInactive) {
+//        newChannel.state = IdentityStatePendingAddSubscription;
+//    } else if (newChannel.state == IdentityStatePendingRemoveSubscription) {
+//        newChannel.state = IdentityStatePendingAddSubscription;
+//    } else if (newChannel.state == IdentityStateActive) {
+//        [ConvenienceMethods showHUDAddedTo:self.view animated:YES customView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]] text:T(@"已订阅") andHideAfterDelay:2];
+//        
+//        [self.confirmButton setTitle:T(@"查看信息") forState:UIControlStateNormal];
+//        [self.confirmButton removeTarget:self action:@selector(subscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
+//        [self.confirmButton addTarget:self action:@selector(sendMsgButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
+//        [self.cancelButton setHidden:YES];
+//        
+//        return ;
+//    } else if (newChannel.state == IdentityStatePendingAddSubscription){
+//        
+//    } else {
+//        DDLogVerbose(@"CRITICAL ERROR: new channel STATE wrong (%@)", newChannel);
+//        return;
+//    }
+    
+}
 
 
 - (void)didReceiveMemoryWarning

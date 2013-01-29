@@ -11,6 +11,7 @@
 #import "Me.h"
 #import "Avatar.h"
 #import "Channel.h"
+#import "Company.h"
 #import "ImageRemote.h"
 #import "Pluggin.h"
 #import "ServerDataTransformer.h"
@@ -132,6 +133,35 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
         }
         return [array objectAtIndex:0];
     }
+}
+
+- (Company *)findCompanyWithCompanyID:(NSString *)companyID
+{
+    NSManagedObjectContext *moc = self.managedObjectContext;
+    NSEntityDescription *entityDescription = [NSEntityDescription
+                                              entityForName:@"Company" inManagedObjectContext:moc];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDescription];
+    
+    // Set example predicate and sort orderings...
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:
+                              @"(companyID = %@)", companyID];
+    [request setPredicate:predicate];
+    
+    NSError *error = nil;
+    NSArray *array = [moc executeFetchRequest:request error:&error];
+    
+    if ([array count] == 0)
+    {
+        DDLogError(@"Company doesn't exist: %@", error);
+        return nil;
+    } else {
+        if ([array count] > 1) {
+            DDLogError(@"More than one user object with same company id: %@", companyID);
+        }
+        return [array objectAtIndex:0];
+    }
+
 }
 
 - (Channel *)findChannelWithSubrequestID:(NSString *)subID
@@ -349,6 +379,19 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
 
     channel.type = IdentityTypeChannel;
 }
+
+- (void)populateCompany:(Company *)company withServerJSONData:(id)json
+{
+    company.companyID = [ServerDataTransformer getCompanyIDFromServerJSON:json];
+    company.name = [ServerDataTransformer getCompanyNameFromServerJSON:json];
+    company.website = [ServerDataTransformer getWebsiteFromServerJSON:json];
+    company.email = [ServerDataTransformer getEmailFromServerJSON:json];
+    company.serverbotJID = [ServerDataTransformer getServerbotJIDFromServerJSON:json];
+    company.logo = [ServerDataTransformer getLogoFromServerJSON:json];
+    company.desc = [ServerDataTransformer getDescriptionFromServerJSON:json];
+    company.isPrivate = [ServerDataTransformer getPrivateFromServerJSON:json];
+}
+
 
 - (User *)createNewUser
 {

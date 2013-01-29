@@ -13,8 +13,9 @@
 @implementation Company
 
 @dynamic name;
-@dynamic cid;
+@dynamic companyID;
 @dynamic serverbotJID;
+@dynamic isFollow;
 @dynamic isPrivate;
 @dynamic website;
 @dynamic email;

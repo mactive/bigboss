@@ -13,6 +13,7 @@
 @class Identity;
 @class Pluggin;
 @class FriendRequest;
+@class Company;
 
 @interface ModelHelper : NSObject
 
@@ -25,8 +26,10 @@
 - (Channel *)findChannelWithNode:(NSString *)node;
 - (Channel *)findChannelWithSubrequestID:(NSString *)subID;
 - (Pluggin *)findFriendRequestPluggin;
+- (Company *)findCompanyWithCompanyID:(NSString *)companyID;
 
 - (void)populateIdentity:(Identity *)identity withJSONData:(id)json;
+- (void)populateCompany:(Company *)company withServerJSONData:(id)json;
 
 
 - (User *)createNewUser;

@@ -40,7 +40,7 @@
 + (NSString *)getEmailFromServerJSON:(id)jsonData;
 + (NSString *)getWebsiteFromServerJSON:(id)jsonData;
 + (NSString *)getDescriptionFromServerJSON:(id)jsonData;
-+ (BOOL)getPrivateFromServerJSON:(id)jsonData;
++ (NSNumber *)getPrivateFromServerJSON:(id)jsonData;
 
 // static dict
 + (NSDictionary *)sexDict;

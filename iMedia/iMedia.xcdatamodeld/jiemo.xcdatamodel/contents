@@ -10,9 +10,10 @@
         <relationship name="owner" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Me" inverseName="channels" inverseEntity="Me" syncable="YES"/>
     </entity>
     <entity name="Company" representedClassName="Company" syncable="YES">
-        <attribute name="cid" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="companyID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="desc" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="email" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isFollow" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="isPrivate" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="logo" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
@@ -145,6 +146,6 @@
         <element name="Pluggin" positionX="250" positionY="-342" width="128" height="60"/>
         <element name="ShakeInfo" positionX="304" positionY="-189" width="128" height="75"/>
         <element name="User" positionX="-234" positionY="141" width="128" height="240"/>
-        <element name="Company" positionX="126" positionY="351" width="128" height="180"/>
+        <element name="Company" positionX="126" positionY="351" width="128" height="195"/>
     </elements>
 </model>

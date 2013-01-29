@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "BBCustomBackButtonViewController.h"
-
+@class Company;
 @interface CompanyDetailViewController : BBCustomBackButtonViewController
 
 @property(strong, nonatomic) id   jsonData;
+@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+
 @end

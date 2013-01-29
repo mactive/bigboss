@@ -156,14 +156,14 @@
 + (NSString *)getDescriptionFromServerJSON:(id)jsonData{
     return [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"description"];
 }
-+ (BOOL)getPrivateFromServerJSON:(id)jsonData{
++ (NSNumber *)getPrivateFromServerJSON:(id)jsonData{
     NSString *privateString = [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"private"];
     if ([privateString isEqualToString:@"False"]) {
-        return NO;
+        return [NSNumber numberWithBool:NO];
     }else if ([privateString isEqualToString:@"True"]){
-        return YES;
+        return [NSNumber numberWithBool:YES];
     }else{
-        return NO;
+        return [NSNumber numberWithBool:NO];
     }
 }
 
