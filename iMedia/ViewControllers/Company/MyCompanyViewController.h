@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface MyCompanyViewController : UITableViewController
+@property(strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
 @end

@@ -262,7 +262,6 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         [ConvenienceMethods showHUDAddedTo:self.view animated:YES customView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]] text:T(@"已退订") andHideAfterDelay:1];
         
         return;
-        
     }
     self.channel.subrequestID = [[XMPPNetworkCenter sharedClient] unsubscribeToChannel:self.channel.node withCallbackBlock:^(NSError *error) {
 

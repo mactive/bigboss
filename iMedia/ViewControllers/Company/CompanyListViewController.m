@@ -18,7 +18,7 @@
 #import "ModelHelper.h"
 #import "AppDelegate.h"
 
-@interface CompanyListViewController ()<UITableViewDataSource,UITableViewDelegate,UISearchBarDelegate>
+@interface CompanyListViewController ()<UITableViewDataSource,UITableViewDelegate>
 
 @property(strong,nonatomic)NSArray *sourceData;
 @property(strong, nonatomic)NSMutableDictionary * sourceDict;
@@ -204,7 +204,7 @@
     nameLabel.text = [dataDict objectForKey:@"company_name"];
     
     UILabel *countLabel = (UILabel *)[cell viewWithTag:COUNT_TAG];
-    countLabel.text = [ServerDataTransformer getStringObjFromServerJSON:dataDict byName:@"c"];
+    countLabel.text = @"";
 }
 
 - (void) tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath

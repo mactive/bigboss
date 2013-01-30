@@ -35,7 +35,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @property(strong, nonatomic)UIView *faceView;
 @property(strong, nonatomic)UIImageView *avatarView;
 @property(strong, nonatomic)UILabel *nameLabel;
-@property(strong, nonatomic)UIButton *joinButton;
+@property(strong, nonatomic)UIButton *followButton;
+@property(strong, nonatomic)UIButton *unFollowButton;
 @property(strong, nonatomic)UIImageView *privateView;
 @property(readwrite, nonatomic)BOOL isPrivate;
 @property(readwrite, nonatomic)BOOL isFollow;
@@ -52,7 +53,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @synthesize jsonData;
 @synthesize avatarView;
 @synthesize nameLabel;
-@synthesize joinButton;
+@synthesize followButton;
+@synthesize unFollowButton;
 @synthesize privateView;
 @synthesize isPrivate;
 @synthesize isFollow;
@@ -86,9 +88,10 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 #define NAME_WIDTH  180
 
 #define JOIN_X     130
-#define JOIN_WIDTH 120
+#define JOIN_WIDTH 100
 #define JOIN_HEIGHT 30
 #define JOIN_Y     70
+#define JOIN_WIDTH2 60
 
 #define CELL_HEIGHT 50.0f
 
@@ -164,16 +167,27 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     nameLabel.textAlignment = NSTextAlignmentLeft;
     nameLabel.textColor = [UIColor whiteColor];
     
-    // joinButton
-    self.joinButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.joinButton setFrame:CGRectMake(JOIN_X, JOIN_Y, JOIN_WIDTH, JOIN_HEIGHT)];
-    [self.joinButton.titleLabel setFont:[UIFont systemFontOfSize:16.0]];
-    [self.joinButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [self.joinButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
-    [self.joinButton.titleLabel setTextAlignment:UITextAlignmentCenter];
-    [self.joinButton setTitle:T(@"加入公司") forState:UIControlStateNormal];
-    [self.joinButton setBackgroundImage:[UIImage imageNamed:@"green_btn.png"] forState:UIControlStateNormal];
+    // followButton
+    self.followButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.followButton setFrame:CGRectMake(JOIN_X, JOIN_Y, JOIN_WIDTH, JOIN_HEIGHT)];
+    [self.followButton.titleLabel setFont:[UIFont systemFontOfSize:16.0]];
+    [self.followButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.followButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
+    [self.followButton.titleLabel setTextAlignment:UITextAlignmentCenter];
+    [self.followButton setTitle:T(@"加入公司") forState:UIControlStateNormal];
+    [self.followButton setBackgroundImage:[UIImage imageNamed:@"green_btn.png"] forState:UIControlStateNormal];
 
+    // unFollowButton
+    self.unFollowButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.unFollowButton setFrame:CGRectMake(JOIN_X+JOIN_WIDTH+10, JOIN_Y, JOIN_WIDTH2, JOIN_HEIGHT)];
+    [self.unFollowButton.titleLabel setFont:[UIFont systemFontOfSize:16.0]];
+    [self.unFollowButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.unFollowButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
+    [self.unFollowButton.titleLabel setTextAlignment:UITextAlignmentCenter];
+    [self.unFollowButton setTitle:T(@"退出") forState:UIControlStateNormal];
+    [self.unFollowButton setBackgroundImage:[UIImage imageNamed:@"green_btn_120.png"] forState:UIControlStateNormal];
+
+    
     // private view
     self.privateView = [[UIImageView alloc] initWithFrame:CGRectMake(300, 5, 15, 15)];
     self.privateView.image = [UIImage imageNamed:@"private_icon.png"];
@@ -183,17 +197,16 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [self.faceView addSubview:self.avatarView];
     [self.faceView addSubview:self.privateView];
     [self.faceView addSubview:self.nameLabel];
-    [self.faceView addSubview:self.joinButton];
+    [self.faceView addSubview:self.followButton];
+    [self.faceView addSubview:self.unFollowButton];
     [self.view addSubview:self.faceView];
     
     [self.privateView setHidden:YES];
+    [self.unFollowButton setHidden:YES];
 }
 
 - (void)refreshFaceView
-{
-
-    
-    
+{    
     if (self.company != nil) {
         //
         self.isPrivate  = self.company.isPrivate.boolValue;
@@ -203,19 +216,28 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         
         
         if (self.company.status == CompanyStateFollowed) {
-            [self.joinButton setTitle:T(@"已加入") forState:UIControlStateNormal];
-            [self.joinButton removeTarget:self action:@selector(joinAction) forControlEvents:UIControlEventTouchUpInside];
+            [self.followButton setTitle:T(@"已加入") forState:UIControlStateNormal];
+            [self.followButton setBackgroundImage:[UIImage imageNamed:@"brown_btn.png"] forState:UIControlStateNormal];
+            [self.followButton removeTarget:self action:@selector(followAction) forControlEvents:UIControlEventTouchUpInside];
+            
+            [self.unFollowButton setHidden:NO];
+            [self.unFollowButton addTarget:self action:@selector(unFollowAction) forControlEvents:UIControlEventTouchUpInside];
+
         }else if(self.company.status == CompanyStateUnFollowed){
-            [self.joinButton setTitle:T(@"加入公司") forState:UIControlStateNormal];
-            [self.joinButton addTarget:self action:@selector(joinAction) forControlEvents:UIControlEventTouchUpInside];
+            [self.followButton setTitle:T(@"加入公司") forState:UIControlStateNormal];
+            [self.followButton addTarget:self action:@selector(followAction) forControlEvents:UIControlEventTouchUpInside];
+            [self.followButton setBackgroundImage:[UIImage imageNamed:@"green_btn.png"] forState:UIControlStateNormal];
+            [self.unFollowButton setHidden:YES];
+
         }
     }else if(self.jsonData != nil){
         self.isPrivate  = [ServerDataTransformer getPrivateFromServerJSON:self.jsonData].boolValue;
-        [self.joinButton addTarget:self action:@selector(joinAction) forControlEvents:UIControlEventTouchUpInside];
+        [self.followButton addTarget:self action:@selector(followAction) forControlEvents:UIControlEventTouchUpInside];
         
         self.nameLabel.text = [ServerDataTransformer getCompanyNameFromServerJSON:self.jsonData];
         NSURL *url = [NSURL URLWithString:[ServerDataTransformer getLogoFromServerJSON:self.jsonData]];
         [self.avatarView setImageWithURL:url placeholderImage:[UIImage imageNamed:@"company_face.png"]];
+        [self.unFollowButton setHidden:YES];
     }
     
 
@@ -289,7 +311,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 - (UITableViewCell *)tableViewCellWithReuseIdentifier:(NSString *)identifier
 {
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
-    cell.selectionStyle = UITableViewCellSelectionStyleGray;
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.backgroundView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"cell_H50_bg.png"]];
 //    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator ;
     
@@ -333,7 +355,6 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
             descLabel.text = self.company.website;
         }else if ([enTitle isEqualToString:@"member"]){
             descLabel.text = T(@"点击查看");
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator ;
         }else if ([enTitle isEqualToString:@"description"]){
             descLabel.text = self.company.desc;
         }
@@ -341,14 +362,15 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         descLabel.text = [ServerDataTransformer getStringObjFromServerJSON:self.jsonData byName:enTitle];
         if ([enTitle isEqualToString:@"member"]){
             descLabel.text = T(@"点击查看");
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator ;
         }
     }
     
     UIFont *font = [UIFont systemFontOfSize:14.0f];
     CGSize size = [(descLabel.text ? descLabel.text : @"") sizeWithFont:font constrainedToSize:CGSizeMake(DESC_WIDTH, 9999) lineBreakMode:UILineBreakModeWordWrap];
     NSLog(@"height %f",size.height);
-    [descLabel setFrame:CGRectMake(descLabel.frame.origin.x, (cell.frame.size.height - size.height)/2+3 , DESC_WIDTH, size.height)];
+
+    CGFloat posY = ([self.titleArray count] == indexPath.row + 1) ? 18 : (cell.frame.size.height - size.height)/2+3;
+    [descLabel setFrame:CGRectMake(descLabel.frame.origin.x, posY , DESC_WIDTH, size.height)];
     
 }
 
@@ -357,7 +379,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     cell.backgroundColor = BGCOLOR;
 }
 
-- (void)joinAction
+- (void)followAction
 {
     NSString *companyID = [ServerDataTransformer getCompanyIDFromServerJSON:self.jsonData];
     [[AppNetworkAPIClient sharedClient]followCompanyWithCompanyID:companyID withBlock:^(id responseDict, NSError *error) {
@@ -373,6 +395,20 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     }];
 }
 
+- (void)unFollowAction
+{
+    NSString *companyID = self.company.companyID;
+    [[AppNetworkAPIClient sharedClient]unfollowCompanyWithCompanyID:companyID withBlock:^(id responseDict, NSError *error) {
+        //
+        if (responseDict != nil) {
+            [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"请求已发送") andHideAfterDelay:2];
+            [self unSubscribeButtonPushed];
+            [self refreshFaceView];
+        }else{
+            [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"推出公司失败") andHideAfterDelay:1];
+        }
+    }];
+}
 
 -(void)subscribeButtonPushed
 {
@@ -390,33 +426,25 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         }
         self.company = newCompany;
     }
+}
+
+- (void)unSubscribeButtonPushed
+{
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Company"
+                                              inManagedObjectContext:self.managedObjectContext];
+    [request setEntity:entity];
     
-//    NSString *nodeStr = [jsonData valueForKey:@"node_address"];
-//    Channel *newChannel = [[ModelHelper sharedInstance] findChannelWithNode:nodeStr];
-//    if (newChannel == nil) {
-//        newChannel = [NSEntityDescription insertNewObjectForEntityForName:@"Channel" inManagedObjectContext:self.managedObjectContext];
-//        newChannel.owner = [self appDelegate].me;
-//        [[ModelHelper sharedInstance] populateIdentity:newChannel withJSONData:jsonData];
-//        newChannel.state = IdentityStatePendingAddSubscription;
-//    } else if (newChannel.state == IdentityStateInactive) {
-//        newChannel.state = IdentityStatePendingAddSubscription;
-//    } else if (newChannel.state == IdentityStatePendingRemoveSubscription) {
-//        newChannel.state = IdentityStatePendingAddSubscription;
-//    } else if (newChannel.state == IdentityStateActive) {
-//        [ConvenienceMethods showHUDAddedTo:self.view animated:YES customView:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"37x-Checkmark.png"]] text:T(@"已订阅") andHideAfterDelay:2];
-//        
-//        [self.confirmButton setTitle:T(@"查看信息") forState:UIControlStateNormal];
-//        [self.confirmButton removeTarget:self action:@selector(subscribeButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
-//        [self.confirmButton addTarget:self action:@selector(sendMsgButtonPushed:) forControlEvents:UIControlEventTouchUpInside];
-//        [self.cancelButton setHidden:YES];
-//        
-//        return ;
-//    } else if (newChannel.state == IdentityStatePendingAddSubscription){
-//        
-//    } else {
-//        DDLogVerbose(@"CRITICAL ERROR: new channel STATE wrong (%@)", newChannel);
-//        return;
-//    }
+    NSPredicate *pred = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"companyID = %@", self.company.companyID]];
+    [request setPredicate:pred];
+    
+    NSArray *companyArray=[self.managedObjectContext executeFetchRequest:request error:nil];
+    
+    if ([companyArray count] > 0){
+        Company *aCompany = [companyArray objectAtIndex:0];
+        [self.managedObjectContext deleteObject:aCompany];
+        [self.managedObjectContext save:nil];
+    }
     
 }
 

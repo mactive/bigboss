@@ -176,7 +176,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     self.companyCategoryViewController = [[CompanyCategoryViewController alloc] initWithNibName:nil bundle:nil];
     
     self.myCompanyController = [[MyCompanyViewController alloc]initWithStyle:UITableViewStylePlain];
-    
+    self.myCompanyController.managedObjectContext = self.managedObjectContext;
+
 }
 
 - (void)initSearchTableView
