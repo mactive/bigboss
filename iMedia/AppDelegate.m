@@ -310,7 +310,6 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         if (responseObject != nil) {
             NSDictionary *responseDict = [[NSDictionary alloc]initWithDictionary:responseObject];
             NSArray *sourceData = [responseDict allValues];
-
             [sourceData enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 //
                 Company *newCompany = [[ModelHelper sharedInstance] findCompanyWithCompanyID:
@@ -320,6 +319,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
                     newCompany = [NSEntityDescription insertNewObjectForEntityForName:@"Company" inManagedObjectContext:moc];
                     newCompany.owner = self.me;
                     newCompany.status = CompanyStateFollowed;
+                    DDLogVerbose(@"SYNC Insert company success");
                 }
                 // update
                 else{
@@ -336,6 +336,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
                         aCompany.status = CompanyStateFollowed;
                         [moc save:nil];
                     }
+                    DDLogVerbose(@"SYNC update company success");
+
                 }
 
             }];

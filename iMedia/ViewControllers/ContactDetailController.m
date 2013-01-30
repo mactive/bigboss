@@ -715,7 +715,8 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
                             destructiveButtonTitle:nil
                             otherButtonTitles:T(@"举报用户"),nil];
     self.reportActionsheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
-    [self.reportActionsheet showFromTabBar:[[self tabBarController] tabBar]];
+    [self.reportActionsheet showFromRect:self.view.bounds inView:self.view animated:YES];
+
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex

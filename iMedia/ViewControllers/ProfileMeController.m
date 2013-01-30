@@ -608,7 +608,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
                                   destructiveButtonTitle:nil
                                   otherButtonTitles:T(@"本地相册"), T(@"照相"),nil];
     self.photoActionsheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
-    [self.photoActionsheet showFromTabBar:[[self tabBarController] tabBar]];
+    [self.photoActionsheet showFromRect:self.view.bounds inView:self.view animated:YES];
+
 }
 
 - (void)removeOrReplace:(UIButton *)sender
@@ -620,7 +621,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
                             destructiveButtonTitle:nil
                             otherButtonTitles:T(@"替换照片"), T(@"删除照片"),nil];
     self.editActionsheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
-    [self.editActionsheet showFromTabBar:[[self tabBarController] tabBar]];
+    [self.editActionsheet showFromRect:self.view.bounds inView:self.view animated:YES];
     self.editingAlbumIndex = sender.tag;
     
     DDLogVerbose(@"editingAlbumIndex %d",self.editingAlbumIndex);

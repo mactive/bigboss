@@ -110,8 +110,7 @@
                               nil ];
     //,@"我的相册",@"新浪微博",@"微信朋友圈"
     
-    CGRect rect = CGRectMake(0, 0, 320, self.view.bounds.size.height-90);
-    self.settingTableView = [[UITableView alloc] initWithFrame:rect style:UITableViewStyleGrouped];
+    self.settingTableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
     self.settingTableView.dataSource = self;
     self.settingTableView.delegate = self;
 
@@ -311,7 +310,7 @@
                               destructiveButtonTitle:T(@"退出登录")
                               otherButtonTitles:nil];
     self.logoutActionsheet.actionSheetStyle = UIActionSheetStyleDefault;
-    [self.logoutActionsheet showFromTabBar:[[self tabBarController] tabBar]];
+    [self.logoutActionsheet showFromRect:self.view.bounds inView:self.view animated:YES];
 }
 
 

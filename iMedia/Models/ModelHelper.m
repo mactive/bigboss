@@ -478,6 +478,7 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
                         @"Message",
                         @"Information",
                         @"ShakeInfo",
+                        @"Company",
                         nil];
     
     // Common
