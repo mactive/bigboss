@@ -40,8 +40,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 #import "UpYun.h"
 #endif
 
-static NSString * const kAppNetworkAPIBaseURLString = @"http://192.168.1.104:8000/";
-//static NSString * const kAppNetworkAPIBaseURLString = @"http://media.wingedstone.com:8000/";
+//static NSString * const kAppNetworkAPIBaseURLString = @"http://192.168.1.104:8000/";
+static NSString * const kAppNetworkAPIBaseURLString = @"http://c.wingedstone.com:8000/";
 
 
 NSString *const kXMPPmyJID = @"kXMPPmyJID";

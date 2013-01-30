@@ -317,9 +317,11 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
                 // insert
                 if (newCompany == nil) {
                     newCompany = [NSEntityDescription insertNewObjectForEntityForName:@"Company" inManagedObjectContext:moc];
+                    [[ModelHelper sharedInstance]populateCompany:newCompany withServerJSONData:obj];
                     newCompany.owner = self.me;
                     newCompany.status = CompanyStateFollowed;
-                    DDLogVerbose(@"SYNC Insert company success");
+
+                    DDLogVerbose(@"SYNC Insert company success %@",newCompany.companyID);
                 }
                 // update
                 else{
@@ -335,8 +337,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
                         [[ModelHelper sharedInstance]populateCompany:aCompany withServerJSONData:obj];
                         aCompany.status = CompanyStateFollowed;
                         [moc save:nil];
+                        DDLogVerbose(@"SYNC update company success %@",aCompany.companyID);
                     }
-                    DDLogVerbose(@"SYNC update company success");
 
                 }
 

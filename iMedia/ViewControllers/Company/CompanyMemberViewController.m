@@ -92,7 +92,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         if (responseObject != nil) {
             NSMutableDictionary *responseDict = [NSMutableDictionary dictionaryWithDictionary:responseObject];
 
-//            [responseDict removeObjectForKey:[self appDelegate].me.guid];  // 移出自己
+            [responseDict removeObjectForKey:[self appDelegate].me.guid];  // 移出自己
 
             self.sourceDict = responseDict;
             self.sourceData = [self.sourceDict allValues];
