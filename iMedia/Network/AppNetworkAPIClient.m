@@ -328,8 +328,8 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     UIImage *image = [savedObjects objectForKey:@"image"];
     UIImage *thumbnail = [savedObjects objectForKey:@"thumbnail"];
     
-    NSString *url = [NSString stringWithFormat:@"http://cst01.b0.upaiyun.com%@?%.0f", upYun.name, [[NSDate date] timeIntervalSince1970]];
-    NSString *thumbnailURL = [NSString stringWithFormat:@"http://cst01.b0.upaiyun.com%@!tm?%.0f", upYun.name, [[NSDate date] timeIntervalSince1970]];
+    NSString *url = [NSString stringWithFormat:@"http://bigbossapp.b0.upaiyun.com%@?%.0f", upYun.name, [[NSDate date] timeIntervalSince1970]];
+    NSString *thumbnailURL = [NSString stringWithFormat:@"http://bigbossapp.b0.upaiyun.com%@!tm?%.0f", upYun.name, [[NSDate date] timeIntervalSince1970]];
     
     avatar.image = image;
     avatar.thumbnail = thumbnail;
@@ -357,8 +357,8 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     UpYun *uy = [[UpYun alloc] init];
     uy.delegate = self;
     uy.expiresIn = 100;
-    uy.bucket = @"cst01";
-    uy.passcode = @"JRamioTNAQo+4xQxGenZdNYmAio=";
+    uy.bucket = @"bigbossapp";
+    uy.passcode = @"2Q7/2EDFIVh00kxhZE4D62lH/2M=";
     NSMutableDictionary *params = [NSMutableDictionary dictionary];
     //    [params setObject:@"0,1000" forKey:@"content-length-range"];
     //    [params setObject:@"png" forKey:@"allow-file-type"];
@@ -1026,13 +1026,13 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 }
 
 // op 39 获取公司详情
-- (void)getcompanyWithCompanyID:(NSString *)companyID withBlock:(void (^)(id, NSError *))block
+- (void)getCompanyWithCompanyID:(NSString *)companyID withBlock:(void (^)(id, NSError *))block
 {
     NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys:companyID, @"cid", @"39", @"op", nil];
     NSMutableURLRequest *getRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"GET" path:GET_DATA_PATH parameters:getDict];
     AFHTTPRequestOperation *getOperation = [[AppNetworkAPIClient sharedClient]HTTPRequestOperationWithRequest:getRequest success:^(AFHTTPRequestOperation *operation, id responseObject) {
         //
-        DDLogVerbose(@"getcompanyWithCompanyID: %@", responseObject);
+        DDLogVerbose(@"getCompanyWithCompanyID: %@", responseObject);
         
         NSString* type = [responseObject valueForKey:@"type"];
         
@@ -1053,6 +1053,42 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     }];
     [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:getOperation];
     
+}
+
+// op 41
+- (void)getCompanyMemberWithCompanyID:(NSString *)companyID andStart:(NSUInteger)start withBlock:(void(^)(id, NSError *))block
+{
+    NSString *startString = [NSString stringWithFormat:@"%d",start];
+    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys:companyID, @"cid", startString, @"start", @"41", @"op", nil];
+    NSMutableURLRequest *getRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"GET" path:GET_DATA_PATH parameters:getDict];
+    AFHTTPRequestOperation *getOperation = [[AppNetworkAPIClient sharedClient]HTTPRequestOperationWithRequest:getRequest success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        //
+        DDLogVerbose(@"getCompanyMemberWithCompanyID: %@", responseObject);
+        
+        NSString* type = [responseObject valueForKey:@"type"];
+        
+        if (![@"error" isEqualToString:type]) {
+            if (block) {
+                block (responseObject, nil);
+            }
+        } else {
+            if (block) {
+                if ([@"fail" isEqualToString:type]) {
+                    NSError *error = [[NSError alloc] initWithDomain:@"wingedstone.com" code:403 userInfo:nil];
+                    block (nil, error);
+                }else{
+                    NSError *error = [[NSError alloc] initWithDomain:@"wingedstone.com" code:500 userInfo:nil];
+                    block (nil, error);
+                }
+
+            }
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        if (block) {
+            block (nil, error);
+        }
+    }];
+    [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:getOperation];
 }
 
 // op 30 follow company

@@ -15,6 +15,7 @@
 #import "Me.h"
 #import "Avatar.h"
 #import "Channel.h"
+#import "Company.h"
 #import "Conversation.h"
 #import "Pluggin.h"
 #import <CocoaPlant/NSManagedObject+CocoaPlant.h>
@@ -28,6 +29,7 @@
 #import "LoginViewController.h"
 #import "MainMenuViewController.h"
 #import "ConfigSetting.h"
+#import "ServerDataTransformer.h"
 
 #import "AppNetworkAPIClient.h"
 #import "LocationManager.h"
@@ -215,50 +217,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
       UIRemoteNotificationTypeSound)];
     
     // Update local data with latest server info
-    [self updateMeWithBlock:nil];    
-    
-    /*
-    self.tabController = [[UITabBarController alloc] init];
-    
-    self.conversationController = [[ConversationsController alloc] init];
-    UINavigationController *navController2 = [[UINavigationController alloc] initWithRootViewController:self.conversationController];
-    self.conversationController.managedObjectContext = _managedObjectContext;
-    self.conversationController.title = T(@"消息");
-    self.conversationController.tabBarItem = [[UITabBarItem alloc] initWithTitle:T(@"消息") image:[UIImage imageNamed:@"tabbar_item_2.png"] tag:1002];
-    
-    self.contactListController = [[ContactListViewController alloc] initWithStyle:UITableViewStylePlain andManagementContext:_managedObjectContext];
-    UINavigationController *navController3 = [[UINavigationController alloc] initWithRootViewController:self.contactListController];
-    self.contactListController.title = T(@"联系人");
-    self.contactListController.tabBarItem = [[UITabBarItem alloc] initWithTitle:T(@"联系人")  image:[UIImage imageNamed:@"tabbar_item_3.png"] tag:1003];
-    
-    self.functionListController = [[FunctionListViewController alloc] init];
-    UINavigationController *navController4 = [[UINavigationController alloc] initWithRootViewController:self.functionListController];
-    self.functionListController.managedObjectContext = _managedObjectContext;
-    self.functionListController.title = T(@"百宝箱");
-    self.functionListController.tabBarItem = [[UITabBarItem alloc] initWithTitle:T(@"百宝箱") image:[UIImage imageNamed:@"tabbar_item_4.png"] tag:1004];
-    
-    self.settingController = [[SettingViewController alloc] init];
-    self.settingController.managedObjectContext = _managedObjectContext;
-    UINavigationController *navController5 = [[UINavigationController alloc] initWithRootViewController:self.settingController];
-    self.settingController.title = T(@"设置");
-    self.settingController.tabBarItem = [[UITabBarItem alloc] initWithTitle:T(@"设置") image:[UIImage imageNamed:@"tabbar_item_5.png"] tag:1005];
-    
-    NSArray* controllers = [NSArray arrayWithObjects: navController2, navController3, navController4, navController5, nil];
-    self.tabController.viewControllers = controllers;
+    [self updateMeWithBlock:nil];
 
-    [XFox logAllPageViews:navController2];
-    [XFox logAllPageViews:navController3];
-    [XFox logAllPageViews:navController4];
-    [XFox logAllPageViews:navController5];
-    
-    // tabtar style
-    [self.tabController.tabBar setFrame:CGRectMake(0, 430.0, 320.0, 50.0)];
-    UIImageView *tabbarBgView  = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"tabbar_bg.png"]];
-    [self.tabController.tabBar insertSubview:tabbarBgView atIndex:1];
-    [self.tabController.tabBar setTintColor:[UIColor grayColor]];
-    [self.tabController.tabBar setSelectedImageTintColor:RGBCOLOR(151, 206, 45)];
-    [self.tabController.tabBar setSelectionIndicatorImage:[UIImage imageNamed:@"tabbar_overlay.png"]];
-    */
     // mainMenuViewController
 
     self.mainMenuViewController = [[MainMenuViewController alloc]initWithNibName:nil bundle:nil];
@@ -329,6 +289,57 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     }];
 }
  */
+
+- (void)updateMyCompanyInformation:(NSNotification *)notification
+{
+    NSManagedObjectContext *moc = _managedObjectContext;
+    NSEntityDescription *entityDescription = [NSEntityDescription
+                                              entityForName:@"Company" inManagedObjectContext:moc];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDescription];
+    
+    
+    [[AppNetworkAPIClient sharedClient]getMyCompanyWithBlock:^(id responseObject, NSError *error) {
+        //
+        if (responseObject != nil) {
+            NSDictionary *responseDict = [[NSDictionary alloc]initWithDictionary:responseObject];
+            NSArray *sourceData = [responseDict allValues];
+
+            [sourceData enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                //
+                Company *newCompany = [[ModelHelper sharedInstance] findCompanyWithCompanyID:
+                                       [ServerDataTransformer getCompanyIDFromServerJSON:obj]];
+                // insert
+                if (newCompany == nil) {
+                    newCompany = [NSEntityDescription insertNewObjectForEntityForName:@"Company" inManagedObjectContext:moc];
+                    newCompany.owner = self.me;
+                    newCompany.status = CompanyStateFollowed;
+                    [[ModelHelper sharedInstance] populateCompany:newCompany withServerJSONData:obj];
+                }
+                // update
+                else{
+                    NSPredicate *predicate = [NSPredicate predicateWithFormat:
+                                              @"(companyID = %@)", newCompany.companyID];
+                    [request setPredicate:predicate];
+                    
+                    NSError *error = nil;
+                    NSArray *companyArray = [moc executeFetchRequest:request error:&error];
+                    
+                    if ([companyArray count] > 0){
+                        Company *aCompany = [companyArray objectAtIndex:0];
+                        [[ModelHelper sharedInstance]populateCompany:aCompany withServerJSONData:obj];
+                        aCompany.status = CompanyStateFollowed;
+                        [moc save:nil];
+                    }
+                }
+
+            
+            }];
+
+        }
+    }];
+
+}
 
 - (void)updateMyChannelInformation:(NSNotification *)notification
 {
@@ -501,9 +512,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         self.friendRequestPluggin = [[ModelHelper sharedInstance] findFriendRequestPluggin];
     }
     
-    [self updateMyChannelInformation:nil];
-    
-    [[AppNetworkAPIClient sharedClient] updateIdentity:self.me withBlock:block];
+    [self updateMyChannelInformation:nil]; 
+   [[AppNetworkAPIClient sharedClient] updateIdentity:self.me withBlock:block];
 }
 
 -(void)createMeAndOtherOneTimeObjectsWithUsername:(NSString *)username password:(NSString *)passwd jid:(NSString *)jidStr jidPasswd:(NSString *)jidPass andGUID:(NSString *)guid withBlock:(void (^)(id responseObject, NSError *error))block

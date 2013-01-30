@@ -48,6 +48,7 @@
 - (NSManagedObjectContext *)context;
 - (void) disableLeftBarButtonItemOnNavbar:(BOOL)disable;
 - (void)clearSession;
+- (void)updateMyCompanyInformation:(NSNotification *)notification;
 
 - (void)saveContextInDefaultLoop;
 @end

@@ -12,6 +12,12 @@
 #import "AppNetworkAPIClient.h"
 #import "MBProgressHUD.h"
 #import "ConvenienceMethods.h"
+#import "AppDelegate.h"
+#import "ModelHelper.h"
+#import "ServerDataTransformer.h"
+#import "Me.h"
+#import "Company.h"
+
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -74,6 +80,11 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
     }
     return self;
+}
+
+- (AppDelegate *)appDelegate
+{
+	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
 #define VIEW_OFFSET 5
@@ -158,6 +169,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     self.transition.subtype = kCATransitionFromLeft;
     self.fetchArray = [[NSMutableArray alloc]init];
     self.fetchDict = [[NSMutableDictionary alloc]init];
+    
+//  update company
 }
 
 - (void)initViewControllers

@@ -79,7 +79,9 @@ extern NSString *const kXMPPmyUsername;
 // op37 按分类请求公司 codename
 - (void)getCompanyWithCategory:(NSString *)codename withBlock:(void(^)(id, NSError *))block;
 // op39 公司的详细信息 by cid
-- (void)getcompanyWithCompanyID:(NSString *)companyID withBlock:(void(^)(id, NSError *))block;
+- (void)getCompanyWithCompanyID:(NSString *)companyID withBlock:(void(^)(id, NSError *))block;
+// op41 获取公司的成员 by cid start
+- (void)getCompanyMemberWithCompanyID:(NSString *)companyID andStart:(NSUInteger)start withBlock:(void(^)(id, NSError *))block;
 
 // op 30
 - (void)followCompanyWithCompanyID:(NSString *)companyID withBlock:(void(^)(id, NSError *))block;

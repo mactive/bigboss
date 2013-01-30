@@ -14,6 +14,7 @@
 #import "ServerDataTransformer.h"
 #import "UIImageView+AFNetworking.h"
 #import "CompanyListViewController.h"
+#import "CompanyMemberViewController.h"
 #import "Company.h"
 #import "ModelHelper.h"
 #import "AppDelegate.h"
@@ -256,14 +257,12 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-#warning Potentially incomplete method implementation.
     // Return the number of sections.
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-#warning Incomplete method implementation.
     // Return the number of rows in the section.
     return [self.titleArray count];
 }
@@ -355,6 +354,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
             descLabel.text = self.company.website;
         }else if ([enTitle isEqualToString:@"member"]){
             descLabel.text = T(@"点击查看");
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         }else if ([enTitle isEqualToString:@"description"]){
             descLabel.text = self.company.desc;
         }
@@ -362,6 +362,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         descLabel.text = [ServerDataTransformer getStringObjFromServerJSON:self.jsonData byName:enTitle];
         if ([enTitle isEqualToString:@"member"]){
             descLabel.text = T(@"点击查看");
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         }
     }
     
@@ -377,6 +378,25 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 - (void) tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     cell.backgroundColor = BGCOLOR;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *enTitle = [self.titleEnArray objectAtIndex:indexPath.row];
+    if ([enTitle isEqualToString:@"member"]) {
+        NSString *companyID;
+
+        if (self.company != nil) {
+            companyID = self.company.companyID;
+        }else{
+            companyID = [ServerDataTransformer getStringObjFromServerJSON:self.jsonData byName:@"cid"];
+        }
+        
+        CompanyMemberViewController *controller = [[CompanyMemberViewController alloc]initWithNibName:nil bundle:nil];
+        controller.companyID = companyID;
+        [self.navigationController pushViewController:controller animated:YES];
+    }
+
 }
 
 - (void)followAction
@@ -403,7 +423,9 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         if (responseDict != nil) {
             [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"请求已发送") andHideAfterDelay:2];
             [self unSubscribeButtonPushed];
-            [self refreshFaceView];
+            //返回上一层
+            [self.navigationController popViewControllerAnimated:YES];
+            
         }else{
             [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"推出公司失败") andHideAfterDelay:1];
         }
@@ -430,15 +452,19 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 - (void)unSubscribeButtonPushed
 {
+    NSManagedObjectContext *moc = self.managedObjectContext;
+    NSEntityDescription *entityDescription = [NSEntityDescription
+                                              entityForName:@"Company" inManagedObjectContext:moc];
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Company"
-                                              inManagedObjectContext:self.managedObjectContext];
-    [request setEntity:entity];
+    [request setEntity:entityDescription];
     
-    NSPredicate *pred = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"companyID = %@", self.company.companyID]];
-    [request setPredicate:pred];
+    // Set example predicate and sort orderings...
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:
+                              @"(companyID = %@)", self.company.companyID];
+    [request setPredicate:predicate];
     
-    NSArray *companyArray=[self.managedObjectContext executeFetchRequest:request error:nil];
+    NSError *error = nil;
+    NSArray *companyArray = [moc executeFetchRequest:request error:&error];
     
     if ([companyArray count] > 0){
         Company *aCompany = [companyArray objectAtIndex:0];

@@ -231,6 +231,8 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
 {
     Company *aCompany = [self.sourceData objectAtIndex:indexPath.row];
     
+    DDLogVerbose(@"companyID %@",aCompany.companyID);
+    
     UIImageView *avatarView = (UIImageView *)[cell viewWithTag:AVATAR_TAG];
     NSURL *url = [NSURL URLWithString:aCompany.logo];
     [avatarView setImageWithURL:url placeholderImage:[UIImage imageNamed:@"company_face.png"]];
@@ -279,7 +281,7 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
         HUD.removeFromSuperViewOnHide = YES;
         HUD.labelText = T(@"正在加载");
         
-        [[AppNetworkAPIClient sharedClient]getcompanyWithCompanyID:companyID withBlock:^(id responseDict, NSError *error) {
+        [[AppNetworkAPIClient sharedClient]getCompanyWithCompanyID:companyID withBlock:^(id responseDict, NSError *error) {
             //
             [HUD hide:YES];
             
