@@ -16,7 +16,7 @@
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * companyID;
 @property (nonatomic, retain) NSString * serverbotJID;
-@property (nonatomic, retain) NSNumber * isFollow;
+@property (nonatomic)          u_int16_t status;
 @property (nonatomic, retain) NSNumber * isPrivate;
 @property (nonatomic, retain) NSString * website;
 @property (nonatomic, retain) NSString * email;

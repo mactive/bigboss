@@ -12,6 +12,7 @@
 @interface CompanyDetailViewController : BBCustomBackButtonViewController
 
 @property(strong, nonatomic) id   jsonData;
+@property(strong, nonatomic) Company *company;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
 @end

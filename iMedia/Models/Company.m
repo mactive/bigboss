@@ -15,7 +15,7 @@
 @dynamic name;
 @dynamic companyID;
 @dynamic serverbotJID;
-@dynamic isFollow;
+@dynamic status;
 @dynamic isPrivate;
 @dynamic website;
 @dynamic email;

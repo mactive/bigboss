@@ -126,6 +126,12 @@ typedef enum _IdentityType
     IdentityTypePlugginFriendRequest = 10
 } IdentityType;
 
+typedef enum _CompanyStatus
+{
+    CompanyStateFollowed = 1,
+    CompanyStateUnFollowed = 2
+} CompanyStatus;
+
 typedef enum _IdentityState
 {
     IdentityStateActive     = 1,

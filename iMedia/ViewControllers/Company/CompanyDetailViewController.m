@@ -36,7 +36,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @property(strong, nonatomic)UIImageView *avatarView;
 @property(strong, nonatomic)UILabel *nameLabel;
 @property(strong, nonatomic)UIButton *joinButton;
-@property(strong, nonatomic)NSNumber *isPrivate;
+@property(strong, nonatomic)UIImageView *privateView;
+@property(readwrite, nonatomic)BOOL isPrivate;
 @property(readwrite, nonatomic)BOOL isFollow;
 
 @property(strong, nonatomic)UITableView * tableView;
@@ -52,8 +53,12 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @synthesize avatarView;
 @synthesize nameLabel;
 @synthesize joinButton;
+@synthesize privateView;
 @synthesize isPrivate;
+@synthesize isFollow;
 @synthesize managedObjectContext;
+@synthesize company;
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -120,13 +125,12 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     
     self.sourceData = [[NSArray alloc]init];
     self.sourceDict = [[NSMutableDictionary alloc]init];
-    self.isPrivate = [ServerDataTransformer getPrivateFromServerJSON:self.jsonData];
-    self.isFollow = FALSE;
+    
+    self.isFollow = NO;
+    self.isPrivate = NO;
+    
     [self.view addSubview:self.tableView];
     [self initFaceView];
-    
-    self.managedObjectContext = [self appDelegate].context;
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -169,29 +173,57 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [self.joinButton.titleLabel setTextAlignment:UITextAlignmentCenter];
     [self.joinButton setTitle:T(@"加入公司") forState:UIControlStateNormal];
     [self.joinButton setBackgroundImage:[UIImage imageNamed:@"green_btn.png"] forState:UIControlStateNormal];
-    [self.joinButton addTarget:self action:@selector(joinAction) forControlEvents:UIControlEventTouchUpInside];
 
+    // private view
+    self.privateView = [[UIImageView alloc] initWithFrame:CGRectMake(300, 5, 15, 15)];
+    self.privateView.image = [UIImage imageNamed:@"private_icon.png"];
+    
     //add sub
     [self.faceView addSubview:avatarBG];
     [self.faceView addSubview:self.avatarView];
+    [self.faceView addSubview:self.privateView];
     [self.faceView addSubview:self.nameLabel];
     [self.faceView addSubview:self.joinButton];
     [self.view addSubview:self.faceView];
+    
+    [self.privateView setHidden:YES];
 }
 
 - (void)refreshFaceView
 {
-    NSURL *url = [NSURL URLWithString:[ServerDataTransformer getLogoFromServerJSON:self.jsonData]];
-    [self.avatarView setImageWithURL:url placeholderImage:[UIImage imageNamed:@"company_face.png"]];
-    
-    self.nameLabel.text = [ServerDataTransformer getCompanyNameFromServerJSON:self.jsonData];
-    
 
     
-    if (self.isFollow){
-        [self.joinButton setHidden:YES];
+    
+    if (self.company != nil) {
+        //
+        self.isPrivate  = self.company.isPrivate.boolValue;
+        self.nameLabel.text = self.company.name;
+        NSURL *url = [NSURL URLWithString:self.company.logo];
+        [self.avatarView setImageWithURL:url placeholderImage:[UIImage imageNamed:@"company_face.png"]];
+        
+        
+        if (self.company.status == CompanyStateFollowed) {
+            [self.joinButton setTitle:T(@"已加入") forState:UIControlStateNormal];
+            [self.joinButton removeTarget:self action:@selector(joinAction) forControlEvents:UIControlEventTouchUpInside];
+        }else if(self.company.status == CompanyStateUnFollowed){
+            [self.joinButton setTitle:T(@"加入公司") forState:UIControlStateNormal];
+            [self.joinButton addTarget:self action:@selector(joinAction) forControlEvents:UIControlEventTouchUpInside];
+        }
+    }else if(self.jsonData != nil){
+        self.isPrivate  = [ServerDataTransformer getPrivateFromServerJSON:self.jsonData].boolValue;
+        [self.joinButton addTarget:self action:@selector(joinAction) forControlEvents:UIControlEventTouchUpInside];
+        
+        self.nameLabel.text = [ServerDataTransformer getCompanyNameFromServerJSON:self.jsonData];
+        NSURL *url = [NSURL URLWithString:[ServerDataTransformer getLogoFromServerJSON:self.jsonData]];
+        [self.avatarView setImageWithURL:url placeholderImage:[UIImage imageNamed:@"company_face.png"]];
+    }
+    
+
+    // is private
+    if (self.isPrivate){
+        [self.privateView setHidden:NO];
     }else{
-        [self.joinButton setHidden:NO];
+        [self.privateView setHidden:YES];
     }
 }
 
@@ -216,12 +248,17 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    NSString *enTitle = [self.titleEnArray objectAtIndex:indexPath.row];
+    NSString *enTitle = [self.titleEnArray objectAtIndex:indexPath.row];    
     
     if ([enTitle isEqualToString:@"description"]) {
+        NSString *item ;
+        if (self.company != nil) {
+            item = self.company.desc;
+        }else{
+            item = [ServerDataTransformer getDescriptionFromServerJSON:self.jsonData];
+        }
+
         UIFont *font = [UIFont systemFontOfSize:14.0f];
-        NSString *item = [ServerDataTransformer getStringObjFromServerJSON:self.jsonData byName:enTitle];
 
         CGSize size = [(item ? item : @"") sizeWithFont:font constrainedToSize:CGSizeMake(DESC_WIDTH, 9999) lineBreakMode:UILineBreakModeWordWrap];
         if (size.height > CELL_HEIGHT) {
@@ -289,7 +326,24 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     
     NSString *enTitle = [self.titleEnArray objectAtIndex:indexPath.row];
     UILabel *descLabel = (UILabel *)[cell viewWithTag:DESC_TAG];
-    descLabel.text = [ServerDataTransformer getStringObjFromServerJSON:self.jsonData byName:enTitle];
+    if (self.company != nil) {
+        if([enTitle isEqualToString:@"email"]){
+            descLabel.text = self.company.email;
+        }else if ([enTitle isEqualToString:@"website"]){
+            descLabel.text = self.company.website;
+        }else if ([enTitle isEqualToString:@"member"]){
+            descLabel.text = T(@"点击查看");
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator ;
+        }else if ([enTitle isEqualToString:@"description"]){
+            descLabel.text = self.company.desc;
+        }
+    }else{
+        descLabel.text = [ServerDataTransformer getStringObjFromServerJSON:self.jsonData byName:enTitle];
+        if ([enTitle isEqualToString:@"member"]){
+            descLabel.text = T(@"点击查看");
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator ;
+        }
+    }
     
     UIFont *font = [UIFont systemFontOfSize:14.0f];
     CGSize size = [(descLabel.text ? descLabel.text : @"") sizeWithFont:font constrainedToSize:CGSizeMake(DESC_WIDTH, 9999) lineBreakMode:UILineBreakModeWordWrap];
@@ -309,10 +363,10 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [[AppNetworkAPIClient sharedClient]followCompanyWithCompanyID:companyID withBlock:^(id responseDict, NSError *error) {
         //
         if (responseDict != nil) {
-            [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"加入公司成功") andHideAfterDelay:1];
-            self.isFollow = YES;
-            [self refreshFaceView];
+            [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"请求已发送") andHideAfterDelay:2];
             [self subscribeButtonPushed];
+            [self refreshFaceView];
+            
         }else{
             [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"加入公司失败") andHideAfterDelay:1];
         }
@@ -328,7 +382,13 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         newCompany = [NSEntityDescription insertNewObjectForEntityForName:@"Company" inManagedObjectContext:self.managedObjectContext];
         newCompany.owner = [self appDelegate].me;
         [[ModelHelper sharedInstance] populateCompany:newCompany withServerJSONData:self.jsonData];
-        newCompany.isFollow  = [NSNumber numberWithBool:YES];
+        
+        if (self.isPrivate) {
+            newCompany.status  = CompanyStateUnFollowed;
+        }else{
+            newCompany.status  = CompanyStateFollowed;
+        }
+        self.company = newCompany;
     }
     
 //    NSString *nodeStr = [jsonData valueForKey:@"node_address"];

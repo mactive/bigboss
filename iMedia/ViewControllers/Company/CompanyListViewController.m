@@ -14,6 +14,9 @@
 #import "ServerDataTransformer.h"
 #import "UIImageView+AFNetworking.h"
 #import "CompanyDetailViewController.h"
+#import "Company.h"
+#import "ModelHelper.h"
+#import "AppDelegate.h"
 
 @interface CompanyListViewController ()<UITableViewDataSource,UITableViewDelegate,UISearchBarDelegate>
 
@@ -36,6 +39,11 @@
         
     }
     return self;    
+}
+
+- (AppDelegate *)appDelegate
+{
+	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
 
@@ -210,26 +218,64 @@
 {
     NSDictionary *dataDict = [self.sourceData objectAtIndex:indexPath.row];
     NSString *companyID = [ServerDataTransformer getStringObjFromServerJSON:dataDict byName:@"cid"];
-
-
-    MBProgressHUD* HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    HUD.removeFromSuperViewOnHide = YES;
-    HUD.labelText = T(@"正在加载");
     
-    [[AppNetworkAPIClient sharedClient]getcompanyWithCompanyID:companyID withBlock:^(id responseDict, NSError *error) {
-        //
-        [HUD hide:YES];
-        
-        if (responseDict != nil) {
-            CompanyDetailViewController *controller = [[CompanyDetailViewController alloc]initWithNibName:nil bundle:nil];\
-            controller.jsonData = responseDict;
-            [self.navigationController pushViewController:controller animated:YES];
-        }else{
-            [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"网络错误 暂时无法刷新") andHideAfterDelay:1];
-        }
-                
-    }];
+    [self getDict:companyID];
     
+
+//    MBProgressHUD* HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//    HUD.removeFromSuperViewOnHide = YES;
+//    HUD.labelText = T(@"正在加载");
+//    
+//    [[AppNetworkAPIClient sharedClient]getcompanyWithCompanyID:companyID withBlock:^(id responseDict, NSError *error) {
+//        //
+//        [HUD hide:YES];
+//        
+//        if (responseDict != nil) {
+//            CompanyDetailViewController *controller = [[CompanyDetailViewController alloc]initWithNibName:nil bundle:nil];\
+//            controller.jsonData = responseDict;
+//            [self.navigationController pushViewController:controller animated:YES];
+//        }else{
+//            [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"网络错误 暂时无法刷新") andHideAfterDelay:1];
+//        }
+//                
+//    }];
+    
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark Accessors & selectors
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (void)getDict:(NSString *)companyID
+{
+    Company *aCompany = [[ModelHelper sharedInstance]findCompanyWithCompanyID:companyID];
+    
+    if (aCompany != nil && aCompany.status == CompanyStateFollowed ) {
+        CompanyDetailViewController *controller = [[CompanyDetailViewController alloc]initWithNibName:nil bundle:nil];\
+        controller.company = aCompany;
+        controller.managedObjectContext = [self appDelegate].context;
+        [self.navigationController pushViewController:controller animated:YES];
+    }else {
+        // get user info from web and display as if it is searched
+        MBProgressHUD* HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        HUD.removeFromSuperViewOnHide = YES;
+        HUD.labelText = T(@"正在加载");
+
+        [[AppNetworkAPIClient sharedClient]getcompanyWithCompanyID:companyID withBlock:^(id responseDict, NSError *error) {
+            //
+            [HUD hide:YES];
+
+            if (responseDict != nil) {
+                CompanyDetailViewController *controller = [[CompanyDetailViewController alloc]initWithNibName:nil bundle:nil];\
+                controller.jsonData = responseDict;
+                controller.managedObjectContext = [self appDelegate].context;
+                [self.navigationController pushViewController:controller animated:YES];
+            }else{
+                [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"网络错误 暂时无法刷新") andHideAfterDelay:1];
+            }
+                    
+        }];
+    }
 }
 
 
