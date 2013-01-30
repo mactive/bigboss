@@ -58,10 +58,12 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     SystemSoundID           _messageReceivedSystemSoundID;
     SystemSoundID           _messageSentSystemSoundID;
     NSUInteger              _updateChannelRetryCount;
+    NSUInteger              _updateCompanyRetryCount;
     NSUInteger              _loginRetryCount;
 }
 
 @property (nonatomic, strong) NSTimer* updateChannelTimer;
+@property (nonatomic, strong) NSTimer* updateCompanyTimer;
 @property (nonatomic, strong) NSTimer* loginTimer;
 @property (nonatomic, strong) PrivacyLoginViewController *privacyLoginViewController;
 @property (nonatomic, strong) UIViewController *transController;
@@ -78,6 +80,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @synthesize functionListController;
 @synthesize settingController;
 @synthesize updateChannelTimer;
+@synthesize updateCompanyTimer;
 @synthesize loginTimer;
 @synthesize privacyLoginViewController;
 @synthesize transController;
@@ -144,10 +147,13 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     //retry logic here
     //
     _updateChannelRetryCount = 0 ;
+    _updateCompanyRetryCount = 0 ;
     _loginRetryCount = 0;
     self.updateChannelTimer = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow:10] interval:60 target:self selector:@selector(updateMyChannelInformation:) userInfo:nil repeats:YES];
+    self.updateCompanyTimer = [[NSTimer alloc]initWithFireDate:[NSDate dateWithTimeIntervalSinceNow:5] interval:60 target:self selector:@selector(updateMyCompanyInformation:) userInfo:nil repeats:YES];
   //  self.loginTimer = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow:2000] interval:5 target:self selector:@selector(reLogin:) userInfo:nil repeats:YES];
     [[NSRunLoop currentRunLoop] addTimer:self.updateChannelTimer forMode:NSDefaultRunLoopMode];
+    [[NSRunLoop currentRunLoop] addTimer:self.updateCompanyTimer forMode:NSDefaultRunLoopMode];
   //  [[NSRunLoop currentRunLoop] addTimer:self.loginTimer forMode:NSDefaultRunLoopMode];
     
     // monitor for network status change
@@ -314,7 +320,6 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
                     newCompany = [NSEntityDescription insertNewObjectForEntityForName:@"Company" inManagedObjectContext:moc];
                     newCompany.owner = self.me;
                     newCompany.status = CompanyStateFollowed;
-                    [[ModelHelper sharedInstance] populateCompany:newCompany withServerJSONData:obj];
                 }
                 // update
                 else{
@@ -333,9 +338,17 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
                     }
                 }
 
-            
             }];
-
+            [self.updateCompanyTimer invalidate];
+        }else{
+            _updateCompanyRetryCount += 1;
+            NSTimeInterval seconds = 0;
+            if (_updateCompanyRetryCount > 3) {
+                seconds = 60;
+            } else {
+                seconds = _updateCompanyRetryCount * 2;
+            }
+            [self.updateChannelTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:seconds]];
         }
     }];
 
@@ -512,7 +525,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         self.friendRequestPluggin = [[ModelHelper sharedInstance] findFriendRequestPluggin];
     }
     
-    [self updateMyChannelInformation:nil]; 
+    [self updateMyChannelInformation:nil];
+    [self updateMyCompanyInformation:nil];
    [[AppNetworkAPIClient sharedClient] updateIdentity:self.me withBlock:block];
 }
 
