@@ -32,7 +32,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @property(strong, nonatomic)CATransition* transition;
 @property(strong, nonatomic)UISearchBar *searchBar;
 @property(strong, nonatomic)UIButton *barButton;
-@property(strong, nonatomic)UIButton *settingButton;
+@property(strong, nonatomic)UIBarButtonItem *settingButton;
+@property(strong, nonatomic)UIBarButtonItem *lastMessageButton;
 @property(strong, nonatomic)UITableView *searchTableView;
 @property(strong, nonatomic)NSArray *sourceData;
 @property(strong, nonatomic)NSMutableArray *fetchArray;
@@ -52,6 +53,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @synthesize searchTableView;
 @synthesize searchBar;
 @synthesize barButton;
+@synthesize lastMessageButton;
 @synthesize settingButton;
 @synthesize sourceData;
 @synthesize fetchArray;
@@ -72,11 +74,19 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         [self.navigationItem setHidesBackButton:YES];
         
         
-        self.settingButton = [[UIButton alloc] init];
-        self.settingButton.frame=CGRectMake(0, 0, 50, 29);
-        [self.settingButton setBackgroundImage:[UIImage imageNamed: @"barbutton_setting.png"] forState:UIControlStateNormal];
-        [self.settingButton addTarget:self action:@selector(settingAction) forControlEvents:UIControlEventTouchUpInside];
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.settingButton];
+        UIButton* customBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 50, 29)];
+
+        [customBtn setBackgroundImage:[UIImage imageNamed: @"barbutton_setting.png"] forState:UIControlStateNormal];
+        [customBtn addTarget:self action:@selector(settingAction) forControlEvents:UIControlEventTouchUpInside];
+        self.settingButton = [[UIBarButtonItem alloc]initWithCustomView:customBtn];
+
+        UIButton* customBtn1 = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 40, 29)];
+
+        [customBtn1 setBackgroundImage:[UIImage imageNamed: @"barbutton_notification.png"] forState:UIControlStateNormal];
+        [customBtn1 addTarget:self action:@selector(lastMessageAction) forControlEvents:UIControlEventTouchUpInside];
+        self.lastMessageButton = [[UIBarButtonItem alloc]initWithCustomView:customBtn1];
+
+        self.navigationItem.leftBarButtonItems = [[NSArray alloc]initWithObjects:self.settingButton, self.lastMessageButton,nil];
 
     }
     return self;
@@ -90,29 +100,31 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 #define VIEW_OFFSET 5
 #define VIEW_WIDTH 310
 #define HALF_WIDTH (VIEW_WIDTH-VIEW_OFFSET)/2
-#define LITE_HEIGHT 45
 
 - (CGRect)calcRect:(NSInteger)index
 {
+    CGFloat liteHeight = self.view.bounds.size.height / 460 * 45;
+    CGFloat halfHeight = self.view.bounds.size.height / 460 * HALF_WIDTH;
+    DDLogVerbose(@"%f",self.view.bounds.size.height);
     CGRect rect = CGRectZero;
     switch (index) {
         case 0:
-            rect = CGRectMake(VIEW_OFFSET, VIEW_OFFSET, VIEW_WIDTH , LITE_HEIGHT);
+            rect = CGRectMake(VIEW_OFFSET, VIEW_OFFSET, VIEW_WIDTH , liteHeight);
             break;
         case 1:
-            rect = CGRectMake(VIEW_OFFSET, VIEW_OFFSET*2+LITE_HEIGHT, HALF_WIDTH, HALF_WIDTH);
+            rect = CGRectMake(VIEW_OFFSET, VIEW_OFFSET*2+liteHeight, HALF_WIDTH, halfHeight);
             break;
         case 2:
-            rect = CGRectMake(VIEW_OFFSET*2 + HALF_WIDTH, VIEW_OFFSET*2+LITE_HEIGHT, HALF_WIDTH, HALF_WIDTH);
+            rect = CGRectMake(VIEW_OFFSET*2 + HALF_WIDTH, VIEW_OFFSET*2+liteHeight, HALF_WIDTH, halfHeight);
             break;
         case 3:
-            rect = CGRectMake(VIEW_OFFSET, VIEW_OFFSET*3+LITE_HEIGHT+HALF_WIDTH, HALF_WIDTH, HALF_WIDTH+LITE_HEIGHT);
+            rect = CGRectMake(VIEW_OFFSET, VIEW_OFFSET*3+liteHeight+halfHeight, HALF_WIDTH, halfHeight+liteHeight);
             break;
         case 4:
-            rect = CGRectMake(VIEW_OFFSET*2 + HALF_WIDTH, VIEW_OFFSET*3+LITE_HEIGHT+HALF_WIDTH, HALF_WIDTH, (HALF_WIDTH-15));
+            rect = CGRectMake(VIEW_OFFSET*2 + HALF_WIDTH, VIEW_OFFSET*3+liteHeight+halfHeight, HALF_WIDTH, (halfHeight-15));
             break;
         case 5:
-            rect = CGRectMake(VIEW_OFFSET*2 + HALF_WIDTH, VIEW_OFFSET+LITE_HEIGHT+HALF_WIDTH*2, HALF_WIDTH, LITE_HEIGHT+10);
+            rect = CGRectMake(VIEW_OFFSET*2 + HALF_WIDTH, VIEW_OFFSET+liteHeight+halfHeight*2, HALF_WIDTH, liteHeight+10);
             break;
         default:
             rect = CGRectZero;
@@ -163,7 +175,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [self initSearchTableView];
     // transition animation
     self.transition = [CATransition animation];
-    self.transition.duration = 0.3;
+    self.transition.duration = 0.1;
     self.transition.type = kCATransitionFade;
     self.transition.timingFunction = UIViewAnimationCurveEaseInOut;
     self.transition.subtype = kCATransitionFromLeft;
@@ -329,7 +341,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
     [self.searchBar becomeFirstResponder];
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.barButton];
-    self.navigationItem.leftBarButtonItem = nil;
+    self.navigationItem.leftBarButtonItems = nil;
 }
 
 - (void)cancelSearchAction
@@ -337,7 +349,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [self.searchTableView setHidden:YES];
     [self.searchBar resignFirstResponder];
     self.navigationItem.rightBarButtonItem = nil;
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.settingButton];
+    self.navigationItem.leftBarButtonItems = [[NSArray alloc]initWithObjects:self.settingButton, self.lastMessageButton,nil];
 }
 
 - (void)conversationAction
@@ -374,7 +386,11 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [self.navigationController pushViewController:self.myCompanyController animated:NO];
 }
 
-
+- (void)lastMessageAction
+{
+    //
+    NSLog(@"daf");
+}
 
 - (void)didReceiveMemoryWarning
 {

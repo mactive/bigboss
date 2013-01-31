@@ -7,9 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "BBCustomBackButtonViewController.h"
 @class ProfileMeController;
 
-@interface SettingViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
+@interface SettingViewController : BBCustomBackButtonViewController<UITableViewDataSource, UITableViewDelegate>
 
 @property(nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 
