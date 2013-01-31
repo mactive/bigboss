@@ -12,13 +12,13 @@
 
 @interface MetroButton()
 @property(readwrite, nonatomic)CGRect mainframe;
-
 @end
 
 @implementation MetroButton
 
 @synthesize iconView;
 @synthesize titleLabel;
+@synthesize badgeLabel;
 @synthesize colorArray;
 @synthesize mainframe;
 #define LABEL_HEIGHT 20.0f
@@ -43,6 +43,13 @@
         [self.titleLabel setTextAlignment:NSTextAlignmentCenter];
         [self.titleLabel setTextColor:[UIColor whiteColor]];
         [self.titleLabel setFont:[UIFont boldSystemFontOfSize:20.0f]];
+        
+        self.badgeLabel = [[UILabel alloc]initWithFrame:self.iconView.bounds];
+        self.badgeLabel.backgroundColor = [UIColor clearColor];
+        self.badgeLabel.textAlignment = NSTextAlignmentCenter;
+        self.badgeLabel.textColor = RGBCOLOR(136,143,154);
+        [self.badgeLabel setHidden:YES];
+        [self.iconView addSubview:self.badgeLabel];
         [self addSubview:self.iconView];
         [self addSubview:self.titleLabel];
         self.mainframe = frame;
@@ -72,6 +79,13 @@
     [self setBackgroundImage:selectedImage forState:UIControlStateHighlighted];
 }
 
+- (void)setBadgeNumber:(NSUInteger )badgeNumber
+{
+    [self.badgeLabel setHidden:NO];
+    [self.badgeLabel setFrame:self.iconView.bounds];
+    [self.badgeLabel setFont:[UIFont boldSystemFontOfSize:self.iconView.frame.size.height/3*2]];
+    self.badgeLabel.text = [NSString stringWithFormat:@"%d",badgeNumber];
+}
 
 - (UIImage *) createImageWithColor: (UIColor *) color
 {

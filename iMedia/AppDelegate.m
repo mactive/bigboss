@@ -93,6 +93,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @synthesize mainMenuViewController;
 
 @synthesize me = _me;
+@synthesize unreadMessageCount;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {    

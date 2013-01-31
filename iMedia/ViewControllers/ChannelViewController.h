@@ -8,9 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "ChatWithIdentity.h"
-
+#import "BBCustomBackButtonViewController.h"
 @class Channel;
-@interface ChannelViewController : UIViewController
+@interface ChannelViewController : BBCustomBackButtonViewController
 {
 }
 

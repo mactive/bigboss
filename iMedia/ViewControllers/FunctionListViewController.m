@@ -79,7 +79,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 {
     [super viewDidLoad];
     
-    self.settingTitleArray = [[NSArray alloc] initWithObjects:@"摇一摇",@"情趣研究院", nil]; //@"打招呼的人", 
+    self.settingTitleArray = [[NSArray alloc] initWithObjects:@"摇一摇",@"频道列表", nil]; //@"打招呼的人", 
     self.view.backgroundColor = BGCOLOR;
     [self.view addSubview:self.settingView];
     

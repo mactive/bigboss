@@ -38,6 +38,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @property(strong, nonatomic)NSArray *sourceData;
 @property(strong, nonatomic)NSMutableArray *fetchArray;
 @property(strong, nonatomic)NSMutableDictionary *fetchDict;
+@property(strong, nonatomic)NSMutableArray *buttonArray;
 @end
 
 @implementation MainMenuViewController
@@ -60,6 +61,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @synthesize fetchArray;
 @synthesize fetchDict;
 @synthesize managedObjectContext = _managedObjectContext;
+@synthesize buttonArray;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -140,7 +142,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     self.menuTitleArray = [[NSArray alloc] initWithObjects:@"搜索公司",@"消息",@"联系人",@"福利",@"我的公司",@"公司列表", nil];
     self.view.backgroundColor = BGCOLOR;
     [self.view addSubview:self.menuView];
-    
+    self.buttonArray = [[NSMutableArray alloc]init];
     for (int index = 0; index <[self.menuTitleArray count]; index++) {
         MetroButton *button = [[MetroButton alloc]initWithFrame:[self calcRect:index]];
         NSString *title = [self.menuTitleArray objectAtIndex:index];
@@ -166,6 +168,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
             [button addTarget:self action:@selector(companyCategoryAction) forControlEvents:UIControlEventTouchUpInside];
         }
         [self.view addSubview:button];
+        [self.buttonArray addObject:button];
     }
     
     // init all viewcontroller
@@ -201,6 +204,9 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         [self.lastMessageButton  setBackgroundImage:[UIImage imageNamed: @"barbutton_notification.png"] forState:UIControlStateNormal];
     }
     
+    MetroButton *targetButton = [self.buttonArray objectAtIndex:1];
+    [targetButton setBadgeNumber:[self appDelegate].unreadMessageCount];
+
 
     
     //;

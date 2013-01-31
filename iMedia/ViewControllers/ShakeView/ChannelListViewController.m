@@ -52,22 +52,22 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 
 
-@interface ChannelListViewController ()
+@interface ChannelListViewController ()<UITableViewDataSource, UITableViewDelegate>
 
 @property(nonatomic, strong)NSArray *dataArray;
+@property(nonatomic, strong)UITableView *tableView;
 
 @end
 
 @implementation ChannelListViewController
 @synthesize dataArray;
+@synthesize tableView;
 
-- (id)initWithStyle:(UITableViewStyle)style
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithStyle:style];
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
-        self.tableView.delegate = self;
-        self.tableView.dataSource = self;
+        
     }
     return self;
 }
@@ -88,15 +88,20 @@ NSInteger intSort2(id num1, id num2, void *context)
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.title = T(@"频道列表");
     self.view.backgroundColor = BGCOLOR;
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-    self.tableView.separatorColor = SEPCOLOR;
-    [self.tableView setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero]];
 
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
+    self.tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
+    self.tableView.backgroundColor = BGCOLOR;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    //    self.tableView.separatorColor = SEPCOLOR;
+    [self.tableView setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero]];
     
-    self.title = T(@"情趣研究院");
+    self.tableView.delegate = self;
+    self.tableView.dataSource  = self;
+    [self.view addSubview:self.tableView];
+    
+    
 //    [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     MBProgressHUD* HUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
     HUD.removeFromSuperViewOnHide = YES;

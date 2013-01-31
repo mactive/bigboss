@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "BBCustomBackButtonViewController.h"
 
-@interface ChannelListViewController : UITableViewController
+@interface ChannelListViewController : BBCustomBackButtonViewController
 
 @end

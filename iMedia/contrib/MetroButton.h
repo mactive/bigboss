@@ -13,7 +13,9 @@
 @property (nonatomic, strong) UIImageView *iconView;
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) NSArray *colorArray;
+@property (nonatomic, strong) UILabel *badgeLabel;
 
 - (void)initMetroButton:(UIImage *)image andText:(NSString *)titleString andIndex:(NSUInteger)index;
+- (void)setBadgeNumber:(NSUInteger )badgeNumber;
 
 @end

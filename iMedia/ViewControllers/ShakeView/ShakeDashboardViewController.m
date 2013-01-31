@@ -24,7 +24,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 static const int ddLogLevel = LOG_LEVEL_OFF;
 #endif
 
-@interface ShakeDashboardViewController ()
+@interface ShakeDashboardViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
     ShakeInfo     *_shakeInfo;
 }
@@ -42,6 +42,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @property(nonatomic, strong) UIImageView *replaceView;
 @property(nonatomic, strong) UIImageView *inprogressImageView;
 @property(nonatomic, strong) UIScrollView *baseView;
+@property(nonatomic, strong) UITableView *tableView;
 
 @end
 
@@ -59,14 +60,19 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @synthesize shakeTimesDict;
 @synthesize replaceView;
 @synthesize baseView;
+@synthesize tableView;
 
-- (id)initWithStyle:(UITableViewStyle)style
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithStyle:style];
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
-        self.tableView.delegate = self;
-        self.tableView.dataSource = self;
+        // refresh button
+        UIButton *button1 = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 50, 29)];
+        [button1 setBackgroundImage:[UIImage imageNamed: @"barbutton_refresh.png"] forState:UIControlStateNormal];
+        [button1 addTarget:self action:@selector(populateData) forControlEvents:UIControlEventTouchUpInside];
+        
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:button1];
+        
     }
     return self;
 }
@@ -115,22 +121,17 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     self.title = T(@"摇一摇");
     _shakeInfo = nil;
     
-    // refresh button
-    UIButton *button1 = [[UIButton alloc] init];
-    button1.frame=CGRectMake(0, 0, 50, 29);
-    [button1 setBackgroundImage:[UIImage imageNamed: @"barbutton_refresh.png"] forState:UIControlStateNormal];
-    [button1 addTarget:self action:@selector(populateData) forControlEvents:UIControlEventTouchUpInside];
-    
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:button1];
-    
-        
-    self.tableView = [[UITableView alloc]initWithFrame:self.view.bounds];
-    self.tableView.separatorColor = [UIColor grayColor];
-//    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
     self.tableView.backgroundColor = BGCOLOR;
-    self.tableView.scrollsToTop = YES;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    //    self.tableView.separatorColor = SEPCOLOR;
     [self.tableView setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero]];
+    self.tableView.scrollsToTop = YES;
 
+    self.tableView.delegate = self;
+    self.tableView.dataSource  = self;
+    [self.view addSubview:self.tableView];
+    
 
     [self initShakeData];
     

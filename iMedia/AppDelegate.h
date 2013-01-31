@@ -38,6 +38,7 @@
 // if me is nil, it is the first run. a full poster fetch will be performed, welcome section will be displayed, and
 // initial data population will be done.
 @property (strong, nonatomic) Me *me;
+@property (nonatomic) int unreadMessageCount;
 
 // Here is a list of all available pluggins;
 @property (strong, nonatomic) Pluggin *friendRequestPluggin;
