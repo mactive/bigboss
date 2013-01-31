@@ -79,7 +79,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         [self.settingButton setBackgroundImage:[UIImage imageNamed: @"barbutton_setting.png"] forState:UIControlStateNormal];
         [self.settingButton addTarget:self action:@selector(settingAction) forControlEvents:UIControlEventTouchUpInside];
 
-        self.lastMessageButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 40, 29)];
+        self.lastMessageButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 50, 29)];
         [self.lastMessageButton addTarget:self action:@selector(lastMessageAction) forControlEvents:UIControlEventTouchUpInside];
         
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.settingButton];
@@ -191,17 +191,17 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     NSUInteger lastMessageCount = [lastMessageCountString integerValue];
     if (lastMessageCount > 0) {
         [self.lastMessageButton setTitle:lastMessageCountString forState:UIControlStateNormal];
-        [self.lastMessageButton setFrame:CGRectMake(0, 0, 50, 29)];
         [self.lastMessageButton setTitleEdgeInsets:UIEdgeInsetsMake(8, 23, 8, 8)];
         [self.lastMessageButton.titleLabel setFont:[UIFont boldSystemFontOfSize:16]];
         [self.lastMessageButton.titleLabel setShadowColor:[UIColor blackColor]];
         [self.lastMessageButton.titleLabel setShadowOffset:CGSizeMake(0, 1)];
         [self.lastMessageButton setBackgroundImage:[UIImage imageNamed: @"barbutton_notification_100.png"] forState:UIControlStateNormal];
     }else{
-        [self.lastMessageButton setFrame:CGRectMake(0, 0, 40, 29)];
         [self.lastMessageButton setTitle:nil forState:UIControlStateNormal];
         [self.lastMessageButton  setBackgroundImage:[UIImage imageNamed: @"barbutton_notification.png"] forState:UIControlStateNormal];
     }
+    
+
     
     //;
 }
