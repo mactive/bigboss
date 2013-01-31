@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="0.1" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1810" systemVersion="11G63b" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="0.1" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="11G63b" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Channel" representedClassName="Channel" parentEntity="Identity" syncable="YES">
         <attribute name="csContactPostalID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isMandatory" optional="YES" attributeType="Boolean" syncable="YES"/>
@@ -73,6 +73,7 @@
     </entity>
     <entity name="Information" representedClassName="Information" syncable="YES">
         <attribute name="createdOn" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="infoID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="value" optional="YES" attributeType="String" syncable="YES"/>
@@ -135,17 +136,17 @@
     </entity>
     <elements>
         <element name="Channel" positionX="151" positionY="180" width="128" height="150"/>
+        <element name="Company" positionX="126" positionY="351" width="128" height="195"/>
         <element name="Conversation" positionX="-666" positionY="153" width="128" height="180"/>
         <element name="FriendRequest" positionX="241" positionY="-9" width="128" height="120"/>
         <element name="Identity" positionX="-92" positionY="-513" width="128" height="255"/>
         <element name="ImageLocal" positionX="-83" positionY="318" width="128" height="150"/>
         <element name="ImageRemote" positionX="394" positionY="51" width="128" height="120"/>
-        <element name="Information" positionX="297" positionY="216" width="128" height="105"/>
+        <element name="Information" positionX="297" positionY="216" width="128" height="120"/>
         <element name="Me" positionX="-63" positionY="-171" width="128" height="390"/>
         <element name="Message" positionX="-324" positionY="-78" width="128" height="150"/>
         <element name="Pluggin" positionX="250" positionY="-342" width="128" height="60"/>
         <element name="ShakeInfo" positionX="304" positionY="-189" width="128" height="75"/>
         <element name="User" positionX="-234" positionY="141" width="128" height="240"/>
-        <element name="Company" positionX="126" positionY="351" width="128" height="195"/>
     </elements>
 </model>

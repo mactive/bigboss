@@ -13,6 +13,7 @@
 
 @dynamic type;
 @dynamic name;
+@synthesize infoID;
 @dynamic value;
 @dynamic createdOn;
 

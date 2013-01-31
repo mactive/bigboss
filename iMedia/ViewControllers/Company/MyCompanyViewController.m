@@ -140,7 +140,6 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
     [request setEntity:entityDescription];
 
-    // Set example predicate and sort orderings...
 //    NSPredicate *predicate = [NSPredicate predicateWithFormat:
 //                              @"(status = %d)", CompanyStateFollowed];
 //    [request setPredicate:predicate];

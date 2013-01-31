@@ -131,7 +131,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"CheckinCell";
+    static NSString *CellIdentifier = @"MemoViewCell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     

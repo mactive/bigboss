@@ -15,10 +15,16 @@ typedef enum _InformationType
     LastMessageFromServer = 2
 } InformationType;
 
+typedef enum _InformationCodeType
+{
+    InformationApproved = 1,
+    InformationRefused = 2
+} InformationCodeType;
 
 @interface Information : NSManagedObject
 
 @property (nonatomic) u_int16_t type;
+@property (nonatomic, retain) NSString * infoID;
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString * value;
 @property (nonatomic, retain) NSDate * createdOn;

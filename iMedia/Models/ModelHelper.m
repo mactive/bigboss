@@ -428,6 +428,7 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
     information.type = LastMessageFromServer;
     information.createdOn = [NSDate date];
     information.name = [ServerDataTransformer getStringObjFromServerJSON:json byName:@"code"];
+    information.infoID = [ServerDataTransformer getStringObjFromServerJSON:json byName:@"cid"];
     information.value = [ServerDataTransformer getStringObjFromServerJSON:json byName:@"message"];
 }
 

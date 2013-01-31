@@ -404,10 +404,54 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
             
             [sourceData enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 //
-                Information *newInformation;
-                newInformation = [NSEntityDescription insertNewObjectForEntityForName:@"Information" inManagedObjectContext:moc];
+                Information *newInformation = [NSEntityDescription insertNewObjectForEntityForName:@"Information" inManagedObjectContext:moc];
                 [[ModelHelper sharedInstance]populateInformation:newInformation withJSONData:obj];
                 DDLogVerbose(@"Insert new message %@",newInformation.name);
+                
+                if (newInformation.name.integerValue == InformationApproved) {
+                    
+                    ////////////////////////////////////////////////////////////////////////////////////
+                    // update youcompany
+                    Company *newCompany = [[ModelHelper sharedInstance] findCompanyWithCompanyID:newInformation.infoID];
+                    // insert
+                    if (newCompany == nil) {
+                        [[AppNetworkAPIClient sharedClient]getCompanyWithCompanyID:newInformation.infoID withBlock:^(id responseObject, NSError *error) {
+                            //
+                            if (responseObject != nil) {
+                                NSDictionary *responseDict = responseObject;
+                                Company *aCompany = [NSEntityDescription insertNewObjectForEntityForName:@"Company" inManagedObjectContext:_managedObjectContext];
+                                newCompany.owner = self.me;
+                                [[ModelHelper sharedInstance] populateCompany:aCompany withServerJSONData:responseDict];
+                            }
+                        }];
+                        
+                        DDLogVerbose(@"SYNC Insert company success %@",newCompany.companyID);
+                    }else{
+                        NSPredicate *predicate = [NSPredicate predicateWithFormat:
+                                                  @"(companyID = %@)", newCompany.companyID];
+                        [request setPredicate:predicate];
+                        
+                        NSError *error = nil;
+                        NSArray *companyArray = [moc executeFetchRequest:request error:&error];
+                        
+                        if ([companyArray count] > 0){
+                            Company *aCompany = [companyArray objectAtIndex:0];
+                            [[ModelHelper sharedInstance]populateCompany:aCompany withServerJSONData:obj];
+                            aCompany.status = CompanyStateFollowed;
+                            [moc save:nil];
+                            DDLogVerbose(@"SYNC update company success %@",aCompany.companyID);
+                        }
+
+                    }
+                    ////////////////////////////////////////////////////////////////////////////////////
+
+                }
+                
+
+ 
+
+                
+                
             }];
             [self.getLastMessageTimer invalidate];
         }else{
