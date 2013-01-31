@@ -381,10 +381,10 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     Information *lastInfo = [[ModelHelper sharedInstance]findLastInformationWithType:LastMessageFromServer];
     NSDate *nowDate = [NSDate date];
     
-    if ( lastInfo!= nil && [nowDate minutesAfterDate:lastInfo.createdOn] < 60) {
-        DDLogVerbose(@"[nowDate minutesAfterDate:lastInfo.createdOn] %d",[nowDate minutesAfterDate:lastInfo.createdOn]);
-        return;
-    }
+//    if ( lastInfo!= nil && [nowDate minutesAfterDate:lastInfo.createdOn] < 60) {
+//        DDLogVerbose(@"[nowDate minutesAfterDate:lastInfo.createdOn] %d",[nowDate minutesAfterDate:lastInfo.createdOn]);
+//        return;
+//    }
     
     // 大于 60分钟
     NSManagedObjectContext *moc = _managedObjectContext;
@@ -414,19 +414,25 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
                     // update youcompany
                     Company *newCompany = [[ModelHelper sharedInstance] findCompanyWithCompanyID:newInformation.infoID];
                     // insert
-                    if (newCompany == nil) {
+                    if (newCompany == nil && StringHasValue(newInformation.infoID)) {
                         [[AppNetworkAPIClient sharedClient]getCompanyWithCompanyID:newInformation.infoID withBlock:^(id responseObject, NSError *error) {
                             //
                             if (responseObject != nil) {
                                 NSDictionary *responseDict = responseObject;
                                 Company *aCompany = [NSEntityDescription insertNewObjectForEntityForName:@"Company" inManagedObjectContext:_managedObjectContext];
-                                newCompany.owner = self.me;
+                                aCompany.owner = self.me;
+                                aCompany.status = CompanyStateFollowed;
                                 [[ModelHelper sharedInstance] populateCompany:aCompany withServerJSONData:responseDict];
                             }
                         }];
                         
                         DDLogVerbose(@"SYNC Insert company success %@",newCompany.companyID);
                     }else{
+                        NSEntityDescription *entityDescription = [NSEntityDescription
+                                                                  entityForName:@"Company" inManagedObjectContext:_managedObjectContext];
+                        NSFetchRequest *request = [[NSFetchRequest alloc] init];
+                        [request setEntity:entityDescription];
+                        
                         NSPredicate *predicate = [NSPredicate predicateWithFormat:
                                                   @"(companyID = %@)", newCompany.companyID];
                         [request setPredicate:predicate];
@@ -436,7 +442,6 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
                         
                         if ([companyArray count] > 0){
                             Company *aCompany = [companyArray objectAtIndex:0];
-                            [[ModelHelper sharedInstance]populateCompany:aCompany withServerJSONData:obj];
                             aCompany.status = CompanyStateFollowed;
                             [moc save:nil];
                             DDLogVerbose(@"SYNC update company success %@",aCompany.companyID);
