@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "BBCustomBackButtonViewController.h"
 
-@interface MemoViewController : UITableViewController
+@interface MemoViewController : BBCustomBackButtonViewController
 
 @property(nonatomic,strong)NSManagedObjectContext *managedObjectContext;
 

@@ -18,6 +18,7 @@
 @class Message;
 @class Me;
 @class Pluggin;
+@class Information;
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 

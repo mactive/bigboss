@@ -13,6 +13,7 @@
 #import "SettingViewController.h"
 #import "CompanyCategoryViewController.h"
 #import "MyCompanyViewController.h"
+#import "MemoViewController.h"
 
 @interface MainMenuViewController : UIViewController
 
@@ -22,6 +23,7 @@
 @property(strong, nonatomic) SettingViewController *settingViewController;
 @property(strong, nonatomic) CompanyCategoryViewController *companyCategoryViewController;
 @property(strong, nonatomic) MyCompanyViewController *myCompanyController;
+@property(strong, nonatomic) MemoViewController *memoViewController;
 @property(strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
 @end

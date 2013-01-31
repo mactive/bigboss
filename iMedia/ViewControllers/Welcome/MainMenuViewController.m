@@ -32,6 +32,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @property(strong, nonatomic)CATransition* transition;
 @property(strong, nonatomic)UISearchBar *searchBar;
 @property(strong, nonatomic)UIButton *barButton;
+@property(strong, nonatomic)UIButton *customButton;
 @property(strong, nonatomic)UIBarButtonItem *settingButton;
 @property(strong, nonatomic)UIBarButtonItem *lastMessageButton;
 @property(strong, nonatomic)UITableView *searchTableView;
@@ -49,10 +50,12 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @synthesize settingViewController;
 @synthesize companyCategoryViewController;
 @synthesize myCompanyController;
+@synthesize memoViewController;
 @synthesize transition;
 @synthesize searchTableView;
 @synthesize searchBar;
 @synthesize barButton;
+@synthesize customButton;
 @synthesize lastMessageButton;
 @synthesize settingButton;
 @synthesize sourceData;
@@ -80,12 +83,10 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         [customBtn addTarget:self action:@selector(settingAction) forControlEvents:UIControlEventTouchUpInside];
         self.settingButton = [[UIBarButtonItem alloc]initWithCustomView:customBtn];
 
-        UIButton* customBtn1 = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 40, 29)];
-
-        [customBtn1 setBackgroundImage:[UIImage imageNamed: @"barbutton_notification.png"] forState:UIControlStateNormal];
-        [customBtn1 addTarget:self action:@selector(lastMessageAction) forControlEvents:UIControlEventTouchUpInside];
-        self.lastMessageButton = [[UIBarButtonItem alloc]initWithCustomView:customBtn1];
-
+        self.customButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 40, 29)];
+        [self.customButton addTarget:self action:@selector(lastMessageAction) forControlEvents:UIControlEventTouchUpInside];
+        self.lastMessageButton = [[UIBarButtonItem alloc]initWithCustomView:self.customButton];
+        
         self.navigationItem.leftBarButtonItems = [[NSArray alloc]initWithObjects:self.settingButton, self.lastMessageButton,nil];
 
     }
@@ -185,6 +186,29 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 //  update company
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    NSString * lastMessageCountString = [[NSUserDefaults standardUserDefaults]objectForKey:@"lastMessageCount"];
+    NSUInteger lastMessageCount = [lastMessageCountString integerValue];
+    if (lastMessageCount > 0) {
+        [self.customButton setTitle:lastMessageCountString forState:UIControlStateNormal];
+        [self.customButton setFrame:CGRectMake(0, 0, 50, 29)];
+        [self.customButton setTitleEdgeInsets:UIEdgeInsetsMake(8, 23, 8, 8)];
+        [self.customButton.titleLabel setFont:[UIFont boldSystemFontOfSize:16]];
+        [self.customButton.titleLabel setShadowColor:[UIColor blackColor]];
+        [self.customButton.titleLabel setShadowOffset:CGSizeMake(0, 1)];
+        [self.customButton setBackgroundImage:[UIImage imageNamed: @"barbutton_notification_100.png"] forState:UIControlStateNormal];
+    }else{
+        [self.customButton setFrame:CGRectMake(0, 0, 40, 29)];
+        [self.customButton setTitle:nil forState:UIControlStateNormal];
+        [self.customButton setBackgroundImage:[UIImage imageNamed: @"barbutton_notification.png"] forState:UIControlStateNormal];
+    }
+    
+    //;
+}
+
 - (void)initViewControllers
 {
     self.conversationController = [[ConversationsController alloc] initWithStyle:UITableViewStylePlain];
@@ -202,6 +226,9 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     
     self.myCompanyController = [[MyCompanyViewController alloc]initWithStyle:UITableViewStylePlain];
     self.myCompanyController.managedObjectContext = self.managedObjectContext;
+    
+    self.memoViewController = [[MemoViewController alloc]initWithNibName:nil bundle:nil];
+    self.memoViewController.managedObjectContext = self.managedObjectContext;
 
 }
 
@@ -388,8 +415,11 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 - (void)lastMessageAction
 {
-    //
-    NSLog(@"daf");
+    [[NSUserDefaults standardUserDefaults] setObject:@"0"
+                                              forKey:@"lastMessageCount"];
+    [self.navigationController.view.layer addAnimation:self.transition forKey:kCATransition];
+    [self.navigationController pushViewController:self.memoViewController animated:NO];
+    
 }
 
 - (void)didReceiveMemoryWarning

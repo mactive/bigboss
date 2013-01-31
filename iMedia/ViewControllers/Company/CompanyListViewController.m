@@ -145,7 +145,7 @@
 #define AVATAR_HEIGHT 36
 #define AVATAR_X    (CELL_HEIGHT - AVATAR_HEIGHT)/2
 #define NAME_X      75
-#define NAME_HEIGHT 16
+#define NAME_HEIGHT 18
 #define NAME_Y      (CELL_HEIGHT - NAME_HEIGHT)/2
 #define NAME_WIDTH  200
 

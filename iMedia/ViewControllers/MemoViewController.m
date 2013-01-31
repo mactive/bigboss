@@ -20,11 +20,12 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 static const int ddLogLevel = LOG_LEVEL_OFF;
 #endif
 
-@interface MemoViewController ()
+@interface MemoViewController ()<UITableViewDataSource,UITableViewDelegate>
 
 @property(nonatomic, strong)NSArray *dataArray;
 @property(nonatomic, strong)UIView *noticeView;
 @property(nonatomic, strong)UILabel *noticeLabel;
+@property(nonatomic, strong)UITableView *tableView;
 
 @end
 
@@ -33,6 +34,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @synthesize dataArray;
 @synthesize noticeLabel;
 @synthesize noticeView;
+@synthesize tableView;
 
 
 #define SUMMARY_WIDTH 200.0
@@ -42,32 +44,33 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 #define TYPE_TAG 11
 #define ROW_HEIGHT 50
 
-- (id)initWithStyle:(UITableViewStyle)style
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithStyle:style];
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
-        self.tableView.delegate = self;
-        self.tableView.dataSource = self;
+        
     }
     return self;
 }
+
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
+    self.title = T(@"系统通知中心");
+    
     self.view.backgroundColor = BGCOLOR;
+    self.tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
+    self.tableView.backgroundColor = BGCOLOR;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     self.tableView.separatorColor = SEPCOLOR;
-    self.title = T(@"优惠码备忘录");
-
+    
+    self.tableView.delegate = self;
+    self.tableView.dataSource  = self;
+    [self.view addSubview:self.tableView];
+    
     [self.tableView setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero]];
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     [self initDataArray];
 }
 
@@ -154,13 +157,13 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     
     //    UIImageView *cellBgView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cell_bg.png"]];
     //    cell.backgroundView = cellBgView;
-    cell.textLabel.font = [UIFont systemFontOfSize:18];
+    cell.textLabel.font = [UIFont systemFontOfSize:14];
     cell.textLabel.textColor = RGBCOLOR(195, 70, 21);
     cell.textLabel.backgroundColor = [UIColor clearColor];
     cell.textLabel.layer.cornerRadius = 5.0f;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
-    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(80, 30 , 40, 15)];
+    UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(80, 30 , 60, 15)];
     label.textAlignment = NSTextAlignmentCenter;
     label.tag = TYPE_TAG;
     label.font = [UIFont boldSystemFontOfSize:10];
@@ -179,7 +182,6 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 - (void)configureCell:(UITableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath {
     Information *info = [self.dataArray objectAtIndex:indexPath.row];
     
-    
     cell.textLabel.text = info.value;
     cell.detailTextLabel.text = [info.createdOn timesince];
     
@@ -188,6 +190,10 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     if (info.type == WinnerCodeFromShake) {
         label.backgroundColor = RGBCOLOR(25, 164, 221);
         label.text = T(@"CODE");
+    }
+    if (info.type == LastMessageFromServer) {
+        label.backgroundColor = RGBCOLOR(25, 164, 221);
+        label.text = T(@"MESSAGE");
     }
     
 }

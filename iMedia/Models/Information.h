@@ -11,8 +11,8 @@
 
 typedef enum _InformationType
 {
-    WinnerCodeFromShake = 1
-    
+    WinnerCodeFromShake = 1,
+    LastMessageFromServer = 2
 } InformationType;
 
 

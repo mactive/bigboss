@@ -12,6 +12,7 @@
 #import "Avatar.h"
 #import "Channel.h"
 #import "Company.h"
+#import "Information.h"
 #import "ImageRemote.h"
 #import "Pluggin.h"
 #import "ServerDataTransformer.h"
@@ -162,6 +163,37 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
         return [array objectAtIndex:0];
     }
 
+}
+
+// 获得最后一条message
+- (Information *)findLastInformationWithType:(NSUInteger)type
+{
+    NSManagedObjectContext *moc = self.managedObjectContext;
+    NSEntityDescription *entityDescription = [NSEntityDescription
+                                              entityForName:@"Information" inManagedObjectContext:moc];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDescription];
+    
+    // Set example predicate and sort orderings...
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:
+                              @"(type = %d)", type];
+    [request setPredicate:predicate];
+    
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"createdOn" ascending:NO];
+    NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
+    [request setSortDescriptors:sortDescriptors];
+    
+    NSError *error = nil;
+    NSArray *array = [moc executeFetchRequest:request error:&error];
+    
+    if ([array count] == 0)
+    {
+        DDLogError(@"Company doesn't exist: %@", error);
+        return nil;
+    } else {
+        DDLogError(@"get the last message form imformation: %d", type);
+        return [array objectAtIndex:0];
+    }
 }
 
 - (Channel *)findChannelWithSubrequestID:(NSString *)subID
@@ -391,6 +423,14 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
     company.desc = [ServerDataTransformer getDescriptionFromServerJSON:json];
     company.isPrivate = [ServerDataTransformer getPrivateFromServerJSON:json];
 }
+
+- (void)populateInformation:(Information *)information withJSONData:(id)json{
+    information.type = LastMessageFromServer;
+    information.createdOn = [NSDate date];
+    information.name = [ServerDataTransformer getStringObjFromServerJSON:json byName:@"code"];
+    information.value = [ServerDataTransformer getStringObjFromServerJSON:json byName:@"message"];
+}
+
 
 
 - (User *)createNewUser

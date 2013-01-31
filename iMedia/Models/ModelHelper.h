@@ -14,6 +14,7 @@
 @class Pluggin;
 @class FriendRequest;
 @class Company;
+@class Information;
 
 @interface ModelHelper : NSObject
 
@@ -27,10 +28,11 @@
 - (Channel *)findChannelWithSubrequestID:(NSString *)subID;
 - (Pluggin *)findFriendRequestPluggin;
 - (Company *)findCompanyWithCompanyID:(NSString *)companyID;
+- (Information *)findLastInformationWithType:(NSUInteger)type;
 
 - (void)populateIdentity:(Identity *)identity withJSONData:(id)json;
 - (void)populateCompany:(Company *)company withServerJSONData:(id)json;
-
+- (void)populateInformation:(Information *)information withJSONData:(id)json;
 
 - (User *)createNewUser;
 - (FriendRequest *)newFriendRequestWithEPostalID:(NSString *)jid andJson:(id)jsonData;

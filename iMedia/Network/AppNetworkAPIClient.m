@@ -1091,13 +1091,13 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:getOperation];
 }
 
-// op51 获取离线消息 by cid start
+// op43 获取离线消息 by cid start
 - (void)getLastMessageWithBlock:(void(^)(id, NSError *))block{
-    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys:@"51", @"op", nil];
+    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys:@"43", @"op", nil];
     NSMutableURLRequest *getRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"GET" path:GET_DATA_PATH parameters:getDict];
     AFHTTPRequestOperation *getOperation = [[AppNetworkAPIClient sharedClient]HTTPRequestOperationWithRequest:getRequest success:^(AFHTTPRequestOperation *operation, id responseObject) {
         //
-        DDLogVerbose(@"getCompanyMemberWithCompanyID: %@", responseObject);
+        DDLogVerbose(@"getLastMessageWithBlock: %@", responseObject);
         
         NSString* type = [responseObject valueForKey:@"type"];
         

@@ -114,7 +114,6 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     
     Information *info = [NSEntityDescription insertNewObjectForEntityForName:@"Information" inManagedObjectContext:self.managedObjectContext];
     
-
     [info setName:@"Wincode"];
     [info setType:WinnerCodeFromShake];
     [info setCreatedOn:[NSDate date]];

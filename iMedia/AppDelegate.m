@@ -18,6 +18,7 @@
 #import "Company.h"
 #import "Conversation.h"
 #import "Pluggin.h"
+#import "Information.h"
 #import <CocoaPlant/NSManagedObject+CocoaPlant.h>
 #import "AFNetworkActivityIndicatorManager.h"
 #import "XMPPNetworkCenter.h"
@@ -30,6 +31,7 @@
 #import "MainMenuViewController.h"
 #import "ConfigSetting.h"
 #import "ServerDataTransformer.h"
+#import "NSDate-Utilities.h"
 
 #import "AppNetworkAPIClient.h"
 #import "LocationManager.h"
@@ -59,11 +61,13 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     SystemSoundID           _messageSentSystemSoundID;
     NSUInteger              _updateChannelRetryCount;
     NSUInteger              _updateCompanyRetryCount;
+    NSUInteger              _lastMessageRetryCount;
     NSUInteger              _loginRetryCount;
 }
 
 @property (nonatomic, strong) NSTimer* updateChannelTimer;
 @property (nonatomic, strong) NSTimer* updateCompanyTimer;
+@property (nonatomic, strong) NSTimer* getLastMessageTimer;
 @property (nonatomic, strong) NSTimer* loginTimer;
 @property (nonatomic, strong) PrivacyLoginViewController *privacyLoginViewController;
 @property (nonatomic, strong) UIViewController *transController;
@@ -81,6 +85,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @synthesize settingController;
 @synthesize updateChannelTimer;
 @synthesize updateCompanyTimer;
+@synthesize getLastMessageTimer;
 @synthesize loginTimer;
 @synthesize privacyLoginViewController;
 @synthesize transController;
@@ -148,12 +153,16 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     //
     _updateChannelRetryCount = 0 ;
     _updateCompanyRetryCount = 0 ;
+    _lastMessageRetryCount = 0;
     _loginRetryCount = 0;
     self.updateChannelTimer = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow:10] interval:60 target:self selector:@selector(updateMyChannelInformation:) userInfo:nil repeats:YES];
     self.updateCompanyTimer = [[NSTimer alloc]initWithFireDate:[NSDate dateWithTimeIntervalSinceNow:5] interval:60 target:self selector:@selector(updateMyCompanyInformation:) userInfo:nil repeats:YES];
+    self.getLastMessageTimer = [[NSTimer alloc]initWithFireDate:[NSDate dateWithTimeIntervalSinceNow:5] interval:60 target:self selector:@selector(getLastMessageFromServer:) userInfo:nil repeats:NO];
   //  self.loginTimer = [[NSTimer alloc] initWithFireDate:[NSDate dateWithTimeIntervalSinceNow:2000] interval:5 target:self selector:@selector(reLogin:) userInfo:nil repeats:YES];
     [[NSRunLoop currentRunLoop] addTimer:self.updateChannelTimer forMode:NSDefaultRunLoopMode];
     [[NSRunLoop currentRunLoop] addTimer:self.updateCompanyTimer forMode:NSDefaultRunLoopMode];
+    [[NSRunLoop currentRunLoop] addTimer:self.getLastMessageTimer forMode:NSDefaultRunLoopMode];
+                                
   //  [[NSRunLoop currentRunLoop] addTimer:self.loginTimer forMode:NSDefaultRunLoopMode];
     
     // monitor for network status change
@@ -244,11 +253,20 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 - (void)checkIOSVersion
 {
     NSString *iOSVersion =  [[NSUserDefaults standardUserDefaults] objectForKey:@"ios_ver"];
-    NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
-    self.versionAlertView = [[UIAlertView alloc]initWithTitle:T(@"目前有新版本，是否升级") message:T(@"更多新功能，运行更流畅") delegate:self cancelButtonTitle:T(@"否") otherButtonTitles:T(@"是"), nil];
-    
-    if (StringHasValue(iOSVersion) && ![iOSVersion isEqualToString:version]) {
-        [self.versionAlertView show];
+    if (StringHasValue(iOSVersion) ) {
+        NSString *version = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+        self.versionAlertView = [[UIAlertView alloc]initWithTitle:T(@"目前有新版本，是否升级") message:T(@"更多新功能，运行更流畅") delegate:self cancelButtonTitle:T(@"否") otherButtonTitles:T(@"是"), nil];
+        
+        NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
+        [f setNumberStyle:NSNumberFormatterDecimalStyle];
+        
+        NSNumber *iOSVersion_num = [f numberFromString:iOSVersion];
+        NSNumber *version_num = [f numberFromString:version];
+        
+        
+        if (iOSVersion_num.floatValue > version_num.floatValue ) {
+            [self.versionAlertView show];
+        }
     }
 }
 
@@ -356,6 +374,55 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         }
     }];
 
+}
+
+- (void)getLastMessageFromServer:(NSNotification *)notification
+{
+    Information *lastInfo = [[ModelHelper sharedInstance]findLastInformationWithType:LastMessageFromServer];
+    NSDate *nowDate = [NSDate date];
+    
+    if ( lastInfo!= nil && [nowDate minutesAfterDate:lastInfo.createdOn] < 60) {
+        DDLogVerbose(@"[nowDate minutesAfterDate:lastInfo.createdOn] %d",[nowDate minutesAfterDate:lastInfo.createdOn]);
+        return;
+    }
+    
+    // 大于 60分钟
+    NSManagedObjectContext *moc = _managedObjectContext;
+    NSEntityDescription *entityDescription = [NSEntityDescription
+                                              entityForName:@"Information" inManagedObjectContext:moc];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDescription];
+    
+    [[AppNetworkAPIClient sharedClient]getLastMessageWithBlock:^(id responseObject, NSError *error) {
+        //
+        if (responseObject != nil) {
+            NSDictionary *responseDict = [[NSDictionary alloc]initWithDictionary:responseObject];
+            NSArray *sourceData = [responseDict allValues];
+            
+            [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%d",[sourceData count]]
+                                                      forKey:@"lastMessageCount"];
+            
+            [sourceData enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                //
+                Information *newInformation;
+                newInformation = [NSEntityDescription insertNewObjectForEntityForName:@"Information" inManagedObjectContext:moc];
+                [[ModelHelper sharedInstance]populateInformation:newInformation withJSONData:obj];
+                DDLogVerbose(@"Insert new message %@",newInformation.name);
+            }];
+            [self.getLastMessageTimer invalidate];
+        }else{
+            _lastMessageRetryCount += 1;
+            NSTimeInterval seconds = 0;
+            if (_lastMessageRetryCount > 3) {
+                seconds = 60;
+            } else {
+                seconds = _lastMessageRetryCount * 2;
+            }
+            [self.getLastMessageTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:seconds]];
+        }
+    }];
+    
+    
 }
 
 - (void)updateMyChannelInformation:(NSNotification *)notification
@@ -531,6 +598,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     
     [self updateMyChannelInformation:nil];
     [self updateMyCompanyInformation:nil];
+    [self getLastMessageFromServer:nil];
    [[AppNetworkAPIClient sharedClient] updateIdentity:self.me withBlock:block];
 }
 
@@ -592,7 +660,11 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         DDLogVerbose(@"%@: %@ cannot connect to XMPP server", THIS_FILE, THIS_METHOD);
         return NO;
     }
-    [[AppNetworkAPIClient sharedClient] loginWithRetryCount:3 username:self.me.username andPassword:self.me.password withBlock:nil];
+    [[AppNetworkAPIClient sharedClient] loginWithRetryCount:3 username:self.me.username andPassword:self.me.password withBlock:^(id responseObject, NSError *error) {
+        if (responseObject != nil) {
+            [self checkIOSVersion];
+        }
+    }];
     
     return YES;
 }
