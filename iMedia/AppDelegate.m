@@ -382,10 +382,10 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     Information *lastInfo = [[ModelHelper sharedInstance]findLastInformationWithType:LastMessageFromServer];
     NSDate *nowDate = [NSDate date];
     
-//    if ( lastInfo!= nil && [nowDate minutesAfterDate:lastInfo.createdOn] < 60) {
-//        DDLogVerbose(@"[nowDate minutesAfterDate:lastInfo.createdOn] %d",[nowDate minutesAfterDate:lastInfo.createdOn]);
-//        return;
-//    }
+    if ( lastInfo!= nil && [nowDate minutesAfterDate:lastInfo.createdOn] < 60) {
+        DDLogVerbose(@"[nowDate minutesAfterDate:lastInfo.createdOn] %d",[nowDate minutesAfterDate:lastInfo.createdOn]);
+        return;
+    }
     
     // 大于 60分钟
     NSManagedObjectContext *moc = _managedObjectContext;
@@ -647,8 +647,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     }
     
     [self updateMyChannelInformation:nil];
-    [self updateMyCompanyInformation:nil];
-    [self getLastMessageFromServer:nil];
+
    [[AppNetworkAPIClient sharedClient] updateIdentity:self.me withBlock:block];
 }
 
@@ -712,7 +711,10 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     }
     [[AppNetworkAPIClient sharedClient] loginWithRetryCount:3 username:self.me.username andPassword:self.me.password withBlock:^(id responseObject, NSError *error) {
         if (responseObject != nil) {
+#warning <#message#>
             [self checkIOSVersion];
+            [self updateMyCompanyInformation:nil];
+            [self getLastMessageFromServer:nil];
         }
     }];
     

@@ -17,7 +17,7 @@
 #import "ServerDataTransformer.h"
 #import "Me.h"
 #import "Company.h"
-
+#import "CompanyDetailViewController.h"
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -207,15 +207,18 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     MetroButton *targetButton = [self.buttonArray objectAtIndex:1];
     [targetButton setBadgeNumber:[self appDelegate].unreadMessageCount];
 
-
-    
     //;
 }
 
 - (void)initViewControllers
 {
+//    [self appDelegate].conversationController = [[ConversationsController alloc] initWithStyle:UITableViewStylePlain];
+//    [self appDelegate].conversationController.managedObjectContext = self.managedObjectContext;
+//    [[self appDelegate].conversationController updateUnreadBadge]; // 为了消息数量计算使用
+    
     self.conversationController = [[ConversationsController alloc] initWithStyle:UITableViewStylePlain];
     self.conversationController.managedObjectContext = self.managedObjectContext;
+    [self.conversationController updateUnreadBadge]; // 为了消息数量计算使用
     
     self.contactListViewController = [[ContactListViewController alloc] initWithStyle:UITableViewStylePlain andManagementContext:self.managedObjectContext];
     
@@ -359,8 +362,53 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 {
     NSDictionary *dataDict = [self.sourceData objectAtIndex:indexPath.row];
     cell.textLabel.text = [dataDict objectForKey:@"company_name"];
-
 }
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSDictionary *dataDict = [self.sourceData objectAtIndex:indexPath.row];
+    NSString *companyID = [ServerDataTransformer getCompanyIDFromServerJSON:dataDict];
+    
+    [self getDict:companyID];
+    
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark Accessors & selectors
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (void)getDict:(NSString *)companyID
+{
+    Company *aCompany = [[ModelHelper sharedInstance]findCompanyWithCompanyID:companyID];
+    
+    if (aCompany != nil && aCompany.status == CompanyStateFollowed ) {
+        CompanyDetailViewController *controller = [[CompanyDetailViewController alloc]initWithNibName:nil bundle:nil];\
+        controller.company = aCompany;
+        controller.managedObjectContext = [self appDelegate].context;
+        [self.navigationController pushViewController:controller animated:YES];
+    }else {
+        // get user info from web and display as if it is searched
+        MBProgressHUD* HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        HUD.removeFromSuperViewOnHide = YES;
+        HUD.labelText = T(@"正在加载");
+        
+        [[AppNetworkAPIClient sharedClient]getCompanyWithCompanyID:companyID withBlock:^(id responseDict, NSError *error) {
+            //
+            [HUD hide:YES];
+            
+            if (responseDict != nil) {
+                CompanyDetailViewController *controller = [[CompanyDetailViewController alloc]initWithNibName:nil bundle:nil];\
+                controller.jsonData = responseDict;
+                controller.managedObjectContext = [self appDelegate].context;
+                [self.navigationController pushViewController:controller animated:YES];
+            }else{
+                [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"网络错误 暂时无法刷新") andHideAfterDelay:1];
+            }
+            
+        }];
+    }
+}
+
 //////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark actions
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -382,8 +430,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     self.navigationItem.leftBarButtonItem   = [[UIBarButtonItem alloc]initWithCustomView:self.settingButton];
 }
 
-- (void)conversationAction
-{
+- (void)conversationAction{
     [self.navigationController.view.layer addAnimation:self.transition forKey:kCATransition];
     [self.navigationController pushViewController:self.conversationController animated:NO];
 }

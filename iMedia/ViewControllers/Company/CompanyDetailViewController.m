@@ -88,10 +88,10 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 #define NAME_Y      25
 #define NAME_WIDTH  180
 
-#define JOIN_X     130
-#define JOIN_WIDTH 100
+#define JOIN_X      130
+#define JOIN_WIDTH  100
 #define JOIN_HEIGHT 30
-#define JOIN_Y     70
+#define JOIN_Y      50
 #define JOIN_WIDTH2 60
 
 #define CELL_HEIGHT 50.0f
@@ -101,10 +101,14 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 #define ITEM_Y      (CELL_HEIGHT - ITEM_HEIGHT)/2
 #define ITEM_WIDTH  80
 
-#define DESC_X     105
-#define DESC_WIDTH 180
+#define DESC_X      105
+#define DESC_WIDTH  160
 #define DESC_HEIGHT 16
 #define DESC_Y     (CELL_HEIGHT - DESC_HEIGHT)/2
+
+#define LAST_WIDTH  260
+#define LAST_X      (320-LAST_WIDTH)/2
+
 
 #define ITEM_TAG   1
 #define DESC_TAG   3
@@ -112,13 +116,18 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = T(@"公司分类列表");
+    if (self.company != nil) {
+        self.title = self.company.name;
+    }else{
+        self.title = [ServerDataTransformer getCompanyNameFromServerJSON:self.jsonData];
+    }
+
     self.titleArray = [[NSArray alloc]initWithObjects:T(@"邮箱"),T(@"网址"),T(@"公司成员"),T(@"描述"), nil];
     self.titleEnArray = [[NSArray alloc]initWithObjects:@"email",@"website",@"member",@"description", nil];
 
 	// Do any additional setup after loading the view.
     self.view.backgroundColor = BGCOLOR;
-    self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, FACE_HEIGHT, 320, self.view.bounds.size.height-FACE_HEIGHT) style:UITableViewStylePlain];
+    self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, FACE_HEIGHT, 320, self.view.bounds.size.height-FACE_HEIGHT-44) style:UITableViewStylePlain];
     self.tableView.backgroundColor = BGCOLOR;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     //    self.tableView.separatorColor = SEPCOLOR;
@@ -197,7 +206,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [self.faceView addSubview:avatarBG];
     [self.faceView addSubview:self.avatarView];
     [self.faceView addSubview:self.privateView];
-    [self.faceView addSubview:self.nameLabel];
+//    [self.faceView addSubview:self.nameLabel]; // title = name
     [self.faceView addSubview:self.followButton];
     [self.faceView addSubview:self.unFollowButton];
     [self.view addSubview:self.faceView];
@@ -211,7 +220,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     if (self.company != nil) {
         //
         self.isPrivate  = self.company.isPrivate.boolValue;
-        self.nameLabel.text = self.company.name;
+//        self.nameLabel.text = self.company.name;
         NSURL *url = [NSURL URLWithString:self.company.logo];
         [self.avatarView setImageWithURL:url placeholderImage:[UIImage imageNamed:@"company_face.png"]];
         
@@ -235,7 +244,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         self.isPrivate  = [ServerDataTransformer getPrivateFromServerJSON:self.jsonData].boolValue;
         [self.followButton addTarget:self action:@selector(followAction) forControlEvents:UIControlEventTouchUpInside];
         
-        self.nameLabel.text = [ServerDataTransformer getCompanyNameFromServerJSON:self.jsonData];
+//        self.nameLabel.text = [ServerDataTransformer getCompanyNameFromServerJSON:self.jsonData];
         NSURL *url = [NSURL URLWithString:[ServerDataTransformer getLogoFromServerJSON:self.jsonData]];
         [self.avatarView setImageWithURL:url placeholderImage:[UIImage imageNamed:@"company_face.png"]];
         [self.unFollowButton setHidden:YES];
@@ -281,7 +290,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
         UIFont *font = [UIFont systemFontOfSize:14.0f];
 
-        CGSize size = [(item ? item : @"") sizeWithFont:font constrainedToSize:CGSizeMake(DESC_WIDTH, 9999) lineBreakMode:UILineBreakModeWordWrap];
+        CGSize size = [(item ? item : @"") sizeWithFont:font constrainedToSize:CGSizeMake(LAST_WIDTH, 9999) lineBreakMode:UILineBreakModeWordWrap];
         if (size.height > CELL_HEIGHT) {
             return size.height + 40;
         }else{
@@ -357,21 +366,35 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         }else if ([enTitle isEqualToString:@"description"]){
             descLabel.text = self.company.desc;
+            [itemLabel removeFromSuperview];
         }
     }else{
         descLabel.text = [ServerDataTransformer getStringObjFromServerJSON:self.jsonData byName:enTitle];
         if ([enTitle isEqualToString:@"member"]){
             descLabel.text = T(@"点击查看");
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        }else if ([enTitle isEqualToString:@"description"]){
+            [itemLabel removeFromSuperview];
         }
     }
-    
     UIFont *font = [UIFont systemFontOfSize:14.0f];
-    CGSize size = [(descLabel.text ? descLabel.text : @"") sizeWithFont:font constrainedToSize:CGSizeMake(DESC_WIDTH, 9999) lineBreakMode:UILineBreakModeWordWrap];
-    NSLog(@"height %f",size.height);
 
-    CGFloat posY = ([self.titleArray count] == indexPath.row + 1) ? 18 : (cell.frame.size.height - size.height)/2+3;
-    [descLabel setFrame:CGRectMake(descLabel.frame.origin.x, posY , DESC_WIDTH, size.height)];
+    if (![enTitle isEqualToString:@"description"]) {
+        CGSize size = [(descLabel.text ? descLabel.text : @"") sizeWithFont:font constrainedToSize:CGSizeMake(DESC_WIDTH, 9999) lineBreakMode:UILineBreakModeWordWrap];
+        NSLog(@"height %f",size.height);
+        
+        CGFloat posY = ([self.titleArray count] == indexPath.row + 1) ? 18 : (cell.frame.size.height - size.height)/2+3;
+        [descLabel setFrame:CGRectMake(descLabel.frame.origin.x, posY , DESC_WIDTH, size.height)];
+    }else{
+        CGSize size = [(descLabel.text ? descLabel.text : @"") sizeWithFont:font constrainedToSize:CGSizeMake(LAST_WIDTH, 9999) lineBreakMode:UILineBreakModeWordWrap];
+        NSLog(@"height %f",size.height);
+        
+        CGFloat posY = ([self.titleArray count] == indexPath.row + 1) ? 18 : (cell.frame.size.height - size.height)/2+3;
+        [descLabel setFrame:CGRectMake(LAST_X, posY , LAST_WIDTH, size.height)];
+    }
+    
+    
+    
     
 }
 

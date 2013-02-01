@@ -33,8 +33,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 //#define BANDWIDTH_MONITOR
 
 
-//static NSString * const pubsubhost = @"pubsub.192.168.1.104";
-static NSString * const pubsubhost = @"pubsub.d.wingedstone.com";
+static NSString * const pubsubhost = @"pubsub.192.168.1.104";
+//static NSString * const pubsubhost = @"pubsub.d.wingedstone.com";
 
 @interface XMPPNetworkCenter () <XMPPRosterDelegate, XMPPPubSubDelegate, XMPPRosterMemoryStorageDelegate, XMPPPrivacyDelegate>
 {
@@ -299,7 +299,6 @@ static NSString * const pubsubhost = @"pubsub.d.wingedstone.com";
 -(BOOL)sendMessage:(Message *)message
 {
     DDLogVerbose(@"%@: %@", THIS_FILE, THIS_METHOD);
-    
     
     
     XMPPMessage* msg = [NetMessageConverter newXMPPMessageFromMessage:message];

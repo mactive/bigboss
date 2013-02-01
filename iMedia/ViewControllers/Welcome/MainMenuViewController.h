@@ -26,4 +26,5 @@
 @property(strong, nonatomic) MemoViewController *memoViewController;
 @property(strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
+- (void)conversationAction;
 @end

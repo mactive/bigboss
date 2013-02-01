@@ -105,12 +105,23 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 - (void)viewController:(UIViewController *)viewController didChatIdentity:(id)obj
 {
-    [self dismissModalViewControllerAnimated:YES];
+//    [self dismissViewControllerAnimated:YES completion:^{
+//        //
+//    }];
     
+    [self.navigationController popToRootViewControllerAnimated:NO];
+    [[self appDelegate].mainMenuViewController conversationAction];
     if (obj) {
-        [self.tabBarController setSelectedIndex:1];
-        [[self appDelegate].conversationController chatWithIdentity:obj];
-    }    
+        [[self appDelegate].mainMenuViewController.conversationController chatWithIdentity:obj];
+    }
+    
+//    [[self appDelegate].mainMenuViewController conversationActionWithBlock:^(id responseObject) {
+//        if (obj) {
+//            [[self appDelegate].mainMenuViewController.conversationController chatWithIdentity:obj];
+//        }
+//    }];
+    
+   
 
 }
 

@@ -443,7 +443,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     
     _detailController.managedObjectContext = self.managedObjectContext;
     [_detailController setHidesBottomBarWhenPushed:YES];
-    [self.navigationController popToRootViewControllerAnimated:NO];
+//    [self.navigationController popToRootViewControllerAnimated:NO];
     [self.navigationController pushViewController:_detailController animated:YES];
 }
 

@@ -83,7 +83,8 @@
 {
     [self.badgeLabel setHidden:NO];
     [self.badgeLabel setFrame:self.iconView.bounds];
-    [self.badgeLabel setFont:[UIFont boldSystemFontOfSize:self.iconView.frame.size.height/3*2]];
+    [self.badgeLabel setFrame:CGRectMake(self.badgeLabel.frame.origin.x, self.badgeLabel.frame.origin.y-3, self.badgeLabel.frame.size.width, self.badgeLabel.frame.size.height)];
+    [self.badgeLabel setFont:[UIFont boldSystemFontOfSize:self.iconView.frame.size.height/2]];
     self.badgeLabel.text = [NSString stringWithFormat:@"%d",badgeNumber];
 }
 
