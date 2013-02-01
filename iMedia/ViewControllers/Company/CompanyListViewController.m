@@ -232,7 +232,7 @@
     Company *aCompany = [[ModelHelper sharedInstance]findCompanyWithCompanyID:companyID];
     
     if (aCompany != nil && aCompany.status == CompanyStateFollowed ) {
-        CompanyDetailViewController *controller = [[CompanyDetailViewController alloc]initWithNibName:nil bundle:nil];\
+        CompanyDetailViewController *controller = [[CompanyDetailViewController alloc]initWithNibName:nil bundle:nil];
         controller.company = aCompany;
         controller.managedObjectContext = [self appDelegate].context;
         [self.navigationController pushViewController:controller animated:YES];

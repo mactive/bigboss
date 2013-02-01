@@ -20,6 +20,7 @@
 #import "AppDelegate.h"
 #import "Channel.h"
 #import "ModelHelper.h"
+#import "ChannelViewController.h"
 
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
@@ -113,9 +114,15 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 #define LAST_WIDTH  260
 #define LAST_X      (320-LAST_WIDTH)/2
 
+#define CHANNEL_WIDTH 32
+#define CHANNEL_X   DESC_X - 60
+#define CHANNEL_Y (CELL_HEIGHT-CHANNEL_WIDTH)/2
 
-#define ITEM_TAG   1
-#define DESC_TAG   3
+#define ITEM_TAG    1
+#define DESC_TAG    3
+#define CHANNEL_TAG  2
+
+
 
 - (void)viewDidLoad
 {
@@ -147,18 +154,20 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     self.isFollow = NO;
     self.isPrivate = NO;
     
-    self.titleArray = [[NSMutableArray alloc]initWithObjects:T(@"描述"),T(@"邮箱"),T(@"网址"),T(@"公司成员"), nil];
-    self.titleEnArray = [[NSMutableArray alloc]initWithObjects:@"description",@"email",@"website",@"member", nil];
+    self.titleArray = [[NSMutableArray alloc]initWithObjects:T(@"邮箱"),T(@"网址"),T(@"公司成员"),T(@"频道"), nil];
+    self.titleEnArray = [[NSMutableArray alloc]initWithObjects: @"email",@"website",@"member",@"channel", nil];
     
     [self.view addSubview:self.tableView];
     [self initFaceView];
+    [self initHeaderView];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     [self refreshFaceView];
-    [self populateData];
+    [self populateChannelData];
 }
 
 
@@ -221,6 +230,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     
     [self.privateView setHidden:YES];
     [self.unFollowButton setHidden:YES];
+    
 }
 
 - (void)refreshFaceView
@@ -258,7 +268,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         [self.unFollowButton setHidden:YES];
     }
     
-
+    
     // is private
     if (self.isPrivate){
         [self.privateView setHidden:NO];
@@ -267,7 +277,42 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     }
 }
 
-- (void)populateData
+- (void)initHeaderView
+{
+    UIView *headerView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 320, 100)];
+    headerView.backgroundColor = BGCOLOR;
+    
+    UIView *separateLine = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 320, 1)];
+    separateLine.backgroundColor = SEPCOLOR;
+    
+    NSString *descString;
+    if (self.company != nil) {
+        descString = self.company.desc;
+    }else{
+        descString = [ServerDataTransformer getDescriptionFromServerJSON:self.jsonData];
+    }
+    
+    UILabel *descLabel = [[UILabel alloc]initWithFrame:CGRectMake(LAST_X, 0, LAST_WIDTH, 10)];
+    descLabel.backgroundColor = [UIColor clearColor];
+    descLabel.font = [UIFont systemFontOfSize:14.0f];
+    descLabel.textAlignment = NSTextAlignmentLeft;
+    descLabel.numberOfLines = 0;
+    descLabel.textColor = LIVID_COLOR;
+    descLabel.text = descString;
+    
+    CGSize size = [(descString ? descString : @"") sizeWithFont:descLabel.font constrainedToSize:CGSizeMake(LAST_WIDTH, 9999) lineBreakMode:UILineBreakModeWordWrap];
+    [headerView setFrame:CGRectMake(0, 0, 320, size.height+JOIN_HEIGHT)];
+    [descLabel setFrame:CGRectMake(LAST_X, JOIN_HEIGHT/2 , LAST_WIDTH, size.height)];
+    [separateLine setFrame:CGRectMake(0, size.height+JOIN_HEIGHT-1, 320, 1)];
+    
+    [headerView addSubview:separateLine];
+    [headerView addSubview:descLabel];
+    self.tableView.tableHeaderView = headerView;
+
+}
+
+// 频道channel 数据
+- (void)populateChannelData
 {
     NSString  *companyID;
     NSMutableArray *tmpArray = [[NSMutableArray alloc]init];
@@ -287,13 +332,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
             NSUInteger i;
             for(i = 0; i < [self.sourceData count]; i++)
             {
-                NSDictionary *dict = [self.sourceData objectAtIndex:i];
-                Channel *aChannel = [[ModelHelper sharedInstance] findChannelWithNode:[dict objectForKey:@"node_address"]];
-
-                [[ModelHelper sharedInstance] populateIdentity:aChannel withJSONData:dict];
-                
-                
-                [tmpArray addObject:aChannel];
+                NSDictionary *dict = [self.sourceData objectAtIndex:i];                
+                [tmpArray addObject:dict];
             }
             
             self.channelData = [[NSArray alloc]initWithArray:tmpArray];
@@ -323,31 +363,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row < [self.titleArray count]) {
-        NSString *enTitle = [self.titleEnArray objectAtIndex:indexPath.row];
-        
-        if ([enTitle isEqualToString:@"description"]) {
-            NSString *item ;
-            if (self.company != nil) {
-                item = self.company.desc;
-            }else{
-                item = [ServerDataTransformer getDescriptionFromServerJSON:self.jsonData];
-            }
-            
-            UIFont *font = [UIFont systemFontOfSize:14.0f];
-            
-            CGSize size = [(item ? item : @"") sizeWithFont:font constrainedToSize:CGSizeMake(LAST_WIDTH, 9999) lineBreakMode:UILineBreakModeWordWrap];
-            if (size.height > CELL_HEIGHT) {
-                return size.height + JOIN_HEIGHT;
-            }else{
-                return CELL_HEIGHT;
-            }
-        }else{
-            return CELL_HEIGHT;
-        }
-    }else{
+
         return CELL_HEIGHT;
-    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -387,6 +404,17 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     descLabel.textColor = LIVID_COLOR;
     descLabel.tag = DESC_TAG;
     
+    // Create an image view for the quarter image.
+	CGRect imageRect = CGRectMake(CHANNEL_X, CHANNEL_Y, CHANNEL_WIDTH, CHANNEL_WIDTH);
+    
+    UIImageView *avatarImage = [[UIImageView alloc] initWithFrame:imageRect];
+    avatarImage.tag = CHANNEL_TAG;
+    CALayer *avatarLayer = [avatarImage layer];
+    [avatarLayer setMasksToBounds:YES];
+    [avatarLayer setCornerRadius:5.0];
+    [cell.contentView addSubview:avatarImage];
+    
+    [cell addSubview:avatarImage];
     [cell addSubview:itemLabel];
     [cell addSubview:descLabel];
     return cell;
@@ -398,7 +426,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     
     UILabel *itemLabel = (UILabel *)[cell viewWithTag:ITEM_TAG];
     UILabel *descLabel = (UILabel *)[cell viewWithTag:DESC_TAG];
-    
+    UIImageView *imageView = (UIImageView *)[cell viewWithTag:CHANNEL_TAG];
     if (indexPath.row < descCount) {
         itemLabel.text = [self.titleArray objectAtIndex:indexPath.row];
         NSString *enTitle = [self.titleEnArray objectAtIndex:indexPath.row];
@@ -410,45 +438,43 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
             }else if ([enTitle isEqualToString:@"member"]){
                 descLabel.text = T(@"点击查看");
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            }else if ([enTitle isEqualToString:@"description"]){
-                descLabel.text = self.company.desc;
-                [itemLabel removeFromSuperview];
             }
         }else{
             descLabel.text = [ServerDataTransformer getStringObjFromServerJSON:self.jsonData byName:enTitle];
             if ([enTitle isEqualToString:@"member"]){
                 descLabel.text = T(@"点击查看");
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            }else if ([enTitle isEqualToString:@"description"]){
-                [itemLabel removeFromSuperview];
             }
         }
         UIFont *font = [UIFont systemFontOfSize:14.0f];
         
-        if (![enTitle isEqualToString:@"description"]) {
-            CGSize size = [(descLabel.text ? descLabel.text : @"") sizeWithFont:font constrainedToSize:CGSizeMake(DESC_WIDTH, 9999) lineBreakMode:UILineBreakModeWordWrap];
-            NSLog(@"height %f",size.height);
-            
-            CGFloat posY =  (cell.frame.size.height - size.height)/2+3;
-            [descLabel setFrame:CGRectMake(descLabel.frame.origin.x, posY , DESC_WIDTH, size.height)];
-        }else{
-            CGSize size = [(descLabel.text ? descLabel.text : @"") sizeWithFont:font constrainedToSize:CGSizeMake(LAST_WIDTH, 9999) lineBreakMode:UILineBreakModeWordWrap];
-            NSLog(@"height %f",size.height);
-            
-            CGFloat posY = JOIN_HEIGHT / 2;
-            [descLabel setFrame:CGRectMake(LAST_X, posY , LAST_WIDTH, size.height)];
-        }
+        CGSize size = [(descLabel.text ? descLabel.text : @"") sizeWithFont:font constrainedToSize:CGSizeMake(DESC_WIDTH, 9999) lineBreakMode:UILineBreakModeWordWrap];
+        NSLog(@"height %f",size.height);
+        
+        CGFloat posY =  (cell.frame.size.height - size.height)/2+3;
+        [descLabel setFrame:CGRectMake(DESC_X, posY , DESC_WIDTH, size.height)];
+        
+        [itemLabel setHidden:NO];
+        [descLabel setHidden:NO];
+        [imageView setHidden:YES];
 
     }else{
-        Channel *aChannel = [self.channelData objectAtIndex:(indexPath.row - descCount)];
+        NSDictionary *dataDict = [self.channelData objectAtIndex:(indexPath.row - descCount)];
 
         itemLabel.text = T(@"频道");
-        descLabel.text = aChannel.displayName;
+        descLabel.text = [ServerDataTransformer getNicknameFromServerJSON:dataDict];
+        //set avatar
+        NSURL *url = [NSURL URLWithString:[ServerDataTransformer getThumbnailFromServerJSON:dataDict]];
+        [imageView setImageWithURL:url placeholderImage:[UIImage imageNamed:@"placeholder_user.png"]];
+        [descLabel setFrame:CGRectMake(DESC_X, descLabel.frame.origin.y, descLabel.frame.size.width, descLabel.frame.size.height)];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+
+        
+        [itemLabel setHidden:YES];
+        [descLabel setHidden:NO];
+        [imageView setHidden:NO];
     }
-    
 
-
-    
 }
 
 - (void) tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -458,7 +484,9 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row < [self.titleArray count]) {
+    NSUInteger descCount = [self.titleArray count];
+
+    if (indexPath.row < descCount) {
         NSString *enTitle = [self.titleEnArray objectAtIndex:indexPath.row];
         if ([enTitle isEqualToString:@"member"]) {
             NSString *companyID;
@@ -473,6 +501,16 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
             controller.companyID = companyID;
             [self.navigationController pushViewController:controller animated:YES];
         }
+    }else{
+        NSDictionary *dataDict = [self.channelData objectAtIndex:(indexPath.row - descCount)];
+    
+        ChannelViewController *controller = [[ChannelViewController alloc] initWithNibName:nil bundle:nil];
+        controller.jsonData = dataDict;
+        controller.delegate = [self appDelegate].contactListController;
+        controller.managedObjectContext = self.managedObjectContext;
+        
+        [controller setHidesBottomBarWhenPushed:YES];
+        [self.navigationController pushViewController:controller animated:YES];
     }
 
 
