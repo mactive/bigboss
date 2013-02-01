@@ -1126,6 +1126,41 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 
 }
 
+// op 45 获取公司的频道
+- (void)getCompanyChannelWithCompanyID:(NSString *)companyID withBlock:(void(^)(id, NSError *))block
+{
+    NSDictionary *getDict = [NSDictionary dictionaryWithObjectsAndKeys:companyID, @"cid", @"45", @"op", nil];
+    NSMutableURLRequest *getRequest = [[AppNetworkAPIClient sharedClient] requestWithMethod:@"GET" path:GET_DATA_PATH parameters:getDict];
+    AFHTTPRequestOperation *getOperation = [[AppNetworkAPIClient sharedClient]HTTPRequestOperationWithRequest:getRequest success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        //
+        DDLogVerbose(@"getCompanyChannelWithCompanyID: %@", responseObject);
+        
+        NSString* type = [responseObject valueForKey:@"type"];
+        
+        if (![@"error" isEqualToString:type]) {
+            if (block) {
+                block (responseObject, nil);
+            }
+        } else {
+            if (block) {
+                if ([@"fail" isEqualToString:type]) {
+                    NSError *error = [[NSError alloc] initWithDomain:@"wingedstone.com" code:403 userInfo:nil];
+                    block (nil, error);
+                }else{
+                    NSError *error = [[NSError alloc] initWithDomain:@"wingedstone.com" code:500 userInfo:nil];
+                    block (nil, error);
+                }
+                
+            }
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        if (block) {
+            block (nil, error);
+        }
+    }];
+    [[AppNetworkAPIClient sharedClient] enqueueHTTPRequestOperation:getOperation];
+}
+
 
 // op 30 follow company
 - (void)followCompanyWithCompanyID:(NSString *)companyID withBlock:(void(^)(id, NSError *))block

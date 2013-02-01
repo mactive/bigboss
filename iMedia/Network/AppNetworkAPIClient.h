@@ -84,6 +84,8 @@ extern NSString *const kXMPPmyUsername;
 - (void)getCompanyMemberWithCompanyID:(NSString *)companyID andStart:(NSUInteger)start withBlock:(void(^)(id, NSError *))block;
 // op43 获取离线消息 by cid start
 - (void)getLastMessageWithBlock:(void(^)(id, NSError *))block;
+// op45 获取公司的频道 by cid start
+- (void)getCompanyChannelWithCompanyID:(NSString *)companyID withBlock:(void(^)(id, NSError *))block;
 
 
 // op 30

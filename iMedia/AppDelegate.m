@@ -820,14 +820,18 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 - (void)clearSession
 {
     [[XMPPNetworkCenter sharedClient] disconnect];
-    self.contactListController = nil;
+    self.mainMenuViewController = nil;
     self.conversationController = nil;
-    self.nearbyViewController = nil;
-    self.settingController = nil;
-    self.functionListController = nil;
+    self.contactListController = nil;
+    self.functionListViewController = nil;
+    self.settingViewController = nil;
+    self.companyCategoryViewController = nil;
+    self.myCompanyController = nil;
+    self.memoViewController = nil;
     self.me = nil;
     self.friendRequestPluggin = nil;
     [AppNetworkAPIClient sharedClient].isLoggedIn = NO;
+    
 }
 
 - (void)networkChangeReceived:(NSNotification *)notification

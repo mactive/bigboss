@@ -18,6 +18,8 @@
 #import "Company.h"
 #import "ModelHelper.h"
 #import "AppDelegate.h"
+#import "Channel.h"
+#import "ModelHelper.h"
 
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
@@ -30,8 +32,9 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 @interface CompanyDetailViewController ()<UITableViewDataSource,UITableViewDelegate,UISearchBarDelegate>
 @property(strong,nonatomic)NSArray *sourceData;
-@property(strong,nonatomic)NSArray *titleArray;
-@property(strong,nonatomic)NSArray *titleEnArray;
+@property(strong,nonatomic)NSArray *channelData;
+@property(strong,nonatomic)NSMutableArray *titleArray;
+@property(strong,nonatomic)NSMutableArray *titleEnArray;
 @property(strong, nonatomic)NSMutableDictionary * sourceDict;
 @property(strong, nonatomic)UIView *faceView;
 @property(strong, nonatomic)UIImageView *avatarView;
@@ -47,6 +50,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 @implementation CompanyDetailViewController
 @synthesize sourceData;
+@synthesize channelData;
 @synthesize sourceDict;
 @synthesize tableView;
 @synthesize titleArray;
@@ -122,25 +126,29 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         self.title = [ServerDataTransformer getCompanyNameFromServerJSON:self.jsonData];
     }
 
-    self.titleArray = [[NSArray alloc]initWithObjects:T(@"邮箱"),T(@"网址"),T(@"公司成员"),T(@"描述"), nil];
-    self.titleEnArray = [[NSArray alloc]initWithObjects:@"email",@"website",@"member",@"description", nil];
+    self.titleArray = [[NSMutableArray alloc]init];
+    self.titleEnArray = [[NSMutableArray alloc]init];
 
 	// Do any additional setup after loading the view.
     self.view.backgroundColor = BGCOLOR;
     self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, FACE_HEIGHT, 320, self.view.bounds.size.height-FACE_HEIGHT-44) style:UITableViewStylePlain];
     self.tableView.backgroundColor = BGCOLOR;
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    //    self.tableView.separatorColor = SEPCOLOR;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    self.tableView.separatorColor = SEPCOLOR;
     [self.tableView setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero]];
     
     self.tableView.delegate = self;
     self.tableView.dataSource  = self;
     
     self.sourceData = [[NSArray alloc]init];
+    self.channelData = [[NSArray alloc]init];
     self.sourceDict = [[NSMutableDictionary alloc]init];
     
     self.isFollow = NO;
     self.isPrivate = NO;
+    
+    self.titleArray = [[NSMutableArray alloc]initWithObjects:T(@"描述"),T(@"邮箱"),T(@"网址"),T(@"公司成员"), nil];
+    self.titleEnArray = [[NSMutableArray alloc]initWithObjects:@"description",@"email",@"website",@"member", nil];
     
     [self.view addSubview:self.tableView];
     [self initFaceView];
@@ -150,7 +158,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 {
     [super viewWillAppear:animated];
     [self refreshFaceView];
-    
+    [self populateData];
 }
 
 
@@ -259,7 +267,43 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     }
 }
 
+- (void)populateData
+{
+    NSString  *companyID;
+    NSMutableArray *tmpArray = [[NSMutableArray alloc]init];
+    self.channelData = [[NSArray alloc]init];
+    
+    if (self.company != nil) {
+        companyID = self.company.companyID;
+    }else{
+        companyID = [ServerDataTransformer getCompanyIDFromServerJSON:self.jsonData];
+    }
+    [[AppNetworkAPIClient sharedClient]getCompanyChannelWithCompanyID:companyID withBlock:^(id responseObject, NSError *error) {
+        //
+        if (responseObject != nil) {
+            self.sourceDict = responseObject;
+            self.sourceData = [self.sourceDict allValues];
+            
+            NSUInteger i;
+            for(i = 0; i < [self.sourceData count]; i++)
+            {
+                NSDictionary *dict = [self.sourceData objectAtIndex:i];
+                Channel *aChannel = [[ModelHelper sharedInstance] findChannelWithNode:[dict objectForKey:@"node_address"]];
 
+                [[ModelHelper sharedInstance] populateIdentity:aChannel withJSONData:dict];
+                
+                
+                [tmpArray addObject:aChannel];
+            }
+            
+            self.channelData = [[NSArray alloc]initWithArray:tmpArray];
+            if ([self.channelData count] > 0) {
+                [self.tableView reloadData];
+            }
+        }
+    }];
+
+}
 
 
 #pragma mark - Table view data source
@@ -273,26 +317,31 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [self.titleArray count];
+    NSUInteger count = [self.titleArray count] + [self.channelData count];
+    return count;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *enTitle = [self.titleEnArray objectAtIndex:indexPath.row];    
-    
-    if ([enTitle isEqualToString:@"description"]) {
-        NSString *item ;
-        if (self.company != nil) {
-            item = self.company.desc;
-        }else{
-            item = [ServerDataTransformer getDescriptionFromServerJSON:self.jsonData];
-        }
-
-        UIFont *font = [UIFont systemFontOfSize:14.0f];
-
-        CGSize size = [(item ? item : @"") sizeWithFont:font constrainedToSize:CGSizeMake(LAST_WIDTH, 9999) lineBreakMode:UILineBreakModeWordWrap];
-        if (size.height > CELL_HEIGHT) {
-            return size.height + 40;
+    if (indexPath.row < [self.titleArray count]) {
+        NSString *enTitle = [self.titleEnArray objectAtIndex:indexPath.row];
+        
+        if ([enTitle isEqualToString:@"description"]) {
+            NSString *item ;
+            if (self.company != nil) {
+                item = self.company.desc;
+            }else{
+                item = [ServerDataTransformer getDescriptionFromServerJSON:self.jsonData];
+            }
+            
+            UIFont *font = [UIFont systemFontOfSize:14.0f];
+            
+            CGSize size = [(item ? item : @"") sizeWithFont:font constrainedToSize:CGSizeMake(LAST_WIDTH, 9999) lineBreakMode:UILineBreakModeWordWrap];
+            if (size.height > CELL_HEIGHT) {
+                return size.height + JOIN_HEIGHT;
+            }else{
+                return CELL_HEIGHT;
+            }
         }else{
             return CELL_HEIGHT;
         }
@@ -320,10 +369,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 {
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    cell.backgroundView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"cell_H50_bg.png"]];
-//    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator ;
-    
-    
+
+
     UILabel *itemLabel = [[UILabel alloc]initWithFrame:CGRectMake(ITEM_X, ITEM_Y, ITEM_WIDTH, ITEM_HEIGHT)];
     itemLabel.backgroundColor = [UIColor clearColor];
     itemLabel.font = [UIFont systemFontOfSize:16.0f];
@@ -347,54 +394,60 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 - (void)configureCell:(UITableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.row == ([self.titleArray count]-1)) {
-        cell.backgroundView = nil;
-    }
+    NSUInteger descCount = [self.titleArray count];
     
     UILabel *itemLabel = (UILabel *)[cell viewWithTag:ITEM_TAG];
-    itemLabel.text = [self.titleArray objectAtIndex:indexPath.row];
-    
-    NSString *enTitle = [self.titleEnArray objectAtIndex:indexPath.row];
     UILabel *descLabel = (UILabel *)[cell viewWithTag:DESC_TAG];
-    if (self.company != nil) {
-        if([enTitle isEqualToString:@"email"]){
-            descLabel.text = self.company.email;
-        }else if ([enTitle isEqualToString:@"website"]){
-            descLabel.text = self.company.website;
-        }else if ([enTitle isEqualToString:@"member"]){
-            descLabel.text = T(@"点击查看");
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        }else if ([enTitle isEqualToString:@"description"]){
-            descLabel.text = self.company.desc;
-            [itemLabel removeFromSuperview];
+    
+    if (indexPath.row < descCount) {
+        itemLabel.text = [self.titleArray objectAtIndex:indexPath.row];
+        NSString *enTitle = [self.titleEnArray objectAtIndex:indexPath.row];
+        if (self.company != nil) {
+            if([enTitle isEqualToString:@"email"]){
+                descLabel.text = self.company.email;
+            }else if ([enTitle isEqualToString:@"website"]){
+                descLabel.text = self.company.website;
+            }else if ([enTitle isEqualToString:@"member"]){
+                descLabel.text = T(@"点击查看");
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            }else if ([enTitle isEqualToString:@"description"]){
+                descLabel.text = self.company.desc;
+                [itemLabel removeFromSuperview];
+            }
+        }else{
+            descLabel.text = [ServerDataTransformer getStringObjFromServerJSON:self.jsonData byName:enTitle];
+            if ([enTitle isEqualToString:@"member"]){
+                descLabel.text = T(@"点击查看");
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            }else if ([enTitle isEqualToString:@"description"]){
+                [itemLabel removeFromSuperview];
+            }
         }
-    }else{
-        descLabel.text = [ServerDataTransformer getStringObjFromServerJSON:self.jsonData byName:enTitle];
-        if ([enTitle isEqualToString:@"member"]){
-            descLabel.text = T(@"点击查看");
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        }else if ([enTitle isEqualToString:@"description"]){
-            [itemLabel removeFromSuperview];
+        UIFont *font = [UIFont systemFontOfSize:14.0f];
+        
+        if (![enTitle isEqualToString:@"description"]) {
+            CGSize size = [(descLabel.text ? descLabel.text : @"") sizeWithFont:font constrainedToSize:CGSizeMake(DESC_WIDTH, 9999) lineBreakMode:UILineBreakModeWordWrap];
+            NSLog(@"height %f",size.height);
+            
+            CGFloat posY =  (cell.frame.size.height - size.height)/2+3;
+            [descLabel setFrame:CGRectMake(descLabel.frame.origin.x, posY , DESC_WIDTH, size.height)];
+        }else{
+            CGSize size = [(descLabel.text ? descLabel.text : @"") sizeWithFont:font constrainedToSize:CGSizeMake(LAST_WIDTH, 9999) lineBreakMode:UILineBreakModeWordWrap];
+            NSLog(@"height %f",size.height);
+            
+            CGFloat posY = JOIN_HEIGHT / 2;
+            [descLabel setFrame:CGRectMake(LAST_X, posY , LAST_WIDTH, size.height)];
         }
-    }
-    UIFont *font = [UIFont systemFontOfSize:14.0f];
 
-    if (![enTitle isEqualToString:@"description"]) {
-        CGSize size = [(descLabel.text ? descLabel.text : @"") sizeWithFont:font constrainedToSize:CGSizeMake(DESC_WIDTH, 9999) lineBreakMode:UILineBreakModeWordWrap];
-        NSLog(@"height %f",size.height);
-        
-        CGFloat posY = ([self.titleArray count] == indexPath.row + 1) ? 18 : (cell.frame.size.height - size.height)/2+3;
-        [descLabel setFrame:CGRectMake(descLabel.frame.origin.x, posY , DESC_WIDTH, size.height)];
     }else{
-        CGSize size = [(descLabel.text ? descLabel.text : @"") sizeWithFont:font constrainedToSize:CGSizeMake(LAST_WIDTH, 9999) lineBreakMode:UILineBreakModeWordWrap];
-        NSLog(@"height %f",size.height);
-        
-        CGFloat posY = ([self.titleArray count] == indexPath.row + 1) ? 18 : (cell.frame.size.height - size.height)/2+3;
-        [descLabel setFrame:CGRectMake(LAST_X, posY , LAST_WIDTH, size.height)];
+        Channel *aChannel = [self.channelData objectAtIndex:(indexPath.row - descCount)];
+
+        itemLabel.text = T(@"频道");
+        descLabel.text = aChannel.displayName;
     }
     
-    
-    
+
+
     
 }
 
@@ -405,20 +458,23 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *enTitle = [self.titleEnArray objectAtIndex:indexPath.row];
-    if ([enTitle isEqualToString:@"member"]) {
-        NSString *companyID;
-
-        if (self.company != nil) {
-            companyID = self.company.companyID;
-        }else{
-            companyID = [ServerDataTransformer getStringObjFromServerJSON:self.jsonData byName:@"cid"];
+    if (indexPath.row < [self.titleArray count]) {
+        NSString *enTitle = [self.titleEnArray objectAtIndex:indexPath.row];
+        if ([enTitle isEqualToString:@"member"]) {
+            NSString *companyID;
+            
+            if (self.company != nil) {
+                companyID = self.company.companyID;
+            }else{
+                companyID = [ServerDataTransformer getStringObjFromServerJSON:self.jsonData byName:@"cid"];
+            }
+            
+            CompanyMemberViewController *controller = [[CompanyMemberViewController alloc]initWithNibName:nil bundle:nil];
+            controller.companyID = companyID;
+            [self.navigationController pushViewController:controller animated:YES];
         }
-        
-        CompanyMemberViewController *controller = [[CompanyMemberViewController alloc]initWithNibName:nil bundle:nil];
-        controller.companyID = companyID;
-        [self.navigationController pushViewController:controller animated:YES];
     }
+
 
 }
 
