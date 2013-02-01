@@ -105,9 +105,6 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 - (void)viewController:(UIViewController *)viewController didChatIdentity:(id)obj
 {
-//    [self dismissViewControllerAnimated:YES completion:^{
-//        //
-//    }];
     
     [self.navigationController popToRootViewControllerAnimated:NO];
     [[self appDelegate].mainMenuViewController conversationAction];

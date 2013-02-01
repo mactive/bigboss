@@ -887,14 +887,13 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
 ////////////////////////////////////////////////////////////////////////////////////////////////
 -(void)sendMsgRequest:(id)sender
 {
-    [self.navigationController popToRootViewControllerAnimated:NO];
-    [[self appDelegate].tabController setSelectedIndex:1];
+    [self.navigationController popToRootViewControllerAnimated:NO];    
     
     if (self.user != nil) {
-        [[self appDelegate].conversationController chatWithIdentity:self.user];
+        [[self appDelegate].mainMenuViewController.conversationController chatWithIdentity:self.user];
     } else {
         User* user = [[ModelHelper sharedInstance] findUserWithGUID:self.GUIDString];
-        [[self appDelegate].conversationController chatWithIdentity:user];
+        [[self appDelegate].mainMenuViewController.conversationController chatWithIdentity:user];
     }
 }
 
