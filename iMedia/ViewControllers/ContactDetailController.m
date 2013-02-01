@@ -890,10 +890,10 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
     [self.navigationController popToRootViewControllerAnimated:NO];    
     
     if (self.user != nil) {
-        [[self appDelegate].mainMenuViewController.conversationController chatWithIdentity:self.user];
+        [[self appDelegate].conversationController chatWithIdentity:self.user];
     } else {
         User* user = [[ModelHelper sharedInstance] findUserWithGUID:self.GUIDString];
-        [[self appDelegate].mainMenuViewController.conversationController chatWithIdentity:user];
+        [[self appDelegate].conversationController chatWithIdentity:user];
     }
 }
 

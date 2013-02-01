@@ -24,12 +24,14 @@
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) MainMenuViewController *mainMenuViewController;
-@property (strong, nonatomic) UITabBarController *tabController;
-@property (strong, nonatomic) NearbyViewController *nearbyViewController;
 @property (strong, nonatomic) ConversationsController *conversationController;
 @property (strong, nonatomic) ContactListViewController *contactListController;
-@property (strong, nonatomic) FunctionListViewController *functionListController;
-@property (strong, nonatomic) SettingViewController *settingController;
+@property (strong, nonatomic) FunctionListViewController *functionListViewController;
+@property (strong, nonatomic) SettingViewController *settingViewController;
+@property (strong, nonatomic) CompanyCategoryViewController *companyCategoryViewController;
+@property (strong, nonatomic) MyCompanyViewController *myCompanyController;
+@property (strong, nonatomic) MemoViewController *memoViewController;
+
 
 // Here comes one of the bigges assumptions. This me is the only instance in the Me entity. If me exists, it means
 // this is not a first run, all data initializations will be done already. We will not pull the full poster again

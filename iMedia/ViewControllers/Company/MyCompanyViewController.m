@@ -55,7 +55,7 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
 }
 - (void)mainMenuAction
 {
-    [self.navigationController popViewControllerAnimated:NO];
+    [self.navigationController popToRootViewControllerAnimated:NO];
 }
 
 - (AppDelegate *)appDelegate

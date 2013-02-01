@@ -92,7 +92,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 - (void)mainMenuAction
 {
-    [self.navigationController popViewControllerAnimated:NO];
+    [self.navigationController popToRootViewControllerAnimated:NO];
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark Accessors & selectors
@@ -109,7 +109,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [self.navigationController popToRootViewControllerAnimated:NO];
     [[self appDelegate].mainMenuViewController conversationAction];
     if (obj) {
-        [[self appDelegate].mainMenuViewController.conversationController chatWithIdentity:obj];
+        [[self appDelegate].conversationController chatWithIdentity:obj];
     }
     
 //    [[self appDelegate].mainMenuViewController conversationActionWithBlock:^(id responseObject) {

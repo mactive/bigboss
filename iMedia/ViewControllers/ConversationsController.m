@@ -128,7 +128,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 - (void)mainMenuAction
 {
-    [self.navigationController popViewControllerAnimated:NO];
+    [self.navigationController popToRootViewControllerAnimated:NO];
 }
 
 - (void)dealloc {

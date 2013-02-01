@@ -77,20 +77,23 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @implementation AppDelegate
 
 @synthesize window = _window;
-@synthesize tabController = _tabController;
-@synthesize nearbyViewController;
-@synthesize conversationController;
-@synthesize contactListController;
-@synthesize functionListController;
-@synthesize settingController;
+
 @synthesize updateChannelTimer;
 @synthesize updateCompanyTimer;
 @synthesize getLastMessageTimer;
 @synthesize loginTimer;
+
 @synthesize privacyLoginViewController;
 @synthesize transController;
 @synthesize versionAlertView;
 @synthesize mainMenuViewController;
+@synthesize conversationController;
+@synthesize contactListController;
+@synthesize functionListViewController;
+@synthesize settingViewController;
+@synthesize companyCategoryViewController;
+@synthesize myCompanyController;
+@synthesize memoViewController;
 
 @synthesize me = _me;
 @synthesize unreadMessageCount;

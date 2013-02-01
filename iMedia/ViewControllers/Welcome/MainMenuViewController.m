@@ -44,13 +44,6 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @implementation MainMenuViewController
 @synthesize menuTitleArray;
 @synthesize menuView;
-@synthesize conversationController;
-@synthesize contactListViewController;
-@synthesize functionListViewController;
-@synthesize settingViewController;
-@synthesize companyCategoryViewController;
-@synthesize myCompanyController;
-@synthesize memoViewController;
 @synthesize transition;
 @synthesize searchTableView;
 @synthesize searchBar;
@@ -212,29 +205,26 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 - (void)initViewControllers
 {
-//    [self appDelegate].conversationController = [[ConversationsController alloc] initWithStyle:UITableViewStylePlain];
-//    [self appDelegate].conversationController.managedObjectContext = self.managedObjectContext;
-//    [[self appDelegate].conversationController updateUnreadBadge]; // 为了消息数量计算使用
+    [self appDelegate].conversationController = [[ConversationsController alloc] initWithStyle:UITableViewStylePlain];
+    [self appDelegate].conversationController.managedObjectContext = self.managedObjectContext;
+    [[self appDelegate].conversationController updateUnreadBadge]; // 为了消息数量计算使用
     
-    self.conversationController = [[ConversationsController alloc] initWithStyle:UITableViewStylePlain];
-    self.conversationController.managedObjectContext = self.managedObjectContext;
-    [self.conversationController updateUnreadBadge]; // 为了消息数量计算使用
     
-    self.contactListViewController = [[ContactListViewController alloc] initWithStyle:UITableViewStylePlain andManagementContext:self.managedObjectContext];
+    [self appDelegate].contactListController = [[ContactListViewController alloc] initWithStyle:UITableViewStylePlain andManagementContext:self.managedObjectContext];
     
-    self.functionListViewController = [[FunctionListViewController alloc]initWithNibName:nil bundle:nil];
-    self.functionListViewController.managedObjectContext = self.managedObjectContext;
+    [self appDelegate].functionListViewController = [[FunctionListViewController alloc]initWithNibName:nil bundle:nil];
+    [self appDelegate].functionListViewController.managedObjectContext = self.managedObjectContext;
     
-    self.settingViewController = [[SettingViewController alloc]initWithNibName:nil bundle:nil];
-    self.settingViewController.managedObjectContext = self.managedObjectContext;
+    [self appDelegate].settingViewController = [[SettingViewController alloc]initWithNibName:nil bundle:nil];
+    [self appDelegate].settingViewController.managedObjectContext = self.managedObjectContext;
     
-    self.companyCategoryViewController = [[CompanyCategoryViewController alloc] initWithNibName:nil bundle:nil];
+    [self appDelegate].companyCategoryViewController = [[CompanyCategoryViewController alloc] initWithNibName:nil bundle:nil];
     
-    self.myCompanyController = [[MyCompanyViewController alloc]initWithStyle:UITableViewStylePlain];
-    self.myCompanyController.managedObjectContext = self.managedObjectContext;
+    [self appDelegate].myCompanyController = [[MyCompanyViewController alloc]initWithStyle:UITableViewStylePlain];
+    [self appDelegate].myCompanyController.managedObjectContext = self.managedObjectContext;
     
-    self.memoViewController = [[MemoViewController alloc]initWithNibName:nil bundle:nil];
-    self.memoViewController.managedObjectContext = self.managedObjectContext;
+    [self appDelegate].memoViewController = [[MemoViewController alloc]initWithNibName:nil bundle:nil];
+    [self appDelegate].memoViewController.managedObjectContext = self.managedObjectContext;
 
 }
 
@@ -432,35 +422,35 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 - (void)conversationAction{
     [self.navigationController.view.layer addAnimation:self.transition forKey:kCATransition];
-    [self.navigationController pushViewController:self.conversationController animated:NO];
+    [self.navigationController pushViewController:[self appDelegate].conversationController animated:NO];
 }
 
 - (void)contactAction
 {
     [self.navigationController.view.layer addAnimation:self.transition forKey:kCATransition];
-    [self.navigationController pushViewController:self.contactListViewController animated:NO];
+    [self.navigationController pushViewController:[self appDelegate].contactListController animated:NO];
 }
 
 - (void)functionAction
 {
 
     [self.navigationController.view.layer addAnimation:self.transition forKey:kCATransition];
-    [self.navigationController pushViewController:self.functionListViewController animated:NO];
+    [self.navigationController pushViewController:[self appDelegate].functionListViewController animated:NO];
 }
 - (void)settingAction
 {
     [self.navigationController.view.layer addAnimation:self.transition forKey:kCATransition];
-    [self.navigationController pushViewController:self.settingViewController animated:NO];
+    [self.navigationController pushViewController:[self appDelegate].settingViewController animated:NO];
 }
 - (void)companyCategoryAction
 {
     [self.navigationController.view.layer addAnimation:self.transition forKey:kCATransition];
-    [self.navigationController pushViewController:self.companyCategoryViewController animated:NO];
+    [self.navigationController pushViewController:[self appDelegate].companyCategoryViewController animated:NO];
 }
 - (void)myCompanyAction
 {
     [self.navigationController.view.layer addAnimation:self.transition forKey:kCATransition];
-    [self.navigationController pushViewController:self.myCompanyController animated:NO];
+    [self.navigationController pushViewController:[self appDelegate].myCompanyController animated:NO];
 }
 
 - (void)lastMessageAction
@@ -468,7 +458,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [[NSUserDefaults standardUserDefaults] setObject:@"0"
                                               forKey:@"lastMessageCount"];
     [self.navigationController.view.layer addAnimation:self.transition forKey:kCATransition];
-    [self.navigationController pushViewController:self.memoViewController animated:NO];
+    [self.navigationController pushViewController:[self appDelegate].memoViewController animated:NO];
     
 }
 
