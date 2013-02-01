@@ -503,18 +503,46 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         }
     }else{
         NSDictionary *dataDict = [self.channelData objectAtIndex:(indexPath.row - descCount)];
-    
-        ChannelViewController *controller = [[ChannelViewController alloc] initWithNibName:nil bundle:nil];
-        controller.jsonData = dataDict;
-        controller.delegate = [self appDelegate].contactListController;
-        controller.managedObjectContext = self.managedObjectContext;
-        
-        [controller setHidesBottomBarWhenPushed:YES];
-        [self.navigationController pushViewController:controller animated:YES];
+
+        [self getDict:dataDict];
     }
 
-
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark Accessors & selectors
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+- (void)getDict:(NSDictionary *)dict
+{
+    Channel *aChannel = [[ModelHelper sharedInstance]findChannelWithNode:[dict objectForKey:@"node_address"]];
+    
+    if (aChannel != nil && aChannel.state == IdentityStateActive) {
+        ChannelViewController *controller = [[ChannelViewController alloc] initWithNibName:nil bundle:nil];
+        controller.delegate = [self appDelegate].contactListController;
+        controller.managedObjectContext = [self appDelegate].context;
+        controller.channel = aChannel;
+        // Pass the selected object to the new view controller.
+        [controller setHidesBottomBarWhenPushed:YES];
+        [self.navigationController pushViewController:controller animated:YES];
+    } else {
+        // get user info from web and display as if it is searched
+
+        ChannelViewController *controller = [[ChannelViewController alloc] initWithNibName:nil bundle:nil];
+        controller.jsonData = dict;
+        controller.delegate = [self appDelegate].contactListController;
+        controller.managedObjectContext = [self appDelegate].context;
+        
+        // Pass the selected object to the new view controller.
+        [controller setHidesBottomBarWhenPushed:YES];
+        [self.navigationController pushViewController:controller animated:YES];
+        
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark Actions
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 - (void)followAction
 {
