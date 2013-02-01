@@ -20,6 +20,7 @@
 @property (nonatomic, retain) NSString * subID;
 @property (nonatomic, retain) NSString * subrequestID;
 @property (nonatomic, retain) NSNumber * isMandatory;
+@property (nonatomic, retain) NSString * companyID;
 @property (nonatomic, retain) Me *owner;
 
 @end

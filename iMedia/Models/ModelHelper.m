@@ -408,7 +408,7 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
     channel.thumbnailURL = [ServerDataTransformer getThumbnailFromServerJSON:json];
     channel.selfIntroduction = [ServerDataTransformer getSelfIntroductionFromServerJSON:json];
     channel.lastGPSUpdated = [ServerDataTransformer getLastGPSUpdatedFromServerJSON:json];
-
+    channel.companyID = [ServerDataTransformer getCompanyIDFromServerJSON:json];
     channel.type = IdentityTypeChannel;
 }
 

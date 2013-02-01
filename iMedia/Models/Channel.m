@@ -19,6 +19,7 @@
 @dynamic subID;
 @dynamic subrequestID;
 @dynamic isMandatory;
+@dynamic companyID;
 @dynamic owner;
 
 @end
