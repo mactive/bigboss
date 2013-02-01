@@ -212,8 +212,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     
     [self appDelegate].contactListController = [[ContactListViewController alloc] initWithStyle:UITableViewStylePlain andManagementContext:self.managedObjectContext];
     
-    [self appDelegate].functionListViewController = [[FunctionListViewController alloc]initWithNibName:nil bundle:nil];
-    [self appDelegate].functionListViewController.managedObjectContext = self.managedObjectContext;
+    [self appDelegate].shakeDashboardViewController = [[ShakeDashboardViewController alloc]initWithNibName:nil bundle:nil];
+    [self appDelegate].shakeDashboardViewController.managedObjectContext = self.managedObjectContext;
     
     [self appDelegate].settingViewController = [[SettingViewController alloc]initWithNibName:nil bundle:nil];
     [self appDelegate].settingViewController.managedObjectContext = self.managedObjectContext;
@@ -435,7 +435,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 {
 
     [self.navigationController.view.layer addAnimation:self.transition forKey:kCATransition];
-    [self.navigationController pushViewController:[self appDelegate].functionListViewController animated:NO];
+    [self.navigationController pushViewController:[self appDelegate].shakeDashboardViewController animated:NO];
 }
 - (void)settingAction
 {

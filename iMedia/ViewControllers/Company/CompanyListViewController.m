@@ -150,8 +150,8 @@
 #define NAME_WIDTH  200
 
 #define COUNT_X     230
-#define COUNT_WIDTH 33
-#define COUNT_HEIGHT 21
+#define COUNT_WIDTH 15
+#define COUNT_HEIGHT 15
 #define COUNT_Y     (CELL_HEIGHT - COUNT_HEIGHT)/2
 
 #define AVATAR_TAG  1
@@ -179,16 +179,13 @@
     nameLabel.textColor = RGBCOLOR(107, 107, 107);
     nameLabel.tag = NAME_TAG;
     
-    UILabel *countLabel = [[UILabel alloc]initWithFrame:CGRectMake(COUNT_X, COUNT_Y, COUNT_WIDTH, COUNT_HEIGHT)];
-    countLabel.backgroundColor = [UIColor clearColor];
-    countLabel.font = [UIFont boldSystemFontOfSize:14.0f];
-    countLabel.textAlignment = NSTextAlignmentCenter;
-    countLabel.textColor = RGBCOLOR(255, 255, 255);
-    countLabel.tag = COUNT_TAG;
+    UIImageView *privateView = [[UIImageView alloc]initWithFrame:CGRectMake(COUNT_X, COUNT_Y, COUNT_WIDTH, COUNT_HEIGHT)];
+    [privateView setImage:[UIImage imageNamed:@"private_icon.png"]];
+    privateView.tag = COUNT_TAG;
     
     [cell addSubview:avatarView];
     [cell addSubview:nameLabel];
-    [cell addSubview:countLabel];
+    [cell addSubview:privateView];
     return cell;
 }
 
@@ -203,8 +200,13 @@
     UILabel *nameLabel = (UILabel *)[cell viewWithTag:NAME_TAG];
     nameLabel.text = [dataDict objectForKey:@"company_name"];
     
-    UILabel *countLabel = (UILabel *)[cell viewWithTag:COUNT_TAG];
-    countLabel.text = @"";
+    UIImageView *privateView  = (UIImageView *)[cell viewWithTag:COUNT_TAG];
+    if ([ServerDataTransformer getPrivateFromServerJSON:dataDict].boolValue) {
+        [privateView setHidden:NO];
+    }else{
+        [privateView setHidden:YES];
+    }
+    
 }
 
 - (void) tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath

@@ -10,11 +10,14 @@
 #import "AppDefs.h"
 #import "MainMenuViewController.h"
 
-@class NearbyViewController;
 @class ContactListViewController;
 @class ConversationsController;
 @class FunctionListViewController;
 @class SettingViewController;
+@class ShakeDashboardViewController;
+@class CompanyCategoryViewController;
+@class MyCompanyViewController;
+@class MemoViewController;
 @class Message;
 @class Me;
 @class Pluggin;
@@ -26,11 +29,12 @@
 @property (strong, nonatomic) MainMenuViewController *mainMenuViewController;
 @property (strong, nonatomic) ConversationsController *conversationController;
 @property (strong, nonatomic) ContactListViewController *contactListController;
-@property (strong, nonatomic) FunctionListViewController *functionListViewController;
+@property (strong, nonatomic) ShakeDashboardViewController *shakeDash;
 @property (strong, nonatomic) SettingViewController *settingViewController;
 @property (strong, nonatomic) CompanyCategoryViewController *companyCategoryViewController;
 @property (strong, nonatomic) MyCompanyViewController *myCompanyController;
 @property (strong, nonatomic) MemoViewController *memoViewController;
+@property (strong, nonatomic) ShakeDashboardViewController *shakeDashboardViewController;
 
 
 // Here comes one of the bigges assumptions. This me is the only instance in the Me entity. If me exists, it means

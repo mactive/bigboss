@@ -26,6 +26,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @property(nonatomic, strong)UIView *noticeView;
 @property(nonatomic, strong)UILabel *noticeLabel;
 @property(nonatomic, strong)UITableView *tableView;
+@property(nonatomic, strong)UIButton *barButton;
 
 @end
 
@@ -35,7 +36,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @synthesize noticeLabel;
 @synthesize noticeView;
 @synthesize tableView;
-
+@synthesize barButton;
 
 #define SUMMARY_WIDTH 200.0
 #define LABEL_HEIGHT 20.0
@@ -49,8 +50,20 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         
+        self.barButton = [[UIButton alloc] init];
+        self.barButton.frame=CGRectMake(0, 0, 50, 29);
+        [self.barButton setBackgroundImage:[UIImage imageNamed: @"barbutton_mainmenu.png"] forState:UIControlStateNormal];
+        [self.barButton addTarget:self action:@selector(mainMenuAction) forControlEvents:UIControlEventTouchUpInside];
+        [self.navigationItem setHidesBackButton:YES];
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.barButton];
+        
     }
     return self;
+}
+
+- (void)mainMenuAction
+{
+    [self.navigationController popToRootViewControllerAnimated:NO];
 }
 
 
@@ -202,15 +215,15 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 #pragma mark - Table view delegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    Information *info = [self.dataArray objectAtIndex:indexPath.row];
-    // 点击复制到系统本
-    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-    [pasteboard setString:info.value];
-    
-    [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"成功复制到剪贴板") andHideAfterDelay:1];
-}
+//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    Information *info = [self.dataArray objectAtIndex:indexPath.row];
+//    // 点击复制到系统本
+//    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+//    [pasteboard setString:info.value];
+//    
+//    [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"成功复制到剪贴板") andHideAfterDelay:1];
+//}
 
 
 #pragma mark - Table edit and delete

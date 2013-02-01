@@ -43,6 +43,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @property(nonatomic, strong) UIImageView *inprogressImageView;
 @property(nonatomic, strong) UIScrollView *baseView;
 @property(nonatomic, strong) UITableView *tableView;
+@property(nonatomic, strong) UIButton *barButton;
+
 
 @end
 
@@ -61,6 +63,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @synthesize replaceView;
 @synthesize baseView;
 @synthesize tableView;
+@synthesize barButton;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -73,9 +76,22 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:button1];
         
+        self.barButton = [[UIButton alloc] init];
+        self.barButton.frame=CGRectMake(0, 0, 50, 29);
+        [self.barButton setBackgroundImage:[UIImage imageNamed: @"barbutton_mainmenu.png"] forState:UIControlStateNormal];
+        [self.barButton addTarget:self action:@selector(mainMenuAction) forControlEvents:UIControlEventTouchUpInside];
+        [self.navigationItem setHidesBackButton:YES];
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.barButton];
+        
     }
     return self;
 }
+
+- (void)mainMenuAction
+{
+    [self.navigationController popToRootViewControllerAnimated:NO];
+}
+
 
 #define FIRST_TAG 0
 

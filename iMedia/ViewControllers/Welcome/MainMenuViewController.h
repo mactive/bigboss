@@ -14,6 +14,7 @@
 #import "CompanyCategoryViewController.h"
 #import "MyCompanyViewController.h"
 #import "MemoViewController.h"
+#import "ShakeDashboardViewController.h"
 
 @interface MainMenuViewController : UIViewController
 

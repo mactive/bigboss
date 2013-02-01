@@ -7,8 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "BBCustomBackButtonViewController.h"
-@interface ShakeDashboardViewController : BBCustomBackButtonViewController
+@interface ShakeDashboardViewController : UIViewController
 
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 

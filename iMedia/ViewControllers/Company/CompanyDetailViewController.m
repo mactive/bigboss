@@ -154,8 +154,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     self.isFollow = NO;
     self.isPrivate = NO;
     
-    self.titleArray = [[NSMutableArray alloc]initWithObjects:T(@"邮箱"),T(@"网址"),T(@"公司成员"),T(@"频道"), nil];
-    self.titleEnArray = [[NSMutableArray alloc]initWithObjects: @"email",@"website",@"member",@"channel", nil];
+//    self.titleArray = [[NSMutableArray alloc]initWithObjects:T(@"邮箱"),T(@"网址"),T(@"公司成员"),T(@"频道"), nil];
+//    self.titleEnArray = [[NSMutableArray alloc]initWithObjects: @"email",@"website",@"member",@"channel", nil];
     
     [self.view addSubview:self.tableView];
     [self initFaceView];
@@ -167,7 +167,15 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 {
     [super viewWillAppear:animated];
     [self refreshFaceView];
-    [self populateChannelData];
+    if (self.company.status == CompanyStateFollowed) {
+        self.titleArray = [[NSMutableArray alloc]initWithObjects:T(@"邮箱"),T(@"网址"),T(@"公司成员"),T(@"频道"), nil];
+        self.titleEnArray = [[NSMutableArray alloc]initWithObjects: @"email",@"website",@"member",@"channel", nil];
+        [self populateChannelData];
+        
+    }else{
+        self.titleArray = [[NSMutableArray alloc]initWithObjects:T(@"邮箱"),T(@"网址"), nil];
+        self.titleEnArray = [[NSMutableArray alloc]initWithObjects: @"email",@"website", nil];
+    }
 }
 
 

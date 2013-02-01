@@ -32,7 +32,7 @@
 #import "ConfigSetting.h"
 #import "ServerDataTransformer.h"
 #import "NSDate-Utilities.h"
-
+#import "ShakeDashboardViewController.h"
 #import "AppNetworkAPIClient.h"
 #import "LocationManager.h"
 #import "ModelHelper.h"
@@ -89,7 +89,6 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @synthesize mainMenuViewController;
 @synthesize conversationController;
 @synthesize contactListController;
-@synthesize functionListViewController;
 @synthesize settingViewController;
 @synthesize companyCategoryViewController;
 @synthesize myCompanyController;
@@ -823,7 +822,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     self.mainMenuViewController = nil;
     self.conversationController = nil;
     self.contactListController = nil;
-    self.functionListViewController = nil;
+    self.shakeDashboardViewController = nil;
     self.settingViewController = nil;
     self.companyCategoryViewController = nil;
     self.myCompanyController = nil;

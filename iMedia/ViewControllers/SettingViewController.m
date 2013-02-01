@@ -55,7 +55,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
-        self.me = [self appDelegate].me ;
+        self.me = [self appDelegate].me;
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(thumbnailChanged:)
                                                      name:THUMBNAIL_IMAGE_CHANGE_NOTIFICATION object:self.me];
