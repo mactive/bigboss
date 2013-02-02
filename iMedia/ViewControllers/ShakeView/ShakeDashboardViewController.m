@@ -95,7 +95,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 #define FIRST_TAG 0
 
-#define ROW_HEIGHT 120
+#define ROW_HEIGHT 140
 #define CHECKIN_HEIGHT 126
 
 #define TITLE_TAG 1
@@ -197,8 +197,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [self.checkinOverlayButton addTarget:self action:@selector(checkinAction) forControlEvents:UIControlEventTouchUpInside];
     [self.checkinView addSubview:self.checkinOverlayButton];
     
-    self.tableView.tableHeaderView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 320, CHECKIN_HEIGHT)];
-    [self.tableView.tableHeaderView addSubview:self.checkinView];
+//    self.tableView.tableHeaderView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 320, CHECKIN_HEIGHT)];
+//    [self.tableView.tableHeaderView addSubview:self.checkinView];
     
     // did load populate
     [self populateData];
@@ -314,18 +314,20 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     TrapezoidLabel *subTitle = (TrapezoidLabel *)[cell viewWithTag:SUBTITLE_TAG];
     if (ISINPROGRESS) {
         subTitle.text = T(@"正在进行的活动");
-        subTitle.bgColor = RGBCOLOR(71, 221, 36);
+        subTitle.bgColor = RGBCOLOR(204, 31, 31);
     }else{
         subTitle.text = T(@"即将开始的活动");
-        subTitle.bgColor = RGBCOLOR(60, 91, 148);
+        subTitle.bgColor = RGBCOLOR(100, 100, 100);
     }
     
     // title
     UILabel *title = (UILabel *)[cell viewWithTag:TITLE_TAG];    
     if (StringHasValue([data objectForKey:@"id"])) {
         title.text = [NSString stringWithFormat:@"  %@",[data objectForKey:@"name"]];
+        [title setHidden:NO];
     }else{
-        title.text = [NSString stringWithFormat:@"  %@",T(@"暂时没有活动")];
+//        title.text = [NSString stringWithFormat:@"  %@",T(@"暂时没有活动")];
+        [title setHidden:YES];
     }
     
 }

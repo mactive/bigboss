@@ -34,7 +34,6 @@
 #import "NSDate-Utilities.h"
 #import "ShakeDashboardViewController.h"
 #import "AppNetworkAPIClient.h"
-#import "LocationManager.h"
 #import "ModelHelper.h"
 #import "NSObject+SBJson.h"
 #import "XMPPJID.h"
@@ -123,10 +122,6 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     NSURLCache *URLCache = [[NSURLCache alloc] initWithMemoryCapacity:4 * 1024 * 1024 diskCapacity:20 * 1024 * 1024 diskPath:nil];
     [NSURLCache setSharedURLCache:URLCache];
 
-    //Start Location Service and needs to prompt user to turn it on if not
-    if ([LocationManager sharedInstance].isAllowed == NO) {
-        // do sth here
-    }
     
     // check whether first use
     NSArray *fetchedUsers = MOCFetchAll(_managedObjectContext, @"Me");
@@ -649,7 +644,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 - (void)updateMeWithBlock:(void (^)(id responseObject, NSError *error))block
 {
-    [LocationManager sharedInstance].me = self.me;
+//    [LocationManager sharedInstance].me = self.me;
     
     if (self.friendRequestPluggin == nil) {
         self.friendRequestPluggin = [[ModelHelper sharedInstance] findFriendRequestPluggin];

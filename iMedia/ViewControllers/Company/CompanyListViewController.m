@@ -70,23 +70,15 @@
     [self.view addSubview:self.tableView];
     
     self.sourceData = [[NSArray alloc]init];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
     [self populateData];
+
 }
 
 // 解析公司列表
 - (void)populateData
 {
-    MBProgressHUD* HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    HUD.removeFromSuperViewOnHide = YES;
-    HUD.labelText = T(@"正在加载");
     [[AppNetworkAPIClient sharedClient]getCompanyWithCategory:self.categoryName withBlock:^(id responseDict, NSError *error) {
         //
-        [HUD hide:YES];
         
         if (responseDict != nil) {
             self.sourceDict = responseDict;

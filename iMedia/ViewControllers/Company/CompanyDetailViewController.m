@@ -21,6 +21,7 @@
 #import "Channel.h"
 #import "ModelHelper.h"
 #import "ChannelViewController.h"
+#import "WebViewController.h"
 
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
@@ -46,7 +47,6 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @property(strong, nonatomic)UIImageView *privateView;
 @property(readwrite, nonatomic)BOOL isPrivate;
 @property(readwrite, nonatomic)BOOL isFollow;
-
 @property(strong, nonatomic)UITableView * tableView;
 @end
 
@@ -473,6 +473,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
                 descLabel.text = self.company.email;
             }else if ([enTitle isEqualToString:@"website"]){
                 descLabel.text = self.company.website;
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             }else if ([enTitle isEqualToString:@"member"]){
                 descLabel.text = T(@"点击查看");
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -537,6 +538,17 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
             
             CompanyMemberViewController *controller = [[CompanyMemberViewController alloc]initWithNibName:nil bundle:nil];
             controller.companyID = companyID;
+            [self.navigationController pushViewController:controller animated:YES];
+        }else if ([enTitle isEqualToString:@"website"]){
+            WebViewController *controller = [[WebViewController alloc]initWithNibName:nil bundle:nil];
+            if (self.company != nil) {
+                controller.title = self.company.name;
+                controller.urlString = self.company.website;
+            }else{
+                controller.title = [ServerDataTransformer getCompanyNameFromServerJSON:self.jsonData];
+                controller.urlString = [ServerDataTransformer getWebsiteFromServerJSON:self.jsonData];
+            }
+            
             [self.navigationController pushViewController:controller animated:YES];
         }
     }else{

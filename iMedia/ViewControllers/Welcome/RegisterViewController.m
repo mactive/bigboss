@@ -12,6 +12,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "ConvenienceMethods.h"
 #import "ServerDataTransformer.h"
+#import "MBProgressHUD.h"
 
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
@@ -159,8 +160,24 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
                 DDLogVerbose(@"%@",responseObject);
                 NSString *status = [ServerDataTransformer getStringObjFromServerJSON:responseObject byName:@"status"];
                 if ([status isEqualToString:@"0"]) {
-                    [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"注册成功") andHideAfterDelay:1];
-                    [self dismissModalViewControllerAnimated:YES];
+                    
+                    MBProgressHUD* HUD = [[MBProgressHUD alloc] initWithView:self.view];
+                    [self.view addSubview:HUD];
+                    HUD.mode = MBProgressHUDModeText;
+                    HUD.removeFromSuperViewOnHide = YES;
+                    HUD.labelText = T(@"注册成功");
+                    
+                    [HUD showAnimated:YES whileExecutingBlock:^{
+                        sleep(2);
+                        [HUD hide:YES];
+                    } completionBlock:^{
+                        [self dismissModalViewControllerAnimated:YES];
+
+                    }];
+
+                    
+//                    [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"注册成功") andHideAfterDelay:1];
+                    
 
                 }else if([status isEqualToString:@"1"]){
                     [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"邮箱已经被使用") andHideAfterDelay:1];

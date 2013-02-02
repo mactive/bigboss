@@ -117,11 +117,11 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         [self.navigationItem setHidesBackButton:YES];
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.barButton];
         
-        self.sidemenuButton = [[UIButton alloc] init];
-        self.sidemenuButton.frame=CGRectMake(0, 0, 50, 29);
-        [self.sidemenuButton setBackgroundImage:[UIImage imageNamed: @"barbutton_sidemenu.png"] forState:UIControlStateNormal];
-        [self.sidemenuButton addTarget:self action:@selector(sidemenuAction) forControlEvents:UIControlEventTouchUpInside];
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.sidemenuButton];
+//        self.sidemenuButton = [[UIButton alloc] init];
+//        self.sidemenuButton.frame=CGRectMake(0, 0, 50, 29);
+//        [self.sidemenuButton setBackgroundImage:[UIImage imageNamed: @"barbutton_sidemenu.png"] forState:UIControlStateNormal];
+//        [self.sidemenuButton addTarget:self action:@selector(sidemenuAction) forControlEvents:UIControlEventTouchUpInside];
+//        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.sidemenuButton];
     }
     return self;
 }

@@ -158,9 +158,9 @@
 }
 + (NSNumber *)getPrivateFromServerJSON:(id)jsonData{
     NSString *privateString = [ServerDataTransformer getStringObjFromServerJSON:jsonData byName:@"private"];
-    if ([privateString isEqualToString:@"False"]) {
+    if ([privateString isEqualToString:@"False"] || [privateString isEqualToString:@"0"]) {
         return [NSNumber numberWithBool:NO];
-    }else if ([privateString isEqualToString:@"True"]){
+    }else if ([privateString isEqualToString:@"True"] || [privateString isEqualToString:@"1"]){
         return [NSNumber numberWithBool:YES];
     }else{
         return [NSNumber numberWithBool:NO];

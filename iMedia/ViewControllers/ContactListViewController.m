@@ -111,14 +111,6 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     if (obj) {
         [[self appDelegate].conversationController chatWithIdentity:obj];
     }
-    
-//    [[self appDelegate].mainMenuViewController conversationActionWithBlock:^(id responseObject) {
-//        if (obj) {
-//            [[self appDelegate].mainMenuViewController.conversationController chatWithIdentity:obj];
-//        }
-//    }];
-    
-   
 
 }
 

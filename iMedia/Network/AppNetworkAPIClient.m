@@ -40,8 +40,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 #import "UpYun.h"
 #endif
 
-static NSString * const kAppNetworkAPIBaseURLString = @"http://192.168.1.104:8000/";
-//static NSString * const kAppNetworkAPIBaseURLString = @"http://c.wingedstone.com:8000/";
+//static NSString * const kAppNetworkAPIBaseURLString = @"http://192.168.1.104:8000/";
+static NSString * const kAppNetworkAPIBaseURLString = @"http://c.wingedstone.com:8000/";
 
 
 NSString *const kXMPPmyJID = @"kXMPPmyJID";
@@ -330,7 +330,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     
     NSString *url = [NSString stringWithFormat:@"http://bigbossapp.b0.upaiyun.com%@?%.0f", upYun.name, [[NSDate date] timeIntervalSince1970]];
     NSString *thumbnailURL = [NSString stringWithFormat:@"http://bigbossapp.b0.upaiyun.com%@!tm?%.0f", upYun.name, [[NSDate date] timeIntervalSince1970]];
-    
+    //upyun 自定义版本名称 tm 间隔表示符 !tm
     avatar.image = image;
     avatar.thumbnail = thumbnail;
     avatar.imageRemoteThumbnailURL = thumbnailURL;

@@ -888,7 +888,8 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
 -(void)sendMsgRequest:(id)sender
 {
     [self.navigationController popToRootViewControllerAnimated:NO];    
-    
+    [[self appDelegate].mainMenuViewController conversationAction];
+
     if (self.user != nil) {
         [[self appDelegate].conversationController chatWithIdentity:self.user];
     } else {
