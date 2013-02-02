@@ -343,7 +343,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 - (UITableViewCell *)tableViewCellWithReuseIdentifier:(NSString *)identifier
 {
     UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.selectionStyle = UITableViewCellSelectionStyleBlue;
     
     return cell;
 }
