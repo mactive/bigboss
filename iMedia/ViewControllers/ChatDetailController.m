@@ -522,7 +522,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     // Change height of _tableView & messageInputBar to match textView's content height.
     self.textViewContentHeight = textView.contentSize.height;
     CGFloat changeInHeight = textViewContentHeight - _previousTextViewContentHeight;
-    DDLogVerbose(@"textViewContentHeight: %f", self.textViewContentHeight);
+//    DDLogVerbose(@"textViewContentHeight: %f", self.textViewContentHeight);
     
     if (self.textViewContentHeight+changeInHeight > kChatBarHeight4+2) {
         changeInHeight = kChatBarHeight4+2-_previousTextViewContentHeight;

@@ -136,6 +136,36 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
     }
 }
 
+
+- (Channel *)findChannelWithGUID:(NSString *)guid withCompanyID:(NSString *)companyID
+{
+    NSManagedObjectContext *moc = self.managedObjectContext;
+    NSEntityDescription *entityDescription = [NSEntityDescription
+                                              entityForName:@"Channel" inManagedObjectContext:moc];
+    NSFetchRequest *request = [[NSFetchRequest alloc] init];
+    [request setEntity:entityDescription];
+    
+    // Set example predicate and sort orderings...
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:
+                              @"(guid = %@ AND companyID = %@)", guid, companyID];
+    [request setPredicate:predicate];
+    
+    NSError *error = nil;
+    NSArray *array = [moc executeFetchRequest:request error:&error];
+    
+    if ([array count] == 0)
+    {
+        DDLogError(@"Channel doesn't exist: %@", error);
+        return nil;
+    } else {
+        if ([array count] > 1) {
+            DDLogError(@"More than one user object with same guid id: %@ companyid %@", guid,companyID);
+        }
+        return [array objectAtIndex:0];
+    }
+}
+
+
 - (Company *)findCompanyWithCompanyID:(NSString *)companyID
 {
     NSManagedObjectContext *moc = self.managedObjectContext;

@@ -346,20 +346,23 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
                 }
                 // update
                 else{
-                    NSPredicate *predicate = [NSPredicate predicateWithFormat:
-                                              @"(companyID = %@)", newCompany.companyID];
-                    [request setPredicate:predicate];
-                    
-                    NSError *error = nil;
-                    NSArray *companyArray = [moc executeFetchRequest:request error:&error];
-                    
-                    if ([companyArray count] > 0){
-                        Company *aCompany = [companyArray objectAtIndex:0];
-                        [[ModelHelper sharedInstance]populateCompany:aCompany withServerJSONData:obj];
-                        aCompany.status = CompanyStateFollowed;
-                        [moc save:nil];
-                        DDLogVerbose(@"SYNC update company success %@",aCompany.companyID);
-                    }
+                    newCompany.status = CompanyStateFollowed;
+                    [moc save:nil];
+                    DDLogVerbose(@"SYNC update company success %@",newCompany.companyID);
+//                    NSPredicate *predicate = [NSPredicate predicateWithFormat:
+//                                              @"(companyID = %@)", newCompany.companyID];
+//                    [request setPredicate:predicate];
+//                    
+//                    NSError *error = nil;
+//                    NSArray *companyArray = [moc executeFetchRequest:request error:&error];
+//                    
+//                    if ([companyArray count] > 0){
+//                        Company *aCompany = [companyArray objectAtIndex:0];
+//                        [[ModelHelper sharedInstance]populateCompany:aCompany withServerJSONData:obj];
+//                        aCompany.status = CompanyStateFollowed;
+//                        [moc save:nil];
+//                        DDLogVerbose(@"SYNC update company success %@",aCompany.companyID);
+//                    }
 
                 }
 
@@ -431,24 +434,28 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
                         
                         DDLogVerbose(@"SYNC Insert company success %@",newCompany.companyID);
                     }else{
-                        NSEntityDescription *entityDescription = [NSEntityDescription
-                                                                  entityForName:@"Company" inManagedObjectContext:_managedObjectContext];
-                        NSFetchRequest *request = [[NSFetchRequest alloc] init];
-                        [request setEntity:entityDescription];
+                        newCompany.status = CompanyStateFollowed;
+                        [moc save:nil];
+                        DDLogVerbose(@"SYNC update company success %@",newCompany.companyID);
                         
-                        NSPredicate *predicate = [NSPredicate predicateWithFormat:
-                                                  @"(companyID = %@)", newCompany.companyID];
-                        [request setPredicate:predicate];
-                        
-                        NSError *error = nil;
-                        NSArray *companyArray = [moc executeFetchRequest:request error:&error];
-                        
-                        if ([companyArray count] > 0){
-                            Company *aCompany = [companyArray objectAtIndex:0];
-                            aCompany.status = CompanyStateFollowed;
-                            [moc save:nil];
-                            DDLogVerbose(@"SYNC update company success %@",aCompany.companyID);
-                        }
+//                        NSEntityDescription *entityDescription = [NSEntityDescription
+//                                                                  entityForName:@"Company" inManagedObjectContext:_managedObjectContext];
+//                        NSFetchRequest *request = [[NSFetchRequest alloc] init];
+//                        [request setEntity:entityDescription];
+//                        
+//                        NSPredicate *predicate = [NSPredicate predicateWithFormat:
+//                                                  @"(companyID = %@)", newCompany.companyID];
+//                        [request setPredicate:predicate];
+//                        
+//                        NSError *error = nil;
+//                        NSArray *companyArray = [moc executeFetchRequest:request error:&error];
+//                        
+//                        if ([companyArray count] > 0){
+//                            Company *aCompany = [companyArray objectAtIndex:0];
+//                            aCompany.status = CompanyStateFollowed;
+//                            [moc save:nil];
+//                            DDLogVerbose(@"SYNC update company success %@",aCompany.companyID);
+//                        }
 
                     }
                     ////////////////////////////////////////////////////////////////////////////////////

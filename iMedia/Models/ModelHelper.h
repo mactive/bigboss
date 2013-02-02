@@ -26,6 +26,7 @@
 - (User *)findUserWithGUID:(NSString *)guid;
 - (Channel *)findChannelWithNode:(NSString *)node;
 - (Channel *)findChannelWithSubrequestID:(NSString *)subID;
+- (Channel *)findChannelWithGUID:(NSString *)guid withCompanyID:(NSString *)companyID;
 - (Pluggin *)findFriendRequestPluggin;
 - (Company *)findCompanyWithCompanyID:(NSString *)companyID;
 - (Information *)findLastInformationWithType:(NSUInteger)type;
