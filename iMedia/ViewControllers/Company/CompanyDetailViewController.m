@@ -603,6 +603,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
             [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"请求已发送") andHideAfterDelay:2];
             [self subscribeButtonPushed];
             [self refreshFaceView];
+            [self populateChannelData];
             
         }else{
             [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"加入公司失败") andHideAfterDelay:1];
