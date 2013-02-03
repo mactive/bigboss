@@ -151,7 +151,7 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
 #define VIEW_UINAV_HEIGHT 44
 
 #define VIEW_COMMON_WIDTH 296
-#define VIEW_INFO_HEIGHT 560
+#define VIEW_INFO_HEIGHT 440
 
 - (void)viewDidLoad
 {
@@ -168,7 +168,7 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
     [self initInfoView]; // table view 
     
     [self initAlbumView];
-    [self initSNSView];
+//    [self initSNSView];
     [self initActionView];
     
     [self.view addSubview:self.contentView];
@@ -179,7 +179,7 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
     [super viewWillAppear:animated];
     
     [self refreshStatusView];
-    [self refreshSNSView];
+//    [self refreshSNSView];
     [self refreshAlbumView];
 
     [self updateButtonsBasedRequestState];
@@ -526,7 +526,7 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
     }else if(section == 1){
         return 3;
     }else if(section == 2){
-        return 3;
+        return 2;
     }else{
         return 0;
     }

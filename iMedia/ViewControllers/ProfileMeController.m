@@ -394,7 +394,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 #define VIEW_UINAV_HEIGHT 44
 
 #define VIEW_COMMON_WIDTH 296
-#define VIEW_INFO_HEIGHT 720
+#define VIEW_INFO_HEIGHT 640
 
 - (CGRect)calcRect:(NSInteger)index
 {
@@ -438,9 +438,9 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [self initAlbumView];
     [self refreshAlbumView];
     [self initStatusView];
-    [self initSNSView];
+//    [self initSNSView];
     [self initInfoView];
-    [self refreshSNSView];
+//    [self refreshSNSView];
     
     [self.view addSubview:self.contentView];
     

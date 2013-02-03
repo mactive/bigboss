@@ -163,8 +163,10 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     self.isFollow = NO;
     self.isPrivate = NO;
     
-//    self.titleArray = [[NSMutableArray alloc]initWithObjects:T(@"邮箱"),T(@"网址"),T(@"公司成员"),T(@"频道"), nil];
-//    self.titleEnArray = [[NSMutableArray alloc]initWithObjects: @"email",@"website",@"member",@"channel", nil];
+
+    
+    self.titleArray = [[NSMutableArray alloc]initWithObjects:T(@"邮箱"),T(@"网址"),T(@"公司成员"),T(@"频道"), nil];
+    self.titleEnArray = [[NSMutableArray alloc]initWithObjects: @"email",@"website",@"member",@"channel", nil];
     
     [self.view addSubview:self.tableView];
     [self initFaceView];
@@ -176,15 +178,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 {
     [super viewWillAppear:animated];
     [self refreshFaceView];
-    if (self.company.status == CompanyStateFollowed) {
-        self.titleArray = [[NSMutableArray alloc]initWithObjects:T(@"邮箱"),T(@"网址"),T(@"公司成员"),T(@"频道"), nil];
-        self.titleEnArray = [[NSMutableArray alloc]initWithObjects: @"email",@"website",@"member",@"channel", nil];
-        [self populateChannelData];
-        
-    }else{
-        self.titleArray = [[NSMutableArray alloc]initWithObjects:T(@"邮箱"),T(@"网址"), nil];
-        self.titleEnArray = [[NSMutableArray alloc]initWithObjects: @"email",@"website", nil];
-    }
+    [self populateChannelData];
 }
 
 
@@ -270,8 +264,9 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         NSURL *url = [NSURL URLWithString:self.company.logo];
         [self.avatarView setImageWithURL:url placeholderImage:[UIImage imageNamed:@"company_face.png"]];
         
-        
         if (self.company.status == CompanyStateFollowed) {
+
+            
             [self.followButton setTitle:T(@"已加入") forState:UIControlStateNormal];
             [self.followButton setBackgroundImage:[UIImage imageNamed:@"brown_btn.png"] forState:UIControlStateNormal];
             [self.followButton removeTarget:self action:@selector(followAction) forControlEvents:UIControlEventTouchUpInside];
@@ -285,6 +280,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
             [self.unFollowButton setFrame:CGRectMake(JOIN_X+JOIN_WIDTH+10, JOIN_Y+30, JOIN_WIDTH2, JOIN_HEIGHT)];
 
         }else if(self.company.status == CompanyStateUnFollowed){
+            
             [self.followButton setTitle:T(@"加入公司") forState:UIControlStateNormal];
             [self.followButton addTarget:self action:@selector(followAction) forControlEvents:UIControlEventTouchUpInside];
             [self.followButton setBackgroundImage:[UIImage imageNamed:@"green_btn.png"] forState:UIControlStateNormal];
@@ -313,6 +309,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     }else{
         [self.privateView setHidden:YES];
     }
+    
+    [self.tableView reloadData];
 }
 
 - (void)initHeaderView
@@ -481,7 +479,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         }else{
             descLabel.text = [ServerDataTransformer getStringObjFromServerJSON:self.jsonData byName:enTitle];
             if ([enTitle isEqualToString:@"member"]){
-                descLabel.text = T(@"点击查看");
+                descLabel.text = T(@"请先加入公司");
+            }else if ([enTitle isEqualToString:@"website"]){
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             }
         }
@@ -498,20 +497,27 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         [imageView setHidden:YES];
 
     }else{
-        NSDictionary *dataDict = [self.channelData objectAtIndex:(indexPath.row - descCount)];
-
-        itemLabel.text = T(@"频道");
-        descLabel.text = [ServerDataTransformer getNicknameFromServerJSON:dataDict];
-        //set avatar
-        NSURL *url = [NSURL URLWithString:[ServerDataTransformer getThumbnailFromServerJSON:dataDict]];
-        [imageView setImageWithURL:url placeholderImage:[UIImage imageNamed:@"placeholder_user.png"]];
-        [descLabel setFrame:CGRectMake(DESC_X, descLabel.frame.origin.y, descLabel.frame.size.width, descLabel.frame.size.height)];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-
+        if ([self.channelData count] > 0) {
+            NSDictionary *dataDict = [self.channelData objectAtIndex:(indexPath.row - descCount)];
+            
+            descLabel.text = [ServerDataTransformer getNicknameFromServerJSON:dataDict];
+            //set avatar
+            NSURL *url = [NSURL URLWithString:[ServerDataTransformer getThumbnailFromServerJSON:dataDict]];
+            [imageView setImageWithURL:url placeholderImage:[UIImage imageNamed:@"placeholder_user.png"]];
+            [descLabel setFrame:CGRectMake(DESC_X, descLabel.frame.origin.y, descLabel.frame.size.width, descLabel.frame.size.height)];
+            
+            if (self.company.status == CompanyStateFollowed) {
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            }else{
+                
+            }
+            
+            
+            [itemLabel setHidden:YES];
+            [descLabel setHidden:NO];
+            [imageView setHidden:NO];
+        }
         
-        [itemLabel setHidden:YES];
-        [descLabel setHidden:NO];
-        [imageView setHidden:NO];
     }
 
 }
@@ -532,13 +538,11 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
             
             if (self.company != nil) {
                 companyID = self.company.companyID;
-            }else{
-                companyID = [ServerDataTransformer getStringObjFromServerJSON:self.jsonData byName:@"cid"];
+                CompanyMemberViewController *controller = [[CompanyMemberViewController alloc]initWithNibName:nil bundle:nil];
+                controller.companyID = companyID;
+                [self.navigationController pushViewController:controller animated:YES];
             }
             
-            CompanyMemberViewController *controller = [[CompanyMemberViewController alloc]initWithNibName:nil bundle:nil];
-            controller.companyID = companyID;
-            [self.navigationController pushViewController:controller animated:YES];
         }else if ([enTitle isEqualToString:@"website"]){
             WebViewController *controller = [[WebViewController alloc]initWithNibName:nil bundle:nil];
             if (self.company != nil) {
@@ -552,9 +556,13 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
             [self.navigationController pushViewController:controller animated:YES];
         }
     }else{
-        NSDictionary *dataDict = [self.channelData objectAtIndex:(indexPath.row - descCount)];
+        if ([self.channelData count] > 0) {
 
-        [self getDict:dataDict];
+            NSDictionary *dataDict = [self.channelData objectAtIndex:(indexPath.row - descCount)];
+            if (self.company.status == CompanyStateFollowed) {
+                [self getDict:dataDict];
+            }
+        }
     }
 
 }

@@ -31,6 +31,7 @@
 @synthesize sourceDict;
 @synthesize tableView;
 @synthesize categoryName;
+@synthesize codeName;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -77,7 +78,7 @@
 // 解析公司列表
 - (void)populateData
 {
-    [[AppNetworkAPIClient sharedClient]getCompanyWithCategory:self.categoryName withBlock:^(id responseDict, NSError *error) {
+    [[AppNetworkAPIClient sharedClient]getCompanyWithCategory:self.codeName withBlock:^(id responseDict, NSError *error) {
         //
         
         if (responseDict != nil) {

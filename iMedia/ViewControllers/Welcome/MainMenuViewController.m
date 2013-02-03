@@ -201,6 +201,9 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [targetButton setBadgeNumber:[self appDelegate].unreadMessageCount];
 
     //;
+    if (self.searchTableView.hidden == NO) {
+        [self cancelSearchAction];
+    }
 }
 
 - (void)initViewControllers
@@ -415,6 +418,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 - (void)cancelSearchAction
 {
     [self.searchTableView setHidden:YES];
+    [self.searchTableView.layer addAnimation:self.transition forKey:kCATransition];
+
     [self.searchBar resignFirstResponder];
     self.navigationItem.rightBarButtonItem  = [[UIBarButtonItem alloc]initWithCustomView:self.lastMessageButton];
     self.navigationItem.leftBarButtonItem   = [[UIBarButtonItem alloc]initWithCustomView:self.settingButton];

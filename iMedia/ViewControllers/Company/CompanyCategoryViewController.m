@@ -69,10 +69,15 @@
     [self.view addSubview:self.tableView];
     
     self.sourceData = [[NSArray alloc]init];
-    
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
     [self populateData];
 
 }
+
 
 // 解析公司列表
 - (void)populateData
@@ -211,7 +216,8 @@
 {
     NSDictionary *dataDict = [self.sourceData objectAtIndex:indexPath.row];
     CompanyListViewController *controller = [[CompanyListViewController alloc]initWithNibName:nil bundle:nil];
-    controller.categoryName = [dataDict objectForKey:@"cn"];
+    controller.categoryName = [dataDict objectForKey:@"vn"];
+    controller.codeName = [dataDict objectForKey:@"cn"];
     [self.navigationController pushViewController:controller animated:YES];
 
 }

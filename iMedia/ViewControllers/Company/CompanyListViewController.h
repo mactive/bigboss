@@ -11,6 +11,6 @@
 @interface CompanyListViewController : BBCustomBackButtonViewController
 
 @property(nonatomic,strong)NSString *categoryName;
-
+@property(nonatomic,strong)NSString *codeName;
 
 @end
