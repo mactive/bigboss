@@ -469,16 +469,18 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
                      CGRectMake(0, VIEW_ALBUM_HEIGHT + VIEW_STATUS_HEIGHT + 15, self.view.frame.size.width, VIEW_INFO_HEIGHT)];
     self.infoView.backgroundColor = [UIColor clearColor];
     
+
+    
     self.infoArray = [[NSArray alloc] initWithObjects:
                       [[NSArray alloc] initWithObjects:T(@"签名"),nil],
-                      [[NSArray alloc] initWithObjects:T(@"手机"),T(@"职位"),T(@"公司"),T(@"家乡"),nil],
+                      [[NSArray alloc] initWithObjects:T(@"公司"),T(@"职位"),T(@"家乡"),nil],
                       [[NSArray alloc] initWithObjects:T(@"兴趣爱好"),T(@"个人说明"),nil],
                       nil];
     
     self.infoDescArray = [[NSArray alloc] initWithObjects:
                           [[NSArray alloc] initWithObjects:[self getSignature],nil],
-                          [[NSArray alloc] initWithObjects: [self getCareer], [self getCompany],[self getSchool],nil],
-                          [[NSArray alloc] initWithObjects:[self getInterest],[self getAlwaysbeen],[self getSelfIntroduction],nil],
+                          [[NSArray alloc] initWithObjects:[self getCompany], [self getCareer], [self getHometown],nil],
+                          [[NSArray alloc] initWithObjects:[self getInterest],[self getSelfIntroduction],nil],
                           nil];
     
     self.infoTableView = [[UITableView alloc]initWithFrame:self.infoView.bounds style:UITableViewStyleGrouped];
