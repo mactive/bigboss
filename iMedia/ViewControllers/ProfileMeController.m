@@ -304,11 +304,11 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
             case HOMETOWN_ITEM_INDEX:
                 self.me.hometown = value;
                 break;
-            case ALWAYSBEEN_ITEM_INDEX:
-                self.me.alwaysbeen = value;
-                break;
             case SCHOOL_ITEM_INDEX:
                 self.me.school = value;
+                break;
+            case GENDER_ITEM_INDEX:
+                self.me.gender = value;
                 break;
             case COMPANY_ITEM_INDEX:
                 self.me.company = value;
@@ -956,9 +956,9 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
 
     self.infoArray = [[NSArray alloc] initWithObjects:
                       [[NSArray alloc] initWithObjects:T(@"签名"),nil],
-                      [[NSArray alloc] initWithObjects:T(@"昵称"),T(@"生日"),nil],
-                      [[NSArray alloc] initWithObjects:T(@"手机"),T(@"职业"),T(@"公司"),T(@"学校"),nil],
-                      [[NSArray alloc] initWithObjects:T(@"兴趣爱好"),T(@"常出没的地方"),T(@"个人说明"),nil],
+                      [[NSArray alloc] initWithObjects:T(@"昵称"),T(@"性别"),T(@"生日"),nil],
+                      [[NSArray alloc] initWithObjects:T(@"手机"),T(@"公司"),T(@"职位"),T(@"家乡"),nil],
+                      [[NSArray alloc] initWithObjects:T(@"兴趣爱好"),T(@"个人说明"),nil],
                       nil];
     
 
@@ -972,9 +972,9 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     
     self.infoDescArray = [[NSMutableArray alloc] initWithObjects:
                           [[NSMutableArray alloc] initWithObjects:self.me.signature,nil],
-                          [[NSMutableArray alloc] initWithObjects:self.me.displayName, dateString,nil],
-                          [[NSMutableArray alloc] initWithObjects: self.me.cell,self.me.career,self.me.company,self.me.school,nil],
-                          [[NSMutableArray alloc] initWithObjects:self.me.interest,self.me.alwaysbeen,self.me.selfIntroduction,nil],
+                          [[NSMutableArray alloc] initWithObjects:self.me.displayName,self.me.gender, dateString,nil],
+                          [[NSMutableArray alloc] initWithObjects: self.me.cell,self.me.company,self.me.career,self.me.hometown,nil],
+                          [[NSMutableArray alloc] initWithObjects:self.me.interest,self.me.selfIntroduction,nil],
                           nil];
     
     self.infoTableView = [[UITableView alloc]initWithFrame:self.infoView.bounds style:UITableViewStyleGrouped];
@@ -1018,11 +1018,11 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     if (section == 0) {
         return 1;
     }else if(section == 1){
-        return 2;
+        return 3;
     }else if(section == 2){
         return 4;
     }else if(section == 3){
-        return 3;
+        return 2;
     }else{
         return 2;
     }

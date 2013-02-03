@@ -328,26 +328,14 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 - (void)registerAction
 {
     [(UITextField *)self.handle resignFirstResponder];
+    // 清空输入框
+    self.passwordField.text = @"";
     
     RegisterViewController *controller = [[RegisterViewController alloc] initWithNibName:nil bundle:nil];
-    
-//    [UIView beginAnimations:@"View Flip" context:nil];
-//    [UIView setAnimationDuration:0.80];
-//    [UIView setAnimationCurve:UIViewAnimationCurveEaseInOut];
-//    
-//    [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight
-//                           forView:self.navigationController.view cache:NO];
-//    
-//
-//    [UIView commitAnimations];
-//
     
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:controller];
     [self presentModalViewController: navController animated: YES];
     
-//    [self.navigationController presentModalViewController:controller animated:YES];
-//
-//    [self.navigationController presentModalViewController:controller animated:YES];
 
 }
 

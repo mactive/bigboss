@@ -26,6 +26,8 @@
 @property(strong, nonatomic) NSDateFormatter *dateFormatter;
 @property(strong, nonatomic) UIButton* doneButton;
 @property(strong, nonatomic) UILabel *restCountLabel;
+@property(strong, nonatomic)UISegmentedControl *genderControl;
+
 
 // for birth area
 @property(strong, nonatomic) UILabel * ageTitleLabel;
@@ -33,6 +35,11 @@
 @property(strong, nonatomic) UILabel * birthValueLabel;
 @property(strong, nonatomic) UILabel * ageValueLabel;
 @property(strong, nonatomic) UILabel * horoscopeValueLabel;
+
+// gender
+@property(strong, nonatomic) NSDictionary *genderTitleDict;
+@property(strong, nonatomic) NSArray *genderTitleValue;
+@property(strong, nonatomic) NSArray *genderTitleKey;
 
 @end
 
@@ -54,13 +61,17 @@
 @synthesize dateFormatter;
 @synthesize doneButton;
 @synthesize restCountLabel;
-
+@synthesize genderControl;
 //
 @synthesize ageTitleLabel;
 @synthesize horoscopeTitleLabel;
 @synthesize birthValueLabel;
 @synthesize ageValueLabel;
 @synthesize horoscopeValueLabel;
+//
+@synthesize genderTitleDict;
+@synthesize genderTitleKey;
+@synthesize genderTitleValue;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -216,6 +227,32 @@
     [self.view addSubview:self.horoscopeTitleLabel];
 }
 
+- (void)initGenderView
+{
+    self.genderTitleDict = [ServerDataTransformer sexDict];
+    self.genderTitleValue = [self.genderTitleDict allValues];
+    self.genderTitleKey = [self.genderTitleDict allKeys];
+    
+    self.genderControl = [[UISegmentedControl alloc]initWithItems:self.genderTitleValue];
+    self.genderControl.frame = CGRectMake(40, 60, 240, 40);
+    
+    [self.genderControl addTarget:self action:@selector(segmentAction:) forControlEvents:UIControlEventValueChanged];
+    
+    
+    [self.genderControl setImage:[UIImage imageNamed:@"gender_male.png"] forSegmentAtIndex:0];
+    [self.genderControl setImage:[UIImage imageNamed:@"gender_female.png"] forSegmentAtIndex:1];
+    
+    [self.view addSubview:self.genderControl];
+
+}
+
+- (void)segmentAction:(UISegmentedControl *)seg
+{
+    NSInteger Index = seg.selectedSegmentIndex;
+    NSString *genderString = [self.genderTitleKey objectAtIndex:Index];
+    [self.delegate passStringValue:genderString andIndex:self.valueIndex];
+}
+
 - (void)doneAction
 {
     if(self.valueIndex == CELL_ITEM_INDEX)
@@ -256,8 +293,17 @@
             [self.datePicker addTarget:self action:@selector(dateChanged) forControlEvents:UIControlEventValueChanged];
             [self.view addSubview:self.datePicker];
         }
+    }else if (self.valueIndex == GENDER_ITEM_INDEX){
+        [self initGenderView];
         
-    }else if(self.valueIndex == SIGNATURE_ITEM_INDEX || self.valueIndex == SELF_INTRO_ITEM_INDEX)
+        if (StringHasValue(self.valueText)) {
+            self.genderControl.selectedSegmentIndex = [self.genderTitleKey indexOfObject:self.valueText];
+        }else{
+            self.genderControl.selectedSegmentIndex = -1; //设置默认选择项索引
+        }
+
+    }
+    else if(self.valueIndex == SIGNATURE_ITEM_INDEX || self.valueIndex == SELF_INTRO_ITEM_INDEX)
     {
         [self.valueTextView  setFrame:CGRectMake(20 , 60, 280 , 100)];
         self.valueTextView.text = self.valueText;

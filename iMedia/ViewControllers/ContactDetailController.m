@@ -471,8 +471,8 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
     
     self.infoArray = [[NSArray alloc] initWithObjects:
                       [[NSArray alloc] initWithObjects:T(@"签名"),nil],
-                      [[NSArray alloc] initWithObjects:T(@"职业"), T(@"公司"),T(@"学校"),nil],
-                      [[NSArray alloc] initWithObjects:T(@"兴趣爱好"),T(@"常出没的地方"),T(@"个人说明"),nil],
+                      [[NSArray alloc] initWithObjects:T(@"手机"),T(@"职位"),T(@"公司"),T(@"家乡"),nil],
+                      [[NSArray alloc] initWithObjects:T(@"兴趣爱好"),T(@"个人说明"),nil],
                       nil];
     
     self.infoDescArray = [[NSArray alloc] initWithObjects:

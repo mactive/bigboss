@@ -41,19 +41,20 @@
 #define SIGNATURE_ITEM_INDEX    10
 
 #define NICKNAME_ITEM_INDEX     20
-#define BIRTH_ITEM_INDEX        21
+#define GENDER_ITEM_INDEX       21
+#define BIRTH_ITEM_INDEX        22
 
 #define CELL_ITEM_INDEX         30
-#define CAREER_ITEM_INDEX       31
-#define COMPANY_ITEM_INDEX      32
-#define SCHOOL_ITEM_INDEX       33
+#define COMPANY_ITEM_INDEX      31
+#define CAREER_ITEM_INDEX       32
+#define HOMETOWN_ITEM_INDEX     33
 
 #define INTEREST_ITEM_INDEX     40
-#define ALWAYSBEEN_ITEM_INDEX   41
-#define SELF_INTRO_ITEM_INDEX   42
+//#define ALWAYSBEEN_ITEM_INDEX   41
+#define SELF_INTRO_ITEM_INDEX   41
 
 #define SINAWEIBO_ITEM_INDEX    51
-#define HOMETOWN_ITEM_INDEX     52
+#define SCHOOL_ITEM_INDEX       52
 
 
 #define JPEG_QUALITY 0.6
