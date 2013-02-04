@@ -339,12 +339,13 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
                 // update
                 else{
                     newCompany.status = CompanyStateFollowed;
-                    [moc save:nil];
                     DDLogVerbose(@"SYNC update company success %@",newCompany.companyID);
 
                 }
 
             }];
+            
+            MOCSave(moc);
             [self.updateCompanyTimer invalidate];
         }else{
             _updateCompanyRetryCount += 1;
@@ -413,7 +414,6 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
                         DDLogVerbose(@"SYNC Insert company success %@",newCompany.companyID);
                     }else{
                         newCompany.status = CompanyStateFollowed;
-                        [moc save:nil];
                         DDLogVerbose(@"SYNC update company success %@",newCompany.companyID);
 
                     }
@@ -422,6 +422,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
        
                 
             }];
+            MOCSave(moc);
+
             [self.getLastMessageTimer invalidate];
         }else{
             _lastMessageRetryCount += 1;

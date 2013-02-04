@@ -549,7 +549,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         if ([enTitle isEqualToString:@"member"]) {
             NSString *companyID;
             
-            if (self.company != nil) {
+            if (self.company != nil && self.company.status == CompanyStateFollowed) {
                 companyID = self.company.companyID;
                 CompanyMemberViewController *controller = [[CompanyMemberViewController alloc]initWithNibName:nil bundle:nil];
                 controller.companyID = companyID;

@@ -84,13 +84,13 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [self.view addSubview:self.tableView];
     
     [self.tableView setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero]];
-    [self initDataArray];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+    [self initDataArray];
+
 }
 
 
@@ -111,6 +111,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     NSMutableArray *mutableFetchResults = [[self.managedObjectContext executeFetchRequest:request error:&error] mutableCopy];
     self.dataArray = [[NSArray alloc]initWithArray:mutableFetchResults];
     
+    [self.tableView reloadData];
     if (mutableFetchResults == nil) {
         // Handle the error.
     }
