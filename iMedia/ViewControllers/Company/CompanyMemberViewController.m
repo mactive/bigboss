@@ -152,7 +152,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
             
             NSMutableDictionary *responseDict = [NSMutableDictionary dictionaryWithDictionary:responseObject];
             
-            [responseDict removeObjectForKey:[self appDelegate].me.guid];  // 移出自己
+//            [responseDict removeObjectForKey:[self appDelegate].me.guid];  // 移出自己
             
             self.startInt += [responseDict count];
             
@@ -309,6 +309,13 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 {
     NSDictionary *dataDict = [self.sourceData objectAtIndex:indexPath.row];
     
+    if ([[self appDelegate].me.guid isEqualToString:[dataDict objectForKey:@"guid"]]) {
+        cell.accessoryType = UITableViewCellAccessoryNone;
+    }else{
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
+    
+    
     UIImageView *avatarView = (UIImageView *)[cell viewWithTag:AVATAR_TAG];
     NSURL *url = [NSURL URLWithString:[dataDict objectForKey:@"thumbnail"]];
     [avatarView setImageWithURL:url placeholderImage:[UIImage imageNamed:@"company_face.png"]];
@@ -328,8 +335,11 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
     NSDictionary *dataDict = [self.sourceData objectAtIndex:indexPath.row];
-    [self getDict:[ServerDataTransformer getGUIDFromServerJSON:dataDict]];
-    
+    // 自己不能点击
+    if (![[self appDelegate].me.guid isEqualToString:[dataDict objectForKey:@"guid"]]) {
+        [self getDict:[ServerDataTransformer getGUIDFromServerJSON:dataDict]];
+    }
+
 }
 
 - (void)getDict:(NSString *)guidString

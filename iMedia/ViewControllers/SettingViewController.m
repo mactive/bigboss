@@ -106,7 +106,6 @@
                               [[NSArray alloc] initWithObjects:@"个人设置",nil],
                               [[NSArray alloc] initWithObjects:@"隐私保护",@"系统通知中心", nil],
                               [[NSArray alloc] initWithObjects:@"去大掌柜打个分吧",@"帮助与反馈",@"关于大掌柜", nil],
-                              [[NSArray alloc] initWithObjects:@"退出登录",nil],
                               nil ];
     //,@"我的相册",@"新浪微博",@"微信朋友圈"
     
@@ -292,11 +291,12 @@
         [self.navigationController pushViewController:controller animated:YES];
     }
     
-    if (indexPath.row == 0 && indexPath.section == 3 ) {
-        [self logoutAction];
-    }
+//    if (indexPath.row == 0 && indexPath.section == 3 ) {
+//        [self logoutAction];
+//    }
 
 }
+/*
 /////////////////////////////////////////////
 #pragma mark - logout
 ////////////////////////////////////////////
@@ -327,7 +327,7 @@
     }
 
 }
-
+*/
 
 
 - (void)viewDidUnload

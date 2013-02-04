@@ -2944,14 +2944,14 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: qian meng (2WTBYPH5XE)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: qian meng (2WTBYPH5XE)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Winged Stone LLC";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Winged Stone LLC";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
+					"DEBUG=0",
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
@@ -2966,8 +2966,8 @@
 					"-force_load",
 					"${BUILT_PRODUCTS_DIR}/libCocoaPlant.a",
 				);
-				PROVISIONING_PROFILE = "D494AE14-5CE4-4508-8CF4-0707B4B35847";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "D494AE14-5CE4-4508-8CF4-0707B4B35847";
+				PROVISIONING_PROFILE = "0DE5C02F-0F0D-46CB-B00D-CEAB845975ED";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "0DE5C02F-0F0D-46CB-B00D-CEAB845975ED";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2984,8 +2984,8 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: qian meng (2WTBYPH5XE)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: qian meng (2WTBYPH5XE)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Winged Stone LLC";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Winged Stone LLC";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -3000,8 +3000,8 @@
 					"-force_load",
 					"${BUILT_PRODUCTS_DIR}/libCocoaPlant.a",
 				);
-				PROVISIONING_PROFILE = "D494AE14-5CE4-4508-8CF4-0707B4B35847";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "D494AE14-5CE4-4508-8CF4-0707B4B35847";
+				PROVISIONING_PROFILE = "0DE5C02F-0F0D-46CB-B00D-CEAB845975ED";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "0DE5C02F-0F0D-46CB-B00D-CEAB845975ED";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
