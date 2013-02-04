@@ -47,7 +47,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         self.barButton = [[UIButton alloc] init];
         self.barButton.frame=CGRectMake(0, 0, 50, 29);
         [self.barButton setBackgroundImage:[UIImage imageNamed: @"barbutton_bg.png"] forState:UIControlStateNormal];
-        [self.barButton setTitle:T(@"登录") forState:UIControlStateNormal];
+        [self.barButton setTitle:T(@"返回") forState:UIControlStateNormal];
         [self.barButton.titleLabel setFont:[UIFont boldSystemFontOfSize:14.0]];
         [self.barButton addTarget:self action:@selector(backToLoginAction) forControlEvents:UIControlEventTouchUpInside];
         

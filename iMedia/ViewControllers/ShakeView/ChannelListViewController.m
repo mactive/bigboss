@@ -289,7 +289,8 @@ NSInteger intSort2(id num1, id num2, void *context)
     
     NSDictionary *rowData = [self.dataArray objectAtIndex:indexPath.row];
     [self getDict:[rowData objectForKey:@"node_address"] andGuid:[rowData objectForKey:@"guid"]];
-    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];//选中后的反显颜色即刻消失
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

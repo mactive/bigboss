@@ -2420,7 +2420,7 @@
 		566E80941609A24C00A333EA /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0440;
+				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = "Li Xiaosi";
 			};
 			buildConfigurationList = 566E80971609A24C00A333EA /* Build configuration list for PBXProject "iMedia" */;
@@ -2940,6 +2940,9 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer: qian meng (2WTBYPH5XE)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: qian meng (2WTBYPH5XE)";
@@ -2963,8 +2966,8 @@
 					"-force_load",
 					"${BUILT_PRODUCTS_DIR}/libCocoaPlant.a",
 				);
-				PROVISIONING_PROFILE = "8A302DF5-17E7-4B2A-9747-17A3AB513772";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "8A302DF5-17E7-4B2A-9747-17A3AB513772";
+				PROVISIONING_PROFILE = "D494AE14-5CE4-4508-8CF4-0707B4B35847";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "D494AE14-5CE4-4508-8CF4-0707B4B35847";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2977,6 +2980,9 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer: qian meng (2WTBYPH5XE)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: qian meng (2WTBYPH5XE)";
@@ -2994,8 +3000,8 @@
 					"-force_load",
 					"${BUILT_PRODUCTS_DIR}/libCocoaPlant.a",
 				);
-				PROVISIONING_PROFILE = "8A302DF5-17E7-4B2A-9747-17A3AB513772";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "8A302DF5-17E7-4B2A-9747-17A3AB513772";
+				PROVISIONING_PROFILE = "D494AE14-5CE4-4508-8CF4-0707B4B35847";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "D494AE14-5CE4-4508-8CF4-0707B4B35847";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -3019,6 +3025,7 @@
 				);
 				OTHER_LDFLAGS = "-lxml2";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -3040,6 +3047,7 @@
 				);
 				OTHER_LDFLAGS = "-lxml2";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

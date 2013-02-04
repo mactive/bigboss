@@ -297,7 +297,7 @@
         [self initGenderView];
         
         if (StringHasValue(self.valueText)) {
-            self.genderControl.selectedSegmentIndex = [self.genderTitleKey indexOfObject:self.valueText];
+            self.genderControl.selectedSegmentIndex = [self.genderTitleValue indexOfObject:self.valueText];
         }else{
             self.genderControl.selectedSegmentIndex = -1; //设置默认选择项索引
         }

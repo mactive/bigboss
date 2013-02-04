@@ -228,9 +228,6 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
      (UIRemoteNotificationTypeAlert |
       UIRemoteNotificationTypeBadge |
       UIRemoteNotificationTypeSound)];
-    
-    // Update local data with latest server info
-    [self updateMeWithBlock:nil];
 
     // mainMenuViewController
 
@@ -344,20 +341,6 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
                     newCompany.status = CompanyStateFollowed;
                     [moc save:nil];
                     DDLogVerbose(@"SYNC update company success %@",newCompany.companyID);
-//                    NSPredicate *predicate = [NSPredicate predicateWithFormat:
-//                                              @"(companyID = %@)", newCompany.companyID];
-//                    [request setPredicate:predicate];
-//                    
-//                    NSError *error = nil;
-//                    NSArray *companyArray = [moc executeFetchRequest:request error:&error];
-//                    
-//                    if ([companyArray count] > 0){
-//                        Company *aCompany = [companyArray objectAtIndex:0];
-//                        [[ModelHelper sharedInstance]populateCompany:aCompany withServerJSONData:obj];
-//                        aCompany.status = CompanyStateFollowed;
-//                        [moc save:nil];
-//                        DDLogVerbose(@"SYNC update company success %@",aCompany.companyID);
-//                    }
 
                 }
 
@@ -379,13 +362,13 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 - (void)getLastMessageFromServer:(NSNotification *)notification
 {
-    Information *lastInfo = [[ModelHelper sharedInstance]findLastInformationWithType:LastMessageFromServer];
-    NSDate *nowDate = [NSDate date];
+//    Information *lastInfo = [[ModelHelper sharedInstance]findLastInformationWithType:LastMessageFromServer];
+//    NSDate *nowDate = [NSDate date];
     
-    if ( lastInfo!= nil && [nowDate minutesAfterDate:lastInfo.createdOn] < 60) {
-        DDLogVerbose(@"[nowDate minutesAfterDate:lastInfo.createdOn] %d",[nowDate minutesAfterDate:lastInfo.createdOn]);
-        return;
-    }
+//    if ( lastInfo!= nil && [nowDate minutesAfterDate:lastInfo.createdOn] < 60) {
+//        DDLogVerbose(@"[nowDate minutesAfterDate:lastInfo.createdOn] %d",[nowDate minutesAfterDate:lastInfo.createdOn]);
+//        return;
+//    }
     
     // 大于 60分钟
     NSManagedObjectContext *moc = _managedObjectContext;
@@ -432,35 +415,11 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
                         newCompany.status = CompanyStateFollowed;
                         [moc save:nil];
                         DDLogVerbose(@"SYNC update company success %@",newCompany.companyID);
-                        
-//                        NSEntityDescription *entityDescription = [NSEntityDescription
-//                                                                  entityForName:@"Company" inManagedObjectContext:_managedObjectContext];
-//                        NSFetchRequest *request = [[NSFetchRequest alloc] init];
-//                        [request setEntity:entityDescription];
-//                        
-//                        NSPredicate *predicate = [NSPredicate predicateWithFormat:
-//                                                  @"(companyID = %@)", newCompany.companyID];
-//                        [request setPredicate:predicate];
-//                        
-//                        NSError *error = nil;
-//                        NSArray *companyArray = [moc executeFetchRequest:request error:&error];
-//                        
-//                        if ([companyArray count] > 0){
-//                            Company *aCompany = [companyArray objectAtIndex:0];
-//                            aCompany.status = CompanyStateFollowed;
-//                            [moc save:nil];
-//                            DDLogVerbose(@"SYNC update company success %@",aCompany.companyID);
-//                        }
 
                     }
                     ////////////////////////////////////////////////////////////////////////////////////
-
                 }
-                
-
- 
-
-                
+       
                 
             }];
             [self.getLastMessageTimer invalidate];
@@ -651,7 +610,9 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     }
     
     [self updateMyChannelInformation:nil];
-
+    [self updateMyCompanyInformation:nil];
+    [self getLastMessageFromServer:nil];
+    
    [[AppNetworkAPIClient sharedClient] updateIdentity:self.me withBlock:block];
 }
 
@@ -715,10 +676,10 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     }
     [[AppNetworkAPIClient sharedClient] loginWithRetryCount:3 username:self.me.username andPassword:self.me.password withBlock:^(id responseObject, NSError *error) {
         if (responseObject != nil) {
-#warning <#message#>
+            
+            // Update local data with latest server info
+            [self updateMeWithBlock:nil];
             [self checkIOSVersion];
-            [self updateMyCompanyInformation:nil];
-            [self getLastMessageFromServer:nil];
         }
     }];
     

@@ -277,8 +277,12 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
                 _labelHeight = 14.0;
             }
         }
-        descLabel.text = value;
-        descLabel.frame = CGRectMake(descLabel.frame.origin.x, _labelHeight, signatureSize.width , signatureSize.height );
+        if (index == GENDER_ITEM_INDEX) {
+            descLabel.text = [[ServerDataTransformer sexDict] objectForKey:value];
+        }else{
+            descLabel.text = value;
+        }
+        descLabel.frame = CGRectMake(descLabel.frame.origin.x, _labelHeight, SUMMARY_WIDTH , signatureSize.height );
         
         if( indexPath.section == 3 ){
             descLabel.frame     = CGRectMake(10, 37, SUMMARY_WIDTH + 50 , signatureSize.height );
@@ -356,7 +360,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         _labelHeight = 14.0;
     }
     descLabel.text = valueStr;
-    descLabel.frame = CGRectMake(descLabel.frame.origin.x, _labelHeight, signatureSize.width , signatureSize.height );
+    descLabel.frame = CGRectMake(descLabel.frame.origin.x, _labelHeight, SUMMARY_WIDTH , signatureSize.height );
     
     NSIndexPath *tmp = [self decodeIndex:index];
     NSMutableArray *itemArray = [self.infoDescArray objectAtIndex:tmp.section];
@@ -966,13 +970,17 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     NSDateFormatter *df = [[NSDateFormatter alloc] init]; 
     [df setDateFormat:@"yyyy-MM-dd"];
     NSString* dateString = [df stringFromDate:self.me.birthdate];
+    NSString* genderString = [[ServerDataTransformer sexDict] objectForKey:self.me.gender];
     if (dateString == nil) {
         dateString = @"";
+    }
+    if (genderString == nil) {
+        genderString = @"";
     }
     
     self.infoDescArray = [[NSMutableArray alloc] initWithObjects:
                           [[NSMutableArray alloc] initWithObjects:self.me.signature,nil],
-                          [[NSMutableArray alloc] initWithObjects:self.me.displayName,self.me.gender, dateString,nil],
+                          [[NSMutableArray alloc] initWithObjects:self.me.displayName, genderString, dateString,nil],
                           [[NSMutableArray alloc] initWithObjects: self.me.cell,self.me.company,self.me.career,self.me.hometown,nil],
                           [[NSMutableArray alloc] initWithObjects:self.me.interest,self.me.selfIntroduction,nil],
                           nil];
@@ -1098,7 +1106,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
         }
     }
     descLabel.text = text;
-    descLabel.frame = CGRectMake(descLabel.frame.origin.x, _labelHeight, signatureSize.width , signatureSize.height );
+    descLabel.frame = CGRectMake(descLabel.frame.origin.x, _labelHeight, SUMMARY_WIDTH , signatureSize.height );
     
     
     if( indexPath.section == 3 ){

@@ -581,11 +581,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     }
     
     [self appDelegate].unreadMessageCount = self.unreadMessageCount;
-//    if (self.unreadMessageCount > 0) {
-//        self.tabBarItem.badgeValue = [NSString stringWithFormat:@"%d", self.unreadMessageCount];
-//    } else {
-//        self.tabBarItem.badgeValue = nil;
-//    }
+
 }
 
 - (void)contentChanged

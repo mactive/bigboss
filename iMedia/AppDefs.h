@@ -9,10 +9,7 @@
 #ifndef iMedia_LayoutConst_h
 #define iMedia_LayoutConst_h
 
-#define DBNAME @"xiangyuansms.sqlite"
-#define DBVERSION @"1"
-#define URL_TEMPLATE @"http://www.source3g.com/sms/template.txt"
-#define M_APPLEID 583758495
+#define M_APPLEID 599480694
 
 #define TINY_FONT_HEIGHT 12
 #define SMALL_FONT_HEIGHT 14

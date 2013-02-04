@@ -39,8 +39,9 @@
     if (self) {
         
     }
-    return self;    
+    return self;
 }
+
 
 - (AppDelegate *)appDelegate
 {

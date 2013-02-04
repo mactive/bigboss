@@ -96,6 +96,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 - (CGRect)calcRect:(NSInteger)index
 {
+    DDLogVerbose(@"self.view.bounds.size.height %f",self.view.bounds.size.height);
     CGFloat liteHeight = self.view.bounds.size.height / 460 * 45;
     CGFloat halfHeight = self.view.bounds.size.height / 460 * HALF_WIDTH;
     DDLogVerbose(@"%f",self.view.bounds.size.height);
@@ -188,6 +189,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     if (lastMessageCount > 0) {
         [self.lastMessageButton setTitle:lastMessageCountString forState:UIControlStateNormal];
         [self.lastMessageButton setTitleEdgeInsets:UIEdgeInsetsMake(8, 23, 8, 8)];
+        [self.lastMessageButton setTitleColor:[UIColor yellowColor] forState:UIControlStateNormal];
         [self.lastMessageButton.titleLabel setFont:[UIFont boldSystemFontOfSize:16]];
         [self.lastMessageButton.titleLabel setShadowColor:[UIColor blackColor]];
         [self.lastMessageButton.titleLabel setShadowOffset:CGSizeMake(0, 1)];
@@ -204,13 +206,16 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     if (self.searchTableView.hidden == NO) {
         [self cancelSearchAction];
     }
+    
+//    为了消息数量计算使用
+    [[self appDelegate].conversationController updateUnreadBadge];
+
 }
 
 - (void)initViewControllers
 {
     [self appDelegate].conversationController = [[ConversationsController alloc] initWithStyle:UITableViewStylePlain];
     [self appDelegate].conversationController.managedObjectContext = self.managedObjectContext;
-    [[self appDelegate].conversationController updateUnreadBadge]; // 为了消息数量计算使用
     
     
     [self appDelegate].contactListController = [[ContactListViewController alloc] initWithStyle:UITableViewStylePlain andManagementContext:self.managedObjectContext];
@@ -362,6 +367,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     NSDictionary *dataDict = [self.sourceData objectAtIndex:indexPath.row];
     NSString *companyID = [ServerDataTransformer getCompanyIDFromServerJSON:dataDict];
     
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];//选中后的反显颜色即刻消失
+
     [self getDict:companyID];
     
 }

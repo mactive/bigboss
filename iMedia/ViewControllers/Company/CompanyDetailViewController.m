@@ -48,6 +48,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @property(readwrite, nonatomic)BOOL isPrivate;
 @property(readwrite, nonatomic)BOOL isFollow;
 @property(strong, nonatomic)UITableView * tableView;
+@property(strong, nonatomic)UIButton *barButton;
 @end
 
 @implementation CompanyDetailViewController
@@ -69,6 +70,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @synthesize managedObjectContext;
 @synthesize company;
 @synthesize delegate;
+@synthesize barButton;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -76,8 +78,19 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        self.barButton = [[UIButton alloc] init];
+        self.barButton.frame=CGRectMake(0, 0, 50, 29);
+        [self.barButton setBackgroundImage:[UIImage imageNamed: @"barbutton_mainmenu.png"] forState:UIControlStateNormal];
+        [self.barButton addTarget:self action:@selector(mainMenuAction) forControlEvents:UIControlEventTouchUpInside];
+        [self.navigationItem setHidesBackButton:YES];
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.barButton];
     }
     return self;
+}
+
+- (void)mainMenuAction
+{
+    [self.navigationController popToRootViewControllerAnimated:NO];
 }
 
 - (AppDelegate *)appDelegate
@@ -120,7 +133,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 #define DESC_HEIGHT 16
 #define DESC_Y     (CELL_HEIGHT - DESC_HEIGHT)/2
 
-#define LAST_WIDTH  260
+#define LAST_WIDTH  280
 #define LAST_X      (320-LAST_WIDTH)/2
 
 #define CHANNEL_WIDTH 32
@@ -466,7 +479,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     if (indexPath.row < descCount) {
         itemLabel.text = [self.titleArray objectAtIndex:indexPath.row];
         NSString *enTitle = [self.titleEnArray objectAtIndex:indexPath.row];
-        if (self.company != nil) {
+        if (self.company != nil && self.company.status == CompanyStateFollowed) {
             if([enTitle isEqualToString:@"email"]){
                 descLabel.text = self.company.email;
             }else if ([enTitle isEqualToString:@"website"]){
@@ -554,6 +567,17 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
             }
             
             [self.navigationController pushViewController:controller animated:YES];
+        }else if ([enTitle isEqualToString:@"email"]){
+            NSString *emailStr;
+            if (self.company != nil) {
+                emailStr = [NSString stringWithFormat:
+                                 @"mailto:%@",self.company.email ];
+            }else{
+                emailStr = [NSString stringWithFormat:
+                                 @"mailto:%@",[ServerDataTransformer getEmailFromServerJSON:self.jsonData]];
+            }
+            
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:emailStr]];
         }
     }else{
         if ([self.channelData count] > 0) {
@@ -608,7 +632,11 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [[AppNetworkAPIClient sharedClient]followCompanyWithCompanyID:companyID withBlock:^(id responseDict, NSError *error) {
         //
         if (responseDict != nil) {
-            [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"请求已发送") andHideAfterDelay:2];
+            if (self.isPrivate) {
+                [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"请等待批准") andHideAfterDelay:2];
+            }else{
+                [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"已加入") andHideAfterDelay:2];
+            }
             [self subscribeButtonPushed];
             [self refreshFaceView];
             [self populateChannelData];

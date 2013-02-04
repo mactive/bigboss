@@ -32,6 +32,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @property(strong,nonatomic)NSArray *sourceData;
 @property(strong, nonatomic)NSMutableDictionary * sourceDict;
 @property(strong, nonatomic)UITableView * tableView;
+@property(strong, nonatomic)UIButton *barButton;
 @end
 
 @implementation CompanyMemberViewController
@@ -39,15 +40,28 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @synthesize sourceData;
 @synthesize sourceDict;
 @synthesize tableView;
+@synthesize barButton;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
+        self.barButton = [[UIButton alloc] init];
+        self.barButton.frame=CGRectMake(0, 0, 50, 29);
+        [self.barButton setBackgroundImage:[UIImage imageNamed: @"barbutton_mainmenu.png"] forState:UIControlStateNormal];
+        [self.barButton addTarget:self action:@selector(mainMenuAction) forControlEvents:UIControlEventTouchUpInside];
+        [self.navigationItem setHidesBackButton:YES];
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.barButton];
     }
     return self;
 }
+
+- (void)mainMenuAction
+{
+    [self.navigationController popToRootViewControllerAnimated:NO];
+}
+
 - (AppDelegate *)appDelegate
 {
 	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
