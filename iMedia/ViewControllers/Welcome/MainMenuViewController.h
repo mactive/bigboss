@@ -21,4 +21,6 @@
 @property(strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 
 - (void)conversationAction;
+- (void)updateLastMessageWithCount:(NSUInteger)lastMessageCount;
+
 @end

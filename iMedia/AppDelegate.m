@@ -383,8 +383,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
             NSDictionary *responseDict = [[NSDictionary alloc]initWithDictionary:responseObject];
             NSArray *sourceData = [responseDict allValues];
             
-            [[NSUserDefaults standardUserDefaults] setObject:[NSString stringWithFormat:@"%d",[sourceData count]]
-                                                      forKey:@"lastMessageCount"];
+            [self.mainMenuViewController updateLastMessageWithCount:[sourceData count]];
+            
             
             [sourceData enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
                 //

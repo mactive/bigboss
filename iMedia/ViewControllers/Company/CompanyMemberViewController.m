@@ -33,6 +33,9 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @property(strong, nonatomic)NSMutableDictionary * sourceDict;
 @property(strong, nonatomic)UITableView * tableView;
 @property(strong, nonatomic)UIButton *barButton;
+@property(strong, nonatomic)UIButton *loadMoreButton;
+@property( nonatomic, readwrite) NSUInteger startInt;
+@property(nonatomic, readwrite) BOOL isLOADMORE;
 @end
 
 @implementation CompanyMemberViewController
@@ -41,6 +44,9 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @synthesize sourceDict;
 @synthesize tableView;
 @synthesize barButton;
+@synthesize loadMoreButton;
+@synthesize startInt;
+@synthesize isLOADMORE;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -74,23 +80,60 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     self.title = T(@"公司成员列表");
 	// Do any additional setup after loading the view.
     self.view.backgroundColor = BGCOLOR;
-    self.tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStylePlain];
+    self.tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, 320, self.view.frame.size.height-44) style:UITableViewStylePlain];
     self.tableView.backgroundColor = BGCOLOR;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     //    self.tableView.separatorColor = SEPCOLOR;
-    [self.tableView setTableFooterView:[[UIView alloc] initWithFrame:CGRectZero]];
     
     self.tableView.delegate = self;
     self.tableView.dataSource  = self;
-    [self.view addSubview:self.tableView];
     
     self.sourceData = [[NSArray alloc]init];
+    self.startInt = 0;
+    self.isLOADMORE = NO;
+
+    
+    // footerView
+    self.tableView.tableFooterView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 320, 60)];
+    
+    self.loadMoreButton  = [[UIButton alloc] initWithFrame:CGRectMake(40, 10, 240, 40)];
+    [self.loadMoreButton.titleLabel setFont:[UIFont systemFontOfSize:16.0]];
+    [self.loadMoreButton setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
+    [self.loadMoreButton setTitleColor:RGBCOLOR(143, 183, 225) forState:UIControlStateHighlighted];
+    [self.loadMoreButton.titleLabel setTextAlignment:UITextAlignmentCenter];
+    [self.loadMoreButton setTitle:T(@"点击加载更多") forState:UIControlStateNormal];
+    [self.loadMoreButton setBackgroundColor:[UIColor clearColor]];
+    //    [self.loadMoreButton.layer setBorderColor:[RGBCOLOR(187, 217, 247) CGColor]];
+    //    [self.loadMoreButton.layer setBorderWidth:1.0f];
+    [self.loadMoreButton.layer setCornerRadius:5.0f];
+    [self.loadMoreButton addTarget:self action:@selector(loadMoreAction) forControlEvents:UIControlEventTouchUpInside];
+    [self.loadMoreButton setHidden:YES];
+    
+    [self.tableView.tableFooterView addSubview:self.loadMoreButton];
+    
+    [self.view addSubview:self.tableView];
+    
+
+}
+
+
+-(void)loadMoreAction
+{
+    self.isLOADMORE = YES;
+    [self populateData:self.startInt];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self populateData:0];
+    
+    [self.loadMoreButton setHidden:NO];
+    [self.loadMoreButton setEnabled:YES];
+    
+    if (self.sourceData == nil || [self.sourceData count] == 0) {
+        self.startInt = 0;
+        [self populateData:self.startInt];
+    }
 }
 
 // 解析公司成员列表
@@ -99,28 +142,83 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     MBProgressHUD* HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     HUD.removeFromSuperViewOnHide = YES;
     HUD.labelText = T(@"正在加载");
+    
+    
     [[AppNetworkAPIClient sharedClient]getCompanyMemberWithCompanyID:self.companyID andStart:start withBlock:^(id responseObject, NSError *error) {
-        //
         [HUD hide:YES];
-        
         if (responseObject != nil) {
+            
+            NSMutableArray *allData = [[NSMutableArray alloc]initWithArray:self.sourceData];
+            
             NSMutableDictionary *responseDict = [NSMutableDictionary dictionaryWithDictionary:responseObject];
-
+            
             [responseDict removeObjectForKey:[self appDelegate].me.guid];  // 移出自己
-
-            self.sourceDict = responseDict;
-            self.sourceData = [self.sourceDict allValues];
-
-            [self.tableView reloadData];
-        }else{
-            DDLogVerbose(@"error %@",error);
-            if (error.code == 403) {
-                [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"你还没有加入该公司") andHideAfterDelay:1];
+            
+            self.startInt += [responseDict count];
+            
+            if (self.isLOADMORE) {
+                [responseDict enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+                    [allData addObject:obj];
+                }];
+                
+                self.sourceData = [[NSArray alloc]initWithArray:allData];
             }else{
-                [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"网络错误 暂时无法刷新") andHideAfterDelay:1];
+                self.sourceData = [responseDict allValues];
             }
+            
+            
+            // 数量太少不出现 load more
+            if([responseDict count] == 0) {
+                [self.loadMoreButton setTitle:T(@"没有更多了") forState:UIControlStateNormal];
+            } else {
+                [self.loadMoreButton setTitle:T(@"点击加载更多") forState:UIControlStateNormal];
+            }
+            
+            [self.tableView reloadData];
+            
+        }else{
+            [self.loadMoreButton setTitle:T(@"点击加载更多") forState:UIControlStateNormal];
+            [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"网络错误 暂时无法刷新") andHideAfterDelay:1];
         }
+        
+        [self.loadMoreButton setEnabled:YES];
+        [self.loadMoreButton setHidden:NO];
+        self.isLOADMORE = NO;
     }];
+    
+    
+    
+    
+//    [[AppNetworkAPIClient sharedClient]getCompanyMemberWithCompanyID:self.companyID andStart:start withBlock:^(id responseObject, NSError *error) {
+//        //
+//        [HUD hide:YES];
+//        
+//        if (responseObject != nil) {
+//            NSMutableDictionary *responseDict = [NSMutableDictionary dictionaryWithDictionary:responseObject];
+//
+//            [responseDict removeObjectForKey:[self appDelegate].me.guid];  // 移出自己
+//
+//            self.sourceDict = responseDict;
+//            NSMutableArray *allData = [[NSMutableArray alloc]initWithArray:self.sourceData];
+//            NSArray *timeData = [self.sourceDict allValues];
+//            
+//            for (int i = 0; i < [timeData count]; i++) {
+//                [allData addObject: [timeData objectAtIndex:i]];
+//            }
+//            
+//            
+//            self.sourceData = [[NSArray alloc]initWithArray:allData];
+//
+//            [self.tableView reloadData];
+//        }else{
+//            DDLogVerbose(@"error %@",error);
+//            if (error.code == 403) {
+//                [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"你还没有加入该公司") andHideAfterDelay:1];
+//            }else{
+//                [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"网络错误 暂时无法刷新") andHideAfterDelay:1];
+//            }
+//        }
+//    }];
 }
 #pragma mark - Table view data source
 

@@ -183,10 +183,23 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    //;
+    if (self.searchTableView.hidden == NO) {
+        [self cancelSearchAction];
+    }
     
-    NSString * lastMessageCountString = [[NSUserDefaults standardUserDefaults]objectForKey:@"lastMessageCount"];
-    NSUInteger lastMessageCount = [lastMessageCountString integerValue];
+    // 为了消息数量计算使用
+    [[self appDelegate].conversationController updateUnreadBadge];
+    
+    MetroButton *targetButton = [self.buttonArray objectAtIndex:1];
+    [targetButton setBadgeNumber:[self appDelegate].unreadMessageCount];
+    
+    
+}
+- (void)updateLastMessageWithCount:(NSUInteger)lastMessageCount
+{
     if (lastMessageCount > 0) {
+        NSString *lastMessageCountString  = [NSString stringWithFormat:@"%d",lastMessageCount];
         [self.lastMessageButton setTitle:lastMessageCountString forState:UIControlStateNormal];
         [self.lastMessageButton setTitleEdgeInsets:UIEdgeInsetsMake(8, 23, 8, 8)];
         [self.lastMessageButton setTitleColor:[UIColor yellowColor] forState:UIControlStateNormal];
@@ -198,18 +211,6 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         [self.lastMessageButton setTitle:nil forState:UIControlStateNormal];
         [self.lastMessageButton  setBackgroundImage:[UIImage imageNamed: @"barbutton_notification.png"] forState:UIControlStateNormal];
     }
-    
-    MetroButton *targetButton = [self.buttonArray objectAtIndex:1];
-    [targetButton setBadgeNumber:[self appDelegate].unreadMessageCount];
-
-    //;
-    if (self.searchTableView.hidden == NO) {
-        [self cancelSearchAction];
-    }
-    
-//    为了消息数量计算使用
-    [[self appDelegate].conversationController updateUnreadBadge];
-
 }
 
 - (void)initViewControllers
@@ -467,8 +468,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 - (void)lastMessageAction
 {
-    [[NSUserDefaults standardUserDefaults] setObject:@"0"
-                                              forKey:@"lastMessageCount"];
+    [self updateLastMessageWithCount:0];
     [self.navigationController.view.layer addAnimation:self.transition forKey:kCATransition];
     [self.navigationController pushViewController:[self appDelegate].memoViewController animated:NO];
     
