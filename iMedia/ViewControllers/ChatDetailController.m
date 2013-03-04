@@ -205,7 +205,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     self.keyboardBoundHeight = keyboardBounds.size.height;
     self.swipeView.frame =  CGRectMake(0, 0, 320, 370 - self.keyboardBoundHeight);
 
-    DDLogVerbose(@"keyboardBounds.size.height %f",keyboardBounds.size.height);
+//    DDLogVerbose(@"keyboardBounds.size.height %f",keyboardBounds.size.height);
     
 }
 
@@ -214,7 +214,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 {
 	if ([text isEqualToString:@"\n"]){
         if (StringHasValue(self.textView.text)) {
-            [self sendMessage];
+            [self sendMessage:nil];
             return NO;
         }else{
             [textView resignFirstResponder];
@@ -570,7 +570,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     
 }
 
-- (void)sendMessage
+- (void)sendMessage:(NSString *)bodyText
 {
     // Autocomplete text before sending. @hack
 //    [self.textView resignFirstResponder];
@@ -581,6 +581,14 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     message.text = self.textView.text;
     message.conversation = self.conversation;
     message.type = [NSNumber numberWithInt:MessageTypeChat];
+    
+    if (StringHasValue(bodyText)) {
+        message.text = bodyText;
+        message.bodyType = [NSNumber numberWithInt:MessageBodyTypeImage];
+    }else{
+        message.text = self.textView.text;
+        message.bodyType = [NSNumber numberWithInt:MessageBodyTypeText];
+    }
     
     [self.conversation addMessagesObject:message];
     self.conversation.lastMessageSentDate = message.sentDate;
@@ -720,6 +728,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     picker.sourceType = UIImagePickerControllerSourceTypeCamera;
 	picker.delegate = self;
 	picker.allowsEditing = NO;
+#warning picker editing mode crop size
     
     [self presentModalViewController:picker animated:YES];
 }
@@ -729,11 +738,19 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 - (void)imagePickerController:(UIImagePickerController *)picker
 didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-	UIImage *originalImage = [info objectForKey:UIImagePickerControllerEditedImage];
-    NSData *imageData = UIImageJPEGRepresentation(originalImage, JPEG_QUALITY);
+
+	UIImage *originalImage = [info objectForKey:UIImagePickerControllerOriginalImage];
+    UIImage *screenImage = [originalImage imageCroppedToFitSize:CGSizeMake(320, 480)];
+    NSData *imageData = UIImageJPEGRepresentation(screenImage, JPEG_QUALITY);
     DDLogVerbose(@"Imagedata size %i", [imageData length]);
     UIImage *image = [UIImage imageWithData:imageData];
+    UIImage *thumbnail = [image imageCroppedToFitSize:CGSizeMake(MESSAGE_THUMBNAIL_WIDTH, MESSAGE_THUMBNAIL_HEIGHT)];
+
     
+    // HUD show
+    MBProgressHUD* HUD = [MBProgressHUD showHUDAddedTo:picker.view animated:YES];
+    HUD.removeFromSuperViewOnHide = YES;
+    HUD.labelText = T(@"上传中");
     
     if (picker.sourceType == UIImagePickerControllerSourceTypeCamera) {
         // Save Video to Photo Album
@@ -742,35 +759,29 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
                                          metadata:nil
                                   completionBlock:^(NSURL *assetURL, NSError *error){}];
     }
-    
-    UIImage *thumbnail = [image imageCroppedToFitSize:CGSizeMake(MESSAGE_THUMBNAIL_WIDTH, MESSAGE_THUMBNAIL_HEIGHT)];
-    
-    
-    // HUD show
-//    MBProgressHUD* HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-//    HUD.removeFromSuperViewOnHide = YES;
-//    HUD.labelText = T(@"上传中");
+
+
     
 //    上传到upai
     
-//        //网路传输
-//        [[AppNetworkAPIClient sharedClient] storeImage:image thumbnail:thumbnail forMe:me andAvatar:avatar withBlock:^(id responseObject, NSError *error) {
-//            [HUD hide:YES];
-//            if ((responseObject != nil) && error == nil) {
-//                
-//                [[self appDelegate] saveContextInDefaultLoop];
-//                
-//                [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"上传成功") andHideAfterDelay:2];
-//            } else {
-//                DDLogVerbose (@"NSError received during store avatar: %@", error);
-//                [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"上传失败") andHideAfterDelay:2];
-//            }
-//            
-//            [self refreshAlbumView];
-//            [picker dismissModalViewControllerAnimated:YES];
-//            
-//        }];
-    [picker dismissModalViewControllerAnimated:YES];
+    [[AppNetworkAPIClient sharedClient] storeMessageImage:image thumbnail:thumbnail withBlock:^(id responseObject, NSError *error) {
+        [HUD hide:YES];
+        [picker dismissModalViewControllerAnimated:YES];
+
+        if ((responseObject != nil) && error == nil) {
+            
+            DDLogVerbose(@"storeMessageImage %@", responseObject);
+            NSDictionary *responseDict = [[NSDictionary alloc]initWithDictionary:responseObject];
+            [[self appDelegate] saveContextInDefaultLoop];
+            [self sendMessage:[responseDict objectForKey:@"url"]];
+
+            [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"上传成功") andHideAfterDelay:2];
+        } else {
+            DDLogVerbose (@"NSError received during store avatar: %@", error);
+            [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"上传失败") andHideAfterDelay:2];
+        }
+
+    }];
 
 }
 

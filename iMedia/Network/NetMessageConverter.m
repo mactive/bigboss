@@ -240,7 +240,13 @@
     }
     
     XMPPMessage *msg = [XMPPMessage messageWithType:@"chat" to:[XMPPJID jidWithString:toJid]];
-    NSXMLElement *body = [NSXMLElement elementWithName:@"body" stringValue:message.text];
+    NSXMLElement *body;
+    if ([message.bodyType isEqualToNumber:[NSNumber numberWithInt:MessageBodyTypeImage]] ) {
+        body = [NSXMLElement elementWithName:@"image" stringValue:message.text];
+    }else{
+        body = [NSXMLElement elementWithName:@"body" stringValue:message.text];
+    }
+    
     [msg  addChild:body];
     
     if (message.conversation.type == ConversationTypeMediaChannel) {

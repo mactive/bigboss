@@ -118,6 +118,13 @@ typedef enum _MessageType
     MessageTypeNone = 10
 } MessageType;
 
+typedef enum _MessageBodyType
+{
+    MessageBodyTypeText    = 1,
+    MessageBodyTypeImage   = 2,
+    MessageBodyTypeAudio   = 3
+} MessageBodyType;
+
 typedef enum _IdentityType
 {
     IdentityTypeUser = 1,

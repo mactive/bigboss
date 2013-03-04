@@ -17,6 +17,7 @@
 @dynamic summary;
 @dynamic text;
 @dynamic type;
+@dynamic bodyType;
 @dynamic transportID;
 @dynamic conversation;
 @dynamic from;

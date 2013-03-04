@@ -105,6 +105,7 @@
         <relationship name="companys" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Company" inverseName="owner" inverseEntity="Company" syncable="YES"/>
     </entity>
     <entity name="Message" representedClassName="Message" syncable="YES">
+        <attribute name="bodyType" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="sentDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="summary" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
@@ -145,7 +146,7 @@
         <element name="ImageRemote" positionX="394" positionY="51" width="128" height="120"/>
         <element name="Information" positionX="297" positionY="216" width="128" height="120"/>
         <element name="Me" positionX="-63" positionY="-171" width="128" height="390"/>
-        <element name="Message" positionX="-324" positionY="-78" width="128" height="150"/>
+        <element name="Message" positionX="-324" positionY="-78" width="128" height="165"/>
         <element name="Pluggin" positionX="250" positionY="-342" width="128" height="60"/>
         <element name="ShakeInfo" positionX="304" positionY="-189" width="128" height="75"/>
         <element name="User" positionX="-234" positionY="141" width="128" height="240"/>

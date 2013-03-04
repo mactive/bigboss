@@ -319,32 +319,61 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     NSDictionary *savedObjects = [self.upYunRequests objectForKey:upYun.name];
     [_upYunLock unlock];
     
-    // succeed, save all the objects
-    Avatar *avatar = [savedObjects objectForKey:@"avatar"];
-    Me*  me = [savedObjects objectForKey:@"me"];
-    void (^block)(id, NSError *) ;
-    block = [savedObjects objectForKey:@"block"];
+    NSString *from = [savedObjects objectForKey:@"from"];
     
-    UIImage *image = [savedObjects objectForKey:@"image"];
-    UIImage *thumbnail = [savedObjects objectForKey:@"thumbnail"];
-    
-    NSString *url = [NSString stringWithFormat:@"http://bigbossapp.b0.upaiyun.com%@?%.0f", upYun.name, [[NSDate date] timeIntervalSince1970]];
-    NSString *thumbnailURL = [NSString stringWithFormat:@"http://bigbossapp.b0.upaiyun.com%@!tm?%.0f", upYun.name, [[NSDate date] timeIntervalSince1970]];
-    //upyun 自定义版本名称 tm 间隔表示符 !tm
-    avatar.image = image;
-    avatar.thumbnail = thumbnail;
-    avatar.imageRemoteThumbnailURL = thumbnailURL;
-    avatar.imageRemoteURL = url;
-    
-    if (avatar.sequence.intValue == 1) {
-        me.avatarURL = url;
-        me.thumbnailURL = thumbnailURL;
-        me.thumbnailImage = avatar.thumbnail;
+    if ([from isEqualToString:@"message"]) {
+        
+        void (^block)(id, NSError *) ;
+        block = [savedObjects objectForKey:@"block"];
+        
+        UIImage *image = [savedObjects objectForKey:@"image"];
+        UIImage *thumbnail = [savedObjects objectForKey:@"thumbnail"];
+        
+        NSString *url = [NSString stringWithFormat:@"http://bigbossmsg.b0.upaiyun.com%@?%.0f", upYun.name, [[NSDate date] timeIntervalSince1970]];
+        NSString *thumbnailURL = [NSString stringWithFormat:@"http://bigbossmsg.b0.upaiyun.com%@!tm?%.0f", upYun.name, [[NSDate date] timeIntervalSince1970]];
+        //upyun 自定义版本名称 tm 间隔表示符 !tm
+        
+        NSMutableDictionary *resultDict = [[NSMutableDictionary alloc]initWithDictionary:result];
+        [resultDict setObject:thumbnail forKey:@"thumbnail"];
+        [resultDict setObject:url forKey:@"url"];
+        [resultDict setObject:thumbnailURL forKey:@"thumbnailURL"];
+        
+        if (block) {
+            block(resultDict, nil);
+        }
+ 
+    }else{
+        
+        // succeed, save all the objects
+        Avatar *avatar = [savedObjects objectForKey:@"avatar"];
+        Me*  me = [savedObjects objectForKey:@"me"];
+        void (^block)(id, NSError *) ;
+        block = [savedObjects objectForKey:@"block"];
+        
+        UIImage *image = [savedObjects objectForKey:@"image"];
+        UIImage *thumbnail = [savedObjects objectForKey:@"thumbnail"];
+        
+        NSString *url = [NSString stringWithFormat:@"http://bigbossapp.b0.upaiyun.com%@?%.0f", upYun.name, [[NSDate date] timeIntervalSince1970]];
+        NSString *thumbnailURL = [NSString stringWithFormat:@"http://bigbossapp.b0.upaiyun.com%@!tm?%.0f", upYun.name, [[NSDate date] timeIntervalSince1970]];
+        //upyun 自定义版本名称 tm 间隔表示符 !tm
+        avatar.image = image;
+        avatar.thumbnail = thumbnail;
+        avatar.imageRemoteThumbnailURL = thumbnailURL;
+        avatar.imageRemoteURL = url;
+        
+        if (avatar.sequence.intValue == 1) {
+            me.avatarURL = url;
+            me.thumbnailURL = thumbnailURL;
+            me.thumbnailImage = avatar.thumbnail;
+        }
+        if (block) {
+            block(result, nil);
+        }
     }
     
-    if (block) {
-        block(result, nil);
-    }
+
+    
+
 
 }
 #endif
@@ -455,6 +484,48 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
 #endif
     
 }
+
+- (void)storeMessageImage:(UIImage *)image thumbnail:(UIImage *)thumbnail withBlock:(void (^)(id responseObject, NSError *error))block
+{
+#ifdef USE_UYUN_SERVICE
+    
+    UpYun *uy = [[UpYun alloc] init];
+    uy.delegate = self;
+    uy.expiresIn = 100;
+    uy.bucket = @"bigbossmsg";
+    uy.passcode = @"1fwP9PQGFjtZkwwZBWsUW4atxek=";
+    
+    NSMutableDictionary *params = [NSMutableDictionary dictionary];
+    //    [params setObject:@"0,1000" forKey:@"content-length-range"];
+    //    [params setObject:@"png" forKey:@"allow-file-type"];
+    uy.params = params;
+    
+    NSString *saveKey = nil;
+
+    saveKey = [NSString stringWithFormat:@"/%@/%.0f.jpg", [self appDelegate].me.guid, [[NSDate date] timeIntervalSince1970]];
+    
+    uy.name = saveKey;
+    
+    [uy uploadImageData:UIImageJPEGRepresentation(image, JPEG_QUALITY) savekey:saveKey];
+    
+    NSString *from = @"message";
+    
+    //void (^handlerCopy)(id, NSError *) ;
+    //handlerCopy = Block_copy(block);
+    NSDictionary* results = [NSDictionary dictionaryWithObjectsAndKeys:image, @"image", thumbnail, @"thumbnail", saveKey, @"pathname", [block copy], @"block", from, @"from", nil];
+    //Block_release(handlerCopy); // dict will -retain/-release, this balances the copy.
+    
+    [_upYunLock lock];
+    [self.upYunRequests setObject:results forKey:uy.name];
+    [_upYunLock unlock];
+    
+    return;
+    
+    #else
+    #endif
+    
+}
+
 
 - (void)updateIdentity:(Identity *)identity withBlock:(void (^)(id, NSError *))block
 {

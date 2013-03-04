@@ -17,6 +17,7 @@
 @property (nonatomic, retain) NSString * summary;
 @property (nonatomic, retain) NSString * text;
 @property (nonatomic, retain) NSNumber * type;
+@property (nonatomic, retain) NSNumber * bodyType;
 @property (nonatomic, retain) NSString * transportID;
 @property (nonatomic, retain) Conversation *conversation;
 @property (nonatomic, retain) Identity *from;

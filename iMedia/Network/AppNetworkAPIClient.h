@@ -39,6 +39,8 @@ extern NSString *const kXMPPmyUsername;
 
 - (void)storeImage:(UIImage *)image thumbnail:(UIImage *)thumbnail forMe:(Me *)me andAvatar:(Avatar *)avatar withBlock:(void (^)(id responseObject, NSError *error))block;
 
+- (void)storeMessageImage:(UIImage *)image thumbnail:(UIImage *)thumbnail withBlock:(void (^)(id responseObject, NSError *error))block;
+
 - (void)updateIdentity:(Identity *)identity withBlock:(void (^)(id responseObject, NSError *error))block;
 
 - (void)uploadMe:(Me *)me withBlock:(void (^)(id responseObject, NSError *error))block;
