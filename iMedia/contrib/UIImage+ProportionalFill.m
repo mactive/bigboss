@@ -13,6 +13,7 @@
 
 - (UIImage *)imageToFitSize:(CGSize)fitSize method:(MGImageResizingMethod)resizeMethod
 {
+    NSLog(@"imageToFitSize %f %f", self.size.width, self.size.height);
 	float imageScaleFactor = 1.0;
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_4_0
 	if ([self respondsToSelector:@selector(scale)]) {

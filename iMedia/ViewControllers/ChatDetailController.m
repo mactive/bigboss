@@ -740,11 +740,11 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
 
 	UIImage *originalImage = [info objectForKey:UIImagePickerControllerOriginalImage];
-    UIImage *screenImage = [originalImage imageCroppedToFitSize:CGSizeMake(320, 480)];
+    UIImage *screenImage = [originalImage imageScaledToFitSize:CGSizeMake(320, 480)];
     NSData *imageData = UIImageJPEGRepresentation(screenImage, JPEG_QUALITY);
     DDLogVerbose(@"Imagedata size %i", [imageData length]);
     UIImage *image = [UIImage imageWithData:imageData];
-    UIImage *thumbnail = [image imageCroppedToFitSize:CGSizeMake(MESSAGE_THUMBNAIL_WIDTH, MESSAGE_THUMBNAIL_HEIGHT)];
+    UIImage *thumbnail = [image imageScaledToFitSize:CGSizeMake(MESSAGE_THUMBNAIL_WIDTH, MESSAGE_THUMBNAIL_HEIGHT)];
 
     
     // HUD show
