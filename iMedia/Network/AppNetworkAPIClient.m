@@ -373,7 +373,7 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     }
     uy.name = saveKey;
     
-    [uy uploadImageData:UIImageJPEGRepresentation(image, 1.0) savekey:saveKey];
+    [uy uploadImageData:UIImageJPEGRepresentation(image, JPEG_QUALITY) savekey:saveKey];
     
     //void (^handlerCopy)(id, NSError *) ;
     //handlerCopy = Block_copy(block);
@@ -391,8 +391,8 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
     NSString* csrfToken = [[NSUserDefaults standardUserDefaults] valueForKey:@"csrfmiddlewaretoken"];
     NSDictionary *paramDict = [NSDictionary dictionaryWithObjectsAndKeys: csrfToken, @"csrfmiddlewaretoken", nil];
     NSMutableURLRequest *postRequest = [[AppNetworkAPIClient sharedClient] multipartFormRequestWithMethod:@"POST" path:IMAGE_SERVER_PATH parameters:paramDict constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
-        [formData appendPartWithFileData:UIImageJPEGRepresentation(image, 1.0) name:@"image" fileName:@"testimage" mimeType:@"image/jpeg"];
-        [formData appendPartWithFileData:UIImageJPEGRepresentation(thumbnail, 1.0) name:@"thumbnail" fileName:@"testimageThumb" mimeType:@"image/jpeg"];
+        [formData appendPartWithFileData:UIImageJPEGRepresentation(image, JPEG_QUALITY) name:@"image" fileName:@"testimage" mimeType:@"image/jpeg"];
+        [formData appendPartWithFileData:UIImageJPEGRepresentation(thumbnail,JPEG_QUALITY) name:@"thumbnail" fileName:@"testimageThumb" mimeType:@"image/jpeg"];
     }];
     
     AFHTTPRequestOperation *operation = [[AppNetworkAPIClient sharedClient] HTTPRequestOperationWithRequest:postRequest success:^(AFHTTPRequestOperation *operation, id responseObject) {

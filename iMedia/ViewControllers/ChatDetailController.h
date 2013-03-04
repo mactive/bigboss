@@ -19,7 +19,7 @@
 }
 
 @property (nonatomic, strong) ACPlaceholderTextView *textView;
-@property (nonatomic, strong) UIButton  *sendButton;
+@property (nonatomic, strong) UIButton  *photoButton;
 @property (nonatomic, strong) Conversation *conversation;
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 

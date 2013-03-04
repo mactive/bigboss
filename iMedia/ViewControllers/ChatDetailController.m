@@ -7,6 +7,8 @@
 //
 
 #import "ChatDetailController.h"
+#import <CocoaPlant/CocoaPlant.h>
+#import <AssetsLibrary/AssetsLibrary.h>
 #import "WSBubbleTableView.h"
 #import "WSBubbleData.h"
 #import "User.h"
@@ -17,7 +19,6 @@
 #import "AppDefs.h"
 #import "AppDelegate.h"
 #import "ACPlaceholderTextView.h"
-#import <CocoaPlant/CocoaPlant.h>
 #import "UIImageView+AFNetworking.h"
 #import "AppNetworkAPIClient.h"
 #import "XMPPNetworkCenter.h"
@@ -26,6 +27,13 @@
 #import "ConvenienceMethods.h"
 #import "math.h"
 #import "DDLog.h"
+#import "UIImage+ProportionalFill.h"
+#import "MBProgressHUD.h"
+#import "ConvenienceMethods.h"
+#import "AFImageRequestOperation.h"
+
+
+
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
 static const int ddLogLevel = LOG_LEVEL_VERBOSE;
@@ -43,9 +51,13 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 #define MESSAGE_TEXT_WIDTH_MAX               180
 #define MESSAGE_MARGIN_TOP                   7
 #define MESSAGE_MARGIN_BOTTOM                10
-#define TEXT_VIEW_X                          18   // 40  (with CameraButton)
+#define BUTTON_VIEW_X                        10
+#define BUTTON_VIEW_Y                        5.5
+#define BUTTON_VIEW_WIDTH                    35
+#define BUTTON_VIEW_HEIGHT                   29
+#define TEXT_VIEW_X                          53   // 40  (with CameraButton)
 #define TEXT_VIEW_Y                          2
-#define TEXT_VIEW_WIDTH                      290 // 249 (with CameraButton)
+#define TEXT_VIEW_WIDTH                      260 // 249 (with CameraButton)
 #define TEXT_VIEW_HEIGHT_MIN                 90
 #define ContentHeightMax                     80
 #define MESSAGE_COUNT_LIMIT                  50
@@ -59,7 +71,10 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 [message.text sizeWithFont:font constrainedToSize:CGSizeMake(MESSAGE_TEXT_WIDTH_MAX, CGFLOAT_MAX) lineBreakMode:UILineBreakModeWordWrap]
 
 
-@interface ChatDetailController () <UITextViewDelegate>
+#define kCameraSource       UIImagePickerControllerSourceTypeCamera
+
+
+@interface ChatDetailController () <UITextViewDelegate,UIActionSheetDelegate,UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 {
     NSMutableArray *_heightForRow;
     UIImage *_messageBubbleGray;
@@ -73,6 +88,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @property(strong, nonatomic)UIView *swipeView;
 @property(nonatomic, readwrite)CGFloat keyboardBoundHeight;
 @property(nonatomic, readwrite)CGFloat textViewContentHeight;
+@property(nonatomic, strong)UIActionSheet *photoActionSheet;
 
 - (WSBubbleData *)addMessage:(Message *)msg toBubbleData:(NSMutableArray *)data;
 
@@ -83,7 +99,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @implementation ChatDetailController
 
 @synthesize textView=_textView;
-@synthesize sendButton = _sendButton;
+@synthesize photoButton = _photoButton;
+@synthesize photoActionSheet;
 @synthesize bubbleData;
 @synthesize bubbleTable;
 @synthesize conversation;
@@ -133,7 +150,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     messageInputBar.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin);
     messageInputBar.opaque = YES;
     messageInputBar.userInteractionEnabled = YES; // makes subviews tappable
-    messageInputBar.image = [[UIImage imageNamed:@"MessageInputBarBackground"] resizableImageWithCapInsets:UIEdgeInsetsMake(19, 3, 19, 3)]; // 8 x 40
+    messageInputBar.image = [[UIImage imageNamed:@"MessageInputBarBackground"] resizableImageWithCapInsets:UIEdgeInsetsMake(19, 3, 19, 3)];
     
     // Create _textView to compose messages.
     // TODO: Shrink cursor height by 1 px on top & 1 px on bottom.
@@ -149,6 +166,13 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     _textView.autocapitalizationType = UITextAutocapitalizationTypeNone;
     [messageInputBar addSubview:_textView];
     _previousTextViewContentHeight = MessageFontSize+20;
+    
+    self.photoButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.photoButton setFrame:CGRectMake(BUTTON_VIEW_X, BUTTON_VIEW_Y, BUTTON_VIEW_WIDTH, BUTTON_VIEW_HEIGHT)];
+    [self.photoButton setBackgroundImage:[UIImage imageNamed:@"barbutton_photo.png"] forState:UIControlStateNormal];
+    [self.photoButton addTarget:self action:@selector(photoButtonAction) forControlEvents:UIControlEventTouchUpInside];
+    [messageInputBar addSubview:self.photoButton];
+
     
     // Create messageInputBarBackgroundImageView as subview of messageInputBar.
     UIImageView *messageInputBarBackgroundImageView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"MessageInputFieldBackground"] resizableImageWithCapInsets:UIEdgeInsetsMake(20, 12, 18, 18)]]; // 32 x 40
@@ -333,6 +357,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     }
     
     [self scrollToBottomBubble:YES];
+    [self.textView resignFirstResponder];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -638,5 +663,125 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 {
     [self refreshBubbleData];
 }
+
+//////////////////////////////////////////////////////////////////////
+// photo action sheet
+//////////////////////////////////////////////////////////////////////
+
+- (void)photoButtonAction
+{    
+    self.photoActionSheet = [[UIActionSheet alloc]
+                             initWithTitle:T(@"选择图片或者相机")
+                             delegate:self
+                             cancelButtonTitle:T(@"取消")
+                             destructiveButtonTitle:nil
+                             otherButtonTitles:T(@"本地相册"), T(@"照相"),nil];
+    self.photoActionSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+    [self.photoActionSheet showFromRect:self.view.bounds inView:self.view animated:YES];
+    
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (actionSheet == self.photoActionSheet) {
+        if (buttonIndex == 0) {
+            [self takePhotoFromLibaray];
+        }else if (buttonIndex == 1) {
+            [self takePhotoFromCamera];
+        }
+    }
+    
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - UIImagePickerControllerDelegateMethods
+//////////////////////////////////////////////////////////////////////////////////////////
+
+
+- (void)takePhotoFromLibaray
+{
+    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+    picker.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
+    picker.delegate = self;
+	picker.allowsEditing = NO;
+    [self presentModalViewController:picker animated:YES];
+}
+
+- (void)takePhotoFromCamera
+{
+    if (![UIImagePickerController isSourceTypeAvailable:kCameraSource]) {
+        UIAlertView *cameraAlert = [[UIAlertView alloc] initWithTitle:T(@"cameraAlert") message:T(@"Camera is not available.") delegate:self cancelButtonTitle:T(@"Cancel") otherButtonTitles:nil, nil];
+        [cameraAlert show];
+		return;
+	}
+    
+    //    self.tableView.allowsSelection = NO;
+    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+    picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+	picker.delegate = self;
+	picker.allowsEditing = NO;
+    
+    [self presentModalViewController:picker animated:YES];
+}
+
+// UIImagePickerControllerSourceTypeCamera and UIImagePickerControllerSourceTypePhotoLibrary
+
+- (void)imagePickerController:(UIImagePickerController *)picker
+didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+	UIImage *originalImage = [info objectForKey:UIImagePickerControllerEditedImage];
+    NSData *imageData = UIImageJPEGRepresentation(originalImage, JPEG_QUALITY);
+    DDLogVerbose(@"Imagedata size %i", [imageData length]);
+    UIImage *image = [UIImage imageWithData:imageData];
+    
+    
+    if (picker.sourceType == UIImagePickerControllerSourceTypeCamera) {
+        // Save Video to Photo Album
+        ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+        [library writeImageDataToSavedPhotosAlbum:imageData
+                                         metadata:nil
+                                  completionBlock:^(NSURL *assetURL, NSError *error){}];
+    }
+    
+    UIImage *thumbnail = [image imageCroppedToFitSize:CGSizeMake(MESSAGE_THUMBNAIL_WIDTH, MESSAGE_THUMBNAIL_HEIGHT)];
+    
+    
+    // HUD show
+//    MBProgressHUD* HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//    HUD.removeFromSuperViewOnHide = YES;
+//    HUD.labelText = T(@"上传中");
+    
+//    上传到upai
+    
+//        //网路传输
+//        [[AppNetworkAPIClient sharedClient] storeImage:image thumbnail:thumbnail forMe:me andAvatar:avatar withBlock:^(id responseObject, NSError *error) {
+//            [HUD hide:YES];
+//            if ((responseObject != nil) && error == nil) {
+//                
+//                [[self appDelegate] saveContextInDefaultLoop];
+//                
+//                [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"上传成功") andHideAfterDelay:2];
+//            } else {
+//                DDLogVerbose (@"NSError received during store avatar: %@", error);
+//                [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"上传失败") andHideAfterDelay:2];
+//            }
+//            
+//            [self refreshAlbumView];
+//            [picker dismissModalViewControllerAnimated:YES];
+//            
+//        }];
+    [picker dismissModalViewControllerAnimated:YES];
+
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    /* keep the order first dismiss picker and pop controller */
+    [picker dismissModalViewControllerAnimated:YES];
+    //    [self.controller.navigationController popViewControllerAnimated:NO];
+}
+
+
+
 
 @end
