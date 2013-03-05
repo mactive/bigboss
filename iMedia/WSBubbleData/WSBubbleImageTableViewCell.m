@@ -69,7 +69,7 @@
     CGFloat width = self.rowData.view.frame.size.width;
     CGFloat height = self.rowData.view.frame.size.height;
     CGFloat sizeWidth = self.frame.size.width;
-    CGFloat x = (type == BubbleTypeSomeoneElse) ? 2 : sizeWidth - width - 40 - self.rowData.insets.left - self.rowData.insets.right-3;
+    CGFloat x = (type == BubbleTypeSomeoneElse) ? 2 : sizeWidth - width - 55 - self.rowData.insets.left - self.rowData.insets.right;
     
     CGRect bubbleRect =  CGRectMake(x + self.rowData.insets.left, floorf(self.rowData.insets.top/3*2), width, height);
 
