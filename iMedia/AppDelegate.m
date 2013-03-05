@@ -335,18 +335,18 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
                     newCompany.status = CompanyStateFollowed;
 
                     DDLogVerbose(@"SYNC Insert company success %@",newCompany.companyID);
-                    MOCSave(moc);
                 }
                 // update
                 else{
                     newCompany.status = CompanyStateFollowed;
                     DDLogVerbose(@"SYNC update company success %@",newCompany.companyID);
-                    MOCSave(moc);
 
                 }
-
+#warning mocsave
+//                MOCSave(moc);
             }];
             
+
             [self.updateCompanyTimer invalidate];
         }else{
             _updateCompanyRetryCount += 1;
@@ -419,11 +419,13 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
                     }
                     ////////////////////////////////////////////////////////////////////////////////////
+#warning mocsave
+//                    MOCSave(moc);
+
                 }
        
                 
             }];
-            MOCSave(moc);
 
             [self.getLastMessageTimer invalidate];
         }else{
