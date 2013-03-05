@@ -16,8 +16,10 @@ typedef enum {
     MGImageResizeScale	// analogous to UIViewContentModeScaleAspectFit, i.e. scale down to fit, leaving space around if necessary.
 } MGImageResizingMethod;
 
+- (UIImage*)imageByScalingToSize:(CGSize)targetSize;
 - (UIImage *)imageToFitSize:(CGSize)size method:(MGImageResizingMethod)resizeMethod;
 - (UIImage *)imageCroppedToFitSize:(CGSize)size; // uses MGImageResizeCrop
 - (UIImage *)imageScaledToFitSize:(CGSize)size; // uses MGImageResizeScale
+- (UIImage *)imageSizeToFitSize:(CGSize)areaSize;
 
 @end
