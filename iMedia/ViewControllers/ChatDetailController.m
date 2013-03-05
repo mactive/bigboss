@@ -214,7 +214,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 {
 	if ([text isEqualToString:@"\n"]){
         if (StringHasValue(self.textView.text)) {
-            [self sendMessage:nil];
+            [self sendMessage:nil andSummary:nil];
             return NO;
         }else{
             [textView resignFirstResponder];
@@ -570,7 +570,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     
 }
 
-- (void)sendMessage:(NSString *)bodyText
+- (void)sendMessage:(NSString *)bodyText andSummary:(NSString *)summary
 {
     // Autocomplete text before sending. @hack
 //    [self.textView resignFirstResponder];
@@ -584,6 +584,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     
     if (StringHasValue(bodyText)) {
         message.text = bodyText;
+        message.summary = summary;
         message.bodyType = [NSNumber numberWithInt:MessageBodyTypeImage];
     }else{
         message.text = self.textView.text;
@@ -636,7 +637,14 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     WSBubbleData *wsData = nil;
     if (msg.type == [NSNumber numberWithInt:MessageTypeChat])
     {
-        wsData = [WSBubbleData dataWithText:msg.text date:msg.sentDate type:type];
+        if (msg.bodyType == [NSNumber numberWithInt:MessageBodyTypeImage]) {
+            wsData = [WSBubbleData dataWithImage:msg.text size:msg.summary date:msg.sentDate type:type];
+        }else if(msg.bodyType == [NSNumber numberWithInt:MessageBodyTypeText]){
+            wsData = [WSBubbleData dataWithText:msg.text date:msg.sentDate type:type];
+        }else{
+            wsData = [WSBubbleData dataWithText:msg.text date:msg.sentDate type:type];  
+        }
+        
         wsData.msg = msg;
         wsData.avatar = msg.from.thumbnailImage;
         if (msg.from.thumbnailImage == nil) {
@@ -645,6 +653,9 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
                 wsData.avatar = msg.from.thumbnailImage;
             }];
         }
+        
+
+        
     }
     else if (msg.type == [NSNumber numberWithInt:MessageTypeTemplateA]) {
         wsData = [WSBubbleData dataWithTemplateA:msg.text date:msg.sentDate type:BubbleTypeTemplateAview];
@@ -744,7 +755,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     NSData *imageData = UIImageJPEGRepresentation(screenImage, JPEG_QUALITY);
     DDLogVerbose(@"Imagedata size %i", [imageData length]);
     UIImage *image = [UIImage imageWithData:imageData];
-    UIImage *thumbnail = [image imageCroppedToFitSize:CGSizeMake(MESSAGE_THUMBNAIL_WIDTH, MESSAGE_THUMBNAIL_HEIGHT)];
+    UIImage *thumbnail = [image imageByScalingToSize:CGSizeMake(MESSAGE_THUMBNAIL_WIDTH, MESSAGE_THUMBNAIL_HEIGHT)];
 
     
     // HUD show
@@ -773,7 +784,8 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
             DDLogVerbose(@"storeMessageImage %@", responseObject);
             NSDictionary *responseDict = [[NSDictionary alloc]initWithDictionary:responseObject];
             [[self appDelegate] saveContextInDefaultLoop];
-            [self sendMessage:[responseDict objectForKey:@"url"]];
+            NSString *summaryString = [NSString stringWithFormat:@"%.0f,%.0f",thumbnail.size.width,thumbnail.size.height];
+            [self sendMessage:[responseDict objectForKey:@"url"] andSummary:summaryString];
 
             [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"上传成功") andHideAfterDelay:2];
         } else {

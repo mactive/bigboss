@@ -37,6 +37,29 @@ const UIEdgeInsets textInsetsCommon = {7, 0, 7, 0};
 #pragma mark - text bubble
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
++ (id)dataWithImage:(NSString *)text size:(NSString*)sizeString date:(NSDate *)date type:(WSBubbleType)type
+{
+    return [[WSBubbleData alloc] dataWithImage:text size:sizeString date:date type:type];
+}
+- (id)dataWithImage:(NSString *)text size:(NSString*)sizeString date:(NSDate *)date type:(WSBubbleType)type
+{
+    NSArray *sizeArray = [sizeString componentsSeparatedByString:@","];
+    NSString *widthString = [sizeArray objectAtIndex:0];
+    NSString *heightString = [sizeArray objectAtIndex:1];
+    self.templateView = [[UIView alloc]init];
+
+    self.templateView.frame = CGRectMake(0, 0, widthString.intValue, heightString.intValue);
+    
+    
+    UIEdgeInsets insets = (type == BubbleTypeMine ? textInsetsMine : textInsetsSomeone);
+    return [self initWithView:self.templateView date:date content:text type:type insets:insets];
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - text bubble
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
 + (id)dataWithText:(NSString *)text date:(NSDate *)date type:(WSBubbleType)type
 {
     return [[WSBubbleData alloc] initWithText:text date:date type:type];

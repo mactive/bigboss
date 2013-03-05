@@ -39,6 +39,8 @@ typedef enum _WSBubbleType
 
 - (id)initWithText:(NSString *)text date:(NSDate *)date type:(WSBubbleType)type;
 + (id)dataWithText:(NSString *)text date:(NSDate *)date type:(WSBubbleType)type;
+- (id)initWithImage:(NSString *)text size:(NSString*)sizeString date:(NSDate *)date type:(WSBubbleType)type;
++ (id)dataWithImage:(NSString *)text size:(NSString*)sizeString date:(NSDate *)date type:(WSBubbleType)type;
 - (id)initWithTemplateA:(NSString *)xmlString date:(NSDate *)date type:(WSBubbleType)type;
 + (id)dataWithTemplateA:(NSString *)xmlString date:(NSDate *)date type:(WSBubbleType)type;
 - (id)initWithTemplateB:(NSString *)xmlString date:(NSDate *)date type:(WSBubbleType)type;

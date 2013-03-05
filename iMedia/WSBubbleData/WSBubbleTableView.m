@@ -19,6 +19,7 @@
 
 #import "WSBubbleTableViewCell.h"
 #import "WSBubbleTextTableViewCell.h"
+#import "WSBubbleImageTableViewCell.h"
 #import "WSBubbleTemplateATableViewCell.h"
 #import "WSBubbleTemplateBTableViewCell.h"
 #import "WSBubbleRateTableViewCell.h"
@@ -49,6 +50,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @synthesize bubbleSection;
 
 static NSString *CellText = @"CellText";
+static NSString *CellImage = @"CellImage";
 static NSString *CellTemplateA = @"CellTemplateA";
 static NSString *CellTemplateB = @"CellTemplateB";
 static NSString *CellRate = @"CellRate";
@@ -111,7 +113,11 @@ static NSString *CellSectionHeader = @"CellSectionHeader";
     WSBubbleTableViewCell *cell = nil;
     
     if (rowData.type == BubbleTypeMine || rowData.type == BubbleTypeSomeoneElse) {
-        cell = [tableView dequeueReusableCellWithIdentifier:CellText];
+        if (rowData.msg.bodyType == [NSNumber numberWithInt:MessageBodyTypeImage]) {
+            cell = [tableView dequeueReusableCellWithIdentifier:CellImage];
+        }else{
+            cell = [tableView dequeueReusableCellWithIdentifier:CellText];
+        }
     }else if ( rowData.type == BubbleTypeTemplateAview){
         cell = [tableView dequeueReusableCellWithIdentifier:CellTemplateA];
     }else if ( rowData.type == BubbleTypeTemplateBview){
@@ -126,7 +132,11 @@ static NSString *CellSectionHeader = @"CellSectionHeader";
     
     if (cell == nil) {
         if (rowData.type == BubbleTypeMine || rowData.type == BubbleTypeSomeoneElse) {
-            cell = [[WSBubbleTextTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellText];
+            if (rowData.msg.bodyType == [NSNumber numberWithInt:MessageBodyTypeImage]) {
+                cell = [[WSBubbleImageTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellImage];
+            }else{
+                cell = [[WSBubbleTextTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellText];
+            }
         }else if ( rowData.type == BubbleTypeTemplateAview){
             cell = [[WSBubbleTemplateATableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellTemplateA];
         }else if ( rowData.type == BubbleTypeTemplateBview){

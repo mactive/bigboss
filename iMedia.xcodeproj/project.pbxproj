@@ -10,6 +10,7 @@
 		042B51D8165A8CF900443796 /* PullToRefreshView.m in Sources */ = {isa = PBXBuildFile; fileRef = 042B51D7165A8CF900443796 /* PullToRefreshView.m */; };
 		0436B478165136930081A6F7 /* WSBubbleTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0436B477165136930081A6F7 /* WSBubbleTableView.m */; };
 		0450A5ED164649080002BA54 /* LoginSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0450A5EC164649080002BA54 /* LoginSettingViewController.m */; };
+		04A37B8616E5F8C1000907F5 /* WSBubbleImageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 04A37B8516E5F8C1000907F5 /* WSBubbleImageTableViewCell.m */; };
 		04D9B836166517E1009DB832 /* ShakeCodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D9B835166517E1009DB832 /* ShakeCodeViewController.m */; };
 		04D9B83916651824009DB832 /* ShakeEntityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D9B83816651824009DB832 /* ShakeEntityViewController.m */; };
 		04D9B83C16652BD4009DB832 /* ShakeAddressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D9B83B16652BD4009DB832 /* ShakeAddressViewController.m */; };
@@ -451,6 +452,8 @@
 		0436B477165136930081A6F7 /* WSBubbleTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WSBubbleTableView.m; path = WSBubbleData/WSBubbleTableView.m; sourceTree = "<group>"; };
 		0450A5EB164649080002BA54 /* LoginSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginSettingViewController.h; path = ViewControllers/Welcome/LoginSettingViewController.h; sourceTree = "<group>"; };
 		0450A5EC164649080002BA54 /* LoginSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginSettingViewController.m; path = ViewControllers/Welcome/LoginSettingViewController.m; sourceTree = "<group>"; };
+		04A37B8416E5F8C0000907F5 /* WSBubbleImageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WSBubbleImageTableViewCell.h; path = WSBubbleData/WSBubbleImageTableViewCell.h; sourceTree = "<group>"; };
+		04A37B8516E5F8C1000907F5 /* WSBubbleImageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WSBubbleImageTableViewCell.m; path = WSBubbleData/WSBubbleImageTableViewCell.m; sourceTree = "<group>"; };
 		04D9B834166517E1009DB832 /* ShakeCodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShakeCodeViewController.h; path = ViewControllers/ShakeView/ShakeCodeViewController.h; sourceTree = "<group>"; };
 		04D9B835166517E1009DB832 /* ShakeCodeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShakeCodeViewController.m; path = ViewControllers/ShakeView/ShakeCodeViewController.m; sourceTree = "<group>"; };
 		04D9B83716651824009DB832 /* ShakeEntityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShakeEntityViewController.h; path = ViewControllers/ShakeView/ShakeEntityViewController.h; sourceTree = "<group>"; };
@@ -1392,6 +1395,8 @@
 		269DDE011650F17A00320B02 /* WSBubbleData */ = {
 			isa = PBXGroup;
 			children = (
+				04A37B8416E5F8C0000907F5 /* WSBubbleImageTableViewCell.h */,
+				04A37B8516E5F8C1000907F5 /* WSBubbleImageTableViewCell.m */,
 				269DDE051650F21C00320B02 /* WSBubbleData.h */,
 				269DDE061650F21C00320B02 /* WSBubbleData.m */,
 				0436B476165136930081A6F7 /* WSBubbleTableView.h */,
@@ -2876,6 +2881,7 @@
 				264419A416B7C66D0024C0EA /* MyCompanyViewController.m in Sources */,
 				264419A916B804C80024C0EA /* Company.m in Sources */,
 				2638140516B933B00020F9A7 /* CompanyMemberViewController.m in Sources */,
+				04A37B8616E5F8C1000907F5 /* WSBubbleImageTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
