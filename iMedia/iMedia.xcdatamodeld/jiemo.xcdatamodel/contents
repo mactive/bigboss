@@ -106,8 +106,8 @@
     </entity>
     <entity name="Message" representedClassName="Message" syncable="YES">
         <attribute name="bodyType" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
+        <attribute name="metadata" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sentDate" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="summary" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="text" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="transportID" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="type" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>

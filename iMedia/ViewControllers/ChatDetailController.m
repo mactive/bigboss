@@ -214,7 +214,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 {
 	if ([text isEqualToString:@"\n"]){
         if (StringHasValue(self.textView.text)) {
-            [self sendMessage:nil andSummary:nil];
+            [self sendMessage:nil andMetadata:nil];
             return NO;
         }else{
             [textView resignFirstResponder];
@@ -570,7 +570,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     
 }
 
-- (void)sendMessage:(NSString *)bodyText andSummary:(NSString *)summary
+- (void)sendMessage:(NSString *)bodyText andMetadata:(NSString *)metadata
 {
     // Autocomplete text before sending. @hack
 //    [self.textView resignFirstResponder];
@@ -584,7 +584,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     
     if (StringHasValue(bodyText)) {
         message.text = bodyText;
-        message.summary = summary;
+        message.metadata = metadata;
         message.bodyType = [NSNumber numberWithInt:MessageBodyTypeImage];
     }else{
         message.text = self.textView.text;
@@ -638,7 +638,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     if (msg.type == [NSNumber numberWithInt:MessageTypeChat])
     {
         if (msg.bodyType == [NSNumber numberWithInt:MessageBodyTypeImage]) {
-            wsData = [WSBubbleData dataWithImage:msg.text size:msg.summary date:msg.sentDate type:type];
+            wsData = [WSBubbleData dataWithImage:msg.text size:msg.metadata date:msg.sentDate type:type];
         }else if(msg.bodyType == [NSNumber numberWithInt:MessageBodyTypeText]){
             wsData = [WSBubbleData dataWithText:msg.text date:msg.sentDate type:type];
         }else{
@@ -784,8 +784,8 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
             DDLogVerbose(@"storeMessageImage %@", responseObject);
             NSDictionary *responseDict = [[NSDictionary alloc]initWithDictionary:responseObject];
             [[self appDelegate] saveContextInDefaultLoop];
-            NSString *summaryString = [NSString stringWithFormat:@"%.0f,%.0f",thumbnail.size.width,thumbnail.size.height];
-            [self sendMessage:[responseDict objectForKey:@"url"] andSummary:summaryString];
+            NSString *metadata = [NSString stringWithFormat:@"%.0f,%.0f",thumbnail.size.width,thumbnail.size.height];
+            [self sendMessage:[responseDict objectForKey:@"url"] andMetadata:metadata];
 
             [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"上传成功") andHideAfterDelay:2];
         } else {

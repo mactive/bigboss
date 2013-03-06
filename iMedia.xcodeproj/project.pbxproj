@@ -169,6 +169,7 @@
 		2638140516B933B00020F9A7 /* CompanyMemberViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2638140416B933B00020F9A7 /* CompanyMemberViewController.m */; };
 		2638140C16BA625B0020F9A7 /* barbutton_notification_100@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2638140B16BA625B0020F9A7 /* barbutton_notification_100@2x.png */; };
 		2638F55416E445C200F22E66 /* barbutton_photo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2638F55316E445C200F22E66 /* barbutton_photo@2x.png */; };
+		2638F55C16E7365200F22E66 /* ImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2638F55B16E7365200F22E66 /* ImageViewController.m */; };
 		263ACBC4166DA9AF00D61725 /* WSBubbleNoticationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 263ACBC3166DA9AF00D61725 /* WSBubbleNoticationTableViewCell.m */; };
 		2640031F1642B45E00A1B779 /* WelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2640031E1642B45E00A1B779 /* WelcomeViewController.m */; };
 		2644198F16B6A63D0024C0EA /* CompanyCategoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2644198E16B6A63D0024C0EA /* CompanyCategoryViewController.m */; };
@@ -641,6 +642,8 @@
 		2638140416B933B00020F9A7 /* CompanyMemberViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CompanyMemberViewController.m; path = ViewControllers/Company/CompanyMemberViewController.m; sourceTree = "<group>"; };
 		2638140B16BA625B0020F9A7 /* barbutton_notification_100@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "barbutton_notification_100@2x.png"; sourceTree = "<group>"; };
 		2638F55316E445C200F22E66 /* barbutton_photo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "barbutton_photo@2x.png"; sourceTree = "<group>"; };
+		2638F55A16E7365200F22E66 /* ImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageViewController.h; path = ViewControllers/ImageViewController.h; sourceTree = "<group>"; };
+		2638F55B16E7365200F22E66 /* ImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ImageViewController.m; path = ViewControllers/ImageViewController.m; sourceTree = "<group>"; };
 		263ACBC2166DA9AF00D61725 /* WSBubbleNoticationTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WSBubbleNoticationTableViewCell.h; path = WSBubbleData/WSBubbleNoticationTableViewCell.h; sourceTree = "<group>"; };
 		263ACBC3166DA9AF00D61725 /* WSBubbleNoticationTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WSBubbleNoticationTableViewCell.m; path = WSBubbleData/WSBubbleNoticationTableViewCell.m; sourceTree = "<group>"; };
 		2640031D1642B45E00A1B779 /* WelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WelcomeViewController.h; path = ViewControllers/Welcome/WelcomeViewController.h; sourceTree = "<group>"; };
@@ -2260,6 +2263,8 @@
 				268CEEB7164B8D1000BFBA13 /* AboutUsViewController.m */,
 				268CEED5164C177400BFBA13 /* WebViewController.h */,
 				268CEED6164C177400BFBA13 /* WebViewController.m */,
+				2638F55A16E7365200F22E66 /* ImageViewController.h */,
+				2638F55B16E7365200F22E66 /* ImageViewController.m */,
 				26DE71D71654C1C400672C4F /* NearbyViewController.h */,
 				26DE71D81654C1C400672C4F /* NearbyViewController.m */,
 			);
@@ -2882,6 +2887,7 @@
 				264419A916B804C80024C0EA /* Company.m in Sources */,
 				2638140516B933B00020F9A7 /* CompanyMemberViewController.m in Sources */,
 				04A37B8616E5F8C1000907F5 /* WSBubbleImageTableViewCell.m in Sources */,
+				2638F55C16E7365200F22E66 /* ImageViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2976,8 +2982,8 @@
 					"-force_load",
 					"${BUILT_PRODUCTS_DIR}/libCocoaPlant.a",
 				);
-				PROVISIONING_PROFILE = "87C192B2-ED91-453D-AB89-98A0BAFB02C9";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "87C192B2-ED91-453D-AB89-98A0BAFB02C9";
+				PROVISIONING_PROFILE = "D494AE14-5CE4-4508-8CF4-0707B4B35847";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "D494AE14-5CE4-4508-8CF4-0707B4B35847";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -3010,8 +3016,8 @@
 					"-force_load",
 					"${BUILT_PRODUCTS_DIR}/libCocoaPlant.a",
 				);
-				PROVISIONING_PROFILE = "87C192B2-ED91-453D-AB89-98A0BAFB02C9";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "87C192B2-ED91-453D-AB89-98A0BAFB02C9";
+				PROVISIONING_PROFILE = "D494AE14-5CE4-4508-8CF4-0707B4B35847";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "D494AE14-5CE4-4508-8CF4-0707B4B35847";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;

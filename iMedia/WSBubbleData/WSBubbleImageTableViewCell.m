@@ -12,6 +12,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "Me.h"
 #import "AppDelegate.h"
+#import "ImageViewController.h"
 
 @interface WSBubbleImageTableViewCell ()
 
@@ -20,6 +21,7 @@
 @property (nonatomic, strong) UILabel *bubbleLabel;
 @property (nonatomic, strong) WSBubbleData *rowData;
 @property (nonatomic, strong) UIImageView *messageImage;
+@property (nonatomic, strong) UIButton *button1;
 
 
 - (void) setupInternalData:(WSBubbleData *)cellData;
@@ -33,6 +35,7 @@
 @synthesize avatarImage;
 @synthesize bubbleLabel;
 @synthesize rowData;
+@synthesize button1;
 @synthesize messageImage = _messageImage;
 
 
@@ -47,6 +50,16 @@
         self.rowData = [[WSBubbleData alloc]init];
         self.messageImage = [[UIImageView alloc]initWithFrame:CGRectMake(5, 5, TEMPLATE_IMAGE_WIDTH, TEMPLATE_IMAGE_HEIGHT)];
         [self.contentView addSubview:self.messageImage];
+        
+        //button1
+        self.button1 = [UIButton buttonWithType:UIButtonTypeCustom];
+        self.button1.frame = self.messageImage.bounds;
+        [self.button1 setTitle:@"" forState:UIControlStateNormal];
+        self.button1.alpha = 1;
+        self.button1.tag = 0;
+        
+        [self.contentView addSubview:self.button1];
+
     }
     return self;
 }
@@ -69,14 +82,38 @@
     CGFloat width = self.rowData.view.frame.size.width;
     CGFloat height = self.rowData.view.frame.size.height;
     CGFloat sizeWidth = self.frame.size.width;
-    CGFloat x = (type == BubbleTypeSomeoneElse) ? 2 : sizeWidth - width - 55 - self.rowData.insets.left - self.rowData.insets.right;
-    
+    CGFloat x = (type == BubbleTypeSomeoneElse) ? 55 : sizeWidth - width - 55 - self.rowData.insets.left - self.rowData.insets.right;
+
     CGRect bubbleRect =  CGRectMake(x + self.rowData.insets.left, floorf(self.rowData.insets.top/3*2), width, height);
 
     self.messageImage.contentMode = UIViewContentModeScaleAspectFit;
     [self.messageImage setFrame:bubbleRect];
-    [self.messageImage setImageWithURL:[NSURL URLWithString:cellData.msg.text] placeholderImage:[UIImage imageNamed:@"template_placeholder.png"]];
+    // 缓存 thumbnail
+    NSString *thumbnailString = [cellData.msg.text stringByReplacingOccurrencesOfString:@"jpg?" withString:@"jpg!tm?"];
+    [self.messageImage setImageWithURL:[NSURL URLWithString:thumbnailString] placeholderImage:[UIImage imageNamed:@"template_placeholder.png"]];
+    [self.button1 setFrame:bubbleRect];
+    [self.button1 addTarget:self action:@selector(linkAction:) forControlEvents:UIControlEventTouchUpInside];
 
+}
+
+#warning addtarget chatDetailController
+- (void)linkAction:(UIButton *)sender
+{
+    NSString* imageString = self.rowData.msg.text;
+    
+    if (StringHasValue(imageString)) {
+        ImageViewController *controller = [[ImageViewController alloc]initWithNibName:nil bundle:nil];
+        controller.urlString = imageString;
+        
+        [[self appDelegate].conversationController.chatDetailController.navigationController setHidesBottomBarWhenPushed:YES];
+        [[self appDelegate].conversationController.chatDetailController.navigationController pushViewController:controller animated:YES];
+    }
+    
+}
+
+- (AppDelegate *)appDelegate
+{
+	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
 - (void)drawRect:(CGRect)rect

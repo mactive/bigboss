@@ -14,7 +14,7 @@
 @interface Message : NSManagedObject
 
 @property (nonatomic, retain) NSDate * sentDate;
-@property (nonatomic, retain) NSString * summary;
+@property (nonatomic, retain) NSString * metadata;
 @property (nonatomic, retain) NSString * text;
 @property (nonatomic, retain) NSNumber * type;
 @property (nonatomic, retain) NSNumber * bodyType;

@@ -55,7 +55,7 @@
     NSString *node ; 
     BOOL isCloseMsg ; 
     NSString* rateKey = nil;
-    
+    NSString* imageKey = nil;
     
     if (from == nil) {
         node = [[msg elementForName:@"thread"] stringValue];
@@ -84,8 +84,19 @@
         message.text = rateKey;
         message.type = [NSNumber numberWithInt:MessageTypeRate];
     } else {
-        message.text = [[msg elementForName:@"body"] stringValue];
-        message.type = [NSNumber numberWithInt:MessageTypeChat];
+        imageKey = [[msg elementForName:@"image"] stringValue];
+        if (StringHasValue(imageKey)) {
+            message.text = [[msg elementForName:@"image"] stringValue];
+            message.type = [NSNumber numberWithInt:MessageTypeChat];
+            message.bodyType = [NSNumber numberWithInt:MessageBodyTypeImage];
+            NSString *widthString = [[msg elementForName:@"image"] attributeStringValueForName:@"width"];
+            NSString *heightString = [[msg elementForName:@"image"] attributeStringValueForName:@"height"];
+            message.metadata = [NSString stringWithFormat:@"%@,%@",widthString,heightString];
+        }else{
+            message.text = [[msg elementForName:@"body"] stringValue];
+            message.type = [NSNumber numberWithInt:MessageTypeChat];
+            message.bodyType = [NSNumber numberWithInt:MessageBodyTypeText];
+        }
     }
     
     Conversation *conv;
@@ -242,12 +253,18 @@
     XMPPMessage *msg = [XMPPMessage messageWithType:@"chat" to:[XMPPJID jidWithString:toJid]];
     NSXMLElement *body;
     if ([message.bodyType isEqualToNumber:[NSNumber numberWithInt:MessageBodyTypeImage]] ) {
+        NSArray *sizeArray = [message.metadata componentsSeparatedByString:@","];
+        NSString *widthString = [sizeArray objectAtIndex:0];
+        NSString *heightString = [sizeArray objectAtIndex:1];
         body = [NSXMLElement elementWithName:@"image" stringValue:message.text];
+        [body addAttributeWithName:@"width" stringValue:widthString];
+        [body addAttributeWithName:@"height" stringValue:heightString];
+        
     }else{
         body = [NSXMLElement elementWithName:@"body" stringValue:message.text];
     }
     
-    [msg  addChild:body];
+    [msg addChild:body];
     
     if (message.conversation.type == ConversationTypeMediaChannel) {
         Channel* channel = (Channel *) message.conversation.ownerEntity;

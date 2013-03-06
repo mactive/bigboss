@@ -14,7 +14,7 @@
 @implementation Message
 
 @dynamic sentDate;
-@dynamic summary;
+@dynamic metadata;
 @dynamic text;
 @dynamic type;
 @dynamic bodyType;
