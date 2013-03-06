@@ -347,8 +347,10 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     User *anUser = [userEnumerator nextObject];
     if (anUser == nil) {
         self.title = conversation.ownerEntity.displayName;
-    } else {
+    } else if(StringHasValue(anUser.displayName)) {
         self.title = anUser.displayName;
+    }else{
+        self.title = T(@"对话");
     }
     
     if (self.conversation.unreadMessagesCount > 0) {
@@ -594,7 +596,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [self.conversation addMessagesObject:message];
     self.conversation.lastMessageSentDate = message.sentDate;
     self.conversation.lastMessageText = message.text;
-    
+
     WSBubbleData* wsData = [self addMessage:message toBubbleData:self.bubbleData];
     self.bubbleTable.bubbleSection = [self addLatestData:wsData toSortedBubbleSection:self.bubbleTable.bubbleSection];
     
@@ -624,7 +626,6 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     }
     [self.bubbleTable reloadData];
     [self scrollToBottomBubble:YES];
-    
 }
 
 - (WSBubbleData *)addMessage:(Message *)msg toBubbleData:(NSMutableArray *)data

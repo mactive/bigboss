@@ -140,7 +140,11 @@
     if (StringHasValue(rateKey)) {
         conv.lastMessageText = [NSString stringWithFormat:@"%@",T(@"客服评价")];
     }else{
-        conv.lastMessageText = message.text;
+        if (message.bodyType == [NSNumber numberWithInt:MessageBodyTypeImage]) {
+            conv.lastMessageText = T(@"图片");
+        }else if(message.bodyType == [NSNumber numberWithInt:MessageBodyTypeText]){
+            conv.lastMessageText = message.text;
+        }
     }
     [conv addMessagesObject:message];
     

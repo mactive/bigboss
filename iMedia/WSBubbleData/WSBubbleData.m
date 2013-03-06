@@ -26,6 +26,8 @@
 
 const UIEdgeInsets textInsetsMine = {15, 10, 15, 17};
 const UIEdgeInsets textInsetsSomeone = {15, 15, 15, 10};
+const UIEdgeInsets imageInsetsMine = {10, 5, 10, 10};
+const UIEdgeInsets imageInsetsSomeone = {10, 10, 10, 5};
 const UIEdgeInsets templateAInsetsMine = {20, 20, 20, 20};
 const UIEdgeInsets templateBInsetsMine = {12, 20, 12, 20};
 const UIEdgeInsets textInsetsCommon = {7, 0, 7, 0};
@@ -50,8 +52,7 @@ const UIEdgeInsets textInsetsCommon = {7, 0, 7, 0};
 
     self.templateView.frame = CGRectMake(0, 0, widthString.intValue, heightString.intValue);
     
-    
-    UIEdgeInsets insets = (type == BubbleTypeMine ? textInsetsMine : textInsetsSomeone);
+    UIEdgeInsets insets = (type == BubbleTypeMine ? imageInsetsMine : imageInsetsSomeone);
     return [self initWithView:self.templateView date:date content:text type:type insets:insets];
 }
 

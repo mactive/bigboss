@@ -10,6 +10,7 @@
 #import "UIImageView+AFNetworking.h"
 @interface ImageViewController ()
 @property(strong, nonatomic)UIImageView *imageContainer;
+@property(strong, nonatomic)UIScrollView *scrollView;
 @end
 
 @implementation ImageViewController
@@ -17,6 +18,7 @@
 @synthesize urlString;
 @synthesize imageContainer;
 @synthesize titleString;
+@synthesize scrollView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -31,8 +33,11 @@
 {
     [super viewDidLoad];
     self.title = StringHasValue(self.titleString) ? self.titleString:T(@"查看图片") ;
-    self.imageContainer = [[UIImageView alloc]initWithFrame:self.view.bounds];
+    self.view.backgroundColor = [UIColor blackColor];
+    
+    self.imageContainer = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 442)];
     self.imageContainer.contentMode = UIViewContentModeScaleAspectFit;
+    
     [self.imageContainer setUserInteractionEnabled:YES];
     [self.imageContainer setMultipleTouchEnabled:YES];
     
