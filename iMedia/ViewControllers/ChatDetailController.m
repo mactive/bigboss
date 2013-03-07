@@ -596,6 +596,13 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [self.conversation addMessagesObject:message];
     self.conversation.lastMessageSentDate = message.sentDate;
     self.conversation.lastMessageText = message.text;
+    
+    if (message.bodyType == [NSNumber numberWithInt:MessageBodyTypeImage]) {
+        self.conversation.lastMessageText = T(@"图片");
+    }else if(message.bodyType == [NSNumber numberWithInt:MessageBodyTypeText]){
+        self.conversation.lastMessageText = message.text;
+    }
+    
 
     WSBubbleData* wsData = [self addMessage:message toBubbleData:self.bubbleData];
     self.bubbleTable.bubbleSection = [self addLatestData:wsData toSortedBubbleSection:self.bubbleTable.bubbleSection];
@@ -618,6 +625,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         [self.conversation addMessagesObject:msg];
         self.conversation.lastMessageSentDate = msg.sentDate;
         self.conversation.lastMessageText = msg.text;
+        
         
         WSBubbleData* wsData2 = [self addMessage:msg toBubbleData:self.bubbleData];
         self.bubbleTable.bubbleSection = [self addLatestData:wsData2 toSortedBubbleSection:self.bubbleTable.bubbleSection];

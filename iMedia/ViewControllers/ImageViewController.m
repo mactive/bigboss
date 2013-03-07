@@ -35,7 +35,7 @@
     self.title = StringHasValue(self.titleString) ? self.titleString:T(@"查看图片") ;
     self.view.backgroundColor = [UIColor blackColor];
     
-    self.imageContainer = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 320, 442)];
+    self.imageContainer = [[UIImageView alloc]initWithFrame:CGRectMake(0, -10, 320, 442)];
     self.imageContainer.contentMode = UIViewContentModeScaleAspectFit;
     
     [self.imageContainer setUserInteractionEnabled:YES];
