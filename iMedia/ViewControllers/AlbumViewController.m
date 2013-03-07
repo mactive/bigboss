@@ -13,6 +13,8 @@
 #import "UIImage+ProportionalFill.h"
 #import "MBProgressHUD.h"
 #import "DDLog.h"
+#import <AssetsLibrary/AssetsLibrary.h>
+#import "ConvenienceMethods.h"
 
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -21,20 +23,21 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 static const int ddLogLevel = LOG_LEVEL_OFF;
 #endif
 
-@interface AlbumViewController ()<UIScrollViewAccessibilityDelegate>
+@interface AlbumViewController ()<UIScrollViewAccessibilityDelegate,UIActionSheetDelegate>
 - (UIView*) createViewForObj:(id)obj;
-@property(strong, nonatomic)UIImageView *targetImageView;
-@property(strong, nonatomic)UIScrollView *targetScrollView;
-
+@property(strong, nonatomic)UIView *targetView;
+@property(strong, nonatomic)UIButton *moreButton;
 @property(strong, nonatomic)NSMutableArray *targetArray;
+@property(strong, nonatomic)UIActionSheet *moreActionSheet;
 @end
 
 @implementation AlbumViewController
 @synthesize albumArray;
 @synthesize albumIndex;
-@synthesize targetImageView;
-@synthesize targetScrollView;
+@synthesize targetView;
 @synthesize targetArray;
+@synthesize moreButton;
+@synthesize moreActionSheet;
 
 #pragma mark - View lifecycle
 
@@ -46,11 +49,22 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     self.view = scrollView;
     self.targetArray = [[NSMutableArray alloc]init];
     
-    self.targetImageView = [[UIImageView alloc]initWithFrame:self.view.bounds];
-    
+    self.targetView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 320, 432)];
     self.scrollView.backgroundColor = [UIColor blackColor];
+    
+    self.moreButton = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, 50, 29)];
+    [self.moreButton setBackgroundImage:[UIImage imageNamed: @"barbutton_more.png"] forState:UIControlStateNormal];
+    [self.moreButton addTarget:self action:@selector(moreAction) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]initWithCustomView:self.moreButton];
+    
 
+    self.scrollView.minimumZoomScale = 1; //最小到0.3倍
+    self.scrollView.maximumZoomScale = 3.0; //最大到3倍
+    self.scrollView.clipsToBounds = YES;
+    self.scrollView.scrollEnabled = YES;
+    self.scrollView.pagingEnabled = YES;
     self.scrollView.delegate = self;
+
     
     for (NSUInteger index = 0; index < [self.albumArray count]; index ++) {
         //You add your content views here
@@ -84,20 +98,55 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [super viewWillAppear:animated];
     [self.scrollView setPage:self.albumIndex];
     
-    
-    self.targetImageView = [self.targetArray objectAtIndex:self.scrollView.page];
-    DDLogVerbose(@"page %d %@",self.scrollView.page,self.targetImageView);
+    self.targetView = [self.targetArray objectAtIndex:self.scrollView.page];
+    DDLogVerbose(@"page %d %@",self.scrollView.page,self.targetView);
+    self.title = [NSString stringWithFormat:@"%d/%d",self.scrollView.page+1,[self.albumArray count]];
 }
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
-    DDLogVerbose(@"page %d %@",self.scrollView.page,self.targetImageView);
-    self.targetImageView = [self.targetArray objectAtIndex:self.scrollView.page];
+    if ([scrollView isEqual:self.scrollView]) {
+        DDLogVerbose(@"End page %d %@",self.scrollView.page,self.targetView);
+        self.targetView = [self.targetArray objectAtIndex:self.scrollView.page];
+        self.title = [NSString stringWithFormat:@"%d/%d",self.scrollView.page+1,[self.albumArray count]];
+    }
+
 }
 
-- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
-{
-    return self.targetImageView;
-}
+//- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
+//{
+//    DDLogVerbose(@"Zoom scroll %@",self.targetView);
+//    DDLogVerbose(@"Zoom page %d %@",self.scrollView.page,self.targetView);
+//    return self.targetView;
+//}
+//- (void)scrollViewDidZoom:(UIScrollView *)scrollView
+//{
+////    UIImageView *target = (UIImageView *)[self.targetView viewWithTag:1001];
+//
+//    DDLogVerbose(@"DID ZOOM %@ %@",self.scrollView,self.targetView);
+//
+//    self.targetView.frame = [self centeredFrameForScrollView:self.scrollView andUIView:self.targetView];
+//
+//}
+//- (CGRect)centeredFrameForScrollView:(UIScrollView *)scroll andUIView:(UIView *)rView {
+//    CGSize boundsSize = scroll.bounds.size;
+//    CGRect frameToCenter = rView.frame;
+//    // center horizontally
+//    if (frameToCenter.size.width < boundsSize.width) {
+//        frameToCenter.origin.x = (boundsSize.width - frameToCenter.size.width) / 2;
+//    }
+//    else {
+//        frameToCenter.origin.x = 0;
+//    }
+//    // center vertically
+//    if (frameToCenter.size.height < boundsSize.height) {
+//        frameToCenter.origin.y = (boundsSize.height - frameToCenter.size.height) / 2;
+//    }
+//    else {
+//        frameToCenter.origin.y = 0;
+//    }
+//    return frameToCenter;
+//}
+
 
 #pragma mark -
 #pragma mark Getters
@@ -111,10 +160,12 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 #pragma mark Helper methods
 
 - (UIView *)createViewForObj:(id)obj {
-    UIView* view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width - 20, 
+    UIView* view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width - 20,
                                                             self.view.frame.size.height - 50)];
+    
     view.backgroundColor = [UIColor blackColor];
     UIImageView* imageView = [[UIImageView alloc]initWithFrame:view.bounds];
+    imageView.tag = 1001;
     if ([obj isKindOfClass:[Avatar class]]) {
         Avatar * singleAvatar = obj;
         if (singleAvatar.image != nil) {
@@ -150,6 +201,42 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
     [view addSubview:imageView];
     return view;
+}
+/////////////////////////////////////////////////////////////////////
+// moreaction
+/////////////////////////////////////////////////////////////////////
+- (void)moreAction
+{
+    self.moreActionSheet = [[UIActionSheet alloc]
+                            initWithTitle:nil
+                            delegate:self
+                            cancelButtonTitle:T(@"取消")
+                            destructiveButtonTitle:nil
+                            otherButtonTitles: T(@"保存到手机"),nil];
+    self.moreActionSheet.actionSheetStyle = UIActionSheetStyleBlackOpaque;
+    [self.moreActionSheet showFromRect:self.view.bounds inView:self.view animated:YES];
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (actionSheet == self.moreActionSheet) {
+        if (buttonIndex == 0) {
+            [self savePhotoToLibaray];
+        }
+    }
+    
+}
+
+- (void)savePhotoToLibaray
+{
+    // Save Video to Photo Album
+    
+    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+    UIImageView *targetImageView = (UIImageView *)[self.targetView viewWithTag:1001];
+    [library writeImageToSavedPhotosAlbum:targetImageView.image.CGImage
+                                 metadata:nil
+                          completionBlock:^(NSURL *assetURL, NSError *error) {}];
+    [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"保存成功") andHideAfterDelay:2];
 }
 
 @end
