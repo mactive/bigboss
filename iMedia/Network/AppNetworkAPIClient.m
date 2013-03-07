@@ -329,8 +329,8 @@ NSString *const kXMPPmyUsername = @"kXMPPmyUsername";
         UIImage *image = [savedObjects objectForKey:@"image"];
         UIImage *thumbnail = [savedObjects objectForKey:@"thumbnail"];
         
-        NSString *url = [NSString stringWithFormat:@"http://bigbossmsg.b0.upaiyun.com%@?%.0f", upYun.name, [[NSDate date] timeIntervalSince1970]];
-        NSString *thumbnailURL = [NSString stringWithFormat:@"http://bigbossmsg.b0.upaiyun.com%@!tm?%.0f", upYun.name, [[NSDate date] timeIntervalSince1970]];
+        NSString *url = [NSString stringWithFormat:@"http://bigbossmsg.b0.upaiyun.com%@", upYun.name];
+        NSString *thumbnailURL = [NSString stringWithFormat:@"http://bigbossmsg.b0.upaiyun.com%@!tm", upYun.name];
         //upyun 自定义版本名称 tm 间隔表示符 !tm
         
         NSMutableDictionary *resultDict = [[NSMutableDictionary alloc]initWithDictionary:result];

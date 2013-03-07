@@ -89,7 +89,7 @@
     self.messageImage.contentMode = UIViewContentModeScaleAspectFit;
     [self.messageImage setFrame:bubbleRect];
     // 缓存 thumbnail
-    NSString *thumbnailString = [cellData.msg.text stringByReplacingOccurrencesOfString:@"jpg?" withString:@"jpg!tm?"];
+    NSString *thumbnailString = [NSString stringWithFormat:@"%@!tm",cellData.msg.text];
     [self.messageImage setImageWithURL:[NSURL URLWithString:thumbnailString] placeholderImage:[UIImage imageNamed:@"template_placeholder.png"]];
     [self.button1 setFrame:bubbleRect];
     [self.button1 addTarget:self action:@selector(linkAction:) forControlEvents:UIControlEventTouchUpInside];

@@ -316,9 +316,23 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     NSSet *messages = conversation.messages;
     
     self.bubbleData = [[NSMutableArray alloc] initWithCapacity:[messages count]];
-    NSEnumerator *enumerator = [conversation.messages objectEnumerator];
-    Message* aMessage;
-    while (aMessage = [enumerator nextObject]) {
+    
+//    NSEnumerator *enumerator = [conversation.messages objectEnumerator];
+//    Message* aMessage;
+//    while (aMessage = [enumerator nextObject]) {
+//        [self addMessage:aMessage toBubbleData:self.bubbleData];
+//        [self addAlbum:aMessage];
+//    }
+//    
+    // sort
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"sentDate" ascending:YES];
+    NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
+
+    Message *aMessage;
+
+    NSArray *tmp = [[conversation.messages allObjects]sortedArrayUsingDescriptors:sortDescriptors];
+    for (int i = 0; i< [tmp count]; i++) {
+        aMessage = (Message *)[tmp objectAtIndex:i];
         [self addMessage:aMessage toBubbleData:self.bubbleData];
         [self addAlbum:aMessage];
     }
@@ -333,15 +347,29 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [super viewWillAppear:animated];
     self.albumArray = [[NSMutableArray alloc]init];
 #warning  -  this block may be in the viewdidiload
-    
     NSSet *messages = conversation.messages;
     self.bubbleData = [[NSMutableArray alloc] initWithCapacity:[messages count]];
-    NSEnumerator *enumerator = [conversation.messages objectEnumerator];
-    Message* aMessage;
-    while (aMessage = [enumerator nextObject]) {
+
+//    NSEnumerator *enumerator = [conversation.messages objectEnumerator];
+//    Message* aMessage;
+//    while (aMessage = [enumerator nextObject]) {
+//        [self addMessage:aMessage toBubbleData:self.bubbleData];
+//        [self addAlbum:aMessage];
+//    }
+//    
+    // sort
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"sentDate" ascending:YES];
+    NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
+    
+    Message *aMessage;
+    
+    NSArray *tmp = [[conversation.messages allObjects]sortedArrayUsingDescriptors:sortDescriptors];
+    for (int i = 0; i< [tmp count]; i++) {
+        aMessage = (Message *)[tmp objectAtIndex:i];
         [self addMessage:aMessage toBubbleData:self.bubbleData];
         [self addAlbum:aMessage];
     }
+    
     
     self.bubbleTable.bubbleSection = [self sortBubbleSection:self.bubbleData];
     [self.bubbleTable reloadData];

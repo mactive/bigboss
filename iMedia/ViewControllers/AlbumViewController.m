@@ -109,43 +109,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         self.targetView = [self.targetArray objectAtIndex:self.scrollView.page];
         self.title = [NSString stringWithFormat:@"%d/%d",self.scrollView.page+1,[self.albumArray count]];
     }
-
 }
-
-//- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
-//{
-//    DDLogVerbose(@"Zoom scroll %@",self.targetView);
-//    DDLogVerbose(@"Zoom page %d %@",self.scrollView.page,self.targetView);
-//    return self.targetView;
-//}
-//- (void)scrollViewDidZoom:(UIScrollView *)scrollView
-//{
-////    UIImageView *target = (UIImageView *)[self.targetView viewWithTag:1001];
-//
-//    DDLogVerbose(@"DID ZOOM %@ %@",self.scrollView,self.targetView);
-//
-//    self.targetView.frame = [self centeredFrameForScrollView:self.scrollView andUIView:self.targetView];
-//
-//}
-//- (CGRect)centeredFrameForScrollView:(UIScrollView *)scroll andUIView:(UIView *)rView {
-//    CGSize boundsSize = scroll.bounds.size;
-//    CGRect frameToCenter = rView.frame;
-//    // center horizontally
-//    if (frameToCenter.size.width < boundsSize.width) {
-//        frameToCenter.origin.x = (boundsSize.width - frameToCenter.size.width) / 2;
-//    }
-//    else {
-//        frameToCenter.origin.x = 0;
-//    }
-//    // center vertically
-//    if (frameToCenter.size.height < boundsSize.height) {
-//        frameToCenter.origin.y = (boundsSize.height - frameToCenter.size.height) / 2;
-//    }
-//    else {
-//        frameToCenter.origin.y = 0;
-//    }
-//    return frameToCenter;
-//}
 
 
 #pragma mark -
