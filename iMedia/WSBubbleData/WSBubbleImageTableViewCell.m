@@ -102,11 +102,13 @@
     NSString* imageString = self.rowData.msg.text;
     
     if (StringHasValue(imageString)) {
-        ImageViewController *controller = [[ImageViewController alloc]initWithNibName:nil bundle:nil];
-        controller.urlString = imageString;
+        [[self appDelegate].conversationController.chatDetailController albumClick:imageString];
+
+//        ImageViewController *controller = [[ImageViewController alloc]initWithNibName:nil bundle:nil];
+//        controller.urlString = imageString;
         
-        [[self appDelegate].conversationController.chatDetailController.navigationController setHidesBottomBarWhenPushed:YES];
-        [[self appDelegate].conversationController.chatDetailController.navigationController pushViewController:controller animated:YES];
+//        [[self appDelegate].conversationController.chatDetailController.navigationController setHidesBottomBarWhenPushed:YES];
+//        [[self appDelegate].conversationController.chatDetailController.navigationController pushViewController:controller animated:YES];
     }
     
 }

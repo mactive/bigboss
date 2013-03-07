@@ -12,14 +12,29 @@
 #import "UIImageView+AFNetworking.h"
 #import "UIImage+ProportionalFill.h"
 #import "MBProgressHUD.h"
+#import "DDLog.h"
 
-@interface AlbumViewController ()
+// Log levels: off, error, warn, info, verbose
+#if DEBUG
+static const int ddLogLevel = LOG_LEVEL_VERBOSE;
+#else
+static const int ddLogLevel = LOG_LEVEL_OFF;
+#endif
+
+@interface AlbumViewController ()<UIScrollViewAccessibilityDelegate>
 - (UIView*) createViewForObj:(id)obj;
+@property(strong, nonatomic)UIImageView *targetImageView;
+@property(strong, nonatomic)UIScrollView *targetScrollView;
+
+@property(strong, nonatomic)NSMutableArray *targetArray;
 @end
 
 @implementation AlbumViewController
 @synthesize albumArray;
 @synthesize albumIndex;
+@synthesize targetImageView;
+@synthesize targetScrollView;
+@synthesize targetArray;
 
 #pragma mark - View lifecycle
 
@@ -29,9 +44,14 @@
     GCPagedScrollView* scrollView = [[GCPagedScrollView alloc] initWithFrame:self.view.frame];
     scrollView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
     self.view = scrollView;
+    self.targetArray = [[NSMutableArray alloc]init];
+    
+    self.targetImageView = [[UIImageView alloc]initWithFrame:self.view.bounds];
     
     self.scrollView.backgroundColor = [UIColor blackColor];
 
+    self.scrollView.delegate = self;
+    
     for (NSUInteger index = 0; index < [self.albumArray count]; index ++) {
         //You add your content views here
         id obj = [self.albumArray objectAtIndex:index];
@@ -55,6 +75,7 @@
         }
         
         [self.scrollView addContentSubview:[self createViewForObj:obj]];
+        [self.targetArray addObject:[self createViewForObj:obj]];
     }
 }
 
@@ -62,6 +83,20 @@
 {
     [super viewWillAppear:animated];
     [self.scrollView setPage:self.albumIndex];
+    
+    
+    self.targetImageView = [self.targetArray objectAtIndex:self.scrollView.page];
+    DDLogVerbose(@"page %d %@",self.scrollView.page,self.targetImageView);
+}
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    DDLogVerbose(@"page %d %@",self.scrollView.page,self.targetImageView);
+    self.targetImageView = [self.targetArray objectAtIndex:self.scrollView.page];
+}
+
+- (UIView *)viewForZoomingInScrollView:(UIScrollView *)scrollView
+{
+    return self.targetImageView;
 }
 
 #pragma mark -
@@ -70,6 +105,7 @@
 - (GCPagedScrollView *)scrollView {
     return (GCPagedScrollView*) self.view;
 }
+
 
 #pragma mark -
 #pragma mark Helper methods

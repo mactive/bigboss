@@ -8,12 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import "GCPagedScrollView.h"
+#import "BBCustomBackButtonViewController.h"
 
-@interface AlbumViewController : UIViewController
+@interface AlbumViewController : BBCustomBackButtonViewController
 
 @property (nonatomic, readonly) GCPagedScrollView* scrollView;
 @property (nonatomic, strong) NSArray *albumArray;
 @property (nonatomic, readwrite) NSUInteger albumIndex;
+
 
 
 

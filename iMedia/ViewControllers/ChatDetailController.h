@@ -9,11 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "WSBubbleTableView.h"
 #import "User.h"
+#import "BBCustomBackButtonViewController.h"
 
 @class Conversation;
 @class ACPlaceholderTextView;
 
-@interface ChatDetailController : UIViewController
+@interface ChatDetailController : BBCustomBackButtonViewController
 {
     NSString *titleString;
 }
@@ -27,5 +28,5 @@
 @property (nonatomic, strong) WSBubbleTableView *bubbleTable;
 @property (nonatomic, strong) NSMutableArray *bubbleData;
 
-
+- (void)albumClick:(NSString *)urlString;
 @end

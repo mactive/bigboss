@@ -31,7 +31,7 @@
 #import "MBProgressHUD.h"
 #import "ConvenienceMethods.h"
 #import "AFImageRequestOperation.h"
-
+#import "AlbumViewController.h"
 
 
 // Log levels: off, error, warn, info, verbose
@@ -89,8 +89,10 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @property(nonatomic, readwrite)CGFloat keyboardBoundHeight;
 @property(nonatomic, readwrite)CGFloat textViewContentHeight;
 @property(nonatomic, strong)UIActionSheet *photoActionSheet;
+@property(nonatomic, strong)NSMutableArray *albumArray;
 
 - (WSBubbleData *)addMessage:(Message *)msg toBubbleData:(NSMutableArray *)data;
+- (void)addAlbum:(Message *)msg;
 
 // receive new message notification
 - (void)newMessageReceived:(NSNotification *)notification;
@@ -109,6 +111,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @synthesize tapGestureRecognizer;
 @synthesize keyboardBoundHeight;
 @synthesize textViewContentHeight;
+@synthesize albumArray;
 
 - (id)init
 {
@@ -309,6 +312,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 - (void)refreshBubbleData
 {
+    self.albumArray = [[NSMutableArray alloc]init];
     NSSet *messages = conversation.messages;
     
     self.bubbleData = [[NSMutableArray alloc] initWithCapacity:[messages count]];
@@ -316,6 +320,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     Message* aMessage;
     while (aMessage = [enumerator nextObject]) {
         [self addMessage:aMessage toBubbleData:self.bubbleData];
+        [self addAlbum:aMessage];
     }
     
     self.bubbleTable.bubbleSection = [self sortBubbleSection:self.bubbleData];
@@ -326,7 +331,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+    self.albumArray = [[NSMutableArray alloc]init];
 #warning  -  this block may be in the viewdidiload
     
     NSSet *messages = conversation.messages;
@@ -335,6 +340,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     Message* aMessage;
     while (aMessage = [enumerator nextObject]) {
         [self addMessage:aMessage toBubbleData:self.bubbleData];
+        [self addAlbum:aMessage];
     }
     
     self.bubbleTable.bubbleSection = [self sortBubbleSection:self.bubbleData];
@@ -636,6 +642,15 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [self scrollToBottomBubble:YES];
 }
 
+- (void)addAlbum:(Message *)msg
+{
+    if (msg.type == [NSNumber numberWithInt:MessageTypeChat]) {
+        if (msg.bodyType == [NSNumber numberWithInt:MessageBodyTypeImage]) {
+            [self.albumArray addObject:msg.text];
+        }
+    }
+}
+
 - (WSBubbleData *)addMessage:(Message *)msg toBubbleData:(NSMutableArray *)data
 {
     WSBubbleType type = BubbleTypeMine; // 默认是自己的
@@ -811,6 +826,24 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     /* keep the order first dismiss picker and pop controller */
     [picker dismissModalViewControllerAnimated:YES];
     //    [self.controller.navigationController popViewControllerAnimated:NO];
+}
+
+
+- (void)albumClick:(NSString *)urlString
+{
+    AlbumViewController *albumViewController = [[AlbumViewController alloc] init];
+    albumViewController.albumArray = self.albumArray;
+    for (int i=0; i< [self.albumArray count]; i++) {
+        NSString *item = [self.albumArray objectAtIndex:i];
+        if ( [item isEqualToString:urlString] ) {
+            albumViewController.albumIndex = i;
+            DDLogVerbose(@"%d",i);
+        }
+    }
+//    albumViewController.albumIndex = sender.tag;
+    [albumViewController setHidesBottomBarWhenPushed:YES];
+    // Pass the selected object to the new view controller.
+    [self.navigationController pushViewController:albumViewController animated:YES];
 }
 
 
