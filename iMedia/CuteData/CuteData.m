@@ -206,23 +206,41 @@ NSString* XFoxAgentVersion = @"0.1";
 + (NSString *)createLogEntryWithEventName:(NSString *)eventName parameters:(NSDictionary *)parameters andTimeDuration:(double)seconds
 {
     XFox *fox = [XFox sInstance];
-    
+    NSDictionary *xfoxDict = [[NSDictionary alloc]init];
     NSTimeInterval interval = [NSDate timeIntervalSinceReferenceDate] - fox.currentSessionStartDateInTimeInterval;
-    
+
     if (parameters != nil && [parameters count] > 0) {
         if (seconds > 0) {
-            return [NSString stringWithFormat:@"%.2f - %@ p:%@ dur:%f", interval, eventName, [parameters JSONRepresentation], seconds];
+            xfoxDict = [[NSDictionary alloc]initWithObjectsAndKeys:
+                        [NSString stringWithFormat:@"%.2f", interval],@"offset",
+                        eventName, @"action",
+                        [parameters JSONRepresentation],@"p",
+                        [NSString stringWithFormat:@"%f",seconds], @"dur",
+                        nil];
         } else {
-            return [NSString stringWithFormat:@"%.2f - %@ p:%@", interval, eventName, [parameters JSONRepresentation]];
+            xfoxDict = [[NSDictionary alloc]initWithObjectsAndKeys:
+                        [NSString stringWithFormat:@"%.2f", interval],@"offset",
+                        eventName, @"action",
+                        [parameters JSONRepresentation],@"p",
+                        nil];
+            
         }
     } else {
         if (seconds > 0) {
-            return [NSString stringWithFormat:@"%.2f - %@ duration:%f", interval, eventName, seconds];
+            xfoxDict = [[NSDictionary alloc]initWithObjectsAndKeys:
+                        [NSString stringWithFormat:@"%.2f", interval],@"offset",
+                        eventName, @"action",
+                        [NSString stringWithFormat:@"%f",seconds], @"dur",
+                        nil];
         } else {
-            return [NSString stringWithFormat:@"%.2f - %@", interval, eventName];
+            xfoxDict = [[NSDictionary alloc]initWithObjectsAndKeys:
+                                        [NSString stringWithFormat:@"%.2f", interval],@"offset",
+                                        eventName, @"action",
+                                        nil];
         }
     }
     
+    return [xfoxDict JSONRepresentation];    
     
 }
 
@@ -268,19 +286,43 @@ NSString* XFoxAgentVersion = @"0.1";
     
     XFox *fox = [XFox sInstance];
     
-    NSMutableString *log = [NSMutableString stringWithFormat:@"XFoxVer:%@, appKey:%@, appVer:%@ session:%@ startTime:%@\n",
-                            [XFox getXFoxAgentVersion],
-                            fox.apiKey,
-                            fox->_appVersion,
-                            fox.currentSessionKey,
-                            [fox.dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSinceReferenceDate:fox.currentSessionStartDateInTimeInterval]]];
     
+    // sbjson write
+    
+    NSMutableString *itemsMutableString = [[NSMutableString alloc]init];
     [fox.currentSessionLogs enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        [log appendFormat:@"%@\n", obj];
+        [itemsMutableString appendFormat:@"%@,", obj];
     }];
     
+    NSString *firstString = [itemsMutableString substringToIndex:[itemsMutableString length] - 1];
+    // add [string]
+    NSString *secondString = [NSString stringWithFormat:@"[%@]}",firstString];
+    // replace "p":"{}"
+    NSString *thirdString = [secondString stringByReplacingOccurrencesOfString:@"\"{" withString:@"{"];
+    NSString *fourString = [thirdString stringByReplacingOccurrencesOfString:@"}\"" withString:@"}"];
+    NSString *itemsString = [fourString stringByReplacingOccurrencesOfString:@"\\\"" withString:@"\""];
     
+    NSLog(@"%@",itemsString);
+    NSDictionary *logDict = [[NSDictionary alloc]initWithObjectsAndKeys:
+                                [XFox getXFoxAgentVersion],@"XFoxVer",
+                                fox.apiKey,@"appKey",
+                                fox->_appVersion,@"appVer",
+                                fox.currentSessionKey,@"session",
+                                [fox.dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSinceReferenceDate:fox.currentSessionStartDateInTimeInterval]],@"startTime",
+                                @"REPLACECODE",@"items",
+                            nil];
+    NSString *logDictString = [logDict JSONRepresentation];
     
+    NSString *log = [logDictString stringByReplacingOccurrencesOfString:@"\"REPLACECODE\"}" withString:itemsString];
+    
+//    NSMutableString *log = [NSMutableString stringWithFormat:@"XFoxVer:%@, appKey:%@, appVer:%@ session:%@ startTime:%@\n",
+//                            [XFox getXFoxAgentVersion],
+//                            fox.apiKey,
+//                            fox->_appVersion,
+//                            fox.currentSessionKey,
+//                            [fox.dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSinceReferenceDate:fox.currentSessionStartDateInTimeInterval]]];
+    
+    NSLog(@"%@",log);
     
     NSData *logData = [log dataUsingEncoding:NSUTF8StringEncoding];
     NSData *zippedData = [logData dataByGZipCompressingWithError:nil];

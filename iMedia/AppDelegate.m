@@ -233,6 +233,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
     self.mainMenuViewController = [[MainMenuViewController alloc]initWithNibName:nil bundle:nil];
     UINavigationController *mainController = [[UINavigationController alloc] initWithRootViewController:self.mainMenuViewController];
+    [XFox logAllPageViews:mainController];
     self.mainMenuViewController.managedObjectContext = _managedObjectContext;
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
