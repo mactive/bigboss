@@ -65,7 +65,6 @@
     [super viewDidLoad];
     self.title = T(@"好友请求");
     self.view.backgroundColor = BGCOLOR;
-    NSLog(@"%@",self.request);
 
     NSDate * date = self.request.requestDate;
     _localJSONDataDict = [self.request.userJSONData JSONValue];

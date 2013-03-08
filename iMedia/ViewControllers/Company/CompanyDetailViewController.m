@@ -500,7 +500,6 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         UIFont *font = [UIFont systemFontOfSize:14.0f];
         
         CGSize size = [(descLabel.text ? descLabel.text : @"") sizeWithFont:font constrainedToSize:CGSizeMake(DESC_WIDTH, 9999) lineBreakMode:UILineBreakModeWordWrap];
-        NSLog(@"height %f",size.height);
         
         CGFloat posY =  (cell.frame.size.height - size.height)/2+3;
         [descLabel setFrame:CGRectMake(DESC_X, posY , DESC_WIDTH, size.height)];

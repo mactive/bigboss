@@ -12,7 +12,13 @@
 #import "PageViewLogger.h"
 #import "NSData+Godzippa.h"
 #import <CommonCrypto/CommonCryptor.h>
-
+#import "DDLog.h"
+// Log levels: off, error, warn, info, verbose
+#if DEBUG
+static const int ddLogLevel = LOG_LEVEL_VERBOSE;
+#else
+static const int ddLogLevel = LOG_LEVEL_OFF;
+#endif
 NSString* XFoxAgentVersion = @"0.1";
 
 @interface XFox () <UINavigationControllerDelegate, UITabBarControllerDelegate>
@@ -272,6 +278,9 @@ NSString* XFoxAgentVersion = @"0.1";
     [fox.currentSessionLogs enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         [log appendFormat:@"%@\n", obj];
     }];
+    
+    
+    
     
     NSData *logData = [log dataUsingEncoding:NSUTF8StringEncoding];
     NSData *zippedData = [logData dataByGZipCompressingWithError:nil];

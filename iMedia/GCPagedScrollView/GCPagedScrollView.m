@@ -140,7 +140,6 @@ const CGFloat GCPagedScrollViewPageControlHeight = 36.0;
 
 - (void) changePage:(UIPageControl*) aPageControl {
     [self setPage:aPageControl.currentPage animated:YES];
-    NSLog(@"change page %d",aPageControl.currentPage);
 }
 
 - (void) setContentOffset:(CGPoint) new {
