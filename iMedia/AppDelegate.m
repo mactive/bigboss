@@ -100,8 +100,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 {    
 	[DDLog addLogger:[DDTTYLogger sharedInstance]];
     // start log session
-    [XFox startSession:@"cst0.1_201212"];
-    [XFox setAppVersion:@"cst0.1"];
+    [XFox startSession:@"bigboss"];
+    [XFox setAppVersion:@"0.2"];
     
     application.statusBarHidden = NO;
     // Set up Core Data stack.

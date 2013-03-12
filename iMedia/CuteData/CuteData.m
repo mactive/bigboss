@@ -12,6 +12,8 @@
 #import "PageViewLogger.h"
 #import "NSData+Godzippa.h"
 #import <CommonCrypto/CommonCryptor.h>
+#import "AppDelegate.h"
+#import "Me.h"
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -301,14 +303,15 @@ NSString* XFoxAgentVersion = @"0.1";
     NSString *thirdString = [secondString stringByReplacingOccurrencesOfString:@"\"{" withString:@"{"];
     NSString *fourString = [thirdString stringByReplacingOccurrencesOfString:@"}\"" withString:@"}"];
     NSString *itemsString = [fourString stringByReplacingOccurrencesOfString:@"\\\"" withString:@"\""];
+    NSString *guidString = [self appDelegate].me.guid;
     
-    NSLog(@"%@",itemsString);
     NSDictionary *logDict = [[NSDictionary alloc]initWithObjectsAndKeys:
                                 [XFox getXFoxAgentVersion],@"XFoxVer",
                                 fox.apiKey,@"appKey",
                                 fox->_appVersion,@"appVer",
                                 fox.currentSessionKey,@"session",
                                 [fox.dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSinceReferenceDate:fox.currentSessionStartDateInTimeInterval]],@"startTime",
+                                guidString,@"guid",
                                 @"REPLACECODE",@"items",
                             nil];
     NSString *logDictString = [logDict JSONRepresentation];
@@ -322,7 +325,6 @@ NSString* XFoxAgentVersion = @"0.1";
 //                            fox.currentSessionKey,
 //                            [fox.dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSinceReferenceDate:fox.currentSessionStartDateInTimeInterval]]];
     
-    NSLog(@"%@",log);
     
     NSData *logData = [log dataUsingEncoding:NSUTF8StringEncoding];
     NSData *zippedData = [logData dataByGZipCompressingWithError:nil];
@@ -333,6 +335,11 @@ NSString* XFoxAgentVersion = @"0.1";
             [fox clearLogs];
         }
     }];
+}
+
+- (AppDelegate *)appDelegate
+{
+	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
 @end
