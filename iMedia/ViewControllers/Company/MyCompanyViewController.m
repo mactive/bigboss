@@ -17,6 +17,7 @@
 #import "Company.h"
 #import "ModelHelper.h"
 #import "AppDelegate.h"
+#import "CompanyTableViewCell.h"
 #import "DDLog.h"
 
 // Log levels: off, error, warn, info, verbose
@@ -38,6 +39,8 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
 @synthesize sourceData;
 @synthesize sourceDict;
 @synthesize managedObjectContext;
+
+#define CELL_HEIGHT 50.0f
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -63,23 +66,6 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
 	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
-#define CELL_HEIGHT 50.0f
-
-#define AVATAR_HEIGHT 36
-#define AVATAR_X    (CELL_HEIGHT - AVATAR_HEIGHT)/2
-#define NAME_X      75
-#define NAME_HEIGHT 16
-#define NAME_Y      (CELL_HEIGHT - NAME_HEIGHT)/2
-#define NAME_WIDTH  200
-
-#define COUNT_X     230
-#define COUNT_WIDTH 15
-#define COUNT_HEIGHT 15
-#define COUNT_Y     (CELL_HEIGHT - COUNT_HEIGHT)/2
-
-#define AVATAR_TAG  1
-#define NAME_TAG    2
-#define COUNT_TAG   3
 
 - (void)viewDidLoad
 {
@@ -225,66 +211,17 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
 {
     static NSString *CellIdentifier = @"CompanyListCell";
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    
-    if (cell == nil) {
-        cell = [self tableViewCellWithReuseIdentifier:CellIdentifier];
-    }
-    
-    [self configureCell:cell forIndexPath:indexPath];
-    
-    return cell;
-}
-
-- (UITableViewCell *)tableViewCellWithReuseIdentifier:(NSString *)identifier
-{
-    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    cell.backgroundView = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"cell_H50_bg.png"]];
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    
-    
-    UIImageView *avatarView = [[UIImageView alloc]initWithFrame:CGRectMake(AVATAR_X*2, AVATAR_X, AVATAR_HEIGHT, AVATAR_HEIGHT)];
-    [avatarView.layer setMasksToBounds:YES];
-    [avatarView.layer setCornerRadius:3.0f];
-    avatarView.tag = AVATAR_TAG;
-    
-    UILabel *nameLabel = [[UILabel alloc]initWithFrame:CGRectMake(NAME_X, NAME_Y, NAME_WIDTH, NAME_HEIGHT)];
-    nameLabel.backgroundColor = [UIColor clearColor];
-    nameLabel.font = [UIFont systemFontOfSize:16.0f];
-    nameLabel.textAlignment = NSTextAlignmentLeft;
-    nameLabel.textColor = RGBCOLOR(107, 107, 107);
-    nameLabel.tag = NAME_TAG;
-    
-    UIImageView *privateView = [[UIImageView alloc]initWithFrame:CGRectMake(COUNT_X, COUNT_Y, COUNT_WIDTH, COUNT_HEIGHT)];
-    [privateView setImage:[UIImage imageNamed:@"private_icon.png"]];
-    privateView.tag = COUNT_TAG;
-    
-    [cell addSubview:avatarView];
-    [cell addSubview:nameLabel];
-    [cell addSubview:privateView];
-    return cell;
-}
-
-- (void)configureCell:(UITableViewCell *)cell forIndexPath:(NSIndexPath *)indexPath
-{
     Company *aCompany = [self.sourceData objectAtIndex:indexPath.row];
+    CompanyTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
-    DDLogVerbose(@"companyID %@",aCompany.companyID);
-    
-    UIImageView *avatarView = (UIImageView *)[cell viewWithTag:AVATAR_TAG];
-    NSURL *url = [NSURL URLWithString:aCompany.logo];
-    [avatarView setImageWithURL:url placeholderImage:[UIImage imageNamed:@"company_face.png"]];
-    
-    UILabel *nameLabel = (UILabel *)[cell viewWithTag:NAME_TAG];
-    nameLabel.text = aCompany.name;
-    
-    UIImageView *privateView  = (UIImageView *)[cell viewWithTag:COUNT_TAG];
-    if (aCompany.isPrivate.boolValue) {
-        [privateView setHidden:NO];
-    }else{
-        [privateView setHidden:YES];
+        
+    if (cell == nil) {
+        cell = [[CompanyTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
+    
+    [cell setNewCompany:aCompany];
+        
+    return cell;
 }
 
 - (void) tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath

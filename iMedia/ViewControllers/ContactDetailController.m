@@ -383,7 +383,6 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
     
     //age
     self.sexLabel.text  = [self getAgeStr];
-    
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -430,7 +429,6 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
     }
     
     [self.contentView addSubview: self.snsView];
-    
 }
 
 - (void)refreshSNSView

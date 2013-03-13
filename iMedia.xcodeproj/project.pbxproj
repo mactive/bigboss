@@ -156,6 +156,7 @@
 		261241901696C4F7003A2D59 /* SinaWeiboAuthorizeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 261241891696C4F7003A2D59 /* SinaWeiboAuthorizeView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		261241911696C4F7003A2D59 /* SinaWeiboRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 2612418C1696C4F7003A2D59 /* SinaWeiboRequest.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		261241951696C5A2003A2D59 /* iMedia.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 261241921696C5A2003A2D59 /* iMedia.xcdatamodeld */; };
+		26236C2216F02CE500CA51A6 /* CompanyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 26236C2116F02CE500CA51A6 /* CompanyTableViewCell.m */; };
 		2625096D16428282009ED7D8 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2625096C16428282009ED7D8 /* AssetsLibrary.framework */; };
 		2631C52A16313033004DE7FB /* NSDate+timesince.m in Sources */ = {isa = PBXBuildFile; fileRef = 2631C52916313033004DE7FB /* NSDate+timesince.m */; };
 		2637277A16AE8CE100C77FA4 /* RegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2637277916AE8CE100C77FA4 /* RegisterViewController.m */; };
@@ -625,6 +626,8 @@
 		2612418C1696C4F7003A2D59 /* SinaWeiboRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SinaWeiboRequest.m; sourceTree = "<group>"; };
 		261241931696C5A2003A2D59 /* jiemo.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = jiemo.xcdatamodel; sourceTree = "<group>"; };
 		261241941696C5A2003A2D59 /* jiemoRC1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = jiemoRC1.xcdatamodel; sourceTree = "<group>"; };
+		26236C2016F02CE500CA51A6 /* CompanyTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CompanyTableViewCell.h; path = ViewControllers/UITableViewCell/CompanyTableViewCell.h; sourceTree = "<group>"; };
+		26236C2116F02CE500CA51A6 /* CompanyTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CompanyTableViewCell.m; path = ViewControllers/UITableViewCell/CompanyTableViewCell.m; sourceTree = "<group>"; };
 		2625096C16428282009ED7D8 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		2631C52816313033004DE7FB /* NSDate+timesince.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDate+timesince.h"; path = "contrib/NSDate+timesince.h"; sourceTree = "<group>"; };
 		2631C52916313033004DE7FB /* NSDate+timesince.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDate+timesince.m"; path = "contrib/NSDate+timesince.m"; sourceTree = "<group>"; };
@@ -1425,6 +1428,8 @@
 		26E588661659ED2F00180A9D /* UITableViewCell */ = {
 			isa = PBXGroup;
 			children = (
+				26236C2016F02CE500CA51A6 /* CompanyTableViewCell.h */,
+				26236C2116F02CE500CA51A6 /* CompanyTableViewCell.m */,
 				260971A11696BD1A00D0E785 /* ContactTableViewCell.h */,
 				260971A21696BD1A00D0E785 /* ContactTableViewCell.m */,
 				260971A31696BD1A00D0E785 /* ConversationTableViewCell.h */,
@@ -2888,6 +2893,7 @@
 				2638140516B933B00020F9A7 /* CompanyMemberViewController.m in Sources */,
 				04A37B8616E5F8C1000907F5 /* WSBubbleImageTableViewCell.m in Sources */,
 				2638F55C16E7365200F22E66 /* ImageViewController.m in Sources */,
+				26236C2216F02CE500CA51A6 /* CompanyTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
