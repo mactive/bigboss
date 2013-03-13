@@ -17,6 +17,7 @@
 #import "Company.h"
 #import "ModelHelper.h"
 #import "AppDelegate.h"
+#import "CompanyTableViewCell.h"
 
 @interface CompanyListViewController ()<UITableViewDataSource,UITableViewDelegate>
 
@@ -76,6 +77,11 @@
 
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+}
+
 // 解析公司列表
 - (void)populateData
 {
@@ -84,7 +90,24 @@
         
         if (responseDict != nil) {
             self.sourceDict = responseDict;
-            self.sourceData = [self.sourceDict allValues];
+            NSArray *tempArray = [self.sourceDict allValues];
+            NSMutableArray *tempMutableArray = [[NSMutableArray alloc]init];
+            NSEntityDescription *entity = [NSEntityDescription entityForName:@"Company" inManagedObjectContext:[self appDelegate].context];
+            
+            for (int i=0; i < [tempArray count]; i++) {
+                NSDictionary *dict = [tempArray objectAtIndex:i];
+                Company *aCompany = [[ModelHelper sharedInstance] findCompanyWithCompanyID:[dict objectForKey:@"cid"] ];
+                if (aCompany == nil) {
+                    aCompany = (Company *)[[NSManagedObject alloc] initWithEntity:entity insertIntoManagedObjectContext:nil];
+                    [[ModelHelper sharedInstance] populateCompany:aCompany withServerJSONData:dict];
+                }
+                
+                [tempMutableArray addObject:aCompany];
+            }
+            
+            
+            self.sourceData = [[NSArray alloc]initWithArray:tempMutableArray];
+            
             [self.tableView reloadData];
         }else{
             [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"网络错误 暂时无法刷新") andHideAfterDelay:1];
@@ -125,17 +148,20 @@
 {
     static NSString *CellIdentifier = @"CompanyListCell";
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    Company *aCompany = [self.sourceData objectAtIndex:indexPath.row];
+
+    
+    CompanyTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if (cell == nil) {
-        cell = [self tableViewCellWithReuseIdentifier:CellIdentifier];
+        cell = [[CompanyTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
-    [self configureCell:cell forIndexPath:indexPath];
+    [cell setNewCompany:aCompany];
     
     return cell;
 }
-
+/*
 #define AVATAR_HEIGHT 36
 #define AVATAR_X    (CELL_HEIGHT - AVATAR_HEIGHT)/2
 #define NAME_X      75
@@ -202,6 +228,7 @@
     }
     
 }
+*/
 
 - (void) tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -212,10 +239,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSDictionary *dataDict = [self.sourceData objectAtIndex:indexPath.row];
-    NSString *companyID = [ServerDataTransformer getStringObjFromServerJSON:dataDict byName:@"cid"];
+    Company *aCompany = [self.sourceData objectAtIndex:indexPath.row];
     
-    [self getDict:companyID];
+    [self getDict:aCompany.companyID];
     
 }
 
@@ -254,7 +280,5 @@
         }];
     }
 }
-
-
 
 @end

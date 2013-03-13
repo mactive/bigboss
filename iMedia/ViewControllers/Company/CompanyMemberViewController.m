@@ -242,7 +242,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"CompanyListCell";
+    static NSString *CellIdentifier = @"CompanyMemberListCell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     

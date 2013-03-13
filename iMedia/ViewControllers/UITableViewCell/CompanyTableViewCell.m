@@ -76,11 +76,15 @@
         [[AppNetworkAPIClient sharedClient] loadImage:company.logo withBlock:^(UIImage *image, NSError *error) {
             if (image) {
                 self.avatarImage = image;
+#warning everytime get image redraw memory
+                [self setNeedsDisplay];
             }
         }];
+        
+
     }
     
-    [self setNeedsDisplay];
+//    [self setNeedsDisplay];
 }
 
 - (void)drawRect:(CGRect)rect
@@ -92,6 +96,10 @@
         //        CGContextSetRGBStrokeColor(context, 1.0, 0.0, 0.0, 1.0);
         CGContextFillRect(context, rectangle);
     }
+    
+    //drabottomline
+    UIImage *cellBg = [UIImage imageNamed:@"cell_H1_bg.png"];
+    [cellBg drawInRect:CGRectMake(0, CELL_HEIGHT-1.0f , 320.0f, 1.0f)];
     
     //// avatar
     CGRect avatarRect = CGRectMake(AVATAR_X*2, AVATAR_X, AVATAR_HEIGHT, AVATAR_HEIGHT);
@@ -134,6 +142,8 @@
     if (self.data.isPrivate.boolValue) {
         [privateIcon drawInRect:CGRectMake(COUNT_X, COUNT_Y, COUNT_WIDTH, COUNT_HEIGHT)];
     }
+    
+    
     
 }
 
