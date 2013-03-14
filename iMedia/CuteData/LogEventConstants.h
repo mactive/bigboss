@@ -25,14 +25,14 @@
 #define TIMER_GET_NEARBY_USER   @"T_nearby_user"
 #define TIMER_UPDATE_IDENTITY   @"T_get_identity"
 
-// define all pages
-#define PAGE_LOGIN          @"page_login"
-#define PAGE_WELCOME        @"page_welcome"
-#define PAGE_LOGIN_SETTING  @"page_login_setting"
-#define PAGE_NEARBY_USER    @"page_nearby_user"
-#define PAGE_CONVERSATION   @"page_conversation"
-#define PAGE_MESSAGE        @"page_message"
-#define PAGE_CONTACT_LIST   @"page_contact_list"
-#define PAGE_CONTACT_DETAIL @"page_contact_detail"
-#define PAGE_SETTINGS       @"page_settings"
+// define all additional 
+#define PAGE_LOGIN          @"A_page_login"
+#define PAGE_WELCOME        @"A_page_welcome"
+#define PAGE_LOGIN_SETTING  @"A_page_login_setting"
+#define PAGE_NEARBY_USER    @"A_page_nearby_user"
+#define PAGE_CONVERSATION   @"A_page_conversation"
+#define PAGE_MESSAGE        @"A_page_message"
+#define PAGE_CONTACT_LIST   @"A_page_contact_list"
+#define PAGE_CONTACT_DETAIL @"A_page_contact_detail"
+#define PAGE_SETTINGS       @"A_page_settings"
 #endif
