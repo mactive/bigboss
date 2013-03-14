@@ -29,7 +29,7 @@
 #define NAME_Y      (CELL_HEIGHT - NAME_HEIGHT)/2
 #define NAME_WIDTH  200
 
-#define COUNT_X     230
+#define COUNT_X     260
 #define COUNT_WIDTH 15
 #define COUNT_HEIGHT 15
 #define COUNT_Y     (CELL_HEIGHT - COUNT_HEIGHT)/2
@@ -67,6 +67,8 @@
 
 - (void)setNewCompany:(Company *)company{
     self.data  = company;
+    // default
+    self.avatarImage = [UIImage imageNamed:@"placeholder_company.png"];
     
     if (StringHasValue(company.logo)){
         [[AppNetworkAPIClient sharedClient] loadImage:company.logo withBlock:^(UIImage *image, NSError *error) {

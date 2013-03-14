@@ -33,7 +33,7 @@
 
 #define COUNT_X     145
 #define COUNT_WIDTH 130
-#define COUNT_HEIGHT 21
+#define COUNT_HEIGHT 14
 #define COUNT_Y     (CELL_HEIGHT - COUNT_HEIGHT)/2
 #define MAIN_FONT_SIZE 16.0
 
@@ -63,7 +63,8 @@
 - (void)setNewMember:(NSDictionary *)member
 {
     self.data  = member;
-    
+    self.avatarImage = [UIImage imageNamed:@"placeholder_user.png"];
+
     if (StringHasValue([member objectForKey:@"thumbnail"])){
         [[AppNetworkAPIClient sharedClient] loadImage:[member objectForKey:@"thumbnail"] withBlock:^(UIImage *image, NSError *error) {
             if (image) {

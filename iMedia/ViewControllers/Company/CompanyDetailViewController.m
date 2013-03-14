@@ -130,7 +130,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 #define DESC_X      105
 #define DESC_WIDTH  160
-#define DESC_HEIGHT 16
+#define DESC_HEIGHT 14
 #define DESC_Y     (CELL_HEIGHT - DESC_HEIGHT)/2
 
 #define LAST_WIDTH  280
