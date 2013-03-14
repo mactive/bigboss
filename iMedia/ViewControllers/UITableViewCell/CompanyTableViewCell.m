@@ -80,7 +80,6 @@
                 [self setNeedsDisplay];
             }
         }];
-        
 
     }
     

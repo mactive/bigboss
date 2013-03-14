@@ -73,19 +73,26 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
+
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    
-    if ([passwordField isEqual:textField]) {
+    if ([textField isEqual:self.usernameField]) {
+        NSLog(@"==========");
+        return [self.passwordField becomeFirstResponder];
+    }else if([textField isEqual:self.passwordField]) {
         [self loginAction:nil];
         return [textField resignFirstResponder];
     }
     
     if (StringHasValue(self.passwordField.text) && StringHasValue(self.usernameField.text)) {
-        if ([passwordField isEqual:textField]) {
+        if ([textField isEqual:self.passwordField]) {
             [self loginAction:nil];
             return [textField resignFirstResponder];
+        }else{
+            return NO;
         }
+    }else{
+        return NO;
     }
 }
 
@@ -184,14 +191,12 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     
 }
 
-
 #define LOGO_HEIGHT 30
 #define TEXTFIELD_Y 90
 #define TEXTFIELD_X 25
 #define TEXTFIELD_OFFSET 12
 #define TEXTFIELD_WIDTH  270
 #define TEXTFIELD_HEIGHT 40
-
 
 - (void)viewDidLoad
 {
