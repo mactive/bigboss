@@ -221,8 +221,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     
     self.selectedImageView = [[UIImageView alloc]initWithFrame:CGRectMake(45,30, 120, 160)];
     [self.selectedImageView setContentMode:UIViewContentModeScaleAspectFit];
-    self.selectedImageView.layer.borderColor = [UIColor whiteColor].CGColor;
-    self.selectedImageView.layer.borderWidth = 1.0f;
+
     
     // selectedButtton
     self.selectedButtton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -233,7 +232,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [self.selectedButtton.titleLabel setTextAlignment:UITextAlignmentCenter];
     [self.selectedButtton setTitle:T(@"确认") forState:UIControlStateNormal];
     [self.selectedButtton setBackgroundImage:[UIImage imageNamed:@"image_selected.png"] forState:UIControlStateNormal];
-    [self.selectedButtton addTarget:self action:@selector(selectImageAction:) forControlEvents:UIControlEventTouchUpInside];
+    [self.selectedButtton addTarget:self action:@selector(selectImageAction) forControlEvents:UIControlEventTouchUpInside];
     
     // unselectedButtton
     self.unSelectedButtton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -787,11 +786,16 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 - (void)takePhotoFromLibaray
 {
-    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-    picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    picker.delegate = self;
-	picker.allowsEditing = NO;
-    [self presentModalViewController:picker animated:YES];
+//    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+//    picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+//    picker.delegate = self;
+//	picker.allowsEditing = NO;
+//    [self presentModalViewController:picker animated:YES];
+    self.pickerController = [[UIImagePickerController alloc] init];
+    self.pickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    self.pickerController.delegate = self;
+    self.pickerController.allowsEditing = NO;
+    [self presentModalViewController:self.pickerController animated:YES];
 }
 
 - (void)takePhotoFromCamera
@@ -803,13 +807,13 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 	}
     
     //    self.tableView.allowsSelection = NO;
-    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-    picker.sourceType = UIImagePickerControllerSourceTypeCamera;
-	picker.delegate = self;
-	picker.allowsEditing = NO;
+    self.pickerController = [[UIImagePickerController alloc] init];
+    self.pickerController.sourceType = UIImagePickerControllerSourceTypeCamera;
+	self.pickerController.delegate = self;
+	self.pickerController.allowsEditing = NO;
 #warning picker editing mode crop size
     
-    [self presentModalViewController:picker animated:YES];
+    [self presentModalViewController:self.pickerController animated:YES];
 }
 
 // UIImagePickerControllerSourceTypeCamera and UIImagePickerControllerSourceTypePhotoLibrary
@@ -824,8 +828,6 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     DDLogVerbose(@"Imagedata size %i", [imageData length]);
     UIImage *image = [UIImage imageWithData:imageData];
 
-
-    
     if (picker.sourceType == UIImagePickerControllerSourceTypeCamera) {
         // Save Video to Photo Album
         ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
@@ -834,11 +836,8 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
                                   completionBlock:^(NSURL *assetURL, NSError *error){}];
         [self uploadImageToUpyun:image andPicker:picker];
     }else if(picker.sourceType == UIImagePickerControllerSourceTypePhotoLibrary){
-        [self.selectedView setHidden:NO];
         self.selectedImageView.image = image;
-        self.pickerController = picker;
-        self.uploadImage = image;
-        
+        self.uploadImage = image;        
         [picker.view addSubview:self.selectedView];
     }
     
