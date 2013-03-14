@@ -32,6 +32,7 @@
 #import "ConvenienceMethods.h"
 #import "AFImageRequestOperation.h"
 #import "AlbumViewController.h"
+#import <QuartzCore/QuartzCore.h>
 
 
 // Log levels: off, error, warn, info, verbose
@@ -90,6 +91,14 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @property(nonatomic, readwrite)CGFloat textViewContentHeight;
 @property(nonatomic, strong)UIActionSheet *photoActionSheet;
 @property(nonatomic, strong)NSMutableArray *albumArray;
+// select image view
+@property(nonatomic, strong)UIView *selectedView;
+@property(nonatomic, strong)UIImageView *selectedImageView;
+@property(nonatomic, strong)UIButton *selectedButtton;
+@property(nonatomic, strong)UIButton *unSelectedButtton;
+@property(nonatomic, strong)UIImage *uploadImage;
+@property(nonatomic, strong)UIImagePickerController *pickerController;
+
 
 - (WSBubbleData *)addMessage:(Message *)msg toBubbleData:(NSMutableArray *)data;
 - (void)addAlbum:(Message *)msg;
@@ -112,6 +121,12 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @synthesize keyboardBoundHeight;
 @synthesize textViewContentHeight;
 @synthesize albumArray;
+@synthesize selectedImageView;
+@synthesize selectedView;
+@synthesize selectedButtton;
+@synthesize unSelectedButtton;
+@synthesize pickerController;
+@synthesize uploadImage;
 
 - (id)init
 {
@@ -198,6 +213,44 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     self.swipeView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 320, 150)];
     self.swipeView.backgroundColor = [UIColor clearColor];
     
+    // 相册图片选择器
+    self.selectedView = [[UIView alloc]initWithFrame:CGRectMake(55, 100, 210, 270)];
+    self.selectedView.backgroundColor = RGBCOLOR(41, 43, 46);
+    self.selectedView.layer.cornerRadius = 20.0f;
+    self.selectedView.layer.masksToBounds = YES;
+    
+    self.selectedImageView = [[UIImageView alloc]initWithFrame:CGRectMake(45,30, 120, 160)];
+    [self.selectedImageView setContentMode:UIViewContentModeScaleAspectFit];
+    self.selectedImageView.layer.borderColor = [UIColor whiteColor].CGColor;
+    self.selectedImageView.layer.borderWidth = 1.0f;
+    
+    // selectedButtton
+    self.selectedButtton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.selectedButtton setFrame:CGRectMake(0 , 230, 105, 40)];
+    [self.selectedButtton.titleLabel setFont:[UIFont systemFontOfSize:16.0]];
+    [self.selectedButtton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.selectedButtton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
+    [self.selectedButtton.titleLabel setTextAlignment:UITextAlignmentCenter];
+    [self.selectedButtton setTitle:T(@"确认") forState:UIControlStateNormal];
+    [self.selectedButtton setBackgroundImage:[UIImage imageNamed:@"image_selected.png"] forState:UIControlStateNormal];
+    [self.selectedButtton addTarget:self action:@selector(selectImageAction:) forControlEvents:UIControlEventTouchUpInside];
+    
+    // unselectedButtton
+    self.unSelectedButtton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.unSelectedButtton setFrame:CGRectMake(105 , 230, 105, 40)];
+    [self.unSelectedButtton.titleLabel setFont:[UIFont systemFontOfSize:16.0]];
+    [self.unSelectedButtton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.unSelectedButtton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
+    [self.unSelectedButtton.titleLabel setTextAlignment:UITextAlignmentCenter];
+    [self.unSelectedButtton setTitle:T(@"取消") forState:UIControlStateNormal];
+    [self.unSelectedButtton setBackgroundImage:[UIImage imageNamed:@"image_unselected.png"] forState:UIControlStateNormal];
+    [self.unSelectedButtton addTarget:self action:@selector(unSelectImageAction) forControlEvents:UIControlEventTouchUpInside];
+
+    [self.selectedView addSubview:self.selectedImageView];
+    [self.selectedView addSubview:self.selectedButtton];
+    [self.selectedView addSubview:self.unSelectedButtton];
+//    [self.view addSubview:self.selectedView];
+//    [self.selectedView setHidden:YES];
 }
 
 - (void)keyboardWillChangeFrame:(NSNotification *)notification{
@@ -312,30 +365,16 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 - (void)refreshBubbleData
 {
-    self.albumArray = [[NSMutableArray alloc]init];
     NSSet *messages = conversation.messages;
     
     self.bubbleData = [[NSMutableArray alloc] initWithCapacity:[messages count]];
     
-//    NSEnumerator *enumerator = [conversation.messages objectEnumerator];
-//    Message* aMessage;
-//    while (aMessage = [enumerator nextObject]) {
-//        [self addMessage:aMessage toBubbleData:self.bubbleData];
-//        [self addAlbum:aMessage];
-//    }
-//    
-    // sort
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"sentDate" ascending:YES];
-    NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
-
-    Message *aMessage;
-
-    NSArray *tmp = [[conversation.messages allObjects]sortedArrayUsingDescriptors:sortDescriptors];
-    for (int i = 0; i< [tmp count]; i++) {
-        aMessage = (Message *)[tmp objectAtIndex:i];
+    NSEnumerator *enumerator = [conversation.messages objectEnumerator];
+    Message* aMessage;
+    while (aMessage = [enumerator nextObject]) {
         [self addMessage:aMessage toBubbleData:self.bubbleData];
-        [self addAlbum:aMessage];
     }
+    
     
     self.bubbleTable.bubbleSection = [self sortBubbleSection:self.bubbleData];
     [self.bubbleTable reloadData];
@@ -345,31 +384,16 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.albumArray = [[NSMutableArray alloc]init];
 #warning  -  this block may be in the viewdidiload
     NSSet *messages = conversation.messages;
     self.bubbleData = [[NSMutableArray alloc] initWithCapacity:[messages count]];
 
-//    NSEnumerator *enumerator = [conversation.messages objectEnumerator];
-//    Message* aMessage;
-//    while (aMessage = [enumerator nextObject]) {
-//        [self addMessage:aMessage toBubbleData:self.bubbleData];
-//        [self addAlbum:aMessage];
-//    }
-//    
-    // sort
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"sentDate" ascending:YES];
-    NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
-    
-    Message *aMessage;
-    
-    NSArray *tmp = [[conversation.messages allObjects]sortedArrayUsingDescriptors:sortDescriptors];
-    for (int i = 0; i< [tmp count]; i++) {
-        aMessage = (Message *)[tmp objectAtIndex:i];
+    NSEnumerator *enumerator = [conversation.messages objectEnumerator];
+    Message* aMessage;
+    while (aMessage = [enumerator nextObject]) {
         [self addMessage:aMessage toBubbleData:self.bubbleData];
         [self addAlbum:aMessage];
     }
-    
     
     self.bubbleTable.bubbleSection = [self sortBubbleSection:self.bubbleData];
     [self.bubbleTable reloadData];
@@ -670,14 +694,6 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [self scrollToBottomBubble:YES];
 }
 
-- (void)addAlbum:(Message *)msg
-{
-    if (msg.type == [NSNumber numberWithInt:MessageTypeChat]) {
-        if (msg.bodyType == [NSNumber numberWithInt:MessageBodyTypeImage]) {
-            [self.albumArray addObject:msg.text];
-        }
-    }
-}
 
 - (WSBubbleData *)addMessage:(Message *)msg toBubbleData:(NSMutableArray *)data
 {
@@ -772,7 +788,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 - (void)takePhotoFromLibaray
 {
     UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-    picker.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
+    picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     picker.delegate = self;
 	picker.allowsEditing = NO;
     [self presentModalViewController:picker animated:YES];
@@ -807,13 +823,8 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     NSData *imageData = UIImageJPEGRepresentation(screenImage, JPEG_QUALITY);
     DDLogVerbose(@"Imagedata size %i", [imageData length]);
     UIImage *image = [UIImage imageWithData:imageData];
-    UIImage *thumbnail = [image imageByScalingToSize:CGSizeMake(MESSAGE_THUMBNAIL_WIDTH, MESSAGE_THUMBNAIL_HEIGHT)];
 
-    
-    // HUD show
-    MBProgressHUD* HUD = [MBProgressHUD showHUDAddedTo:picker.view animated:YES];
-    HUD.removeFromSuperViewOnHide = YES;
-    HUD.labelText = T(@"上传中");
+
     
     if (picker.sourceType == UIImagePickerControllerSourceTypeCamera) {
         // Save Video to Photo Album
@@ -821,16 +832,31 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
         [library writeImageDataToSavedPhotosAlbum:imageData
                                          metadata:nil
                                   completionBlock:^(NSURL *assetURL, NSError *error){}];
+        [self uploadImageToUpyun:image andPicker:picker];
+    }else if(picker.sourceType == UIImagePickerControllerSourceTypePhotoLibrary){
+        [self.selectedView setHidden:NO];
+        self.selectedImageView.image = image;
+        self.pickerController = picker;
+        self.uploadImage = image;
+        
+        [picker.view addSubview:self.selectedView];
     }
-
-
     
-//    上传到upai
-    
+
+}
+
+- (void)uploadImageToUpyun:(UIImage *)image andPicker:(UIImagePickerController *)picker
+{
+    UIImage *thumbnail = [image imageByScalingToSize:CGSizeMake(MESSAGE_THUMBNAIL_WIDTH, MESSAGE_THUMBNAIL_HEIGHT)];
+    // HUD show
+    MBProgressHUD* HUD = [MBProgressHUD showHUDAddedTo:picker.view animated:YES];
+    HUD.removeFromSuperViewOnHide = YES;
+    HUD.labelText = T(@"上传中");
+    //    上传到upai
     [[AppNetworkAPIClient sharedClient] storeMessageImage:image thumbnail:thumbnail withBlock:^(id responseObject, NSError *error) {
         [HUD hide:YES];
         [picker dismissModalViewControllerAnimated:YES];
-
+        
         if ((responseObject != nil) && error == nil) {
             
             DDLogVerbose(@"storeMessageImage %@", responseObject);
@@ -838,16 +864,28 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
             [[self appDelegate] saveContextInDefaultLoop];
             NSString *metadata = [NSString stringWithFormat:@"%.0f,%.0f",thumbnail.size.width,thumbnail.size.height];
             [self sendMessage:[responseDict objectForKey:@"url"] andMetadata:metadata];
-
+            
             [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"上传成功") andHideAfterDelay:2];
         } else {
             DDLogVerbose (@"NSError received during store avatar: %@", error);
             [ConvenienceMethods showHUDAddedTo:self.view animated:YES text:T(@"上传失败") andHideAfterDelay:2];
         }
-
+        
     }];
-
 }
+
+- (void)selectImageAction
+{
+    [self uploadImageToUpyun:self.uploadImage andPicker:self.pickerController];
+    [self.selectedView removeFromSuperview];
+}
+
+- (void)unSelectImageAction
+{
+    [self.selectedView removeFromSuperview];
+}
+
+
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
@@ -859,6 +897,20 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
 
 - (void)albumClick:(NSString *)urlString
 {
+    self.albumArray = [[NSMutableArray alloc]init];
+
+    // sort
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"sentDate" ascending:YES];
+    NSArray *sortDescriptors = [[NSArray alloc] initWithObjects:sortDescriptor, nil];
+    
+    Message *aMessage;
+    
+    NSArray *tmp = [[conversation.messages allObjects]sortedArrayUsingDescriptors:sortDescriptors];
+    for (int i = 0; i< [tmp count]; i++) {
+        aMessage = (Message *)[tmp objectAtIndex:i];
+        [self addAlbum:aMessage];
+    }
+
     AlbumViewController *albumViewController = [[AlbumViewController alloc] init];
     albumViewController.albumArray = self.albumArray;
     for (int i=0; i< [self.albumArray count]; i++) {
@@ -874,6 +926,14 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     [self.navigationController pushViewController:albumViewController animated:YES];
 }
 
+- (void)addAlbum:(Message *)msg
+{
+    if (msg.type == [NSNumber numberWithInt:MessageTypeChat]) {
+        if (msg.bodyType == [NSNumber numberWithInt:MessageBodyTypeImage]) {
+            [self.albumArray addObject:msg.text];
+        }
+    }
+}
 
 
 

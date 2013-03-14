@@ -220,6 +220,9 @@
 		26BA7EF21653908E0094D030 /* WSBubbleTextTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 26BA7EF11653908E0094D030 /* WSBubbleTextTableViewCell.m */; };
 		26BA7EF5165390C00094D030 /* WSBubbleTemplateATableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 26BA7EF4165390C00094D030 /* WSBubbleTemplateATableViewCell.m */; };
 		26BA7EF8165390D30094D030 /* WSBubbleRateTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 26BA7EF7165390D30094D030 /* WSBubbleRateTableViewCell.m */; };
+		26CBED7F16F1B64C00290FE1 /* orange_btn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26CBED7E16F1B64C00290FE1 /* orange_btn@2x.png */; };
+		26CBED8316F1B87A00290FE1 /* image_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26CBED8216F1B87A00290FE1 /* image_selected@2x.png */; };
+		26CBED8516F1B88000290FE1 /* image_unselected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 26CBED8416F1B88000290FE1 /* image_unselected@2x.png */; };
 		26DE71D91654C1C400672C4F /* NearbyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 26DE71D81654C1C400672C4F /* NearbyViewController.m */; };
 		26E5886A1659ED8200180A9D /* NearbyTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 26E588691659ED8200180A9D /* NearbyTableViewCell.m */; };
 		26E7C4E31661F1C700366B0C /* ChannelListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 26E7C4E21661F1C700366B0C /* ChannelListViewController.m */; };
@@ -732,6 +735,9 @@
 		26BA7EF4165390C00094D030 /* WSBubbleTemplateATableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WSBubbleTemplateATableViewCell.m; path = WSBubbleData/WSBubbleTemplateATableViewCell.m; sourceTree = "<group>"; };
 		26BA7EF6165390D30094D030 /* WSBubbleRateTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WSBubbleRateTableViewCell.h; path = WSBubbleData/WSBubbleRateTableViewCell.h; sourceTree = "<group>"; };
 		26BA7EF7165390D30094D030 /* WSBubbleRateTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WSBubbleRateTableViewCell.m; path = WSBubbleData/WSBubbleRateTableViewCell.m; sourceTree = "<group>"; };
+		26CBED7E16F1B64C00290FE1 /* orange_btn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "orange_btn@2x.png"; sourceTree = "<group>"; };
+		26CBED8216F1B87A00290FE1 /* image_selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "image_selected@2x.png"; sourceTree = "<group>"; };
+		26CBED8416F1B88000290FE1 /* image_unselected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "image_unselected@2x.png"; sourceTree = "<group>"; };
 		26DE71D71654C1C400672C4F /* NearbyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NearbyViewController.h; path = ViewControllers/NearbyViewController.h; sourceTree = "<group>"; };
 		26DE71D81654C1C400672C4F /* NearbyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NearbyViewController.m; path = ViewControllers/NearbyViewController.m; sourceTree = "<group>"; };
 		26E588681659ED8200180A9D /* NearbyTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NearbyTableViewCell.h; path = ViewControllers/UITableViewCell/NearbyTableViewCell.h; sourceTree = "<group>"; };
@@ -1122,6 +1128,9 @@
 			isa = PBXGroup;
 			children = (
 				260970921696BAC500D0E785 /* 37x-Checkmark.png */,
+				26CBED8216F1B87A00290FE1 /* image_selected@2x.png */,
+				26CBED8416F1B88000290FE1 /* image_unselected@2x.png */,
+				26CBED7E16F1B64C00290FE1 /* orange_btn@2x.png */,
 				26236C2516F0754300CA51A6 /* cell_H1_bg@2x.png */,
 				2638F55316E445C200F22E66 /* barbutton_photo@2x.png */,
 				26FA49AE16BCED31003597CB /* green_cs_btn@2x.png */,
@@ -2655,6 +2664,9 @@
 				26FA49AF16BCED31003597CB /* green_cs_btn@2x.png in Resources */,
 				2638F55416E445C200F22E66 /* barbutton_photo@2x.png in Resources */,
 				26236C2616F0754300CA51A6 /* cell_H1_bg@2x.png in Resources */,
+				26CBED7F16F1B64C00290FE1 /* orange_btn@2x.png in Resources */,
+				26CBED8316F1B87A00290FE1 /* image_selected@2x.png in Resources */,
+				26CBED8516F1B88000290FE1 /* image_unselected@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
