@@ -19,6 +19,7 @@
 #import "ModelHelper.h"
 #import "AppDelegate.h"
 #import "Me.h"
+#import "CompanyMemberTableViewCell.h"
 
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
@@ -243,17 +244,19 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"CompanyMemberListCell";
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    NSDictionary *dataDict = [self.sourceData objectAtIndex:indexPath.row];
+
+    CompanyMemberTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if (cell == nil) {
-        cell = [self tableViewCellWithReuseIdentifier:CellIdentifier];
+        cell = [[CompanyMemberTableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
-    [self configureCell:cell forIndexPath:indexPath];
+    [cell setNewMember:dataDict];
     
     return cell;
 }
+/*
 
 #define AVATAR_HEIGHT 36
 #define AVATAR_X    (CELL_HEIGHT - AVATAR_HEIGHT)/2
@@ -326,6 +329,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     UILabel *countLabel = (UILabel *)[cell viewWithTag:COUNT_TAG];
     countLabel.text = [dataDict objectForKey:@"signature"];
 }
+*/
 
 - (void) tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {

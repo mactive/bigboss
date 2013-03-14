@@ -201,6 +201,7 @@
 		266A1A6F162E5AF3008EF1D5 /* ShakeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 266A1A6E162E5AF2008EF1D5 /* ShakeViewController.m */; };
 		266A1A72162E5B10008EF1D5 /* SettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 266A1A71162E5B0F008EF1D5 /* SettingViewController.m */; };
 		2674B852164A51950092D980 /* NSDate-Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 2674B851164A51950092D980 /* NSDate-Utilities.m */; };
+		267AACE016F170E400543533 /* CompanyMemberTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 267AACDF16F170E400543533 /* CompanyMemberTableViewCell.m */; };
 		267B678516689BB000CF25C2 /* WSBubbleTemplateBTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 267B678416689BB000CF25C2 /* WSBubbleTemplateBTableViewCell.m */; };
 		267F508E1640DAAD00B42D21 /* EditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 267F508D1640DAAD00B42D21 /* EditViewController.m */; };
 		26825BD716378FA3008DA7CC /* GCPagedScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 26825BD616378FA3008DA7CC /* GCPagedScrollView.m */; };
@@ -694,6 +695,8 @@
 		266A1A71162E5B0F008EF1D5 /* SettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SettingViewController.m; path = ViewControllers/SettingViewController.m; sourceTree = "<group>"; };
 		2674B850164A51950092D980 /* NSDate-Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSDate-Utilities.h"; path = "contrib/NSDate-Utilities.h"; sourceTree = "<group>"; };
 		2674B851164A51950092D980 /* NSDate-Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSDate-Utilities.m"; path = "contrib/NSDate-Utilities.m"; sourceTree = "<group>"; };
+		267AACDE16F170E400543533 /* CompanyMemberTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CompanyMemberTableViewCell.h; path = ViewControllers/UITableViewCell/CompanyMemberTableViewCell.h; sourceTree = "<group>"; };
+		267AACDF16F170E400543533 /* CompanyMemberTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CompanyMemberTableViewCell.m; path = ViewControllers/UITableViewCell/CompanyMemberTableViewCell.m; sourceTree = "<group>"; };
 		267B678316689BB000CF25C2 /* WSBubbleTemplateBTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WSBubbleTemplateBTableViewCell.h; path = WSBubbleData/WSBubbleTemplateBTableViewCell.h; sourceTree = "<group>"; };
 		267B678416689BB000CF25C2 /* WSBubbleTemplateBTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WSBubbleTemplateBTableViewCell.m; path = WSBubbleData/WSBubbleTemplateBTableViewCell.m; sourceTree = "<group>"; };
 		267F508C1640DAAC00B42D21 /* EditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EditViewController.h; path = ViewControllers/EditViewController.h; sourceTree = "<group>"; };
@@ -1431,6 +1434,8 @@
 		26E588661659ED2F00180A9D /* UITableViewCell */ = {
 			isa = PBXGroup;
 			children = (
+				267AACDE16F170E400543533 /* CompanyMemberTableViewCell.h */,
+				267AACDF16F170E400543533 /* CompanyMemberTableViewCell.m */,
 				26236C2016F02CE500CA51A6 /* CompanyTableViewCell.h */,
 				26236C2116F02CE500CA51A6 /* CompanyTableViewCell.m */,
 				260971A11696BD1A00D0E785 /* ContactTableViewCell.h */,
@@ -2898,6 +2903,7 @@
 				04A37B8616E5F8C1000907F5 /* WSBubbleImageTableViewCell.m in Sources */,
 				2638F55C16E7365200F22E66 /* ImageViewController.m in Sources */,
 				26236C2216F02CE500CA51A6 /* CompanyTableViewCell.m in Sources */,
+				267AACE016F170E400543533 /* CompanyMemberTableViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

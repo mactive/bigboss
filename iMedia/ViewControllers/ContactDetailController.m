@@ -214,7 +214,8 @@ static const int ddLogLevel = LOG_LEVEL_ERROR;
     self.albumButtonArray = [[NSMutableArray alloc] init];
 
     for (int i = 0; i< MAX_ALBUN_COUNT; i++) {
-        albumButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        albumButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        albumButton.backgroundColor = [UIColor blackColor];
         [albumButton setFrame:[self calcRect:i]];
         [albumButton.layer setMasksToBounds:YES];
         [albumButton.layer setCornerRadius:3.0];

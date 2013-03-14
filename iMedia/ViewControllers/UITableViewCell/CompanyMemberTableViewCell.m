@@ -1,27 +1,29 @@
 //
-//  CompanyTableViewCell.m
+//  CompanyMemberTableViewCell.m
 //  iMedia
 //
-//  Created by meng qian on 13-3-13.
+//  Created by meng qian on 13-3-14.
 //  Copyright (c) 2013年 Li Xiaosi. All rights reserved.
 //
 
-#import "CompanyTableViewCell.h"
+#import "CompanyMemberTableViewCell.h"
 #import "AppNetworkAPIClient.h"
+#import "AppDelegate.h"
+#import "Me.h"
 
-@interface CompanyTableViewCell()
-@property(nonatomic, strong)Company *data;
+@interface CompanyMemberTableViewCell()
+
+@property(nonatomic, strong)NSDictionary *data;
 @property(nonatomic, strong)UIImage *avatarImage;
+
 @end
 
-@implementation CompanyTableViewCell
+@implementation CompanyMemberTableViewCell
 
 @synthesize data;
 @synthesize avatarImage;
 
-
 #define CELL_HEIGHT 50.0f
-
 #define AVATAR_HEIGHT 36
 #define AVATAR_X    (CELL_HEIGHT - AVATAR_HEIGHT)/2
 #define NAME_X      75
@@ -29,17 +31,11 @@
 #define NAME_Y      (CELL_HEIGHT - NAME_HEIGHT)/2
 #define NAME_WIDTH  200
 
-#define COUNT_X     230
-#define COUNT_WIDTH 15
-#define COUNT_HEIGHT 15
+#define COUNT_X     145
+#define COUNT_WIDTH 130
+#define COUNT_HEIGHT 21
 #define COUNT_Y     (CELL_HEIGHT - COUNT_HEIGHT)/2
-
-#define MIDDLE_COLUMN_WIDTH 100.0
-#define LABEL_HEIGHT 20.0
-#define SUMMARY_WIDTH_OFFEST 30.0
-#define SUMMARY_WIDTH 80.0
 #define MAIN_FONT_SIZE 16.0
-
 
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
@@ -50,8 +46,6 @@
     }
     return self;
 }
-
-
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
@@ -65,22 +59,30 @@
     [self setNeedsDisplay];
 }
 
-- (void)setNewCompany:(Company *)company{
-    self.data  = company;
+
+- (void)setNewMember:(NSDictionary *)member
+{
+    self.data  = member;
     
-    if (StringHasValue(company.logo)){
-        [[AppNetworkAPIClient sharedClient] loadImage:company.logo withBlock:^(UIImage *image, NSError *error) {
+    if (StringHasValue([member objectForKey:@"thumbnail"])){
+        [[AppNetworkAPIClient sharedClient] loadImage:[member objectForKey:@"thumbnail"] withBlock:^(UIImage *image, NSError *error) {
             if (image) {
                 self.avatarImage = image;
 #warning everytime get image redraw memory
                 [self setNeedsDisplay];
             }
         }];
-
     }
     
-//    [self setNeedsDisplay];
+    // show the right arrow
+    if ([[self appDelegate].me.guid isEqualToString:[member objectForKey:@"guid"]]) {
+        self.accessoryType = UITableViewCellAccessoryNone;
+    }else{
+        self.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    }
 }
+
+
 
 - (void)drawRect:(CGRect)rect
 {
@@ -106,38 +108,30 @@
     [self.avatarImage drawInRect:avatarRect];
     CGContextRestoreGState(ctx);
     
-    // set max size
-    CGSize nameMaxSize = CGSizeMake(MIDDLE_COLUMN_WIDTH, LABEL_HEIGHT*2);
-    CGFloat _labelHeight;
-    
-    NSString *nameString;
-    
-    nameString = self.data.name;
-    
-    // nickname
+    // name
     UIColor *nameMagentaColor = RGBCOLOR(107, 107, 107);
     [nameMagentaColor set];
-    UIFont* nameFont = [UIFont boldSystemFontOfSize:MAIN_FONT_SIZE];
-    CGSize labelSize = [nameString sizeWithFont:nameFont constrainedToSize:nameMaxSize lineBreakMode: UILineBreakModeTailTruncation];
-    if (labelSize.height > LABEL_HEIGHT) {
-        _labelHeight = 10.0;
-    }else {
-        _labelHeight = 20.0;
-    }
-    
+    NSString *nameString = [self.data objectForKey:@"nickname"];
     CGRect nameRect = CGRectMake(NAME_X, NAME_Y, NAME_WIDTH, NAME_HEIGHT);
     
     [nameString drawInRect:nameRect
                   withFont:[UIFont systemFontOfSize:MAIN_FONT_SIZE]];
     
-    
-    // location icon
-    UIImage *privateIcon = [UIImage imageNamed:@"private_icon.png"];
-    
-    if (self.data.isPrivate.boolValue) {
-        [privateIcon drawInRect:CGRectMake(COUNT_X, COUNT_Y, COUNT_WIDTH, COUNT_HEIGHT)];
-    }
+    // signture
+    UIColor *signatureMagentaColor = LIVID_COLOR;
+    [signatureMagentaColor set];
+    NSString *signatureString = [self.data objectForKey:@"signature"];
+    CGRect signatureRect  = CGRectMake(COUNT_X, COUNT_Y, COUNT_WIDTH, COUNT_HEIGHT);
+    [signatureString drawInRect:signatureRect withFont:[UIFont systemFontOfSize:14.0f]];
     
 }
+
+- (AppDelegate *)appDelegate
+{
+	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
+}
+
+
+
 
 @end
