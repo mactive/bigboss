@@ -399,10 +399,9 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         [self updateUnreadBadge];
 
     } else {
+        
         if (conv.type == IdentityTypeChannel) {
             [XFox logEvent:EVENT_CHANNEL_READ withParameters:[NSDictionary dictionaryWithObjectsAndKeys:conv.ownerEntity.guid,@"guid", nil]];
-        }else if (conv.type == IdentityTypeChannel){
-            
         }
 
         _detailController.conversation = conv;
