@@ -285,7 +285,7 @@
         
         [[self appDelegate].conversationController.chatDetailController.navigationController setHidesBottomBarWhenPushed:YES];
         [[self appDelegate].conversationController.chatDetailController.navigationController pushViewController:controller animated:YES];
-        [XFox logEvent:EVENT_READING_ARTICLE withParameters:[NSDictionary dictionaryWithObjectsAndKeys:titleString, @"title", linkString,@"url" nil]];
+        [XFox logEvent:EVENT_ARTICLE_READ withParameters:[NSDictionary dictionaryWithObjectsAndKeys:titleString, @"title", linkString,@"url",nil]];
 
     }
     

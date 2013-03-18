@@ -12,8 +12,6 @@
 #import "PageViewLogger.h"
 #import "NSData+Godzippa.h"
 #import <CommonCrypto/CommonCryptor.h>
-#import "AppDelegate.h"
-#import "Me.h"
 #import "DDLog.h"
 // Log levels: off, error, warn, info, verbose
 #if DEBUG
@@ -36,6 +34,7 @@ NSString* XFoxAgentVersion = @"0.1";
 @property (nonatomic, strong) NSMutableArray *delegateArray;
 @property (nonatomic) NSTimeInterval currentSessionStartDateInTimeInterval;
 @property (nonatomic, strong) NSDateFormatter *dateFormatter;
+@property (nonatomic, strong) NSString *guid;
 @end
 
 @implementation XFox
@@ -48,6 +47,7 @@ NSString* XFoxAgentVersion = @"0.1";
 @synthesize delegateArray;
 @synthesize currentSessionStartDateInTimeInterval;
 @synthesize dateFormatter;
+@synthesize guid;
 
 - (id)init
 {
@@ -93,6 +93,11 @@ NSString* XFoxAgentVersion = @"0.1";
 + (void)setAppVersion:(NSString *)version
 {
     [self sInstance]->_appVersion = version;
+}
+
++ (void)setGUID:(NSString *)guid;
+{
+    [self sInstance].guid = guid;
 }
 
 + (NSString *)getXFoxAgentVersion
@@ -303,7 +308,6 @@ NSString* XFoxAgentVersion = @"0.1";
     NSString *thirdString = [secondString stringByReplacingOccurrencesOfString:@"\"{" withString:@"{"];
     NSString *fourString = [thirdString stringByReplacingOccurrencesOfString:@"}\"" withString:@"}"];
     NSString *itemsString = [fourString stringByReplacingOccurrencesOfString:@"\\\"" withString:@"\""];
-    NSString *guidString = [self appDelegate].me.guid;
     
     NSDictionary *logDict = [[NSDictionary alloc]initWithObjectsAndKeys:
                                 [XFox getXFoxAgentVersion],@"XFoxVer",
@@ -311,7 +315,7 @@ NSString* XFoxAgentVersion = @"0.1";
                                 fox->_appVersion,@"appVer",
                                 fox.currentSessionKey,@"session",
                                 [fox.dateFormatter stringFromDate:[NSDate dateWithTimeIntervalSinceReferenceDate:fox.currentSessionStartDateInTimeInterval]],@"startTime",
-                                guidString,@"guid",
+                                fox.guid, @"guid",
                                 @"REPLACECODE",@"items",
                             nil];
     NSString *logDictString = [logDict JSONRepresentation];
@@ -335,13 +339,6 @@ NSString* XFoxAgentVersion = @"0.1";
             [fox clearLogs];
         }
     }];
-}
-
-/* AppDelegate */
-
-- (AppDelegate *)appDelegate
-{
-	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
 @end

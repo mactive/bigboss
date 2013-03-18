@@ -107,12 +107,6 @@ NS_INLINE BOOL StringHasValue(NSString * str) {
     return (str != nil) && (![str isEqualToString:@""]);
 }
 
-typedef enum _ChatType
-{
-    ChatTypeUser = 1,
-    ChatTypeChannel = 2,
-    ChatTypeOther = 3
-} ChatType;
 
 typedef enum _MessageType
 {

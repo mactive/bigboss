@@ -101,6 +101,14 @@
         _me.lastGPSUpdated = newLocation.timestamp;
         _me.lastGPSLocation = [NSString stringWithFormat:@"%f,%f", newLocation.coordinate.latitude, newLocation.coordinate.longitude];
          [[AppNetworkAPIClient sharedClient] updateLocation:newLocation.coordinate.latitude andLongitude:newLocation.coordinate.longitude];
+        [XFox logEvent:EVENT_CUR_LOCATION
+        withParameters:
+            [NSDictionary dictionaryWithObjectsAndKeys:
+             [NSString stringWithFormat:@"%f",newLocation.coordinate.latitude],
+             @"lat",
+             [NSString stringWithFormat:@"%f",newLocation.coordinate.longitude],
+             @"lon", nil]
+         ];
     }
     
 //    NSLog(@"location information received: %@, from old location %@", newLocation, oldLocation);

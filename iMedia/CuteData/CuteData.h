@@ -46,6 +46,7 @@
  */
 
 + (void)setAppVersion:(NSString *)version;
++ (void)setGUID:(NSString *)guid;
 
 /*!
  *  @brief Retrieves the XFox Agent Build Version.

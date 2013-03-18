@@ -20,11 +20,16 @@
 #define EVENT_FRIEND_REQUEST    @"E_friend_request"
 #define EVENT_ADD_WEIBO     @"E_add_weibo"
 #define EVENT_DEL_WEIBO     @"E_del_weibo"
-#define EVENT_GET_LOCATION     @"E_get_location"
+#define EVENT_CUR_LOCATION     @"E_current_location"
 
 //define reading time and read click
-#define EVENT_READING_TIMER     @"E_reading_timer"
-#define EVENT_READING_ARTICLE   @"E_reading_article"
+#define EVENT_CHANNEL_TIMER     @"E_reading_timer"
+#define EVENT_ARTICLE_READ      @"E_article_read"
+#define EVENT_ARTICLE_TIMER     @"E_article_timer"
+
+#define EVENT_CHANNEL_UNREAD    @"E_channel_unread"
+#define EVENT_CHANNEL_READ      @"E_channel_read"
+
 
 //define all timer variables
 #define TIMER_GET_NEARBY_USER   @"T_nearby_user"

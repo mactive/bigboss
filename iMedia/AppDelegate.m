@@ -200,7 +200,6 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     for (id key in userInfo) {
         DDLogVerbose(@"key: %@, value: %@", key, [userInfo objectForKey:key]);
     }
-    
 }
 
 

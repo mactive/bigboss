@@ -399,11 +399,18 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         [self updateUnreadBadge];
 
     } else {
+        if (conv.type == IdentityTypeChannel) {
+            [XFox logEvent:EVENT_CHANNEL_READ withParameters:[NSDictionary dictionaryWithObjectsAndKeys:conv.ownerEntity.guid,@"guid", nil]];
+        }else if (conv.type == IdentityTypeChannel){
+            
+        }
+
         _detailController.conversation = conv;
         _detailController.managedObjectContext = self.managedObjectContext;
+        
         [_detailController setHidesBottomBarWhenPushed:YES];
         [self.navigationController pushViewController:_detailController animated:YES];
-
+        
     }
 }
 
@@ -429,7 +436,6 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
             [user addOwnedConversationsObject:_detailController.conversation];
             _detailController.conversation.type = ConversationTypeSingleUserChat;
         }
-        _detailController.chatType = [NSNumber numberWithInt:ChatTypeUser];
 
     } else if ([obj isKindOfClass:[Channel class]]) {
         Channel *channel = obj;
@@ -440,7 +446,6 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         }
         Conversation *conv = [channel.ownedConversations anyObject];
         _detailController.conversation = conv;
-        _detailController.chatType = [NSNumber numberWithInt:ChatTypeChannel];
     }
     
     _detailController.managedObjectContext = self.managedObjectContext;
@@ -579,7 +584,12 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     NSArray *conversations = [[self fetchedResultsController] fetchedObjects];
     self.unreadMessageCount = 0;
     for (int i = 0 ; i < [conversations count] ; i++) {
-        self.unreadMessageCount += ((Conversation *)[conversations objectAtIndex:i]).unreadMessagesCount;
+        Conversation *conv = (Conversation *)[conversations objectAtIndex:i];
+        self.unreadMessageCount += conv.unreadMessagesCount;
+#warning channel guid
+        if (conv.unreadMessagesCount > 0) {
+            [XFox logEvent:EVENT_CHANNEL_UNREAD withParameters:[NSDictionary dictionaryWithObjectsAndKeys:conv.ownerEntity.guid,@"guid", nil]];
+        }
     }
     
     [self appDelegate].unreadMessageCount = self.unreadMessageCount;

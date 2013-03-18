@@ -127,7 +127,6 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @synthesize unSelectedButtton;
 @synthesize pickerController;
 @synthesize uploadImage;
-@synthesize chatType;
 
 - (id)init
 {
@@ -418,8 +417,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [self scrollToBottomBubble:YES];
     [self.textView resignFirstResponder];
     
-    if ([self.chatType isEqualToNumber:[NSNumber numberWithInt:ChatTypeChannel]]) {
-        [XFox logEvent:EVENT_READING_TIMER
+    if (self.conversation.type == IdentityTypeChannel) {
+        [XFox logEvent:EVENT_CHANNEL_TIMER
         withParameters:[NSDictionary dictionaryWithObjectsAndKeys:self.title,@"title", nil]
                  timed:YES];
     }
@@ -461,8 +460,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [self.swipeView removeGestureRecognizer:self.tapGestureRecognizer];
     [self.swipeView removeFromSuperview];
 
-    if ([self.chatType isEqualToNumber:[NSNumber numberWithInt:ChatTypeChannel]]) {
-        [XFox endTimedEvent:EVENT_READING_TIMER withParameters:nil];
+    if (self.conversation.type == IdentityTypeChannel) {
+        [XFox endTimedEvent:EVENT_CHANNEL_TIMER withParameters:nil];
     }
 }
 
