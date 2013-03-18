@@ -203,9 +203,13 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     CLLocation *loc = [LocationManager sharedInstance].location;
     CGFloat lat =  loc.coordinate.latitude;
     CGFloat lon =  loc.coordinate.longitude;
+    NSString *latString = [NSString stringWithFormat:@"%f",loc.coordinate.latitude];
+    NSString *lonString = [NSString stringWithFormat:@"%f",loc.coordinate.longitude];
     [self appDelegate].me.lastGPSUpdated = loc.timestamp;
-    [self appDelegate].me.lastGPSLocation = [NSString stringWithFormat:@"%f,%f", loc.coordinate.latitude, loc.coordinate.longitude];
+    [self appDelegate].me.lastGPSLocation = [NSString stringWithFormat:@"%@,%@", latString, lonString];
     
+    // XFox
+    [XFox logEvent:EVENT_GET_LOCATION withParameters:[NSDictionary dictionaryWithObjectsAndKeys:latString, @"lat", lonString, @"lon", nil]];
     
     [[AppNetworkAPIClient sharedClient]getNearestPeopleWithGender:gender start:start latitude:lat longitude:lon andBlock:^(id responseObject, NSError *error) {
         [HUD hide:YES];

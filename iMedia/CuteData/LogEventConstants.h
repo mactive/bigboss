@@ -20,6 +20,11 @@
 #define EVENT_FRIEND_REQUEST    @"E_friend_request"
 #define EVENT_ADD_WEIBO     @"E_add_weibo"
 #define EVENT_DEL_WEIBO     @"E_del_weibo"
+#define EVENT_GET_LOCATION     @"E_get_location"
+
+//define reading time and read click
+#define EVENT_READING_TIMER     @"E_reading_timer"
+#define EVENT_READING_ARTICLE   @"E_reading_article"
 
 //define all timer variables
 #define TIMER_GET_NEARBY_USER   @"T_nearby_user"
@@ -35,4 +40,5 @@
 #define PAGE_CONTACT_LIST   @"A_page_contact_list"
 #define PAGE_CONTACT_DETAIL @"A_page_contact_detail"
 #define PAGE_SETTINGS       @"A_page_settings"
+
 #endif

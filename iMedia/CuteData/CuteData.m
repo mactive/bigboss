@@ -337,6 +337,8 @@ NSString* XFoxAgentVersion = @"0.1";
     }];
 }
 
+/* AppDelegate */
+
 - (AppDelegate *)appDelegate
 {
 	return (AppDelegate *)[[UIApplication sharedApplication] delegate];
