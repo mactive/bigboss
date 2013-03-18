@@ -429,6 +429,8 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
             [user addOwnedConversationsObject:_detailController.conversation];
             _detailController.conversation.type = ConversationTypeSingleUserChat;
         }
+        _detailController.chatType = [NSNumber numberWithInt:ChatTypeUser];
+
     } else if ([obj isKindOfClass:[Channel class]]) {
         Channel *channel = obj;
         if ([channel.ownedConversations count] == 0) {
@@ -438,7 +440,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         }
         Conversation *conv = [channel.ownedConversations anyObject];
         _detailController.conversation = conv;
-
+        _detailController.chatType = [NSNumber numberWithInt:ChatTypeChannel];
     }
     
     _detailController.managedObjectContext = self.managedObjectContext;

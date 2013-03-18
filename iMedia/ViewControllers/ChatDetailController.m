@@ -127,6 +127,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 @synthesize unSelectedButtton;
 @synthesize pickerController;
 @synthesize uploadImage;
+@synthesize chatType;
 
 - (id)init
 {
@@ -162,7 +163,6 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     self.bubbleTable.snapInterval = 120;
     self.bubbleTable.showAvatars = YES;
 
-    
     // Create messageInputBar to contain _textView, messageInputBarBackgroundImageView, & _sendButton.
     UIImageView *messageInputBar = [[UIImageView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height-kChatBarHeight1, self.view.frame.size.width, kChatBarHeight1)];
     messageInputBar.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin);
@@ -417,6 +417,14 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     
     [self scrollToBottomBubble:YES];
     [self.textView resignFirstResponder];
+    
+    if ([self.chatType isEqualToNumber:[NSNumber numberWithInt:ChatTypeChannel]]) {
+        [XFox logEvent:EVENT_READING_TIMER
+        withParameters:[NSDictionary dictionaryWithObjectsAndKeys:self.title,@"title", nil]
+                 timed:YES];
+    }
+
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -452,6 +460,10 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [self.swipeView removeGestureRecognizer:self.swipeGestureRecognizer];
     [self.swipeView removeGestureRecognizer:self.tapGestureRecognizer];
     [self.swipeView removeFromSuperview];
+
+    if ([self.chatType isEqualToNumber:[NSNumber numberWithInt:ChatTypeChannel]]) {
+        [XFox endTimedEvent:EVENT_READING_TIMER withParameters:nil];
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated

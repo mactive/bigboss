@@ -201,14 +201,16 @@ static NSString *CellSectionHeader = @"CellSectionHeader";
     if (data.type == BubbleTypeTemplateAview) {
         
         NSXMLElement *element = [[NSXMLElement alloc] initWithXMLString:data.content error:nil];
-        NSString* imageString = [[element elementForName:@"link9"] stringValue];
-        
-        if (StringHasValue(imageString)) {
+        NSString* linkString = [[element elementForName:@"link9"] stringValue];
+        NSString* titleString = [[element elementForName:@"title1"] stringValue];
+
+        if (StringHasValue(linkString)) {
             WebViewController *controller = [[WebViewController alloc]initWithNibName:nil bundle:nil];
-            controller.urlString = imageString;
+            controller.urlString = linkString;
             
             [[self appDelegate].conversationController.chatDetailController.navigationController setHidesBottomBarWhenPushed:YES];
             [[self appDelegate].conversationController.chatDetailController.navigationController pushViewController:controller animated:YES];
+            [XFox logEvent:EVENT_READING_ARTICLE withParameters:[NSDictionary dictionaryWithObjectsAndKeys:titleString, @"title", linkString,@"url" nil]];
         }
 
     }

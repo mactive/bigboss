@@ -35,6 +35,7 @@
 @property (nonatomic, strong) UIButton *button3;
 @property (nonatomic, strong) UIButton *button4;
 @property (nonatomic, strong) NSMutableArray *linkArray;
+@property (nonatomic, strong) NSMutableArray *titleArray;
 
 - (void) setupInternalData:(WSBubbleData *)cellData;
 
@@ -58,6 +59,7 @@
 @synthesize button3;
 @synthesize button4;
 @synthesize linkArray;
+@synthesize titleArray;
 
 @synthesize data = _data;
 
@@ -210,6 +212,7 @@
     NSString *link3 = [[element elementForName:@"link3"] stringValue];
     NSString *link4 = [[element elementForName:@"link4"] stringValue];
     self.linkArray  = [[NSMutableArray alloc]initWithObjects:link1, link2, link3,link4, nil];
+    self.titleArray  = [[NSMutableArray alloc]initWithObjects:title1, title2, title3, title4, nil];
     
     
     UIFont *titleFont = [UIFont boldSystemFontOfSize:16.0f];
@@ -273,14 +276,17 @@
 #warning addtarget chatDetailController
 - (void)linkAction:(UIButton *)sender
 {
-    NSString* imageString = [self.linkArray objectAtIndex:sender.tag];
+    NSString* linkString = [self.linkArray objectAtIndex:sender.tag];
+    NSString* titleString = [self.titleArray objectAtIndex:sender.tag];
     
-    if (StringHasValue(imageString)) {
+    if (StringHasValue(linkString)) {
         WebViewController *controller = [[WebViewController alloc]initWithNibName:nil bundle:nil];
-        controller.urlString = imageString;
+        controller.urlString = linkString;
         
         [[self appDelegate].conversationController.chatDetailController.navigationController setHidesBottomBarWhenPushed:YES];
         [[self appDelegate].conversationController.chatDetailController.navigationController pushViewController:controller animated:YES];
+        [XFox logEvent:EVENT_READING_ARTICLE withParameters:[NSDictionary dictionaryWithObjectsAndKeys:titleString, @"title", linkString,@"url" nil]];
+
     }
     
 }

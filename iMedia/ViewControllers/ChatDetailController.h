@@ -27,6 +27,7 @@
 
 @property (nonatomic, strong) WSBubbleTableView *bubbleTable;
 @property (nonatomic, strong) NSMutableArray *bubbleData;
+@property (nonatomic, strong) NSNumber *chatType;
 
 - (void)albumClick:(NSString *)urlString;
 @end
