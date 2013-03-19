@@ -167,7 +167,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self updateUnreadBadge];
+    [self updateUnreadBadgeWithLog:NO];
 }
 
 - (void) tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -396,11 +396,12 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
         controller.friendRequestArray = self.friendRequestArray;
         [self.navigationController pushViewController:controller animated:YES];
         conv.unreadMessagesCount = 0;
-        [self updateUnreadBadge];
+        [self updateUnreadBadgeWithLog:NO];
 
     } else {
         
-        if (conv.type == IdentityTypeChannel) {
+        if (conv.type == IdentityTypeChannel && conv.unreadMessagesCount > 0) {
+            //频道 并且有未读消息的才用
             [XFox logEvent:EVENT_CHANNEL_READ withParameters:[NSDictionary dictionaryWithObjectsAndKeys:conv.ownerEntity.guid,@"guid", nil]];
         }
 
@@ -461,7 +462,7 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     Conversation *conv = [notification object];
     conv.unreadMessagesCount += 1;
     
-    [self updateUnreadBadge];
+    [self updateUnreadBadgeWithLog:YES];
     
     if (self.unreadMessageCount == 1) {
 #warning 应该只在localnoticafation 的时候响 用户自己打开不应该响
@@ -578,15 +579,14 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 }
 
-- (void)updateUnreadBadge
+- (void)updateUnreadBadgeWithLog:(BOOL)isLog
 {
     NSArray *conversations = [[self fetchedResultsController] fetchedObjects];
     self.unreadMessageCount = 0;
     for (int i = 0 ; i < [conversations count] ; i++) {
         Conversation *conv = (Conversation *)[conversations objectAtIndex:i];
         self.unreadMessageCount += conv.unreadMessagesCount;
-#warning channel guid
-        if (conv.unreadMessagesCount > 0) {
+        if (conv.unreadMessagesCount > 0 && isLog) {
             [XFox logEvent:EVENT_CHANNEL_UNREAD withParameters:[NSDictionary dictionaryWithObjectsAndKeys:conv.ownerEntity.guid,@"guid", nil]];
         }
     }
@@ -595,9 +595,21 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
 
 }
 
+// just for main menu badge count
+- (NSInteger)updateMainMenuUnreadBadge
+{
+    NSArray *conversations = [[self fetchedResultsController] fetchedObjects];
+    self.unreadMessageCount = 0;
+    for (int i = 0 ; i < [conversations count] ; i++) {
+        Conversation *conv = (Conversation *)[conversations objectAtIndex:i];
+        self.unreadMessageCount += conv.unreadMessagesCount;
+    }
+    return self.unreadMessageCount;
+}
+
 - (void)contentChanged
 {
-    [self updateUnreadBadge];
+    [self updateUnreadBadgeWithLog:NO];
     [self.tableView reloadData];
 }
 @end

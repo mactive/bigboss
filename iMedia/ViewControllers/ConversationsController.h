@@ -27,5 +27,5 @@
 
 - (void)chatWithIdentity:(id)obj;
 - (void)contentChanged;
-- (void)updateUnreadBadge;
+- (NSInteger)updateMainMenuUnreadBadge;
 @end

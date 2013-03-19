@@ -207,7 +207,7 @@ static NSString *CellSectionHeader = @"CellSectionHeader";
         if (StringHasValue(linkString)) {
             WebViewController *controller = [[WebViewController alloc]initWithNibName:nil bundle:nil];
             controller.urlString = linkString;
-            
+            controller.titleString = titleString;
             [[self appDelegate].conversationController.chatDetailController.navigationController setHidesBottomBarWhenPushed:YES];
             [[self appDelegate].conversationController.chatDetailController.navigationController pushViewController:controller animated:YES];
             [XFox logEvent:EVENT_ARTICLE_READ

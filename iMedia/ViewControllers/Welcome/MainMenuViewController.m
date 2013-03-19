@@ -189,11 +189,10 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     }
     
     // 为了消息数量计算使用
-    [[self appDelegate].conversationController updateUnreadBadge];
+    NSInteger badgeInt = [[self appDelegate].conversationController updateMainMenuUnreadBadge];
     
     MetroButton *targetButton = [self.buttonArray objectAtIndex:1];
-    [targetButton setBadgeNumber:[self appDelegate].unreadMessageCount];
-    
+    [targetButton setBadgeNumber:badgeInt];
     
 }
 - (void)updateLastMessageWithCount:(NSUInteger)lastMessageCount
