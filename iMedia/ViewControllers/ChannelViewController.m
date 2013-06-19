@@ -88,8 +88,6 @@ static const int ddLogLevel = LOG_LEVEL_OFF;
     [self.cancelButton.titleLabel setTextAlignment:UITextAlignmentCenter];
     [self.cancelButton setBackgroundImage:[UIImage imageNamed:@"button_cancel_bg.png"] forState:UIControlStateNormal];
 
-    
-    
      
     UIImageView *avatarImage = [[UIImageView alloc] initWithFrame:CGRectMake(20, 20, 75, 75)];
     CALayer *avatarLayer = [avatarImage layer];
