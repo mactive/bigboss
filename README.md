@@ -29,7 +29,12 @@
 	
 	上传机制，第二次打开App时，如果检测到有未上传的log,自动压缩加密上传然后清空log
 	
+
+###6.BBCustomBackButtonViewController
 	
+	可以自己定制 BarButtonItem 和 NavigationBar背景 的类
+	viewController 直接继承自 BBCustom,不用继承自UIViewController
+
 ##UI结构说明
 
 没有采用tabViewController,主View 是 MainViewController
