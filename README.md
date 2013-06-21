@@ -28,3 +28,17 @@
 	pushView的动作统计
 	
 	上传机制，第二次打开App时，如果检测到有未上传的log,自动压缩加密上传然后清空log
+	
+	
+##UI结构说明
+
+没有采用tabViewController,主View 是 MainViewController
+
+1. 将各个 子ViewController 在AppDelegate中定义好
+
+2. 在 MainViewController 中实例化各个 子ViewController
+3. 在子或者更低一级别的ViewController 中
+    [self.navigationController popToRootViewControllerAnimated:NO];
+返回MainViewController
+
+MainViewController - calcRect 控制主页面色块的显示
